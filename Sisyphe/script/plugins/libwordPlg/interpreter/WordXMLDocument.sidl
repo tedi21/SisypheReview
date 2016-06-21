@@ -1,0 +1,21 @@
+package libword
+{
+    // Classe représentant un document XML.
+    interface WordXMLDocument
+    {
+        // Crée un nouveau noeud.
+        WordXMLNode createNode(in string tagName);
+        
+        // Crée un noeud texte.
+        WordXMLNode createTextNode(in string txt);
+        
+        // Retourne le noeud racine du document.
+        WordXMLNode getDocumentNode();
+        
+        // Ouvre un fichier Word XML.
+        void parse(in string doc);
+        
+        // Enregistre le document.
+        readonly void save();
+    }
+}

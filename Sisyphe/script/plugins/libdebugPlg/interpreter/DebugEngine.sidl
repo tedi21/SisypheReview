@@ -1,0 +1,220 @@
+// Spécifie l'état du moteur de débogage
+enum DebugStatus 
+{   
+  DEBUG_STATUS_NO_CHANGE        = 0,
+  DEBUG_STATUS_GO               = 1,
+  DEBUG_STATUS_GO_HANDLED       = 2,
+  DEBUG_STATUS_GO_NOT_HANDLED   = 3,
+  DEBUG_STATUS_STEP_OVER        = 4,
+  DEBUG_STATUS_STEP_INTO        = 5,
+  DEBUG_STATUS_BREAK            = 6,
+  DEBUG_STATUS_NO_DEBUGGEE      = 7,
+  DEBUG_STATUS_STEP_BRANCH      = 8,
+  DEBUG_STATUS_IGNORE_EVENT     = 9
+}
+
+enum CreateFlags
+{
+  DEBUG_PROCESS           = 1,
+  DEBUG_ONLY_THIS_PROCESS = 2
+}
+
+enum WaitFlags
+{
+  DEBUG_WAIT_DEFAULT      = 0
+}
+
+enum TimeOut
+{
+  INFINITE                = -1
+}
+
+enum DebugExecute
+{
+  DEBUG_EXECUTE_DEFAULT     = 0,
+  DEBUG_EXECUTE_ECHO        = 1,
+  DEBUG_EXECUTE_NOT_LOGGED  = 2,
+  DEBUG_EXECUTE_NO_REPEAT   = 4
+}
+
+enum DebugOutCTL
+{
+  DEBUG_OUTCTL_THIS_CLIENT        = 0,
+  DEBUG_OUTCTL_ALL_CLIENTS        = 1,
+  DEBUG_OUTCTL_ALL_OTHER_CLIENTS  = 2,
+  DEBUG_OUTCTL_IGNORE             = 3,
+  DEBUG_OUTCTL_LOG_ONLY           = 4,
+  DEBUG_OUTCTL_SEND_MASK          = 7,
+  DEBUG_OUTCTL_NOT_LOGGED         = 8,
+  DEBUG_OUTCTL_OVERRIDE_MASK      = 16,
+  DEBUG_OUTCTL_AMBIENT            = -1
+}
+
+enum ImageFileMachine
+{
+  IMAGE_FILE_MACHINE_AM33       = 467,
+  IMAGE_FILE_MACHINE_AMD64      = 34404,
+  IMAGE_FILE_MACHINE_ARM        = 448,
+  IMAGE_FILE_MACHINE_ARMV7      = 452,
+  IMAGE_FILE_MACHINE_EBC        = 3772,
+  IMAGE_FILE_MACHINE_I386       = 332,
+  IMAGE_FILE_MACHINE_IA64       = 512,
+  IMAGE_FILE_MACHINE_M32R       = 36929,
+  IMAGE_FILE_MACHINE_MIPS16     = 614,
+  IMAGE_FILE_MACHINE_MIPSFPU    = 870,
+  IMAGE_FILE_MACHINE_MIPSFPU16  = 1126,
+  IMAGE_FILE_MACHINE_POWERPC    = 496
+}
+
+enum DebugValue
+{
+  DEBUG_VALUE_INT8      = 1,
+  DEBUG_VALUE_INT16     = 2,
+  DEBUG_VALUE_INT32     = 3,
+  DEBUG_VALUE_INT64     = 4,
+  DEBUG_VALUE_FLOAT32   = 5,
+  DEBUG_VALUE_FLOAT64   = 6,
+  DEBUG_VALUE_FLOAT80   = 7,
+  DEBUG_VALUE_FLOAT82   = 8,
+  DEBUG_VALUE_FLOAT128  = 9,
+  DEBUG_VALUE_VECTOR64  = 10,
+  DEBUG_VALUE_VECTOR128 = 11
+}
+
+enum DebugBreakpoint
+{
+ DEBUG_BREAKPOINT_CODE  = 0,
+ DEBUG_BREAKPOINT_DATA  = 1,
+ DEBUG_ANY_ID           = -1
+}
+
+enum DebugBreakpointFlag
+{
+  DEBUG_BREAKPOINT_GO_ONLY    = 1,
+  DEBUG_BREAKPOINT_DEFERRED   = 2,
+  DEBUG_BREAKPOINT_ENABLED    = 4,
+  DEBUG_BREAKPOINT_ADDER_ONLY = 8,
+  DEBUG_BREAKPOINT_ONE_SHOT   = 16
+}
+
+// Classe permettant de démarrer le moteur de débogage. 
+interface DebugEngine
+{
+  // Initialise le moteur de débogage.
+  static readonly boolean initialize();
+
+  // Libère les objets debug.
+  static readonly boolean terminate();
+  
+  // Allocate additional memory to the target process.
+  static int DvAlloc(in unsigned long size);
+  
+  // Frees a memory allocation owned by the target process.
+  static boolean DvFree(in int baseAddress, in unsigned long size);
+}
+
+// Classe permettant d'accéder à un client de débogage. 
+interface IDebugClientPtr
+{
+  // La méthode CreateProcess crée un processus à partir de la ligne de commande en paramètre.
+  long CreateProcess(in astring commandLine, in unsigned long createFlags);
+  
+  // The GetRunningProcessSystemIds method returns the process ID.
+  long GetRunningProcessSystemIds(out unsigned long* processId);
+
+  // The GetRunningProcessDescription method returns a description of the process that includes the executable image name, the service names, the MTS package names, and the command line.
+  long GetRunningProcessDescription(in unsigned long systemId, in unsigned long flags, out astring exeName, out astring description);
+}
+
+// Classe permettant d'accéder aux contrôles de débogage. 
+interface IDebugControlPtr
+{
+  // Waits for an event that breaks into the debugger engine application. 
+  long WaitForEvent(in unsigned long flags, in unsigned long timeout);
+  
+  // The SetTextMacro method sets the value of a fixed-name alias.
+  long SetTextMacro(in unsigned long slot, in astring macro);
+  
+  // The Evaluate method evaluates an expression, returning the result.
+  long Evaluate(in astring expression, in unsigned long desiredType, out DEBUG_VALUE* debugValue, out unsigned long* remainderIndex);
+
+  // The Execute method executes the specified debugger commands.
+  long Execute(in unsigned long outputControl, in astring command, in unsigned long flags);
+
+  // The Assemble method assembles a single processor instruction. The assembled instruction is placed in the target's memory.
+  long Assemble(in unsigned long long offset, in astring instr, out unsigned long long* endOffset);
+  
+  // The GetExecutionStatus method returns information about the execution status of the debugger engine.
+  long GetExecutionStatus(out unsigned long* status);
+  
+  // The GetActualProcessorType method returns the processor type of the physical processor of the computer that is running the target.
+  long GetActualProcessorType(out unsigned long* type);
+  
+  // The SetEffectiveProcessorType method sets the effective processor type of the processor of the computer that is running the target.
+  long SetEffectiveProcessorType(in unsigned long type);
+  
+  // Returns the standard prompt text that will be prepended to the formatted output specified in the OutputPrompt and OutputPromptVaList methods.
+  long GetPromptText(out astring buffer);
+  
+  // Opens a log file that will receive output from the client objects.
+  long OpenLogFile(in astring file, in boolean append);
+  
+  // Closes the currently-open log file.
+  long CloseLogFile();
+
+  // Returns the return address for the current function.
+  long GetReturnOffset(out unsigned long long* offset);
+
+  // Creates a new breakpoint for the current target.
+  long AddBreakpoint(in unsigned long type, in unsigned long desiredId, out IDebugBreakpointPtr* bp);
+
+  // Removes a breakpoint.
+  long RemoveBreakpoint(in IDebugBreakpointPtr bp);
+
+  // The SetExpressionSyntax method sets the syntax that the engine will use to evaluate expressions.
+  long SetExpressionSyntax(in unsigned long flags);
+}
+
+// Classe permettant d'accéder aux informations du processus en cours de débogage.
+interface IDebugSystemObjectsPtr
+{
+  // Returns the engine process ID for the current process.
+  long GetCurrentProcessId(out unsigned long* processId);
+  
+  // Returns the location of the system data structure describing the current process.
+  long GetCurrentProcessDataOffset(out unsigned long long* offset);
+  
+  // Returns the name of executable file loaded in the current process.
+  long GetCurrentProcessExecutableName(out astring buffer);
+}
+
+// Classe permettant d'accéder aux informations de symboles de débogage.
+interface IDebugSymbolsPtr
+{
+  long AppendSymbolPath(in astring addition);
+  
+  long GetSymbolModule(in astring symbol, out unsigned long long* base);
+}
+
+// Classe permettant d'accéder aux informations d'un breakpoint.
+interface IDebugBreakpointPtr
+{
+  // Sets the location that triggers a breakpoint.
+  long SetOffset(in unsigned long long offset);
+
+  // Sets the flags for a breakpoint.
+  long SetFlags(in unsigned long flags);
+}
+
+// The DEBUG_VALUE structure holds register and expression values.
+interface DEBUG_VALUE
+{
+  attribute byte I8;
+  attribute unsigned short I16;
+  attribute unsigned long I32;
+  attribute unsigned long long I64;
+  attribute float F32;
+  attribute double F64;
+  attribute unsigned long Type;
+  attribute unsigned long TailOfRawBytes;
+}

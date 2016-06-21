@@ -1,0 +1,123 @@
+package libword
+{
+    // Classe représentant un noeud XML du document Word.
+    interface WordXMLNode
+    {
+        // Le nom du noeud *DOCUMENT*. 
+        static readonly attribute string DOCUMENT_TAG;
+        // Le nom du noeud *BODY*. 
+        static readonly attribute string BODY_TAG;
+        // Le nom du noeud *SECTION*. 
+        static readonly attribute string SECTION_TAG;
+        // Le nom du noeud *SUBSECTION*. 
+        static readonly attribute string SUBSECTION_TAG;
+        // Le nom du noeud *TABLE*. 
+        static readonly attribute string TABLE_TAG;
+        // Le nom du noeud *ROW*. 
+        static readonly attribute string ROW_TAG;
+        // Le nom du noeud *CELL*. 
+        static readonly attribute string CELL_TAG;
+        // Le nom du noeud *PARAGRAPH*. 
+        static readonly attribute string PARAGRAPH_TAG;
+        // Le nom du noeud *REVISION*. 
+        static readonly attribute string REVISION_TAG;
+        // Le nom du noeud *RUN*. 
+        static readonly attribute string RUN_TAG;
+        
+        // Valeur par défaut indiquant que le paramètre de la taille est à ignorer (cf. méthode *eraseString*). 
+        static readonly attribute unsigned long NO_LENGTH;
+           
+        // Retourne le nom du noeud.
+        readonly string getTagName();
+
+        // Execute une requête XPath.
+        readonly WordXMLNodeList evaluate(in string xpath);
+
+        // Retourne les noeuds fils.
+        readonly WordXMLNodeList getNodes();
+
+        // Retourne les noeuds fils avec le nom *tagName*.
+        readonly WordXMLNodeList getNodes(in string tagName);
+
+        // Retourne le noeud suivant.
+        readonly WordXMLNode getNextNode();
+
+        // Retourne le noeud suivant avec le nom *tagName*.
+        readonly WordXMLNode getNextNode(in string tagName);
+
+        // Retourne le noeud précèdent.
+        readonly WordXMLNode getPreviousNode();
+
+        // Retourne le noeud précèdent avec le nom *tagName*.
+        readonly WordXMLNode getPreviousNode(in string tagName);
+
+        // Retourne le noeud parent.
+        readonly WordXMLNode getParent();
+
+        // Retourne le noeud parent avec le nom *tagName*.
+        readonly WordXMLNode getParent(in string tagName);
+
+        // Retourne le contenu d'un noeud.
+        readonly string getContent();
+
+        // Indique si le noeud à un attribut *attrName*.
+        readonly boolean hasAttribute(in string attrName);
+
+        // Retourne la valeur de l'attribut *attrName*.
+        readonly string getAttribute(in string attrName);
+
+        // Retourne les noms des attributs du noeud.
+        readonly StringList getAttributesNames();
+        
+        // Retourne le texte brut du noeud.
+        readonly string getString();
+
+        // Retourne le document.
+        readonly WordXMLDocumentPtr getDocument();
+
+        // Indique si le noeud est valide.
+        readonly boolean isValid();
+
+        // Définit le contenu.
+        void setContent(in string content);
+
+        // Définit un attribut.
+        void setAttribute(in string attrName, in string attrValue);
+
+        // Supprime un attribut.
+        void eraseAttribute(in string attrName);
+
+        // Retourne le noeud Propriétés correspondant au noeud conteneur en cours ou crée le noeud si celui-ci n'existe pas.
+        WordXMLNode createPropertiesNode();
+        
+        // Définit le noeud *Propriétés*.
+        void setPropertiesNode(in WordXMLNode node);
+
+        // Supprime le noeud *Propriétés*.
+        void erasePropertiesNode();
+
+        // Ajoute un nouveau noeud.
+        void append(in WordXMLNode newChild);
+
+        // Supprime le noeud.
+        void erase();
+
+        // Remplace un noeud.
+        void replace(in WordXMLNode newChild, in WordXMLNode oldChild);
+
+        // Insère un nouveau noeud.
+        void insertBefore(in WordXMLNode newChild, in WordXMLNode refChild);
+
+        // Clone le noeud.
+        readonly WordXMLNode cloneNode(in boolean deep);
+
+        // Ajoute du texte.
+        WordXMLNodeList appendString(in boolean trackedChanges, in string str);
+
+        // Supprime du texte.
+        void eraseString(in boolean trackedChanges, in unsigned long pos, in unsigned long length);
+
+        // Insère du texte.
+        WordXMLNodeList insertString(in boolean trackedChanges, in unsigned long pos, in string str);
+    }
+}

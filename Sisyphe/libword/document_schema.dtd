@@ -1,0 +1,39 @@
+﻿<!-- DTD Auteur : Teddy DIDÉ -->
+<!-- DTD Projet : DataSources Generator -->
+<!ELEMENT document_schema    ( Workspace )        >
+<!-- IS ROOT ELEMENT -->
+<!ELEMENT Workspace     ( Comments?, File* )      >
+<!ELEMENT File          ( Comments?, Entity*, Relation* )>
+<!ELEMENT Entity        ( Comments?, Attribute* ) >
+<!ELEMENT Relation      ( Comments? )             >
+<!ELEMENT Attribute     ( Comments? )             >
+<!ATTLIST Workspace 
+  Name    CDATA #REQUIRED
+  Author  CDATA #REQUIRED
+  Brief   CDATA #IMPLIED 
+  Version CDATA #IMPLIED 
+  Type    (File|Project) "Project"
+  Option  CDATA "0"                   >
+<!ATTLIST File
+  Name    CDATA #REQUIRED
+  Alias   CDATA #IMPLIED              >
+<!ATTLIST Entity 
+  Name          CDATA #REQUIRED               
+  FunctionName  CDATA #IMPLIED
+  Alias         CDATA #IMPLIED
+  Class (Data|Function|Enumeration) "Data">
+<!ATTLIST Relation
+  Name          CDATA #REQUIRED  
+  Alias         CDATA #IMPLIED
+  Multiplicity  CDATA #REQUIRED
+  Target        CDATA #REQUIRED
+  TargetREF     CDATA #IMPLIED
+  Source        CDATA #REQUIRED
+  SourceREF     CDATA #IMPLIED        >
+<!ATTLIST Attribute
+  Type (Boolean|SByte|Byte|Char|Int16|UInt16|Int32|UInt32|Int64|UInt64|Single|Double|String|Text|Time|Date|Any) "Any" 
+  Name     CDATA #REQUIRED
+  Alias    CDATA #IMPLIED
+  Modifier CDATA ""
+  Default  CDATA #IMPLIED             >
+<!ELEMENT Comments ( #PCDATA )        >

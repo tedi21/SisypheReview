@@ -1,0 +1,643 @@
+// WdGoToItem
+enum WdGoToItem
+{
+    wdGoToHeading = 11,
+    wdGoToLine = 3,
+    wdGoToPage = 1,
+    wdGoToTable = 2,
+    wdGoToComment = 6,
+    wdGoToSection = 0
+}
+
+// WdGoToDirection
+enum WdGoToDirection
+{
+    wdGoToAbsolute = 1,
+    wdGoToRelative = 2,
+    wdGoToFirst = 1,
+    wdGoToLast = -1,
+    wdGoToNext = 2,
+    wdGoToPrevious = 3
+}
+
+// WdBuiltinStyle
+enum WdBuiltinStyle
+{
+    wdStyleHeading1 = -2,
+    wdStyleHeading2 = -3,
+    wdStyleHeading3 = -4,
+    wdStyleHeading4 = -5,
+    wdStyleHeading5 = -6,
+    wdStyleHeading6 = -7,
+    wdStyleHeading7 = -8,
+    wdStyleHeading8 = -9,
+    wdStyleHeading9 = -10
+}
+
+// WdCollapseDirection
+enum WdCollapseDirection
+{
+    wdCollapseEnd = 0,
+    wdCollapseStart = 1
+}
+
+// WdSaveOptions
+enum WdSaveOptions
+{
+    wdDoNotSaveChanges = 0,
+    wdSaveChanges = -1,
+    wdPromptToSaveChanges = -2
+}
+
+// WdOriginalFormat
+enum WdOriginalFormat
+{
+    wdOriginalDocumentFormat = 1,
+    wdPromptUser = 2,
+    wdWordDocument = 0
+}
+
+// WdCompareTarget
+enum WdCompareTarget
+{
+    wdCompareTargetCurrent = 1,
+    wdCompareTargetNew = 2,
+    wdCompareTargetSelected = 0
+}
+
+// WdSaveFormat
+enum WdSaveFormat
+{
+	// Microsoft Office Word format.
+    wdFormatDocument = 0,    
+	// Microsoft DOS text format.
+    wdFormatDOSText = 4,            
+	// Microsoft DOS text with line breaks preserved.
+    wdFormatDOSTextLineBreaks = 5,   
+	// Encoded text format.
+    wdFormatEncodedText = 7,
+	// Filtered HTML format.
+    wdFormatFilteredHTML = 10,   
+	// Standard HTML format.
+    wdFormatHTML = 8,                
+	// Rich text format (RTF).
+    wdFormatRTF = 6,                 
+	// Word template format.
+    wdFormatTemplate = 1,	         
+	// Microsoft Windows text format.
+    wdFormatText = 2,	             
+	// Windows text format with line breaks preserved.
+    wdFormatTextLineBreaks = 3,	     
+	// Unicode text format.
+    wdFormatUnicodeText = 7,         
+	// Web archive format.
+    wdFormatWebArchive = 9,          
+	// Extensible Markup Language (XML) format.
+    wdFormatXML = 11,                
+	// Microsoft Word 97 document format.
+    wdFormatDocument97 = 0,          
+	// Word default document file format. For Microsoft Office Word 2007, this is the DOCX format.
+    wdFormatDocumentDefault = 16,    
+	// PDF format.
+    wdFormatPDF = 17,                
+	// Word 97 template format.
+    wdFormatTemplate97 = 1,          
+	// XML document format.
+    wdFormatXMLDocument = 12,        
+	// XML document format with macros enabled.
+    wdFormatXMLDocumentMacroEnabled = 13, 
+	// XML template format.
+    wdFormatXMLTemplate = 14,             
+	// XML template format with macros enabled.
+    wdFormatXMLTemplateMacroEnabled = 15, 
+	// XPS format.
+    wdFormatXPS = 18                
+}
+
+// WdMergeTarget
+enum WdMergeTarget
+{
+	// Merge into current document.
+	wdMergeTargetCurrent = 1,
+	// 	Merge into new document.
+	wdMergeTargetNew = 2,
+	// Merge into selected document.
+	wdMergeTargetSelected = 0
+}
+
+// WdUseFormattingFrom
+enum WdUseFormattingFrom
+{
+	// 	Copy source formatting from the current item.
+	wdFormattingFromCurrent = 0,
+	// 	Prompt the user for formatting to use
+	wdFormattingFromPrompt = 2,
+	// 	Copy source formatting from the current selection.
+	wdFormattingFromSelected = 1
+}
+
+// Specifies how Microsoft Word resizes a table when the AutoFit feature is used.
+enum WdAutoFitBehavior
+{
+	// The table is set to a fixed size, regardless of the content, and is not automatically sized.
+	wdAutoFitFixed = 0,
+	// The table is automatically sized to fit the content contained in the table.
+	wdAutoFitContent = 1,
+	// The table is automatically sized to the width of the active window.
+	wdAutoFitWindow = 2
+}
+
+// Represents the entire Microsoft Word application. 
+interface Application
+{
+	// Returns a Document object that represents the active document. 
+	readonly attribute Document ActiveDocument;
+	
+	// Returns a Documents collection that represents all the open documents. 
+	readonly attribute Documents Documents;
+	
+	// Determines if the specified object is visible. This property returns True if the specified object is visible, and False if not. 
+	attribute boolean Visible;
+	
+	// Determines if screen updating is turned on. Returns True if screen updating is turned on, and False if not. 
+	attribute boolean ScreenUpdating;
+	
+	// Quits Microsoft Word and optionally saves or routes the open documents. 
+	void Quit();
+	
+	// Returns the Selection object that represents a selected range or the insertion point. 
+	readonly attribute Selection Selection;
+	
+	// Returns an Options object that represents application settings in Microsoft Word.
+	readonly attribute Options Options;
+	
+	// 
+	attribute any CustomizationContext;
+
+	//
+	readonly attribute Template NormalTemplate;
+	
+	//
+	readonly attribute CommandBars CommandBars;
+}
+
+// A collection of all the Document objects that are currently open in Word.
+interface Documents
+{
+	// Returns an individual object in a collection. 
+	Document Item(in int index);
+
+	// Returns the number of items in the specified collection.
+	readonly attribute int Count;
+	
+	// Opens the specified document and adds it to the Documents collection. 
+	Document Open(in string filename, in boolean ConfirmConversions, in boolean ReadOnly, in boolean AddToRecentFiles);
+	
+	// Closes the specified document or documents. 
+	void Close(in WdSaveOptions SaveChanges, in WdOriginalFormat OriginalFormat, in boolean RouteDocument);
+	
+	// Saves all the documents in the Documents collection. 
+	void Save();
+}
+
+// Represents a document. 
+interface Document
+{
+	// Gets the name of the document, including the drive or Web path. 
+	readonly attribute string FullName;
+	
+	// Returns a Paragraphs collection that represents all the paragraphs in the specified document. 
+	readonly attribute Paragraphs Paragraphs;
+	
+	// Gets a TablesOfContents collection that represents the tables of contents in the document.
+	readonly attribute TablesOfContents TablesOfContents;
+	
+	// Gets a read-only Fields collection that contains the fields in the main text story.
+	readonly attribute Fields Fields;
+	
+	// Gets a Tables collection that represents all the tables in the document.
+	readonly attribute Tables Tables;
+	
+	// Saves the document. If the document has not been saved before, the Save As dialog box prompts the user for a file name. 
+	void Save(); 
+	
+	// Accepts all tracked changes in the document.
+	void AcceptAllRevisions();
+	
+	// Returns a Microsoft.Office.Interop.Word.Range that represents the start position of the specified item, such as a page, bookmark, or field.
+	Range GoTo(in WdGoToItem What, in WdGoToDirection Which, in int Count);
+	
+	// Closes the document.
+	void Close(in WdSaveOptions SaveChanges, in WdOriginalFormat OriginalFormat, in boolean RouteDocument);
+	
+	// Returns a Window object that represents the active window. 
+	readonly attribute Window ActiveWindow;
+	
+	// Returns a Range object that represents the main document story.
+	readonly attribute Range Content;
+	
+	// Displays revision marks that indicate where the specified document differs from another document. 
+	void Compare(in string Name, in string AuthorName, in WdCompareTarget CompareTarget, in boolean DetectFormatChanges, in boolean IgnoreAllComparisonWarnings, in boolean AddToRecentFiles, in boolean RemovePersonalInformation, in boolean RemoveDateAndTime);
+	
+	// Merges the changes marked with revision marks from one document to another.
+	void Merge(in string FileName, in WdMergeTarget MergeTarget, in boolean DetectFormatChanges, in WdUseFormattingFrom UseFormattingFrom, in boolean AddToRecentFiles);
+	
+	// Determines if the specified document or template hasn't changed since it was last saved. 
+	attribute boolean Saved;
+	
+	// Saves the specified document with a new name or format. Some of the arguments for this method correspond to the options in the Save Asdialog box (File menu). 
+	void SaveAs(in string FileName, in WdSaveFormat FileFormat);
+	
+}
+
+// A collection of Paragraph objects in a selection, range, or document. 
+interface Paragraphs
+{
+	// Returns an individual object in a collection. 
+	Paragraph Item(in int index);
+
+	// Returns the number of items in the specified collection.
+	readonly attribute int Count;
+}
+
+// Represents a single paragraph in a selection, range, or document. 
+interface Paragraph
+{
+	// Returns a Range object that represents the portion of a document that's contained in the specified object.
+	readonly attribute Range Range;
+	
+	// Returns or sets the style for the specified object. 
+	attribute int Style;
+	
+	// Returns a Paragraph object that represents the next paragraph. 
+	Paragraph Next(in int Count);
+}
+
+// A collection of TableOfContents objects that represent the tables of contents in a document. 
+interface TablesOfContents
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	TableOfContents Item(in int index);
+}
+
+// Represents a single table of contents in a document. 
+interface TableOfContents
+{
+	// Returns a Range object that represents the portion of a document that's contained in the specified object. 
+	readonly attribute Range Range;
+	
+	// True if Table of Contents Entry (TC) fields are used to create a table of contents. 
+	attribute boolean UseFields;
+	
+	// True if built-in heading styles are used to create a table of contents. 
+	attribute boolean UseHeadingStyles;
+	
+	// Returns a HeadingStyles object that represents additional styles used to compile a table of contents (styles other than the Heading 1 – Heading 9 styles). 
+	readonly attribute HeadingStyles HeadingStyles;
+	
+	// Updates the entries shown in the specified table of contents. 
+	void Update();
+}
+
+// Represents a contiguous area in a document. 
+interface Range
+{
+	// Returns or sets the text in the specified range. 
+	attribute string Text;
+	
+	// Returns a Tables collection that represents all the tables in the specified range. 
+	readonly attribute Tables Tables;
+	
+	// Returns a Range object that represents the start position of the specified item, such as a page, bookmark, or field. 
+	Range GoTo(in WdGoToItem What, in WdGoToDirection Which, in int Count);
+	
+	// Returns a Range object that refers to the start position of the next item or location specified by the What argument. 
+	Range GoToNext(in WdGoToItem What);
+	
+	// Returns a Range object that refers to the start position of the previous item or location specified by the What argument. 
+	Range GoToPrevious(in WdGoToItem What);
+	
+	// Determines if the range to which the method is applied is contained in the specified range. 
+	boolean InRange(in Range Other);
+	
+	// Returns a Range object that represents the specified unit relative to the specified range. 
+	Range Next(in int Unit, in int Count);
+	
+	// Returns a String that represents the XML text in the specified object. 
+	readonly attribute string XML;
+}
+
+// Represents a single table cell.
+interface Cell
+{
+        // Returns a Range object that represents the portion of a document that's contained in the specified object.
+        readonly attribute Range Range;
+}
+
+// A collection of Table objects that represent the tables in a selection, range, or document. 
+interface Tables
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Table Item(in int index);
+}
+
+// Represents a single table. 
+interface Table
+{
+	// Returns a Range object that represents the portion of a document that's contained in the specified object. 
+	readonly attribute Range Range;
+	
+	// Returns a Rows collection that represents all the table rows in a table. 
+	readonly attribute Rows Rows;
+
+	// Returns a Columns collection that represents all the table columns in the table.
+	readonly attribute Columns Columns;
+	
+	// Returns a Cell object that represents a cell in a table. 
+	Cell Cell(in int Column, in int Row);
+	
+	// Determines how Microsoft Word resizes a table when the AutoFit feature is used.
+	void AutoFitBehavior(in WdAutoFitBehavior Behavior);
+}
+
+// A collection of Row objects that represent the table rows in the specified selection, range, or table.
+interface Rows
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Row Item(in int index);
+	
+	// Returns a Row object that represents the first item in the Rows collection. 
+	readonly attribute Row First;
+	
+	// Returns a Row object that represents the last item in the Rows collection.
+	readonly attribute Row Last;	
+}
+
+// Represents a row in a table. 
+interface Row
+{
+	// Returns a Range object that represents the portion of a document that's contained in the specified object. 
+	readonly attribute Range Range;
+	
+	// Returns a Cells collection that represents the table cells in a column, row, selection, or range. 
+	readonly attribute Cells Cells;	
+	
+	// Returns a value that represents the position of an item in a collection. 
+	readonly attribute int Index;
+}
+
+// A collection of Cell objects in a table column, table row, selection, or range.
+interface Cells
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Cell Item(in int index);
+}
+
+// A collection of Field objects that represent all the fields in a selection, range, or document.
+interface Fields
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Field Item(in int index);
+}
+
+// Represents a field. The Field object is a member of the Fields collection. The Fields collection represents the fields in a selection, range, or document. 
+interface Field
+{
+	// Returns the field type. 
+	readonly attribute int Type;
+	
+	// Returns or sets data in an ADDIN field. 
+	attribute string Data;
+	
+	// Updates the result of the field object. 
+	boolean Update();
+	
+	// Clicks the specified field. 
+	void DoClick();
+}
+
+// A collection of HeadingStyle objects that represent the styles used to compile a table of figures or table of contents. 
+interface HeadingStyles
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	HeadingStyle Item(in int index);
+}
+
+// Represents a style used to build a table of contents or figures. 
+interface HeadingStyle
+{
+	// Returns or sets the level for the heading style in a table of contents or table of figures. 
+	attribute short Level;
+	
+	// Returns or sets the style for the specified object. 
+	attribute int Style;
+}
+
+// Represents the current selection in a window or pane. 
+interface Selection
+{
+	// Returns a Range object that represents the portion of a document that's contained in the specified object. 
+	readonly attribute Range Range;
+	
+	// Returns a Paragraphs collection that represents all the paragraphs in the specified selection. 
+	readonly attribute Paragraphs Paragraphs;
+	
+	// Returns or sets the starting character position of a selection.
+	attribute int Start;
+	
+	// Returns or sets the ending character position of a selection. 
+	attribute int End;
+	
+	// Returns a Tables collection that represents all the tables in the specified selection.
+	readonly attribute Tables Tables;
+	
+	// Returns the selection type. 
+	readonly attribute int Type;
+	
+	// Returns or sets the text in the specified selection. 
+	attribute string Text;
+	
+	// Returns or sets the style for the specified object. 
+	attribute int Style;
+	
+	// Returns a Range object that represents the start position of the specified item, such as a page, bookmark, or field. 
+	Range GoTo(in WdGoToItem What, in WdGoToDirection Which, in int Count);
+	
+	// Returns a Range object that refers to the start position of the next item or location specified by the What argument. 
+	Range GoToNext(in WdGoToItem What);
+	
+	// Returns a Range object that refers to the start position of the previous item or location specified by the What argument. 
+	Range GoToPrevious(in WdGoToItem What);
+	
+	// Returns a Characters collection that represents the characters in a selection. 
+	readonly attribute Characters Characters;
+	
+	// Moves the start position of the specified selection. 
+	int MoveStart(in int Unit, in int Count);
+	
+	// Moves the ending character position of a selection. 
+	int MoveEnd(in int Unit, in int Count);
+	
+	// Collapses a selection to the starting or ending position. 
+	void Collapse(in WdCollapseDirection Direction);
+	
+	// Returns a Find object that contains the criteria for a find operation. 
+	readonly attribute Find Find;
+	
+	// Returns a Sentences collection that represents all the sentences in the selection. 
+	readonly attribute Sentences Sentences;
+	
+	// Returns a Words collection that represents all the words in a selection.
+	readonly attribute Words Words;
+}
+
+// A collection of characters in a selection, range, or document. 
+interface Characters
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Range Item(in int index);
+	
+	// Gets a Range object that represents the first character in a document. 
+	readonly attribute Range First;
+	
+	// Gets a Range object that represents the last character, word, or sentence in a document. 
+	readonly attribute Range Last;
+}
+
+// Represents the criteria for a find operation. 
+interface Find
+{
+	// Returns or sets the style for the specified object. 
+	attribute int Style;
+	
+	// Returns or sets the text to find or replace in the specified range or selection. 
+	attribute string Text;
+	
+	// Determines if the text to find contains wildcards. 
+	attribute boolean MatchWildcards;
+	
+	// Determines if the find operation searches forward through the document. 
+	attribute boolean Forward;
+	
+	// Removes text and paragraph formatting from a selection or from the formatting specified in a find or replace operation. 
+	void ClearFormatting();
+	
+	// Runs the specified find operation. 
+	boolean Execute();
+	
+	// Determines if the search for the specified object has produced a match. 
+	readonly attribute boolean Found;
+	
+	// Determines if the find operation is case-sensitive. 
+	attribute boolean MatchCase;
+}
+
+// A collection of words in a selection, range, or document. 
+interface Words
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Range Item(in int index);
+	
+	// Returns a Range object that represents the first word in a document, selection or range. 
+	readonly attribute Range First;
+	
+	// Gets a Range object that represents the last character, word, or sentence in a document. 
+	readonly attribute Range Last;
+}
+
+// A collection of Range objects that represent all the sentences in a selection, range, or document. There is no Sentence object. 
+interface Sentences
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Range Item(in int index);
+	
+	// Returns a Range object that represents the first sentence, word, or character in a document, selection or range.
+	readonly attribute Range First;
+	
+	// Returns a Range object that represents the last character, word, or sentence in a document, selection, or range.
+	readonly attribute Range Last;
+}
+
+// A collection of Column objects that represent the columns in a table. 
+interface Columns
+{
+	// Returns the number of items in the specified collection. 
+	readonly attribute int Count;
+	
+	// Returns an individual object in a collection. 
+	Column Item(in int index);
+	
+	// Returns a Column object that represents the first item in the Columns collection. 
+	readonly attribute Column First;
+	
+	// Returns a Column object that represents the last item in the Columns collection.
+	readonly attribute Column Last;
+}
+
+// Represents a single table column. The Column object is a member of the Columns collection. 
+interface Column
+{
+	// Returns a Cells collection that represents the table cells in a column. 
+	readonly attribute Cells Cells;
+	
+	// Returns a value that represents the position of an item in a collection. 
+	readonly attribute int Index;
+}
+
+// Represents application and document options in Microsoft Word. Many of the properties for the Options object correspond to items in the Options dialog box (Tools menu). 
+interface Options
+{
+	// True if Microsoft Word repaginates documents in the background. 
+	attribute boolean Pagination;
+}
+
+// Represents a window.
+interface Window
+{
+	// Returns a View object that represents the view for the specified window.
+	readonly attribute View View;
+	
+	// True if the specified object is visible. 
+	attribute boolean Visible;
+}
+
+// Contains the view attributes (show all, field shading, table gridlines, and so on) for a window or pane.
+interface View
+{
+	// Returns or sets the view type.
+	attribute int Type;
+}
+
+// Represents a document template.
+interface Template
+{}
+
+
+

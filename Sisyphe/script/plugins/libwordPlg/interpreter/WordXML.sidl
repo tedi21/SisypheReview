@@ -1,0 +1,12 @@
+package libword
+{
+	// Classe permettant d'initialiser ou libérer les objets XML.
+	interface WordXMLDocument
+	{
+		// Initialise le parseur XML.
+        static readonly void initialize();
+
+		// Libère les objets XML.
+        static readonly void terminate();
+	}
+}

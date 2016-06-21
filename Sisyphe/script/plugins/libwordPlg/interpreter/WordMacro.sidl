@@ -1,0 +1,18 @@
+package libword
+{
+	// Classe permettant d'executer des macros Word. 
+	interface WordMacro
+	{
+		// Convertie un fichier en xml.
+		readonly boolean convertToXML(in string file, in string xmlFile, in boolean acceptAllRevisions);
+
+		// Convertie un fichier en doc.
+		readonly boolean convertToDOC(in string file, in string docFile, in boolean acceptAllRevisions);
+
+		// Convertie un fichier en pdf.
+		readonly boolean convertToPDF(in string file, in string pdfFile, in boolean acceptAllRevisions);
+		
+		// Convertie un fichier en xdoc.
+		readonly boolean convertToXDOC(in string file, in string xdocFile, in boolean acceptAllRevisions);
+	}
+}

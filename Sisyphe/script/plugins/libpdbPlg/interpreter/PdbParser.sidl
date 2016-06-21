@@ -1,0 +1,316 @@
+// Spécifie le type de symbole.
+enum SymTagEnumType 
+{ 
+   SymTagNull,
+   SymTagExe,
+   SymTagCompiland,
+   SymTagCompilandDetails,
+   SymTagCompilandEnv,
+   SymTagFunction,
+   SymTagBlock,
+   SymTagData,
+   SymTagAnnotation,
+   SymTagLabel,
+   SymTagPublicSymbol,
+   SymTagUDT,
+   SymTagEnum,
+   SymTagFunctionType,
+   SymTagPointerType,
+   SymTagArrayType, 
+   SymTagBaseType, 
+   SymTagTypedef, 
+   SymTagBaseClass,
+   SymTagFriend,
+   SymTagFunctionArgType, 
+   SymTagFuncDebugStart, 
+   SymTagFuncDebugEnd,
+   SymTagUsingNamespace, 
+   SymTagVTableShape,
+   SymTagVTable,
+   SymTagCustom,
+   SymTagThunk,
+   SymTagCustomType,
+   SymTagManagedType,
+   SymTagDimension,
+   SymTagCallSite,
+   SymTagInlineSite,
+   SymTagBaseInterface,
+   SymTagVectorType,
+   SymTagMatrixType,
+   SymTagHLSLType
+}
+
+// Spécifie les options de recherche pour le symbole et les noms de fichiers.
+enum NameSearchOptions 
+{ 
+   nsNone               = 0x0,
+   nsfCaseSensitive     = 0x1,
+   nsfCaseInsensitive   = 0x2,
+   nsfFNameExt          = 0x4,
+   nsfRegularExpression = 0x8,
+   nsfUndecoratedName   = 0x10
+}
+
+// indique la portée particulière d'une valeur de données.
+enum DataKind { 
+   DataIsUnknown        = 0,
+   DataIsLocal          = 1,
+   DataIsStaticLocal    = 2,
+   DataIsParam          = 3,
+   DataIsObjectPtr      = 4,
+   DataIsFileStatic     = 5,
+   DataIsGlobal         = 6,
+   DataIsMember         = 7,
+   DataIsStaticMember   = 8,
+   DataIsConstant       = 9
+}
+
+// spécifie le type de base du symbole.
+enum BasicType { 
+   btNoType   = 0,
+   btVoid     = 1,
+   btChar     = 2,
+   btWChar    = 3,
+   btInt      = 6,
+   btUInt     = 7,
+   btFloat    = 8,
+   btBCD      = 9,
+   btBool     = 10,
+   btLong     = 13,
+   btULong    = 14,
+   btCurrency = 25,
+   btDate     = 26,
+   btVariant  = 27,
+   btComplex  = 28,
+   btBit      = 29,
+   btBSTR     = 30,
+   btHresult  = 31
+}
+
+// Classe permettant de parser des fichiers PDB. 
+interface PdbParser
+{
+  // Initialise le parseur PDB.
+  static readonly boolean initialize();
+
+  // Libère les objets PDB.
+  static readonly boolean terminate();
+}
+
+// Classe permettant d'accéder à une source de symboles de débogage. 
+interface IDiaDataSourcePtr
+{
+  // Ouvre et prépare un fichier de base de données du programme (.pdb) comme source de données de débogage.
+  long loadDataFromPdb(in string pdbPath);
+  
+  // Ouvre une session pour obtenir des symboles.
+  long openSession(out IDiaSessionPtr* ppSession);
+}
+
+// Classe permettant de fournir un contexte de requête pour des symboles de débogage.
+interface IDiaSessionPtr
+{
+  // Extrait une référence de la portée globale.
+  long get_globalScope(out IDiaSymbolPtr* pRetVal);
+  
+  // Définit l'adresse de charge du fichier exécutable qui correspond aux symboles dans ce magasin de symboles.
+  long put_loadAddress(in unsigned long long pNewVal);
+  
+  // Récupère les lignes d'un module spécifié qui contient une adresse virtuelle relative spécifiée (RVA).
+  long findLinesByRVA(in unsigned long rva, in unsigned long length, out IDiaEnumLineNumbersPtr* ppResult);
+
+  // Détermine les numéros de ligne du module (compiland) que le numéro de ligne spécifié dans un fichier source se trouve dans ou approche.
+  long findLinesByLinenum(in IDiaSymbolPtr compiland, in IDiaSourceFilePtr file, in unsigned long linenum, in unsigned long column, out IDiaEnumLineNumbersPtr* ppResult);
+
+  // Récupère les numéros de ligne dans les ID spécifiés de module (compiland) et du fichier source.
+  long findLines(in IDiaSymbolPtr compiland, in IDiaSourceFilePtr file, out IDiaEnumLineNumbersPtr* ppResult);
+ 
+  // Récupère les fichiers sources par le module et le nom.
+  long findFile(in IDiaSymbolPtr pCompiland, in string name, in unsigned long option, out IDiaEnumSourceFilesPtr* ppResult);
+  
+  // Récupère les fichiers sources par le module.
+  long findFile(in IDiaSymbolPtr pCompiland, out IDiaEnumSourceFilesPtr* ppResult);
+  
+  // Récupère les fichiers sources par le nom.
+  long findFile(in string name, in unsigned long option, out IDiaEnumSourceFilesPtr* ppResult);
+  
+  // Récupère tous les fichiers sources.
+  long findFile(out IDiaEnumSourceFilesPtr* ppResult);
+}
+
+// Classe représentant un symbole.
+interface IDiaSymbolPtr
+{
+  // Récupère les enfants du symbole.
+  long findChildren(in SymTagEnumType symtag, in string name, in long compareFlags, out IDiaEnumSymbolsPtr* ppResult);
+  
+  // Récupère les enfants du symbole.
+  long findChildren(in SymTagEnumType symtag, out IDiaEnumSymbolsPtr* ppResult);
+  
+  // Extrait le nom du symbole.
+  long get_name(out string* pRetVal);
+  
+  // Extrait la partie de section d'un emplacement d'adresse.
+  long get_addressSection(out unsigned long* pRetVal);
+  
+  // Extrait la partie d'offset à un emplacement d'adresse.
+  long get_addressOffset(out unsigned long* pRetVal);
+  
+  // Récupère l'adresse virtuelle relative (RVA) du symbole.
+  long get_relativeVirtualAddress(out unsigned long* pRetVal);
+  
+  // Récupère le symbole qui représente le type pour ce symbole.
+  long get_type(out IDiaSymbolPtr* pRetVal);
+
+  // Extrait une balise qui indique si le type de données défini par l'utilisateur est constante.
+  long get_constType(out int* pRetVal);
+
+  // extrait la classification variable d'un symbole de données.
+  long get_dataKind(out unsigned long* pRetVal);
+
+  // Extrait une balise qui indique si le type de données défini par l'utilisateur possède un constructeur ou un destructeur.
+  long get_constructor(out int* pRetVal);
+
+  // Récupère le type de base pour ce symbole.
+  long get_baseType(out unsigned long* pRetVal);
+
+  // Extrait une balise qui indique si le type de données défini par (UDT) l'utilisateur est volatile.
+  long get_volatileType(out int* pRetVal);
+
+  // extrait une balise qui spécifie si la fonction est virtuelle.
+  long get_virtual(out int* pRetVal);
+
+  // Extrait une balise qui spécifie si la fonction ou la couche de conversion de code a été marquée comme static.
+  long get_isStatic(out int* pRetVal);
+
+  // Spécifie si la variable distribue une valeur de retour.
+  long get_isReturnValue(out int* pRetVal);
+  
+  // Récupère le classifieur de type de symbole.
+  long get_symTag(out unsigned long*pRetVal);
+  
+  // Récupère le nombre de bits ou d'octets de mémoire utilisés par l'objet représenté par ce symbole.
+  long get_length (out unsigned long long* pRetVal);
+  
+  // extrait une balise qui spécifie si un type pointeur est une référence.
+  long get_reference(out int* pRetVal);
+  
+  // Récupère le rang (nombre de dimensions) d'un tableau multidimensionnel FORTRAN.
+  long get_rank(out unsigned long* pRetVal);
+  
+  // Extrait la limite inférieure d'une dimension de tableau FORTRAN.
+  long get_lowerBound(out IDiaSymbolPtr* pRetVal);
+
+  // Récupère un symbole représentant la limite supérieure d'une dimension de tableau FORTRAN.
+  long get_upperBound(out IDiaSymbolPtr* pRetVal);
+
+  // Récupère la valeur du fabricant d'ordinateurs (OEM) OEM du symbole.
+  long get_oemId(out unsigned long* pRetVal);
+
+  // Récupère la valeur (OEM) du symbole de fabricant d'ordinateurs OEM.
+  long get_oemSymbolId(out unsigned long* pRetVal);
+
+  // Récupère un tableau de types de compilateur-détail pour ce symbole.
+  long get_types(out IDiaSymbolPtr types[]);
+
+  // Récupère les octets de données d'un symbole OEM.
+  long get_dataBytes(in unsigned long cbData, out unsigned long* pcbData, out unsigned byte data[]);
+  
+  // Extrait le dossier fichiers divers un type défini par l' (UDT)utilisateur.
+  long get_udtKind (out unsigned long* pRetVal);
+}
+
+// Classe qui énumère les différents symboles contenus dans la source de données.
+interface IDiaEnumSymbolsPtr
+{
+  // Récupère le nombre de symboles.
+  long get_Count(out long* pRetVal);
+  
+  // Récupère un symbole au moyen d'un index.
+  long Item(in long index, out IDiaSymbolPtr* symbol);
+  
+  // Récupère un nombre spécifié de symboles dans la séquence d'énumération.
+  long Next(in unsigned long celt, out IDiaSymbolPtr* rgelt, out unsigned long* pceltFetched);
+  
+  // Ignore un nombre spécifié de symboles dans une séquence d'énumération.
+  long Skip(in unsigned long celt);
+
+  // Réinitialise une séquence d'énumération au début.
+  long Reset();
+}
+
+// Classe qui énumère les différents numéros de ligne contenus dans la source de données.
+interface IDiaEnumLineNumbersPtr
+{
+  // Récupère le nombre de symboles.
+  long get_Count(out long* pRetVal);
+  
+  // Récupère un symbole au moyen d'un index.
+  long Item(in long index, out IDiaLineNumberPtr* symbol);
+  
+  // Récupère un nombre spécifié de symboles dans la séquence d'énumération.
+  long Next(in unsigned long celt, out IDiaLineNumberPtr* rgelt, out unsigned long* pceltFetched);
+  
+  // Ignore un nombre spécifié de symboles dans une séquence d'énumération.
+  long Skip(in unsigned long celt);
+
+  // Réinitialise une séquence d'énumération au début.
+  long Reset();
+}
+
+// Accède aux informations qui décrivent le processus du mappage d'un bloc d'octets de texte image à un numéro de ligne du fichier source.
+interface IDiaLineNumberPtr
+{
+  // Récupère le numéro de ligne dans le fichier source.
+  long get_lineNumber(out unsigned long* pRetVal);
+  
+  // Récupère le numéro de ligne source de base 1 où l'instruction ou l'expression se termine.
+  long get_lineNumberEnd(out unsigned long* pRetVal);
+
+  // Récupère le numéro de colonne où l'expression ou l'instruction commence.
+  long get_columnNumber(out unsigned long* pRetVal);
+
+  // Récupère le numéro de colonne source de base 1 où l'expression ou l'instruction se termine.
+  long get_columnNumberEnd(out unsigned long* pRetVal);
+
+  // Récupère le nombre d'octets dans un bloc.
+  long get_length(out unsigned long* pRetVal);
+
+  // extrait une balise indiquant que ces informations de ligne décrivent le début d'une instruction, plutôt qu'une expression, dans la source de programme.
+  long get_statement(out int* pRetVal);
+  
+  // extrait une référence au fichier source.
+  long get_sourceFile(out IDiaSourceFilePtr* pRetVal);
+}
+
+// Représente un fichier source.
+interface IDiaSourceFilePtr
+{
+  // Récupère les octets de checksum.
+  long get_checksum(out unsigned long cbData, out unsigned long* pcbData, out unsigned byte data[]);
+  
+  // Extrait le nom du fichier source.
+  long get_fileName(out string* pRetVal);
+  
+  // Récupère un énumérateur des compilands qui ont des numéros de ligne référençant ce fichier.
+  long get_compilands (out IDiaEnumSymbolsPtr* ppRetVal);
+}
+
+// Classe qui énumère les fichiers sources différents contenus dans la source de données..
+interface IDiaEnumSourceFilesPtr
+{
+  // Récupère le nombre de fichiers sources.
+  long get_Count(out long* pRetVal);
+  
+  // Extrait un fichier source au moyen d'un index.
+  long Item(in long index, out IDiaSourceFilePtr* symbol);
+  
+  // Récupère un nombre spécifié de fichiers sources dans la séquence d'énumération.
+  long Next(in unsigned long celt, out IDiaSourceFilePtr* rgelt, out unsigned long* pceltFetched);
+  
+  // Ignore un nombre spécifié de fichiers sources dans une séquence d'énumération.
+  long Skip(in unsigned long celt);
+
+  // Réinitialise une séquence d'énumération au début.
+  long Reset();
+}

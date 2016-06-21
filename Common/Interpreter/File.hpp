@@ -1,0 +1,87 @@
+#ifndef _FILE_HPP_
+#define _FILE_HPP_
+
+#include "config.hpp"
+#include "macros.hpp"
+#include "String.hpp"
+#include <boost/shared_ptr.hpp>
+#include <fstream>
+
+using namespace boost;
+using namespace log4cpp;
+
+#define A(str) encode<EncodingT,ansi>(str)
+#define C(str) encode<ansi,EncodingT>(str)
+
+NAMESPACE_BEGIN(interp)
+
+    template <class EncodingT>
+    class File
+    : public String<EncodingT>
+    {
+    private:
+        typename EncodingT::string_t  m_name;
+        typename EncodingT::string_t  m_mode;
+        typename EncodingT::string_t  m_format;
+        std::wfstream m_stream;
+
+        void construct(const typename EncodingT::string_t& name, const typename EncodingT::string_t& mode, const typename EncodingT::string_t& format);
+
+    public:
+        // Constructor
+        File();
+
+        File(const typename EncodingT::string_t& name, const typename EncodingT::string_t& mode, const typename EncodingT::string_t& format);
+
+        FACTORY_PROTOTYPE3(File, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
+        File(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> > const& mode, shared_ptr< Base<EncodingT> > const& format);
+
+        // Destructor
+        ~File();
+
+        // Virtual methods
+        virtual typename EncodingT::string_t toString() const;
+        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual typename EncodingT::string_t getClassName() const;
+        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+
+        // Dynamic methods
+        shared_ptr< Base<EncodingT> > isOpen() const;
+
+        FACTORY_PROTOTYPE1(load, InOut< shared_ptr< Base<EncodingT> > >)
+        shared_ptr< Base<EncodingT> > load(shared_ptr< Base<EncodingT> >& val);
+
+        FACTORY_PROTOTYPE1(save, In< shared_ptr< Base<EncodingT> > >)
+        shared_ptr< Base<EncodingT> > save(shared_ptr< Base<EncodingT> > const& val);
+
+        shared_ptr< Base<EncodingT> > size();
+
+        // Methods registration
+        FACTORY_BEGIN_REGISTER
+            CLASS_REGISTER      (File)
+            CLASS_REGISTER3     (File)
+            METHOD_KEY_REGISTER (File, shared_ptr< Base<EncodingT> >, isOpen, const_t, C("File::Open") )
+            METHOD_REGISTER1    (File, shared_ptr< Base<EncodingT> >, load, no_const_t)
+            METHOD_REGISTER1    (File, shared_ptr< Base<EncodingT> >, save, no_const_t)
+            METHOD_REGISTER     (File, shared_ptr< Base<EncodingT> >, size, no_const_t)
+        FACTORY_END_REGISTER
+
+        // Methods unregistration
+        FACTORY_BEGIN_UNREGISTER
+            CLASS_UNREGISTER      (File)
+            CLASS_UNREGISTER3     (File)
+            METHOD_KEY_UNREGISTER (C("File::Open"))
+            METHOD_UNREGISTER1    (File, load)
+            METHOD_UNREGISTER1    (File, save)
+            METHOD_UNREGISTER     (File, size)
+        FACTORY_END_UNREGISTER
+    };
+
+NAMESPACE_END
+
+#undef C
+#undef A
+
+#include "file_impl.hpp"
+
+#endif

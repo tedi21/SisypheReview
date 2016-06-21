@@ -1,0 +1,12 @@
+package libword
+{
+    // Classe représentant une liste de noeuds XML du document Word.
+    interface WordXMLNodeList
+    {
+        // Retourne le noeud à l'index *i*.
+        readonly WordXMLNode item(in unsigned long i);
+
+        // Retourne la taille de la liste.
+        readonly unsigned long length();
+    }
+}

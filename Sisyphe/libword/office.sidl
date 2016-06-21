@@ -1,0 +1,66 @@
+
+enum MsoControlType 
+{
+    msoControlButton   = 1,
+    msoControlEdit     = 2,
+    msoControlDropdown = 3,
+    msoControlComboBox = 4,
+    msoControlPopup    = 10
+}
+
+// A collection of CommandBar objects that represent the command bars in the container application.
+interface CommandBars
+{
+	// Returns an individual object in a collection. 
+	readonly attribute CommandBar Item[string];
+
+	// Returns the number of items in the specified collection.
+	readonly attribute int Count;
+}
+
+// Represents a command bar in the container application.
+interface CommandBar
+{
+	// Returns a CommandBarControls object that represents all the controls on a command bar or pop-up control. 
+	readonly attribute CommandBarControls Controls;
+}
+
+// A collection of CommandBarControl objects that represent the command bar controls on a command bar.
+interface CommandBarControls
+{
+	// Returns an individual object in a collection. 
+	readonly attribute CommandBarControl Item[int];
+
+	// Returns the number of items in the specified collection.
+	readonly attribute int Count;
+	
+	// Creates a new CommandBarControl object and adds it to the collection of controls on the specified command bar. 
+	CommandBarControl Add(in MsoControlType Type, in int ControlId);
+}
+
+// Represents a command bar control.
+interface CommandBarControl 
+{
+	// Returns or sets the caption text for a command bar control.
+	attribute string Caption;
+	
+	// Returns or sets the name of a procedure that will run when the user clicks or changes the value of a command bar control. 
+	attribute string OnAction;
+}
+
+// Represents a pop-up control on a command bar.
+interface CommandBarPopup 
+: CommandBarControl
+{
+	// Returns a CommandBarControls object that represents all the controls on a command bar or pop-up control. 
+	readonly attribute CommandBarControls Controls;
+}
+
+// Represents a button control on a command bar.
+interface CommandBarButton
+: CommandBarControl
+{
+	static readonly attribute GUID IID_CommandBarButtonEvents = 
+		{0x000c0351,0x0000,0x0000,{0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
+	event void Click(in CommandBarButton Ctrl, inout boolean CancelDefault);
+}

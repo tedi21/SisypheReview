@@ -1,0 +1,44 @@
+#include "cppBaseData.h"
+
+using namespace entity;
+using namespace data_access;
+
+//////////////////////////////////////////
+// Instanciation des classes
+//////////////////////////////////////////
+template class _CppInheritance<ucs>;
+template class _CppInheritanceAccess<ucs>;
+template class _CppFunction<ucs>;
+template class _CppFunctionAccess<ucs>;
+template class _TextFile<ucs>;
+template class _TextFileAccess<ucs>;
+template class _TextNotice<ucs>;
+template class _TextNoticeAccess<ucs>;
+template class _CppFileType<ucs>;
+template class _CppFileTypeAccess<ucs>;
+template class _CppFile<ucs>;
+template class _CppFileAccess<ucs>;
+template class _CppInclude<ucs>;
+template class _CppIncludeAccess<ucs>;
+template class _CppClass<ucs>;
+template class _CppClassAccess<ucs>;
+template class _CppParameter<ucs>;
+template class _CppParameterAccess<ucs>;
+template class _CppAttribute<ucs>;
+template class _CppAttributeAccess<ucs>;
+template class _CppVariable<ucs>;
+template class _CppVariableAccess<ucs>;
+template class _CppEnum<ucs>;
+template class _CppEnumAccess<ucs>;
+template class _CppEnumConstant<ucs>;
+template class _CppEnumConstantAccess<ucs>;
+template class _CMacro<ucs>;
+template class _CMacroAccess<ucs>;
+template class _DebugFileInfo<ucs>;
+template class _DebugFileInfoAccess<ucs>;
+template class _DebugFunctionInfo<ucs>;
+template class _DebugFunctionInfoAccess<ucs>;
+template class _DebugVariableInfo<ucs>;
+template class _DebugVariableInfoAccess<ucs>;
+template class _DataConnection<ucs>;
+
