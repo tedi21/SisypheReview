@@ -13,6 +13,6 @@ Windows Binaries are available [here](https://github.com/tedi21/SisypheReview/bl
 Run the script Sisyphe.bat.
 
 In the web interface, click on *Verify* menu.
-Logo: ![Sisyphe screenshot](/screen.png "Sisyphe screenshot")
+![Sisyphe screenshot](/screen.png "Sisyphe screenshot")
 
 Select *Run* item and set the sources path. Click *Ok*.
