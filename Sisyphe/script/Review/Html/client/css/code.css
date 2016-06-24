@@ -1,0 +1,17 @@
+@charset "utf-8";
+/* CSS Document */
+
+.code-selection {
+  border-left-style: ridge;
+  border-left-color: MediumBlue;
+}
+
+.code-error {
+  text-decoration: underline;
+  text-decoration-style:wavy;
+  text-decoration-color: red;
+}
+
+.code-search {
+  background-color: rgba(255,255,0,0.4) ;
+}

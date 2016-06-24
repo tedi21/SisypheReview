@@ -1,0 +1,216 @@
+<!-- Page content -->
+<div id="wrapper">
+  <header class="header header-fixed">
+    <!-- Bootstrap Navigation bar : grey bar -->
+    <nav class="navbar navbar-default navbar-fixed-top" >
+      <div class="container-fluid">
+        <!-- Navigation bar title -->  
+        <div class="navbar-header">
+          <!-- three bars button for small screen -->
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#appNavBar" ng-init="isNavBarCollased = true" ng-click="isNavBarCollased = !isNavBarCollased">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- brand logo -->
+          <div class="brand navbar-brand">
+            <img src="/imgs/logo.png" class="logo" alt="Sisyphe logo" height="30" width="71">
+          </div>
+        </div>
+        <!-- Collapsed menu for small screen -->
+        <div class="navbar-collapse navbar-ex1-collapse" uib-collapse="isNavBarCollased" id="appNavBar">
+          <!-- Menu -->
+          <ul class="nav navbar-nav">
+            <!-- Verify menu --> 
+            <li class="dropdown" uib-dropdown>                     
+              <a aria-expanded="false" aria-haspopup="true" href="#/" class="dropdown-toggle" data-toggle="dropdown" role="button" uib-dropdown-toggle>
+                <span class="glyphicon glyphicon-sunglasses"></span>
+                Verify 
+                <span class="caret" ng-show="!loading"></span>
+                <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="spinning"></span>
+              </a>
+              <ul class="dropdown-menu uib-dropdown-menu" ng-show="!loading">
+                <li><a href="#/" ng-click="configVerifierClicked()">Parameters</a></li>
+                <li><a href="#/" ng-click="runVerifierClicked()">Run</a></li>
+              </ul>
+            </li>
+            <!-- Debug menu --> 
+            <li class="dropdown" uib-dropdown>
+              <a aria-expanded="false" aria-haspopup="true" href="#/" class="dropdown-toggle" data-toggle="dropdown" role="button" uib-dropdown-toggle>
+                <span class="glyphicon glyphicon-wrench"></span>
+                Debug 
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu uib-dropdown-menu">
+                <li><a href="#/" ng-click="configDebuggerClicked()">Parameters</a></li>
+                <li><a href="#/" ng-click="runDebuggerClicked()">Run</a></li>
+              </ul>
+            </li>
+          </ul>
+          <!-- Search bar -->
+          <form class="navbar-form navbar-right" role="search">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search" ng-model="searchInput">
+              <div class="input-group-btn">
+                <button class="btn btn-default" type="submit" ng-click="searchClicked(searchInput)">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </div> 
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div id="view">
+    <!-- right panel -->
+    <div id="right-panel" class="col-xs-12 col-sm-3">
+      <!-- explorer view -->
+      <div id="explorer-panel">
+        <p class="table-header">Explorer</p>
+        <div class="table-fixed">
+          <table class="table table-hover">             
+            <tbody>
+              <tr class="list-cursor" ng-repeat="file in files" ng-class="{'info':file.status === 'Active'}" ng-click="setFile(file)">
+                <td>
+                  <span class="glyphicon glyphicon-file"></span>
+                  {{file.name}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- properties view -->
+      <div id="properties-panel">
+        <p class="table-header">Properties</p>
+        <div class="table-fixed">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td>Files type:</td>
+                <td>{{currentFile.type}}</td>
+              </tr>
+              <tr>
+                <td>Lines count:</td>
+                <td>{{currentFile.linesCount}}</td>
+              </tr>
+              <tr>
+                <td>Errors count:</td>
+                <td>{{currentFile.errorsCount}}</td>
+              </tr>
+              <tr>
+                <td>Classes count:</td>
+                <td>{{currentFile.classesCount}}</td>
+              </tr>
+              <tr>
+                <td>Enumerations count:</td>
+                <td>{{currentFile.enumsCount}}</td>
+              </tr>
+              <tr>
+                <td>Functions declarations count:</td>
+                <td>{{currentFile.decMethodsCount}}</td>
+              </tr>
+              <tr>
+                <td>Function definitions count:</td>
+                <td>{{currentFile.defMethodsCount}}</td>
+              </tr>
+              <tr>
+                <td>Attributes count:</td>
+                <td>{{currentFile.attributesCount}}</td>
+              </tr>
+              <tr>
+                <td>Macros count:</td>
+                <td>{{currentFile.macrosCount}}</td>
+              </tr>
+              <tr>
+                <td>Cyclomatic complexity avg:</td>
+                <td>{{currentFile.complexityAvg}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- main panel -->
+    <div id="main-panel" class="col-xs-12 col-sm-9">
+      <!-- main panel -->
+      <div id="code-panel">
+        <table id="debug-panel">
+          <tr>
+            <td id="debug-column">
+              <table>
+                <tr ng-repeat="line in currentFile.linesDebug">
+                  <td>
+                    <div id="debug-cell">
+                      <button class="debug-button" ng-click="debugFunction($index)" ng-show="line.isVisible">
+                        <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <prettify content="{{currentFile.content}}"></prettify>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <!-- bottom panel -->
+      <div id="bottom-panel">
+        <div class="collapse-group">
+          <div class="collapse" uib-collapse="isCollapsed" id="viewdetails">
+          <div class="dropdown" uib-dropdown>
+            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" uib-dropdown-toggle>
+            <span class="glyphicon glyphicon-th-list"></span>
+            List: {{currentFilter.name}}
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu uib-dropdown-menu">
+              <li class="list-cursor" ng-repeat="filterName in filters"><a ng-click="setFilter(filterName)">{{filterName}}</a></li>
+            </ul>
+          </div>
+          <div id="list-panel">
+            <table class="table table-hover">
+              <tbody>
+              <!-- -->
+                <tr class="list-cursor" ng-repeat="item in currentFilter.list" ng-class="{'info':item.clicked}" data-ng-click="listClicked($index)" id="row-list-{{$index}}">
+                  <td class="columnIcon">
+                    <div ng-switch on="currentFilter.name">
+                      <div ng-switch-when="Errors">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                      </div>
+                      <div ng-switch-default>
+                         <span class="glyphicon glyphicon-info-sign"></span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="columnLine">l.{{item.lineNumber}}</td>
+                  <td class="columnDescription">
+                    <div ng-switch on="item.description">
+                      <div ng-switch-when="">{{item.category}}</div>
+                      <div ng-switch-default>{{item.category}}: {{item.description}}</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+          <div class="center">
+            <script type='text/ng-template' id='unfolded'>
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </script>
+            <script type='text/ng-template' id='folded'>
+              <span class="glyphicon glyphicon-chevron-up"></span>
+            </script>
+            <button class="btn" id="btndetails" data-toggle="collapse" data-target="#viewdetails" ng-click="changeViewDetails()"> 
+              <div ng-include='btnViewDetailsIcon'></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

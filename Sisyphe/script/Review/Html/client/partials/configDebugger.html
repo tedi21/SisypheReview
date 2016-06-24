@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h3 class="modal-title">Run Debugger</h3>
+</div>
+<div class="modal-body">
+    <div class="form-group">
+      <label>Exe path:</label>
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="exePath.selectedPath" uib-popover-template="exePath.popoverTemplate" popover-placement="bottom" popover-is-open="exePath.isOpen" popover-trigger="none"/>
+        <div class="input-group-btn">
+          <button class="btn btn-default" ng-click="exeClicked()"> 
+            <span class="glyphicon glyphicon-open-file"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pdb path:</label>
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="pdbPath.selectedPath" uib-popover-template="pdbPath.popoverTemplate" popover-placement="bottom" popover-is-open="pdbPath.isOpen" popover-trigger="none"/>
+        <div class="input-group-btn">
+          <button class="btn btn-default" ng-click="pdbClicked()"> 
+            <span class="glyphicon glyphicon-open-file"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
+
+<script type="text/ng-template" id="popoverExePath.html">
+  <filebrowser filesettings="exePath"></filebrowser>
+</script>
+<script type="text/ng-template" id="popoverPdbPath.html">
+  <filebrowser filesettings="pdbPath"></filebrowser>
+</script>

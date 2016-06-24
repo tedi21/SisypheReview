@@ -1,0 +1,9 @@
+{
+    "name": "TDScriptWiki",
+    "version": "0.1.0",
+    "dependencies": {
+		"nodewiki": "~0.1.2"
+    },
+    "author": "Teddy DIDE",
+    "description": "Wiki pour TDScript."
+}

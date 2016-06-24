@@ -3,7 +3,6 @@
 
 using namespace boost;
 using namespace std;
-using namespace chr;
 using namespace fctr;
 using namespace enc;
 

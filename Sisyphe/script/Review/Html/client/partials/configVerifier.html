@@ -1,0 +1,109 @@
+<div class="modal-header">
+  <h3 class="modal-title">Verifier configurations</h3>
+</div>
+<div class="modal-body" style="height:300px">
+    <uib-tabset type="pills">
+      <uib-tab heading="General">
+        <div style="margin:5px;">
+          <div class="form-group">
+            <label>Database path:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="databasePath.selectedPath" uib-popover-template="databasePath.popoverTemplate" popover-placement="bottom" popover-is-open="databasePath.isOpen" popover-trigger="none"/>
+              <div class="input-group-btn">
+                <button class="btn btn-default" ng-click="databaseClicked()"> 
+                  <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Executables path:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="executablePath.selectedPath" uib-popover-template="executablePath.popoverTemplate" popover-placement="bottom" popover-is-open="executablePath.isOpen" popover-trigger="none"/>
+              <div class="input-group-btn">
+                <button class="btn btn-default" ng-click="executableClicked()"> 
+                  <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab heading="Parsing">
+        <div style="margin:5px;">
+          <div class="form-group">
+            <label>Embedded source file:
+              <input type="checkbox" ng-model="parsing.embeddedFile">
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Coding rules script:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="rulesScript.selectedPath" uib-popover-template="rulesScript.popoverTemplate" popover-placement="bottom" popover-is-open="rulesScript.isOpen" popover-trigger="none"/>
+              <div class="input-group-btn">
+                <button class="btn btn-default" ng-click="rulesScriptClicked()"> 
+                  <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown" uib-dropdown>
+            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" uib-dropdown-toggle>
+            <span class="glyphicon glyphicon-th-list"></span>
+            Report model: {{modelName}}
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu uib-dropdown-menu">
+              <li class="list-cursor" ng-repeat="name in models"><a ng-click="$parent.modelName = name">{{name}}</a></li>
+            </ul>
+          </div>
+          <div class="form-group">
+            <label>Disable rules:</label>
+            <div style="font-style: italic;font-size: x-small;">List of rules separated by ';' (Rule1;Rule28;...)</div>
+            <input type="text" class="form-control" ng-model="parsing.rules"/>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab heading="Create database">
+        <div style="margin:5px;">
+          <div class="form-group">
+            <label>Output path:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="dbOutputPath.selectedPath" uib-popover-template="dbOutputPath.popoverTemplate" popover-placement="bottom" popover-is-open="dbOutputPath.isOpen" popover-trigger="none"/>
+              <div class="input-group-btn">
+                <button class="btn btn-default" ng-click="dbOutputPathClicked()"> 
+                  <span class="glyphicon glyphicon-open-file"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Database name:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="dbOutputPath.databaseName"/>
+            </div>
+          </div>
+          <button class="btn btn-primary" ng-click="createDBClicked()">Create</button>
+          <div uib-collapse="isNotificationCollapsed">
+            <div class="well well-sm" style="margin:5px;">Database created.</div>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>
+
+<script type="text/ng-template" id="popoverDatabasePath.html">
+  <filebrowser filesettings="databasePath"></filebrowser>
+</script>
+<script type="text/ng-template" id="popoverExecutablePath.html">
+  <filebrowser filesettings="executablePath"></filebrowser>
+</script>
+<script type="text/ng-template" id="popoverRulesScript.html">
+  <filebrowser filesettings="rulesScript"></filebrowser>
+</script>
+<script type="text/ng-template" id="popoverDBOutputPath.html">
+  <filebrowser filesettings="dbOutputPath"></filebrowser>
+</script>

@@ -1,0 +1,186 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+#wrapper {
+  position:absolute;
+  margin:0;
+  padding:0;  
+  height:100vh;
+  width:100vw;
+  overflow:hidden;
+}
+
+.header-fixed {
+  position:relative;
+  z-index:1000;
+  top:0;
+  left:0;
+  right:0;
+}
+
+.header .brand {
+  padding-top: 6px;
+  padding-bottom: 0px;
+}
+
+.header .brand img {
+  margin-top:5px;
+}
+
+.header .input-group {
+  margin-right:10px;
+}
+
+#view {
+  position:absolute;
+  top:50px;
+  bottom:0px;
+  right:0px;
+  left:0px;
+  overflow:auto;
+}
+
+#right-panel {
+  padding-left:5px;
+  padding-right:5px;
+  height:90vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+
+#explorer-panel {
+  border:1px solid black;
+  margin-top:5px;
+  overflow:auto;
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+
+#properties-panel {
+  border:1px solid black;
+  margin-top:5px;
+  overflow:auto;
+  flex:1;
+  
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+}
+
+#main-panel {
+  margin-top:5px;
+  padding-left:5px;
+  padding-right:5px;
+  height:90vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+#code-panel {
+  background-color: #000000;
+  margin:0px;
+  padding:0px;
+  overflow:auto;
+  flex:1;
+}
+
+#bottom-panel  {
+  margin:0px;
+  padding:0px;
+}
+
+#list-panel {
+  /*min-*/height:160px;
+  /*max-height:40vh;*/
+  overflow:auto;
+}
+
+#debug-panel {
+  width:100%;
+}
+
+#debug-column {
+  vertical-align:top;
+  padding-top:10px;
+  width:1%;
+}
+
+li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
+  line-height:18px;
+}
+
+#debug-cell {
+  height:18px;
+}
+
+.debug-button {
+  height:18px;
+  font-size:12px;
+}
+
+.center {
+  display:table;
+  margin:0 auto;
+}
+
+.stretch {
+  display:flex;
+  flex-direction:row;
+}
+
+pre  {
+  flex:1;
+  overflow:visible;
+}
+
+.table-fixed  {
+  flex:1;
+  overflow-y:auto;
+}
+
+.table-header {
+  text-decoration:underline;
+  font-weight:bold;
+}
+
+.columnIcon {
+  width:15px;
+}
+
+.columnLine {
+  width:25px;
+}
+
+.list-cursor:active,
+.list-cursor:hover {
+  cursor: pointer;
+}
+
+.glyphicon-spin {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
