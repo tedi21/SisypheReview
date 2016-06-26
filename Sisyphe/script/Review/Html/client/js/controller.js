@@ -226,7 +226,8 @@
           param: function () {
             var srcPath = '';
             if ($scope.currentFile) {
-              srcPath = $scope.currentFile.path.substr(0, $scope.currentFile.path.lastIndexOf('\\')+1);
+              indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
+              srcPath = $scope.currentFile.path.substr(0, indexName+1);
             }
             return {
               sourcePath: srcPath,
@@ -285,7 +286,8 @@
     $scope.runDebuggerClicked = function () {
       var srcPath = '';
       if ($scope.currentFile) {
-        srcPath = $scope.currentFile.path.substr(0, $scope.currentFile.path.lastIndexOf('\\')+1);
+        indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
+        srcPath = $scope.currentFile.path.substr(0, indexName+1);
       }
       sisypheFactory.debugDB.query({src: srcPath}, function() {
         refresh();
@@ -302,19 +304,20 @@
       info.debugVariables = $scope.currentFile.linesDebug[index].info.debugVariables;
       sisypheFactory.startDebug.save({}, info, function() {
         sisypheFactory.fileDebug.query({fileId: $scope.currentFile.id}, function(filedebug){
-          var text = 'Espion\n';
-          text = text + '--------------\n';
           for (var i = 0; i < filedebug.debugSymbols.length; i++) {
             var lineNumber = filedebug.debugSymbols[i].lineNumber-1;
             if (lineNumber == index) {
-              for (var ivar = 0; ivar < filedebug.debugSymbols[i].debugVariables.length; ivar++) {
-                var variable = filedebug.debugSymbols[i].debugVariables[ivar];
-                text = text + variable.type + ' ' + variable.name + ' = ' + variable.value + '\n';
-              }
+              var debug = {};
+              debug.variablesList = filedebug.debugSymbols[i].debugVariables;
+              var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: '../partials/debugResult.html',
+                controller: 'debugResultCtrl',
+                resolve: {debug}
+              });
               break;
             }
           }
-          alert(text);
         });
       });
     };
