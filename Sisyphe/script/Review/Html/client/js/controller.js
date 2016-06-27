@@ -226,7 +226,7 @@
           param: function () {
             var srcPath = '';
             if ($scope.currentFile) {
-              indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
+              var indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
               srcPath = $scope.currentFile.path.substr(0, indexName+1);
             }
             return {
@@ -286,7 +286,7 @@
     $scope.runDebuggerClicked = function () {
       var srcPath = '';
       if ($scope.currentFile) {
-        indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
+        var indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
         srcPath = $scope.currentFile.path.substr(0, indexName+1);
       }
       sisypheFactory.debugDB.query({src: srcPath}, function() {
