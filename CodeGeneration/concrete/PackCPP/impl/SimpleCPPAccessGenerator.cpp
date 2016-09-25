@@ -93,7 +93,7 @@ namespace dsg {
 									);
 
 			GetAllMeth_R2 =
-                CreateGetTMethod_R2(    str_g("std::vector< shared_ptr< ") << EntityClass_R2 << " > >",
+                CreateGetTMethod_R2(    str_g("std::vector< boost::shared_ptr< ") << EntityClass_R2 << " > >",
 										AccessClass_R2,
 										str_g("All") << UEntity_R2 << "s",
 										AllMethodBody_R2 );
@@ -114,7 +114,7 @@ namespace dsg {
 																[set_g((attr0, attrN), !If_IsREF_R2 || If_IsID_R2)];
 
             EnumREFAttrLoop_R2 =
-                (~-("shared_ptr< _" << URelation1_R2 << "<EncodingT> >(new _" << URelation1_R2 << "<EncodingT>("))
+                (~-("boost::shared_ptr< _" << URelation1_R2 << "<EncodingT> >(new _" << URelation1_R2 << "<EncodingT>("))
                                                                 [ReferencedRelations_R2]
                 << $(0)
                 << (~-str_g("))"))                              [ReferencedRelations_R2];
@@ -174,16 +174,16 @@ namespace dsg {
 								        [attr0, attrN];
 
 			AllMethodDecl_R2 =
-				IndentationMethod_R2 << "shared_ptr< " << EntityClass_R2 << " > value;" <<
+                IndentationMethod_R2 << "boost::shared_ptr< " << EntityClass_R2 << " > value;" <<
                 IndentationMethod_R2 << "_DataStatement<EncodingT> statement;" <<
-                IndentationMethod_R2 << "std::vector< shared_ptr< " << EntityClass_R2 << " > > tab;";
+                IndentationMethod_R2 << "std::vector< boost::shared_ptr< " << EntityClass_R2 << " > > tab;";
 
 			AllMethodBody_R2 =
                 str_g("\r\n\treturn getMany") << UEntity_R2 << "s(EncodingT::EMPTY);";
 
 
 			GetManyMeth_R2 =
-                CreateTMethod_R2(   str_g("std::vector< shared_ptr< ") << EntityClass_R2 << " > >",
+                CreateTMethod_R2(   str_g("std::vector< boost::shared_ptr< ") << EntityClass_R2 << " > >",
 									AccessClass_R2,
 									str_g("getMany") << UEntity_R2 << "s",
 									str_g("typename EncodingT::string_t const&  filter"),
@@ -207,7 +207,7 @@ namespace dsg {
 				   "return tab;";
 
 			GetOneMeth_R2 =
-				CreateTMethod_R2(   "shared_ptr< " << EntityClass_R2 << " >",
+                CreateTMethod_R2(   "boost::shared_ptr< " << EntityClass_R2 << " >",
 									AccessClass_R2,
 									str_g("getOne") << UEntity_R2,
 									AttributeIDParam_R2,
@@ -269,7 +269,7 @@ namespace dsg {
 			OneMethodBody_R2 =
                 VerifyID_R2(LAttribute_R2, LRelation1Name_R2)
                 << "\r\n\t"
-                   "std::vector< shared_ptr< " << EntityClass_R2 << " > > result = getMany" << UEntity_R2 << "s(" 
+                   "std::vector< boost::shared_ptr< " << EntityClass_R2 << " > > result = getMany" << UEntity_R2 << "s("
                 << ConvertCStringLoop_R2(AttributeId_R2(LAttribute_R2))
                 << ");"                                                               "\r\n\t"
 				   "if (result.size()==0) {"                                          "\r\n\t\t"
@@ -279,7 +279,7 @@ namespace dsg {
 				   "return result.back();";
 
 			SelectOneMeth_R2 =
-				CreateTMethod_R2(   "shared_ptr< " << EntityClass_R2 << " >",
+                CreateTMethod_R2(   "boost::shared_ptr< " << EntityClass_R2 << " >",
 									AccessClass_R2,
 									str_g("selectOne") << UEntity_R2,
 									AttributeIDParam_R2 << ", bool nowait, bool addition",
@@ -289,7 +289,7 @@ namespace dsg {
 			SelOneMethodBody_R2 =
                 VerifyID_R2(LAttribute_R2, LRelation1Name_R2)
                 << "\r\n\t"
-                   "std::vector< shared_ptr< " << EntityClass_R2 << " > > result = selectMany" << UEntity_R2 << "s(" 
+                   "std::vector< boost::shared_ptr< " << EntityClass_R2 << " > > result = selectMany" << UEntity_R2 << "s("
                 << ConvertCStringLoop_R2(AttributeId_R2(LAttribute_R2))
                 << ", nowait, addition);\r\n\t"
 				   "if (result.size()==0) {"                                          "\r\n\t\t"
@@ -299,7 +299,7 @@ namespace dsg {
 				   "return result.back();";
 
 			SelectManyMeth_R2 =
-                CreateTMethod_R2(   str_g("std::vector< shared_ptr< ") << EntityClass_R2 << " > >",
+                CreateTMethod_R2(   str_g("std::vector< boost::shared_ptr< ") << EntityClass_R2 << " > >",
 									AccessClass_R2,
 									str_g("selectMany") << UEntity_R2 << "s",
 									str_g("typename EncodingT::string_t const&  filter, bool nowait, bool addition"),
@@ -308,7 +308,7 @@ namespace dsg {
 
 			SelManyMethodBody_R2 =
 				IndentationMethod_R2 << "_DataStatement<EncodingT> statement;"
-                << IndentationMethod_R2 << "std::vector< shared_ptr< " << EntityClass_R2 << " > > tab;"
+                << IndentationMethod_R2 << "std::vector< boost::shared_ptr< " << EntityClass_R2 << " > > tab;"
 				<< InitializeConnection_R2
 				<< InitializeAccessLoop_R2
 				<< "\r\n\t"
@@ -325,7 +325,7 @@ namespace dsg {
 				   "while( statement.executeStep() ) {"                                     "\r\n\t\t"
                 << AttrDeclarationLoop_R2
                 << "if (" << SetAttrLoop_R2 << ") {"                                        "\r\n\t\t\t" 
-				   "tab.push_back(shared_ptr< " << EntityClass_R2 << " >(new " << EntityClass_R2 << "(" << SelEnumAttrLoop_R2 << ")));\r\n\t\t"
+                   "tab.push_back(boost::shared_ptr< " << EntityClass_R2 << " >(new " << EntityClass_R2 << "(" << SelEnumAttrLoop_R2 << ")));\r\n\t\t"
 				   "}"                                                                      "\r\n\t"
 				   "}"                                                                      "\r\n\t"
                    "m_backup.insert(m_backup.end(), tab.begin(), tab.end());"               "\r\n\t"
@@ -357,7 +357,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("bool"),
 									AccessClass_R2,
 									str_g("isSelected") << UEntity_R2,
-									"shared_ptr< " << EntityClass_R2 << " > o",
+                                    "boost::shared_ptr< " << EntityClass_R2 << " > o",
                                     str_g("const"),
                                     VerifyPTR_R2(str_g("o"))
                                     << VerifyID_R2(Accessor_R2(str_g("o")), RelationAccessor_R2(str_g("o")))
@@ -377,7 +377,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("void"),
 									AccessClass_R2,
 									str_g("fill") << UAttribute_R2,
-                                    "shared_ptr< " << EntityClass_R2 << " > o",
+                                    "boost::shared_ptr< " << EntityClass_R2 << " > o",
 									str_g(""),
 									FillMeth1Body_R2
 								);
@@ -401,7 +401,7 @@ namespace dsg {
                 << AttributeType_R2 << " val = "
                 << GetReferencedAttribute_R2(LAttribute_R2 << "Access->getOne" << AttributeClassName_R2 << "(", str_g("id"), str_g(")"))
                 << ";"                                                                              "\r\n\t\t"
-                   "typename std::vector< shared_ptr<" << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t\t"
+                   "typename std::vector< boost::shared_ptr<" << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t\t"
                    "if (save != m_backup.end()) {"                                                  "\r\n\t\t\t"
                    "(*save)->set" << UAttribute_R2 << "(val);"                                      "\r\n\t\t"
                    "}"                                                                              "\r\n\t\t"
@@ -420,7 +420,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("void"),
 									EncodingClass_R2(URelation1_R2 << "Access"),
                                     str_g("fillAll") << URelationNName_R2 << "s",
-									"shared_ptr< " << Relation1Class_R2 << " > o, bool nowait",
+                                    "boost::shared_ptr< " << Relation1Class_R2 << " > o, bool nowait",
 									str_g(""),
 									FillMeth2Body_R2
 								);
@@ -432,7 +432,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("void"),
 									EncodingClass_R2(URelation1_R2 << "Access"),
                                     str_g("fillOne") << URelationNName_R2,
-									"shared_ptr< " << Relation1Class_R2 << " > o"
+                                    "boost::shared_ptr< " << Relation1Class_R2 << " > o"
 									<< (", " << AttributeConstReference_R2 << SpaceParam_R2 << LAttribute_R2)    
 																							[If_IsID_R2]
 																							[attr0, attrN]
@@ -459,7 +459,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("void"),
 									EncodingClass_R2(URelation1_R2 << "Access"),
                                     str_g("fillMany") << URelationNName_R2 << "s",
-									"shared_ptr< " << Relation1Class_R2 << " > o, typename EncodingT::string_t const& filter, bool nowait",
+                                    "boost::shared_ptr< " << Relation1Class_R2 << " > o, typename EncodingT::string_t const& filter, bool nowait",
 									str_g(""),
 									FillMeth4Body_R2
 								);
@@ -470,7 +470,7 @@ namespace dsg {
                                                                                 [entitiesByRel(FILTER_SOURCE)]
 			    << InitializeRelationAccess_R2
 				<< "\r\n\t"
-                   "std::vector< shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > tab;"    "\r\n\t"
+                   "std::vector< boost::shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > tab;"    "\r\n\t"
                    "typename EncodingT::string_t " << LRelationN_R2 << "Filter = " 
                    "C(\"" << rel_g(getRelationTargetRefHandler(KIND_NAME)) << " = \") + "
                 << ConvertToCString_R2(AttributeAccessor_R2(Accessor_R2(str_g("o"))))
@@ -483,7 +483,7 @@ namespace dsg {
                 << EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", IDParamName_R2(Accessor_R2(str_g("o"))) )
 																			    [entitiesByRel(FILTER_SOURCE)]
                 << "\r\n\t"
-                    "typename std::vector< shared_ptr< " << Relation1Class_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LRelation1_R2 << "IdEquality);\r\n\t"
+                    "typename std::vector< boost::shared_ptr< " << Relation1Class_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LRelation1_R2 << "IdEquality);\r\n\t"
 				   "if (save != m_backup.end())"                                                    "\r\n\t"
 				   "{"                                                                              "\r\n\t\t"
                    "tab = " << LRelationNName_R2 << "Access->selectMany" << URelationN_R2
@@ -503,7 +503,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("bool"),
 									AccessClass_R2,
 									str_g("isModified") << UEntity_R2,
-									"shared_ptr< " << EntityClass_R2 << " > o",
+                                    "boost::shared_ptr< " << EntityClass_R2 << " > o",
 									str_g("const"),
 									IsUpdateMethBody_R2
 								);
@@ -516,7 +516,7 @@ namespace dsg {
 				<< "\r\n\t"
 				<< EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", str_g("*o") )
 				<< "\r\n\t"
-                   "typename std::vector< shared_ptr< " << EntityClass_R2 << " > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
+                   "typename std::vector< boost::shared_ptr< " << EntityClass_R2 << " > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
 				   "if (save == m_backup.end()) {"                                                  "\r\n\t\t"
 				   "m_logger->errorStream() << \"You must select object before update.\";"          "\r\n\t\t"
 				   "throw UnSelectedObjectException(\"You must select object before update.\");"    "\r\n\t"
@@ -566,7 +566,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("void"),
 									AccessClass_R2,
 									str_g("update") << UEntity_R2,
-									"shared_ptr< " << EntityClass_R2 << " > o",
+                                    "boost::shared_ptr< " << EntityClass_R2 << " > o",
 									str_g(""),
 									UpdateMethBody_R2
 								);
@@ -584,7 +584,7 @@ namespace dsg {
 				<< "\r\n\t"
 				<< EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", str_g("*o") )
 				<< "\r\n\t"
-                   "typename std::vector< shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
+                   "typename std::vector< boost::shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
 				   "if (save == m_backup.end()) {"                                                         "\r\n\t\t"
 				   "m_logger->errorStream() << \"You must select object before update.\";"                 "\r\n\t\t"
 				   "throw UnSelectedObjectException(\"You must select object before update.\");"           "\r\n\t"
@@ -626,8 +626,8 @@ namespace dsg {
 															[If_IsREF_R2 && !If_IsID_R2]
 															[attr0, attrN]
 				<< ListRelationN_R2(
-                   "std::vector< shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > listOf" << URelationNName_R2 << "ToAdd;\r\n\t\t"
-                   "std::vector< shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > listOf" << URelationNName_R2 << "ToUpdate;\r\n\t\t"
+                   "std::vector< boost::shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > listOf" << URelationNName_R2 << "ToAdd;\r\n\t\t"
+                   "std::vector< boost::shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > listOf" << URelationNName_R2 << "ToUpdate;\r\n\t\t"
                    "typename " << Relation1Class_R2 << "::"<< RelationNIterator_R2 << " " << LRelationNName_R2 << ";\r\n\t\t"
                    "for ( " << LRelationNName_R2 << "=o->get"<< URelationNName_R2 << "sBeginning(); "
                 << LRelationNName_R2 << "!=o->get" << URelationNName_R2 << "sEnd(); ++" << LRelationNName_R2 << " ) {"
@@ -646,7 +646,7 @@ namespace dsg {
                    "listOf" << URelationNName_R2 << "ToUpdate.push_back(*" << LRelationNName_R2 << ");"             "\r\n\t\t\t"
 				   "}"                                                                                      "\r\n\t\t"
 				   "}"                                                                                      "\r\n\t\t"
-                   "std::vector< shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > listOf" << URelationNName_R2 << "ToRemove;\r\n\t\t"
+                   "std::vector< boost::shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > listOf" << URelationNName_R2 << "ToRemove;\r\n\t\t"
                 << "for ( " << LRelationNName_R2 << "=(*save)->get" << URelationNName_R2 << "sBeginning(); "
                 << LRelationNName_R2 << "<(*save)->get" << URelationNName_R2 << "sEnd(); ++" << LRelationNName_R2 << " ) {"
                 << VerifyRELATION_R2("(*" << LRelationNName_R2 << ")")
@@ -701,7 +701,7 @@ namespace dsg {
 				CreateTMethod_R2(    str_g("void"),
 									AccessClass_R2,
 									str_g("insert") << UEntity_R2,
-									"shared_ptr< " << EntityClass_R2 << " > o",
+                                    "boost::shared_ptr< " << EntityClass_R2 << " > o",
 									str_g(""),
 									InsertMethBody_R2
 								);
@@ -813,7 +813,7 @@ namespace dsg {
 				CreateTMethod_R2(   str_g("void"),
 									AccessClass_R2,
 									str_g("delete") << UEntity_R2,
-									"shared_ptr< " << EntityClass_R2 << " > o" 
+                                    "boost::shared_ptr< " << EntityClass_R2 << " > o"
                                  << str_g(", bool deleteid")[If_HasREF_ID_R2 && If_HasUniqueID_R2],
 									str_g(""),
 									DeleteMethBody_R2
@@ -831,7 +831,7 @@ namespace dsg {
 				<< "\r\n\t"
 				<< EntityEqualFunctor_R2(UEntity_R2 << "IdEquality", str_g("*o"))
 				<< "\r\n\t"
-                   "typename std::vector< shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << UEntity_R2 << "IdEquality);\r\n\t"
+                   "typename std::vector< boost::shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << UEntity_R2 << "IdEquality);\r\n\t"
 				   "if (save == m_backup.end()) {"                                                  "\r\n\t\t"
 				   "m_logger->errorStream() << \"You must select object before deletion.\";"        "\r\n\t\t"
 				   "throw UnSelectedObjectException(\"You must select object before deletion.\");"  "\r\n\t"

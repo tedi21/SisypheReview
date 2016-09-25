@@ -50,7 +50,7 @@ namespace fctr {
     }
 #else
     template<class RootT, class T, class KeyT>
-    RootT * BOOST_PP_CAT(Factory,n)<RootT,T,KeyT>::create(const ParameterArray& parameters) const {
+    RootT * BOOST_PP_CAT(Factory,n)<RootT,T,KeyT>::create(const ParameterArray&) const {
         return new T();
     }
 #endif

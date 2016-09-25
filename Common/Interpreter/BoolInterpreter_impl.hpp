@@ -6,13 +6,13 @@
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > BoolConstant<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > BoolConstant<EncodingT>::interpret(Context<EncodingT> &)
     {
-        return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_data));
+        return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_data));
     }
 
     template <class EncodingT>
-    bool BoolConstant<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool BoolConstant<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {  
         typename EncodingT::string_t str = eat_space<EncodingT>(buf);
         bool success = (str==C("true") || str==C("false"));

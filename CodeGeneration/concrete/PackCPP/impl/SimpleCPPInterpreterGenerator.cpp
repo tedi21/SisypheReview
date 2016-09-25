@@ -45,13 +45,13 @@ namespace dsg {
 				str_g("template <class EncodingT>")
 				<< line_g(1) << UEntity_R2 << "Interpreter<EncodingT>::" << UEntity_R2 << "Interpreter()"
 				<< line_g(1) << "{"
-				<< line_g(1) << htab_g(1) << "setValue( shared_ptr< " << EntityClass_R2 << " > (new " << EntityClass_R2 << "()) );"
+				<< line_g(1) << htab_g(1) << "setValue( boost::shared_ptr< " << EntityClass_R2 << " > (new " << EntityClass_R2 << "()) );"
 				<< line_g(1) << "}"
 				<< line_g(2);
 
 			CreateInterpreterEntityConstructor2_R2 =
 				str_g("template <class EncodingT>")
-				<< line_g(1) << UEntity_R2 << "Interpreter<EncodingT>::" << UEntity_R2 << "Interpreter(shared_ptr< " << EntityClass_R2 << " > const& value)"
+				<< line_g(1) << UEntity_R2 << "Interpreter<EncodingT>::" << UEntity_R2 << "Interpreter(boost::shared_ptr< " << EntityClass_R2 << " > const& value)"
 				<< line_g(1) << "{"
 				<< line_g(1) << htab_g(1) << "setValue(value);"
 				<< line_g(1) << "}"
@@ -65,7 +65,7 @@ namespace dsg {
 				<< line_g(1) << htab_g(1) << "if ("
 				<< ListEntityParam_R2( ~+(line_g(1) << htab_g(2)) << AttributeCheck_R2( LAttribute_R2, "native" << UAttribute_R2) << ~-str_g(" &&") ) << ")"
 				<< line_g(1) << htab_g(1) << "{"
-                << line_g(1) << htab_g(2) << "setValue(shared_ptr< " << EntityClass_R2 << " >(new " << EntityClass_R2 << "(" << ListEntityParam_R2(str_g("native") << UAttribute_R2 << ~-CommaParam_R2) << ")));"
+                << line_g(1) << htab_g(2) << "setValue(boost::shared_ptr< " << EntityClass_R2 << " >(new " << EntityClass_R2 << "(" << ListEntityParam_R2(str_g("native") << UAttribute_R2 << ~-CommaParam_R2) << ")));"
 				<< line_g(1) << htab_g(1) << "}"
 				<< line_g(1) << "}"
 				<< line_g(2);
@@ -78,7 +78,7 @@ namespace dsg {
 
 			CreateInterpreterEntityGetValue_R2 = 
 				str_g("template <class EncodingT>")
-				<< line_g(1) << "shared_ptr< " << EntityClass_R2 << " > " << UEntity_R2 << "Interpreter<EncodingT>::getValue() const"
+				<< line_g(1) << "boost::shared_ptr< " << EntityClass_R2 << " > " << UEntity_R2 << "Interpreter<EncodingT>::getValue() const"
 				<< line_g(1) << "{"
 				<< line_g(1) << htab_g(1) << "return m_value;"
 				<< line_g(1) << "}"
@@ -86,7 +86,7 @@ namespace dsg {
 
 			CreateInterpreterEntitySetValue_R2 = 
 				str_g("template <class EncodingT>")
-				<< line_g(1) << "void " << UEntity_R2 << "Interpreter<EncodingT>::setValue(shared_ptr< " << EntityClass_R2 << " > const& object)"
+				<< line_g(1) << "void " << UEntity_R2 << "Interpreter<EncodingT>::setValue(boost::shared_ptr< " << EntityClass_R2 << " > const& object)"
 				<< line_g(1) << "{"
 				<< line_g(1) << htab_g(1) << "m_value = object;"
 				<< line_g(1) << htab_g(1) << "String<EncodingT>::setValue(toString());"
@@ -105,9 +105,9 @@ namespace dsg {
 
 			CreateInterpreterEntityClone_R2 = 
 				str_g("template <class EncodingT>")
-				<< line_g(1) << "shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::clone() const"
+				<< line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::clone() const"
 				<< line_g(1) << "{"
-				<< line_g(1) << htab_g(1) << "return shared_ptr< Base<EncodingT> >(new " << UEntity_R2 << "Interpreter<EncodingT>(copy_ptr(getValue())));"
+				<< line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> >(new " << UEntity_R2 << "Interpreter<EncodingT>(copy_ptr(getValue())));"
 				<< line_g(1) << "}"
 				<< line_g(2);
 
@@ -121,9 +121,9 @@ namespace dsg {
 
 			CreateInterpreterEntityInvoke_R2 = 
 				str_g("template <class EncodingT>")
-                << line_g(1) << "shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)"
+                << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)"
 				<< line_g(1) << "{"
-				<< line_g(1) << htab_g(1) << "shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());"
+				<< line_g(1) << htab_g(1) << "boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());"
 				<< line_g(1)    
 				<< line_g(1) << htab_g(1) << "ParameterArray args, ret;"
 				<< line_g(1) << htab_g(1) << "if (check_parameters_array(params, args))"
@@ -149,9 +149,9 @@ namespace dsg {
 
 			CreateCheckFunction_R2 =
 				str_g("template <class EncodingT>")
-				<< line_g(1) << "bool check_" << LEntity_R2 << "(shared_ptr< Base<EncodingT> > const& val, shared_ptr< " << EntityClass_R2 << " >& o)"
+				<< line_g(1) << "bool check_" << LEntity_R2 << "(boost::shared_ptr< Base<EncodingT> > const& val, boost::shared_ptr< " << EntityClass_R2 << " >& o)"
 				<< line_g(1) << "{"
-				<< line_g(1) << htab_g(1) << "shared_ptr< " << UEntity_R2 << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << UEntity_R2 << "Interpreter<EncodingT> >(val);"       
+				<< line_g(1) << htab_g(1) << "boost::shared_ptr< " << UEntity_R2 << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << UEntity_R2 << "Interpreter<EncodingT> >(val);"       
 				<< line_g(1) << htab_g(1) << "if (value)"
 				<< line_g(1) << htab_g(1) << "{"
 				<< line_g(1) << htab_g(2) << "o = value->getValue();"
@@ -161,15 +161,15 @@ namespace dsg {
 				<< line_g(1) << htab_g(2) << "Category* logger = &Category::getInstance(LOGNAME);"
 				<< line_g(1) << htab_g(2) << "logger->errorStream() << \"" << UEntity_R2 << " expected, got \" << A(val->getClassName());"            
 				<< line_g(1) << htab_g(1) << "}"
-				<< line_g(1) << htab_g(1) << "return value;"
+                << line_g(1) << htab_g(1) << "return (value != NULL);"
 				<< line_g(1) << "}"
 				<< line_g(2);
 
 			CreateResetFunction_R2 =
 				str_g("template <class EncodingT>")
-				<< line_g(1) << "bool reset_" << LEntity_R2 << "(shared_ptr< Base<EncodingT> >& val, shared_ptr< " << EntityClass_R2 << " > const& o)"
+				<< line_g(1) << "bool reset_" << LEntity_R2 << "(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr< " << EntityClass_R2 << " > const& o)"
 				<< line_g(1) << "{"
-				<< line_g(1) << htab_g(1) << "shared_ptr< " << UEntity_R2 << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << UEntity_R2 << "Interpreter<EncodingT> >(val);"       
+				<< line_g(1) << htab_g(1) << "boost::shared_ptr< " << UEntity_R2 << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << UEntity_R2 << "Interpreter<EncodingT> >(val);"       
 				<< line_g(1) << htab_g(1) << "if (value)"
 				<< line_g(1) << htab_g(1) << "{"
 				<< line_g(1) << htab_g(2) << "value->setValue(o);"
@@ -179,13 +179,13 @@ namespace dsg {
 				<< line_g(1) << htab_g(2) << "Category* logger = &Category::getInstance(LOGNAME);"
 				<< line_g(1) << htab_g(2) << "logger->errorStream() << \"" << UEntity_R2 << " expected, got \" << A(val->getClassName());"            
 				<< line_g(1) << htab_g(1) << "}"
-				<< line_g(1) << htab_g(1) << "return value;"
+                << line_g(1) << htab_g(1) << "return (value != NULL);"
 				<< line_g(1) << "}"
 				<< line_g(2);
 
 			CreateInterpreterEntityAttributeGetter_R2 =
 				(line_g(1) << "template <class EncodingT>"
-				<< line_g(1) << "shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::get" << UAttribute_R2 << "() const"
+				<< line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::get" << UAttribute_R2 << "() const"
 				<< line_g(1) << "{"
 				<< line_g(1) << htab_g(1) << "return " << AttributeInterpreterType_R2("getValue()->get" << UAttribute_R2 << "()") << ";"
 				<< line_g(1) << "}"
@@ -193,7 +193,7 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeRefGetter_R2 =
 				(line_g(1) << "template <class EncodingT>"
-				<< line_g(1) << "shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::get" << UAttribute_R2 << "()"
+				<< line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::get" << UAttribute_R2 << "()"
 				<< line_g(1) << "{"
 				<< line_g(1) << htab_g(1) << "return " << AttributeInterpreterType_R2("getValue()->get" << UAttribute_R2 << "()") << ";"
 				<< line_g(1) << "}"
@@ -201,7 +201,7 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeSetter_R2 =
 				(line_g(1) << "template <class EncodingT>"
-				<< line_g(1) << "void " << UEntity_R2 << "Interpreter<EncodingT>::set" << UAttribute_R2 << "(shared_ptr< Base<EncodingT> > const& " << LAttribute_R2 << ")"
+				<< line_g(1) << "void " << UEntity_R2 << "Interpreter<EncodingT>::set" << UAttribute_R2 << "(boost::shared_ptr< Base<EncodingT> > const& " << LAttribute_R2 << ")"
 				<< line_g(1) << "{"
 				<< line_g(1) << htab_g(1) << AttributeNativeType_R2 << " native" << UAttribute_R2 << ";"
 				<< line_g(1) << htab_g(1) << "if (" << AttributeCheck_R2( LAttribute_R2, "native" << UAttribute_R2) << ")"
@@ -213,9 +213,9 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeIsNull_R2 =
 				(line_g(1) << "template <class EncodingT>"
-				<< line_g(1) << "shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::has" << UAttribute_R2 << "() const"
+				<< line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << UEntity_R2 << "Interpreter<EncodingT>::has" << UAttribute_R2 << "() const"
 				<< line_g(1) << "{"
-				<< line_g(1) << htab_g(1) << "return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNull" << UAttribute_R2 << "()) );"
+				<< line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNull" << UAttribute_R2 << "()) );"
 				<< line_g(1) << "}"
 				<< line_g(2))[If_IsREF_R2][attr0, attrN];
 
@@ -229,7 +229,7 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeListErase_R2 =
 				ListRelationN_R2(line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "void " << URelation1_R2 << "Interpreter<EncodingT>::remove" << URelationNName_R2 << "(shared_ptr< Base<EncodingT> > const& n)"
+                << line_g(1) << "void " << URelation1_R2 << "Interpreter<EncodingT>::remove" << URelationNName_R2 << "(boost::shared_ptr< Base<EncodingT> > const& n)"
 				<< line_g(1) << "{"
                 << line_g(1) << htab_g(1) << "int nativePosition;"
 				<< line_g(1) << htab_g(1) << "if (check_numeric(n, nativePosition))"
@@ -241,10 +241,10 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeListInsert_R2 =
 				ListRelationN_R2(line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "void " << URelation1_R2 << "Interpreter<EncodingT>::insert" << URelationNName_R2 << "(shared_ptr< Base<EncodingT> > const& n, shared_ptr< Base<EncodingT> > const& " << LRelationNName_R2 << ")"
+                << line_g(1) << "void " << URelation1_R2 << "Interpreter<EncodingT>::insert" << URelationNName_R2 << "(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& " << LRelationNName_R2 << ")"
 				<< line_g(1) << "{"
                 << line_g(1) << htab_g(1) << "int nativePosition;"
-                << line_g(1) << htab_g(1) << "shared_ptr< _" << URelationN_R2 << "<EncodingT> > native" << URelationNName_R2 << ";"
+                << line_g(1) << htab_g(1) << "boost::shared_ptr< _" << URelationN_R2 << "<EncodingT> > native" << URelationNName_R2 << ";"
 				<< line_g(1) << htab_g(1) << "if (check_numeric(n, nativePosition) &&"
                 << line_g(1) << htab_g(2) << "check_" << LRelationN_R2 << "(" << LRelationNName_R2 << ", native" << URelationNName_R2 << "))"
 				<< line_g(1) << htab_g(1) << "{"
@@ -255,9 +255,9 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeListAt_R2 =
 				ListRelationN_R2(line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "shared_ptr< Base<EncodingT> > " << URelation1_R2 << "Interpreter<EncodingT>::get" << URelationNName_R2 << "(shared_ptr< Base<EncodingT> > const& n)"
+                << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << URelation1_R2 << "Interpreter<EncodingT>::get" << URelationNName_R2 << "(boost::shared_ptr< Base<EncodingT> > const& n)"
 				<< line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "shared_ptr< Base<EncodingT> > res(new " << URelationN_R2 << "Interpreter<EncodingT>());"
+                << line_g(1) << htab_g(1) << "boost::shared_ptr< Base<EncodingT> > res(new " << URelationN_R2 << "Interpreter<EncodingT>());"
                 << line_g(1) << htab_g(1) << "int nativePosition;"
 				<< line_g(1) << htab_g(1) << "if (check_numeric(n, nativePosition))"
 				<< line_g(1) << htab_g(1) << "{"
@@ -277,17 +277,17 @@ namespace dsg {
 
 			CreateInterpreterEntityAttributeListEmpty_R2 =
 				ListRelationN_R2(line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "shared_ptr< Base<EncodingT> > " << URelation1_R2 << "Interpreter<EncodingT>::has" << URelationNName_R2 << "s() const"
+                << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << URelation1_R2 << "Interpreter<EncodingT>::has" << URelationNName_R2 << "s() const"
 				<< line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->is" << URelationNName_R2 << "sEmpty()));"
+                << line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->is" << URelationNName_R2 << "sEmpty()));"
 				<< line_g(1) << "}"
 				<< line_g(2));
 
 			CreateInterpreterEntityAttributeListSize_R2 =
 				ListRelationN_R2(line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "shared_ptr< Base<EncodingT> > " << URelation1_R2 << "Interpreter<EncodingT>::" << LRelationNName_R2 << "sCount() const"
+                << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << URelation1_R2 << "Interpreter<EncodingT>::" << LRelationNName_R2 << "sCount() const"
 				<< line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->get" << URelationNName_R2 << "sSize()));"
+                << line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->get" << URelationNName_R2 << "sSize()));"
 				<< line_g(1) << "}"
 				<< line_g(2));
 

@@ -44,12 +44,12 @@ _CppFileTypeAccess<EncodingT>::~_CppFileTypeAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppFileType<EncodingT> > >
+std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >
 _CppFileTypeAccess<EncodingT>::getManyCppFileTypes(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppFileType<EncodingT> > value;
+	boost::shared_ptr< _CppFileType<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppFileType<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -74,21 +74,21 @@ _CppFileTypeAccess<EncodingT>::getManyCppFileTypes(typename EncodingT::string_t 
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppFileType<EncodingT> > >
+std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >
 _CppFileTypeAccess<EncodingT>::getAllCppFileTypes() const 
 {
 	return getManyCppFileTypes(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppFileType<EncodingT> >
+boost::shared_ptr< _CppFileType<EncodingT> >
 _CppFileTypeAccess<EncodingT>::getOneCppFileType(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppFileType<EncodingT> > > result = getManyCppFileTypes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > result = getManyCppFileTypes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -97,11 +97,11 @@ _CppFileTypeAccess<EncodingT>::getOneCppFileType(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppFileType<EncodingT> > >
+std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >
 _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppFileType<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -124,7 +124,7 @@ _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string
 		typename EncodingT::string_t string;
 		if (statement.getInt( 0, identifier ) &&
 			statement.getText( 1, string )) {
-			tab.push_back(shared_ptr< _CppFileType<EncodingT> >(new _CppFileType<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppFileType<EncodingT> >(new _CppFileType<EncodingT>(
 				identifier,
 				string)));
 		}
@@ -134,14 +134,14 @@ _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string
 }
 
 template<class EncodingT>
-shared_ptr< _CppFileType<EncodingT> >
+boost::shared_ptr< _CppFileType<EncodingT> >
 _CppFileTypeAccess<EncodingT>::selectOneCppFileType(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppFileType<EncodingT> > > result = selectManyCppFileTypes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > result = selectManyCppFileTypes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -151,7 +151,7 @@ _CppFileTypeAccess<EncodingT>::selectOneCppFileType(int identifier, bool nowait,
 
 template<class EncodingT>
 bool
-_CppFileTypeAccess<EncodingT>::isSelectedCppFileType(shared_ptr< _CppFileType<EncodingT> > o) const 
+_CppFileTypeAccess<EncodingT>::isSelectedCppFileType(boost::shared_ptr< _CppFileType<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -192,21 +192,21 @@ _CppFileTypeAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::fillAllCppFiles(shared_ptr< _CppFileType<EncodingT> > o, bool nowait)  
+_CppFileTypeAccess<EncodingT>::fillAllCppFiles(boost::shared_ptr< _CppFileType<EncodingT> > o, bool nowait)  
 {
 	fillManyCppFiles(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::fillOneCppFile(shared_ptr< _CppFileType<EncodingT> > o, shared_ptr< _TextFile<EncodingT> > textFile, bool nowait)  
+_CppFileTypeAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< _CppFileType<EncodingT> > o, boost::shared_ptr< _TextFile<EncodingT> > textFile, bool nowait)  
 {
 	fillManyCppFiles(o, C("idText = ") /*+ C("\'") */+ C(ToString::parse(textFile->getRowid()))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::fillManyCppFiles(shared_ptr< _CppFileType<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppFileTypeAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _CppFileType<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -221,13 +221,13 @@ _CppFileTypeAccess<EncodingT>::fillManyCppFiles(shared_ptr< _CppFileType<Encodin
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppFile<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > tab;
 	typename EncodingT::string_t cppFileFilter = C("idType = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppFileFilter += C(" AND ") + filter;
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppFileAccess->selectManyCppFiles(cppFileFilter, nowait);
@@ -244,7 +244,7 @@ _CppFileTypeAccess<EncodingT>::fillManyCppFiles(shared_ptr< _CppFileType<Encodin
 
 template<class EncodingT>
 bool
-_CppFileTypeAccess<EncodingT>::isModifiedCppFileType(shared_ptr< _CppFileType<EncodingT> > o) const 
+_CppFileTypeAccess<EncodingT>::isModifiedCppFileType(boost::shared_ptr< _CppFileType<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -260,7 +260,7 @@ _CppFileTypeAccess<EncodingT>::isModifiedCppFileType(shared_ptr< _CppFileType<En
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	typename std::vector< shared_ptr< _CppFileType<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -290,7 +290,7 @@ _CppFileTypeAccess<EncodingT>::isModifiedCppFileType(shared_ptr< _CppFileType<En
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::updateCppFileType(shared_ptr< _CppFileType<EncodingT> > o)  
+_CppFileTypeAccess<EncodingT>::updateCppFileType(boost::shared_ptr< _CppFileType<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -314,7 +314,7 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(shared_ptr< _CppFileType<Encodi
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	typename std::vector< shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -324,8 +324,8 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(shared_ptr< _CppFileType<Encodi
 			values.addText( o->getString() );
 			fields.push_back( C("string") );
 		}
-		std::vector< shared_ptr< _CppFile<EncodingT> > > listOfCppFileToAdd;
-		std::vector< shared_ptr< _CppFile<EncodingT> > > listOfCppFileToUpdate;
+		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToAdd;
+		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToUpdate;
 		typename _CppFileType<EncodingT>::CppFileIterator cppFile;
 		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
 			if (!(*cppFile)) {
@@ -342,7 +342,7 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(shared_ptr< _CppFileType<Encodi
 					listOfCppFileToUpdate.push_back(*cppFile);
 			}
 		}
-		std::vector< shared_ptr< _CppFile<EncodingT> > > listOfCppFileToRemove;
+		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToRemove;
 		for ( cppFile=(*save)->getCppFilesBeginning(); cppFile<(*save)->getCppFilesEnd(); ++cppFile ) {
 			if (!(*cppFile)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -386,7 +386,7 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(shared_ptr< _CppFileType<Encodi
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::insertCppFileType(shared_ptr< _CppFileType<EncodingT> > o)  
+_CppFileTypeAccess<EncodingT>::insertCppFileType(boost::shared_ptr< _CppFileType<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -445,7 +445,7 @@ _CppFileTypeAccess<EncodingT>::insertCppFileType(shared_ptr< _CppFileType<Encodi
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::deleteCppFileType(shared_ptr< _CppFileType<EncodingT> > o)  
+_CppFileTypeAccess<EncodingT>::deleteCppFileType(boost::shared_ptr< _CppFileType<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -467,7 +467,7 @@ _CppFileTypeAccess<EncodingT>::deleteCppFileType(shared_ptr< _CppFileType<Encodi
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality CppFileTypeIdEquality(*o);
-	typename std::vector< shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileTypeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileTypeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

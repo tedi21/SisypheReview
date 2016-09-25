@@ -44,12 +44,12 @@ _CppVariableAccess<EncodingT>::~_CppVariableAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppVariable<EncodingT> > >
+std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >
 _CppVariableAccess<EncodingT>::getManyCppVariables(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppVariable<EncodingT> > value;
+	boost::shared_ptr< _CppVariable<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppVariable<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -98,21 +98,21 @@ _CppVariableAccess<EncodingT>::getManyCppVariables(typename EncodingT::string_t 
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppVariable<EncodingT> > >
+std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >
 _CppVariableAccess<EncodingT>::getAllCppVariables() const 
 {
 	return getManyCppVariables(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppVariable<EncodingT> >
+boost::shared_ptr< _CppVariable<EncodingT> >
 _CppVariableAccess<EncodingT>::getOneCppVariable(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppVariable<EncodingT> > > result = getManyCppVariables(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > result = getManyCppVariables(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -121,11 +121,11 @@ _CppVariableAccess<EncodingT>::getOneCppVariable(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppVariable<EncodingT> > >
+std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >
 _CppVariableAccess<EncodingT>::selectManyCppVariables(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppVariable<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -166,7 +166,7 @@ _CppVariableAccess<EncodingT>::selectManyCppVariables(typename EncodingT::string
 			statement.getInt( 5, lineNumber ) &&
 			statement.getInt( 6, startBlock ) &&
 			statement.getInt( 7, lengthBlock )) {
-			tab.push_back(shared_ptr< _CppVariable<EncodingT> >(new _CppVariable<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppVariable<EncodingT> >(new _CppVariable<EncodingT>(
 				identifier,
 				varType,
 				name,
@@ -182,14 +182,14 @@ _CppVariableAccess<EncodingT>::selectManyCppVariables(typename EncodingT::string
 }
 
 template<class EncodingT>
-shared_ptr< _CppVariable<EncodingT> >
+boost::shared_ptr< _CppVariable<EncodingT> >
 _CppVariableAccess<EncodingT>::selectOneCppVariable(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppVariable<EncodingT> > > result = selectManyCppVariables(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > result = selectManyCppVariables(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -199,7 +199,7 @@ _CppVariableAccess<EncodingT>::selectOneCppVariable(int identifier, bool nowait,
 
 template<class EncodingT>
 bool
-_CppVariableAccess<EncodingT>::isSelectedCppVariable(shared_ptr< _CppVariable<EncodingT> > o) const 
+_CppVariableAccess<EncodingT>::isSelectedCppVariable(boost::shared_ptr< _CppVariable<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -234,7 +234,7 @@ _CppVariableAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppVariableAccess<EncodingT>::fillCppFunction(shared_ptr< _CppVariable<EncodingT> > o)  
+_CppVariableAccess<EncodingT>::fillCppFunction(boost::shared_ptr< _CppVariable<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -259,8 +259,8 @@ _CppVariableAccess<EncodingT>::fillCppFunction(shared_ptr< _CppVariable<Encoding
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFunction")), std::vector<typename EncodingT::string_t>(1,C("cppVariable")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(o->getIdentifier());
-		shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
-		typename std::vector< shared_ptr<_CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+		boost::shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
+		typename std::vector< boost::shared_ptr<_CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFunction(val);
 		}
@@ -274,7 +274,7 @@ _CppVariableAccess<EncodingT>::fillCppFunction(shared_ptr< _CppVariable<Encoding
 
 template<class EncodingT>
 bool
-_CppVariableAccess<EncodingT>::isModifiedCppVariable(shared_ptr< _CppVariable<EncodingT> > o) const 
+_CppVariableAccess<EncodingT>::isModifiedCppVariable(boost::shared_ptr< _CppVariable<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -285,7 +285,7 @@ _CppVariableAccess<EncodingT>::isModifiedCppVariable(shared_ptr< _CppVariable<En
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*o);
-	typename std::vector< shared_ptr< _CppVariable<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+	typename std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -306,7 +306,7 @@ _CppVariableAccess<EncodingT>::isModifiedCppVariable(shared_ptr< _CppVariable<En
 
 template<class EncodingT>
 void
-_CppVariableAccess<EncodingT>::updateCppVariable(shared_ptr< _CppVariable<EncodingT> > o)  
+_CppVariableAccess<EncodingT>::updateCppVariable(boost::shared_ptr< _CppVariable<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -325,7 +325,7 @@ _CppVariableAccess<EncodingT>::updateCppVariable(shared_ptr< _CppVariable<Encodi
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*o);
-	typename std::vector< shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+	typename std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -395,7 +395,7 @@ _CppVariableAccess<EncodingT>::updateCppVariable(shared_ptr< _CppVariable<Encodi
 
 template<class EncodingT>
 void
-_CppVariableAccess<EncodingT>::insertCppVariable(shared_ptr< _CppVariable<EncodingT> > o)  
+_CppVariableAccess<EncodingT>::insertCppVariable(boost::shared_ptr< _CppVariable<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -468,7 +468,7 @@ _CppVariableAccess<EncodingT>::insertCppVariable(shared_ptr< _CppVariable<Encodi
 
 template<class EncodingT>
 void
-_CppVariableAccess<EncodingT>::deleteCppVariable(shared_ptr< _CppVariable<EncodingT> > o)  
+_CppVariableAccess<EncodingT>::deleteCppVariable(boost::shared_ptr< _CppVariable<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -485,7 +485,7 @@ _CppVariableAccess<EncodingT>::deleteCppVariable(shared_ptr< _CppVariable<Encodi
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppVariable<EncodingT>::CppVariableIDEquality CppVariableIdEquality(*o);
-	typename std::vector< shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppVariableIdEquality);
+	typename std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppVariableIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

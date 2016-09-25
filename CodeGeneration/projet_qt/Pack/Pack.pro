@@ -43,7 +43,7 @@ HEADERS += \
 INCLUDEPATH += \
     ../../../../../Libraries/log4cpp/include \
     ../../../../../Libraries/xerces-c-3.1.1/src \
-    ../../../../../Libraries/boost_1_54_0 \
+    ../../../../../Libraries/boost_1_61_0 \
     ../../generator \
     ../../encoding \
     ../../xerces \
@@ -51,8 +51,8 @@ INCLUDEPATH += \
     ../../core \
     ../../pack
 
-LIBS += -L../../../../../Libraries/xerces-c-3.1.1/src/.libs -lxerces-c-3-1 \
-        -L../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5
+LIBS += -L../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c \
+        -L../../../../../Libraries/log4cpp/lib -llog4cpp
 
 #debug {
 #LIBS += ../../bin_qt/Encoding/Debug/Encoding.dll \

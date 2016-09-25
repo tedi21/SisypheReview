@@ -2,7 +2,7 @@
 
 namespace enc {
 
-    const XMLCh * xml::EMPTY = { chNull }; 
+    const XMLCh* xml::EMPTY = L"";
 
     // conversion ucs <-> xml
     XENCODING_API xml::string_t 
@@ -10,7 +10,7 @@ namespace enc {
     {
         // too complex, no efficient
         XMLTransService::Codes failReason;
-        unsigned int eaten;
+        XMLSize_t eaten;
         unsigned int xml_len;
         // boost::scoped_ptr can be replace by static to improve performance
         XMLRecognizer::Encodings encoding = sizeof(ucs::char_t)==2?XMLRecognizer::UTF_16L:XMLRecognizer::UCS_4L;
@@ -38,7 +38,7 @@ namespace enc {
     transcodeTo(const xml::char_t * from) 
     {
         XMLTransService::Codes failReason;
-        unsigned int eaten;
+        XMLSize_t eaten;
         unsigned int ucs4_len;
         // boost::scoped_ptr can be replace by static to improve performance
         XMLRecognizer::Encodings encoding = sizeof(ucs::char_t)==2?XMLRecognizer::UTF_16L:XMLRecognizer::UCS_4L;

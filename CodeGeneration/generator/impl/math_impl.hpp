@@ -134,7 +134,7 @@ namespace gen {
     cast<T,S>::calculate(TYPE_CONTEXT(DataT) & context) const
     {
         size_t l = context.length();
-        this->subject().generate<DataT>(context);
+        this->subject().template generate<DataT>(context);
         return boost::lexical_cast<type_t>(
             context.subtract(l, -1, true) );
     }

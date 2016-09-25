@@ -229,7 +229,7 @@ namespace dsg {
 				EncodingClass_R2(UEntity_R2);
 
 			RelationNClass_R2 = 
-				str_g("shared_ptr< ") << EncodingClass_R2(URelationN_R2) << " >";
+				str_g("boost::shared_ptr< ") << EncodingClass_R2(URelationN_R2) << " >";
 
 			Relation1Class_R2 = 
 				EncodingClass_R2(URelation1_R2);
@@ -254,7 +254,7 @@ namespace dsg {
 				EncodingClassDeclaration_R2(UAccess_R2);
 
 			EntityPointer_R2 =
-				"shared_ptr< " << EntityClass_R2 << " >";
+				"boost::shared_ptr< " << EntityClass_R2 << " >";
 
 			EntityReference_R2 =
 				EntityClass_R2 << "&";
@@ -340,7 +340,7 @@ namespace dsg {
 
 			AttributeType_R2 = 
                 AttributeValueType_R2                       [!If_IsREF_R2]
-                << (str_g("shared_ptr< ") << EncodingClass_R2(AttributeClassName_R2) << " >")
+                << (str_g("boost::shared_ptr< ") << EncodingClass_R2(AttributeClassName_R2) << " >")
                                                             [If_IsREF_R2];
 
 			AttributeClass_R2 =

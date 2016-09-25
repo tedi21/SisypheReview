@@ -11,9 +11,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Base<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Base<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Base<EncodingT>());
+        return boost::shared_ptr< Base<EncodingT> >(new Base<EncodingT>());
     }
 
     template <class EncodingT>
@@ -23,16 +23,16 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Base<EncodingT>::invoke(const typename EncodingT::string_t& method)
+    boost::shared_ptr< Base<EncodingT> > Base<EncodingT>::invoke(const typename EncodingT::string_t& method)
     {
-        std::vector< shared_ptr< Base<EncodingT> > > params;
+        std::vector< boost::shared_ptr< Base<EncodingT> > > params;
         return invoke(method, params);
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Base<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Base<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
         
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -55,7 +55,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool check_parameters_array(const std::vector< shared_ptr< Base<EncodingT> > >& params, ParameterArray& out)
+    bool check_parameters_array(const std::vector< boost::shared_ptr< Base<EncodingT> > >& params, ParameterArray& out)
     { 
         for (size_t i=0; i<params.size(); ++i)
         {

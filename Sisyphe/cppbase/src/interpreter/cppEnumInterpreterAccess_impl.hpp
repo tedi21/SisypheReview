@@ -21,9 +21,9 @@ typename EncodingT::string_t CppEnumInterpreterAccess<EncodingT>::toString() con
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppEnumInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new CppEnumInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t CppEnumInterpreterAccess<EncodingT>::getClassName()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::invoke(const 
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _CppEnum<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new CppEnumInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new CppEnumInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getAllCppEnums()
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getAllCppEnums()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getAllCppEnum
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getManyCppEnums(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getManyCppEnums(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getManyCppEnu
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getOneCppEnum(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getOneCppEnum(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new CppEnumInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppEnumInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getOneCppEnum
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::selectOneCppEnum(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::selectOneCppEnum(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new CppEnumInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppEnumInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::selectOneCppE
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::selectManyCppEnums(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::selectManyCppEnums(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void CppEnumInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::isSelectedCppEnum(const shared_ptr< Base<EncodingT> >& cppEnum)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::isSelectedCppEnum(const boost::shared_ptr< Base<EncodingT> >& cppEnum)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedCppEnum(nativeCppEnum)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::isSelectedCpp
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::fillCppFile(shared_ptr< Base<EncodingT> >& cppEnum)
+void CppEnumInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<EncodingT> >& cppEnum)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum))
 		{
 			m_object->fillCppFile(nativeCppEnum);
@@ -224,13 +224,13 @@ void CppEnumInterpreterAccess<EncodingT>::fillCppFile(shared_ptr< Base<EncodingT
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::fillAllCppEnumConstants(shared_ptr< Base<EncodingT> >& cppEnum, const shared_ptr< Base<EncodingT> >& nowait)
+void CppEnumInterpreterAccess<EncodingT>::fillAllCppEnumConstants(boost::shared_ptr< Base<EncodingT> >& cppEnum, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum) && 
 			check_bool(nowait, nativeNoWait))
 		{
@@ -245,15 +245,15 @@ void CppEnumInterpreterAccess<EncodingT>::fillAllCppEnumConstants(shared_ptr< Ba
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::fillOneCppEnumConstant(shared_ptr< Base<EncodingT> >& refCppEnum,
-				const shared_ptr< Base<EncodingT> >& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+void CppEnumInterpreterAccess<EncodingT>::fillOneCppEnumConstant(boost::shared_ptr< Base<EncodingT> >& refCppEnum,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppEnum<EncodingT> > nativeRefCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeRefCppEnum;
 		int nativeIdentifier;
 		if (check_cppEnum(refCppEnum, nativeRefCppEnum) && 
 			check_numeric(identifier, nativeIdentifier) &&
@@ -272,14 +272,14 @@ void CppEnumInterpreterAccess<EncodingT>::fillOneCppEnumConstant(shared_ptr< Bas
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::fillManyCppEnumConstants(shared_ptr< Base<EncodingT> >& cppEnum, const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+void CppEnumInterpreterAccess<EncodingT>::fillManyCppEnumConstants(boost::shared_ptr< Base<EncodingT> >& cppEnum, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
 		typename EncodingT::string_t nativeFilter;
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum) &&
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
@@ -295,13 +295,13 @@ void CppEnumInterpreterAccess<EncodingT>::fillManyCppEnumConstants(shared_ptr< B
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::isModifiedCppEnum(const shared_ptr< Base<EncodingT> >& cppEnum)
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::isModifiedCppEnum(const boost::shared_ptr< Base<EncodingT> >& cppEnum)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedCppEnum(nativeCppEnum)));
@@ -315,12 +315,12 @@ shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::isModifiedCpp
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::updateCppEnum(shared_ptr< Base<EncodingT> >& cppEnum)
+void CppEnumInterpreterAccess<EncodingT>::updateCppEnum(boost::shared_ptr< Base<EncodingT> >& cppEnum)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum))
 		{
 			m_object->updateCppEnum(nativeCppEnum);
@@ -334,12 +334,12 @@ void CppEnumInterpreterAccess<EncodingT>::updateCppEnum(shared_ptr< Base<Encodin
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::insertCppEnum(shared_ptr< Base<EncodingT> >& cppEnum)
+void CppEnumInterpreterAccess<EncodingT>::insertCppEnum(boost::shared_ptr< Base<EncodingT> >& cppEnum)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum))
 		{
 			m_object->insertCppEnum(nativeCppEnum);
@@ -353,12 +353,12 @@ void CppEnumInterpreterAccess<EncodingT>::insertCppEnum(shared_ptr< Base<Encodin
 }
 
 template <class EncodingT>
-void CppEnumInterpreterAccess<EncodingT>::deleteCppEnum(shared_ptr< Base<EncodingT> >& cppEnum)
+void CppEnumInterpreterAccess<EncodingT>::deleteCppEnum(boost::shared_ptr< Base<EncodingT> >& cppEnum)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
+		boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 		if (check_cppEnum(cppEnum, nativeCppEnum))
 		{
 			m_object->deleteCppEnum(nativeCppEnum);
@@ -386,14 +386,14 @@ void CppEnumInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

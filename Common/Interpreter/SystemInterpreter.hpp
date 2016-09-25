@@ -15,14 +15,14 @@ NAMESPACE_BEGIN(interp)
     : public Term<EncodingT>
     {
     private:
-        shared_ptr< Term<EncodingT> > m_instruction;
+        boost::shared_ptr< Term<EncodingT> > m_instruction;
 
     public:
-        SystemInstruction(shared_ptr< Term<EncodingT> > const& instruction)
+        SystemInstruction(boost::shared_ptr< Term<EncodingT> > const& instruction)
         : m_instruction(instruction)
         {}
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
 NAMESPACE_END

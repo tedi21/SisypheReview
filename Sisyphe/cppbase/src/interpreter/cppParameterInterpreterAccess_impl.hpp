@@ -21,9 +21,9 @@ typename EncodingT::string_t CppParameterInterpreterAccess<EncodingT>::toString(
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppParameterInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new CppParameterInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t CppParameterInterpreterAccess<EncodingT>::getClassN
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::invoke(c
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _CppParameter<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _CppParameter<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new CppParameterInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new CppParameterInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getAllCppParameters()
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getAllCppParameters()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getAllCp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getManyCppParameters(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getManyCppParameters(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getManyC
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getOneCppParameter(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getOneCppParameter(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getOneCp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::selectOneCppParameter(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::selectOneCppParameter(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::selectOn
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::selectManyCppParameters(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::selectManyCppParameters(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void CppParameterInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isSelectedCppParameter(const shared_ptr< Base<EncodingT> >& cppParameter)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isSelectedCppParameter(const boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedCppParameter(nativeCppParameter)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isSelect
 }
 
 template <class EncodingT>
-void CppParameterInterpreterAccess<EncodingT>::fillCppFunction(shared_ptr< Base<EncodingT> >& cppParameter)
+void CppParameterInterpreterAccess<EncodingT>::fillCppFunction(boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
 			m_object->fillCppFunction(nativeCppParameter);
@@ -224,13 +224,13 @@ void CppParameterInterpreterAccess<EncodingT>::fillCppFunction(shared_ptr< Base<
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isModifiedCppParameter(const shared_ptr< Base<EncodingT> >& cppParameter)
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isModifiedCppParameter(const boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedCppParameter(nativeCppParameter)));
@@ -244,12 +244,12 @@ shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isModifi
 }
 
 template <class EncodingT>
-void CppParameterInterpreterAccess<EncodingT>::updateCppParameter(shared_ptr< Base<EncodingT> >& cppParameter)
+void CppParameterInterpreterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
 			m_object->updateCppParameter(nativeCppParameter);
@@ -263,12 +263,12 @@ void CppParameterInterpreterAccess<EncodingT>::updateCppParameter(shared_ptr< Ba
 }
 
 template <class EncodingT>
-void CppParameterInterpreterAccess<EncodingT>::insertCppParameter(shared_ptr< Base<EncodingT> >& cppParameter)
+void CppParameterInterpreterAccess<EncodingT>::insertCppParameter(boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
 			m_object->insertCppParameter(nativeCppParameter);
@@ -282,12 +282,12 @@ void CppParameterInterpreterAccess<EncodingT>::insertCppParameter(shared_ptr< Ba
 }
 
 template <class EncodingT>
-void CppParameterInterpreterAccess<EncodingT>::deleteCppParameter(shared_ptr< Base<EncodingT> >& cppParameter)
+void CppParameterInterpreterAccess<EncodingT>::deleteCppParameter(boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
 			m_object->deleteCppParameter(nativeCppParameter);
@@ -315,14 +315,14 @@ void CppParameterInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

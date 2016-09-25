@@ -107,9 +107,9 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "return EncodingT::EMPTY;"
                 << line_g(1) << "}"
                 << line_g(2) << "template <class EncodingT>"
-                << line_g(1) << "shared_ptr< Base<EncodingT> > " << ClassName << "Interpreter<EncodingT>::clone() const"
+                << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << ClassName << "Interpreter<EncodingT>::clone() const"
                 << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "return shared_ptr< Base<EncodingT> >(new " << ClassName << "Interpreter<EncodingT>(*this));"
+                << line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> >(new " << ClassName << "Interpreter<EncodingT>(*this));"
                 << line_g(1) << "}"
                 << line_g(2) << "template <class EncodingT>"
                 << line_g(1) << "typename EncodingT::string_t " << ClassName << "Interpreter<EncodingT>::getClassName() const"
@@ -117,9 +117,9 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "return C(\"" << ClassName << "\");"
                 << line_g(1) << "}"
                 << line_g(2) << "template <class EncodingT>"
-                << line_g(1) << "shared_ptr< Base<EncodingT> > " << ClassName << "Interpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)"
+                << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << ClassName << "Interpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)"
                 << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());"
+                << line_g(1) << htab_g(1) << "boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());"
                 << line_g(1) << htab_g(1) << "ParameterArray args, ret;"
                 << line_g(1) << htab_g(1) << "if (check_parameters_array(params, args))"
                 << line_g(1) << htab_g(1) << "{"
@@ -171,12 +171,12 @@ namespace dsg {
             CreateInterpreterMethod =
                    line_g(1) << "template <class EncodingT>"
                 << line_g(1)
-                << str_g("shared_ptr< Base<EncodingT> > ")[Has_Return]
+                << str_g("boost::shared_ptr< Base<EncodingT> > ")[Has_Return]
                 << str_g("void ")                         [else_g()]
                 << MethodClassName << "Interpreter<EncodingT>::" << lower_g(InternalMethodName, 0, 1) << "(" << CreateInterpreterParameters << ")"
                 << str_g(" const")[If_IsConstMethod]
                 << line_g(1) << "{"
-                << ((line_g(1) << htab_g(1) << "shared_ptr< Base<EncodingT> > res(new " << GotoReturn(InterpreterType) << "());")[Has_Return]
+                << ((line_g(1) << htab_g(1) << "boost::shared_ptr< Base<EncodingT> > res(new " << GotoReturn(InterpreterType) << "());")[Has_Return]
                 << (
                        ListParameter
                        (
@@ -228,7 +228,7 @@ namespace dsg {
                    ListParameter
                    (
                         str_g("const ")[If_IsReadOnly]
-                     << "shared_ptr< Base<EncodingT> >& " << ParameterName << ~-str_g(", ")
+                     << "boost::shared_ptr< Base<EncodingT> >& " << ParameterName << ~-str_g(", ")
                    );
 
            CommentInterpreterConstant =
@@ -238,10 +238,10 @@ namespace dsg {
            CreateInterpreterConstant =
                    line_g(1) << "template <class EncodingT>"
                 << line_g(1)
-                << str_g("shared_ptr< Base<EncodingT> > ")
+                << str_g("boost::shared_ptr< Base<EncodingT> > ")
                 << ClassName << "Interpreter<EncodingT>::get" << upper_g(InternalConstantName, 0, 1) << "() const"
                 << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "return shared_ptr< Base<EncodingT> > (new " << InterpreterType << "(" << (ClassName << "::")[If_IsClass] << attr_g(getAttributeNameHandler(KIND_NAME)) << "));"
+                << line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> > (new " << InterpreterType << "(" << (ClassName << "::")[If_IsClass] << attr_g(getAttributeNameHandler(KIND_NAME)) << "));"
                 << line_g(1) << "}";
 
             CommentInterpreterAttribute =
@@ -251,11 +251,11 @@ namespace dsg {
             CreateInterpreterAttribute =
                    line_g(1) << "template <class EncodingT>"
                 << line_g(1)
-                << "shared_ptr< Base<EncodingT> > "
+                << "boost::shared_ptr< Base<EncodingT> > "
                 << ClassName << "Interpreter<EncodingT>::get" << lower_g(InternalAttributeName, 0, 1) << "() const"
                 << line_g(1) << "{"
                 << (line_g(1) << htab_g(1)
-                << "shared_ptr< Base<EncodingT> > res(new " << InterpreterType << "("
+                << "boost::shared_ptr< Base<EncodingT> > res(new " << InterpreterType << "("
                 << "value()"
                 << str_g("->")     [If_IsPointerEntity]
                 << str_g(".")      [else_g()]
@@ -268,9 +268,9 @@ namespace dsg {
 
            CreateInterpreterCheck =
                    line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "bool check_" << ClassName << "(shared_ptr< Base<EncodingT> > const& val, " << ClassName << "& a)"
+                << line_g(1) << "bool check_" << ClassName << "(boost::shared_ptr< Base<EncodingT> > const& val, " << ClassName << "& a)"
                 << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "shared_ptr< " << ClassName << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << ClassName << "Interpreter<EncodingT> >(val);"
+                << line_g(1) << htab_g(1) << "boost::shared_ptr< " << ClassName << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << ClassName << "Interpreter<EncodingT> >(val);"
                 << line_g(1) << htab_g(1) << "if (value)"
                 << line_g(1) << htab_g(1) << "{"
                 << line_g(1) << htab_g(2) << "a = value->getValue();"
@@ -280,14 +280,14 @@ namespace dsg {
                 << line_g(1) << htab_g(2) << "Category * logger = &Category::getInstance(LOGNAME);"
                 << line_g(1) << htab_g(2) << "logger->errorStream() << \"" << ClassName << " expected, got \" << A(val->getClassName());"
                 << line_g(1) << htab_g(1) << "}"
-                << line_g(1) << htab_g(1) << "return value;"
+                << line_g(1) << htab_g(1) << "return (value != NULL);"
                 << line_g(1) << "}";
 
            CreateInterpreterReset =
                    line_g(1) << "template <class EncodingT>"
-                << line_g(1) << "bool reset_" << ClassName << "(shared_ptr< Base<EncodingT> >& val, " << ClassName << " const& a)"
+                << line_g(1) << "bool reset_" << ClassName << "(boost::shared_ptr< Base<EncodingT> >& val, " << ClassName << " const& a)"
                 << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "shared_ptr< " << ClassName << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << ClassName << "Interpreter<EncodingT> >(val);"
+                << line_g(1) << htab_g(1) << "boost::shared_ptr< " << ClassName << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << ClassName << "Interpreter<EncodingT> >(val);"
                 << line_g(1) << htab_g(1) << "if (value)"
                 << line_g(1) << htab_g(1) << "{"
                 << line_g(1) << htab_g(2) << "value->setValue(a);"
@@ -297,7 +297,7 @@ namespace dsg {
                 << line_g(1) << htab_g(2) << "Category* logger = &Category::getInstance(LOGNAME);"
                 << line_g(1) << htab_g(2) << "logger->errorStream() << \"" << ClassName << " expected, got \" << A(val->getClassName());"
                 << line_g(1) << htab_g(1) << "}"
-                << line_g(1) << htab_g(1) << "return value;"
+                << line_g(1) << htab_g(1) << "return (value != NULL);"
                 << line_g(1) << "}";
 		}
     }

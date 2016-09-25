@@ -36,17 +36,17 @@ HEADERS += \
     ../src/WordXMLFunctions.h
 
 LIBS += -luuid -loleaut32 -lOle32
-LIBS += -L../../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5
-LIBS += -L../../../../../../Libraries/xerces-c-3.1.1/src/.libs -lxerces-c-3-1
-LIBS += -L../../../../../../Libraries/xalan-c-1.11/lib -lxalan-c1_11_0
+LIBS += -L../../../../../../Libraries/log4cpp/lib -llog4cpp
+LIBS += -L../../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c
+LIBS += -L../../../../../../Libraries/xalan-c-1.11/lib -lxalan-c
 
 release {
-LIBS += ../../../../bin_qt/release/Encoding.dll \
-        ../../../../bin_qt/release/XercesEncoding.dll
+LIBS += ../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll \
+        ../../../../CodeGeneration/bin_qt/Xerces/release/XercesEncoding.dll
 }
 
 INCLUDEPATH += \
-    ../../../../../../Libraries/boost_1_54_0 \
+    ../../../../../../Libraries/boost_1_61_0 \
     ../../../../../../Libraries/log4cpp/include \
     ../../../../../../Libraries/xerces-c-3.1.1/src \
     ../../../../CodeGeneration/generator \

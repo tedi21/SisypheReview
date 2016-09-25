@@ -20,25 +20,25 @@ private:
   
 public:
   // Retourne l'objet DiaDataSource
-  shared_ptr&lt; Base&lt;EncodingT&gt; &gt; getDataSource() const;
+  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; getDataSource() const;
 </Content>
       <Content Type="Implementation">
 // Retourne l'objet DiaDataSource
 template &lt;class EncodingT&gt;
-shared_ptr&lt; Base&lt;EncodingT&gt; &gt; PdbParserInterpreter&lt;EncodingT&gt;::getDataSource() const
+boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; PdbParserInterpreter&lt;EncodingT&gt;::getDataSource() const
 {
-  return shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new IDiaDataSourcePtrInterpreter&lt;EncodingT&gt;(m_diaDataSource));
+  return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new IDiaDataSourcePtrInterpreter&lt;EncodingT&gt;(m_diaDataSource));
 }
 </Content>
       <Content Type="Register">
-METHOD_KEY_REGISTER ( PdbParserInterpreter, shared_ptr&lt; Base&lt;EncodingT&gt; &gt;, getDataSource, const_t, C("PdbParser::DataSource") );
+METHOD_KEY_REGISTER ( PdbParserInterpreter, boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt;, getDataSource, const_t, C("PdbParser::DataSource") );
 </Content>
       <Content Type="Unregister">
 METHOD_KEY_UNREGISTER ( C("PdbParser::DataSource") );
 </Content>
       <Content Target="PdbParser:initialize@Boolean" Type="Implementation-body">
 static GUID IID_IDiaDataSource = {0x79F1BB5F,0xB66E,0x48e5,{0xB6,0xA9,0x15,0x45,0xC3,0x23,0xCA,0x3D}};
-static GUID IID_DiaSource = {0x3bfcea48,0x620f,0x4b6b,{0x81,0xf7,0xb9,0xaf,0x75,0x45,0x4c,0x7d}};
+static GUID IID_DiaSource = {0xE6756135,0x1E65,0x4D17,{0x85,0x76,0x61,0x07,0x61,0x39,0x8C,0x3C}};
 if (m_diaDataSource == NULL)
 {
   IDiaDataSource  *ppSource;
@@ -50,7 +50,7 @@ if (m_diaDataSource == NULL)
                   (void **) &amp;ppSource);
   if(SUCCEEDED(hr)) m_diaDataSource = ppSource;
 }
-return shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource != NULL));
+return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource != NULL));
 </Content>
       <Content Target="PdbParser:terminate@Boolean" Type="Implementation-body">
 if(m_diaDataSource != NULL)
@@ -59,7 +59,7 @@ if(m_diaDataSource != NULL)
   m_diaDataSource = NULL;
   CoUninitialize();
 }
-return shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource == NULL));
+return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource == NULL));
 </Content>
       <Content Target="PdbParser:initialize@Boolean" TargetREF="initialize" Type="ReturnDescription">
 True si l'initialisation est effectuée.
@@ -111,7 +111,7 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
 #include "IDiaEnumSourceFilesPtrInterpreter.hpp"
 </Content>
       <Content Target="IDiaSessionPtr:findFile@String@Uint32@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">
-	shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
 	typename EncodingT::string_t nativeName;
 	unsigned long nativeOption;
 	IDiaEnumSourceFilesPtr nativePpResult;
@@ -125,7 +125,7 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
 	return res;
 </Content>
       <Content Target="IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">
-	shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
 	IDiaEnumSourceFilesPtr nativePpResult;
 	if (check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))
 	{
@@ -135,7 +135,7 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
 	return res;
 </Content>
       <Content Target="IDiaSessionPtr:findFile@IDiaSymbolPtr@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">
-	shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
   IDiaSymbolPtr nativePCompiland;
 	IDiaEnumSourceFilesPtr nativePpResult;
 	if (check_IDiaSymbolPtr(pCompiland, nativePCompiland) &amp;&amp;
@@ -158,14 +158,14 @@ typedef CDiaPtr&lt;IDiaSymbol&gt; IDiaSymbolPtr;
 #include "SymTagEnumTypeInterpreter.hpp"
 </Content>
       <Content Target="IDiaSymbolPtr:get_name@String*@Int32" Type="Implementation-body">
-	  shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
     BSTR nativePRetVal;
     res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;get_name(&amp;nativePRetVal)));
     reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);
 	  return res;
 </Content>
       <Content Target="IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" Type="Implementation-body">
-	shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
 	SymTagEnumType nativeSymtag;
 	IDiaEnumSymbolsPtr nativePpResult;
 	if (check_SymTagEnumType(symtag, nativeSymtag) &amp;&amp; 
@@ -177,7 +177,7 @@ typedef CDiaPtr&lt;IDiaSymbol&gt; IDiaSymbolPtr;
 	return res;
 </Content>
       <Content Target="IDiaSymbolPtr:get_types@IDiaSymbolPtr@Int32" Type="Implementation-body">
-	shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
 	std::vector&lt; IDiaSymbolPtr &gt; nativeTypes;
   DWORD count;
   HRESULT hres = value()-&gt;get_types(0, &amp;count, NULL);
@@ -216,7 +216,7 @@ typedef enum SymTagEnum SymTagEnumType;
 NAMESPACE_BEGIN(interp)
 
 template &lt;class EncodingT&gt;
-bool check_SymTagEnumType(shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s);
+bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s);
 
 NAMESPACE_END
 </Content>
@@ -224,9 +224,9 @@ NAMESPACE_END
 NAMESPACE_BEGIN(interp)
 
 template &lt;class EncodingT&gt;
-bool check_SymTagEnumType(shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s)
+bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s)
 {
-	shared_ptr&lt; Numeric&lt;EncodingT&gt; &gt; value  = dynamic_pointer_cast&lt; Numeric&lt;EncodingT&gt; &gt;(val);
+	boost::shared_ptr&lt; Numeric&lt;EncodingT&gt; &gt; value  = dynamic_pointer_cast&lt; Numeric&lt;EncodingT&gt; &gt;(val);
 	if (value)
 	{
 		s = (SymTagEnumType) value-&gt;getValue();
@@ -236,7 +236,7 @@ bool check_SymTagEnumType(shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; v
 		Category * logger = &amp;Category::getInstance(LOGNAME);
 		logger-&gt;errorStream() &lt;&lt; "Numeric expected, got " &lt;&lt; A(val-&gt;getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 NAMESPACE_END
@@ -274,7 +274,7 @@ typedef CDiaPtr&lt;IDiaEnumLineNumbers&gt; IDiaEnumLineNumbersPtr;
 typedef CDiaPtr&lt;IDiaSourceFile&gt; IDiaSourceFilePtr;
 </Content>
       <Content Target="IDiaSourceFilePtr:get_fileName@String*@Int32" Type="Implementation-body">
-	  shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
+	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
     BSTR nativePRetVal;
     res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;get_fileName(&amp;nativePRetVal)));
     reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);

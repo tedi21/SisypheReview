@@ -29,8 +29,8 @@ namespace dsg {
 
 			CreateInclude_R2 =
 				str_g(   "#include <boost/serialization/serialization.hpp>\r\n"
-						 "#include <boost/serialization/shared_ptr.hpp>\r\n")[call_g(getIsWorkspaceOptionHandler(BOOST_SERIAL))]
-				<< str_g("#include <boost/shared_ptr.hpp>\r\n"
+                         "#include <boost/serialization/shared_ptr.hpp>\r\n")[call_g(getIsWorkspaceOptionHandler(BOOST_SERIAL))]
+                << str_g("#include <boost/shared_ptr.hpp>\r\n"
                          "#include <boost/container/vector.hpp>\r\n"
                          "#include \"copy_ptr.h\"\r\n"                         
 						 "#include \"config.hpp\"\r\n"

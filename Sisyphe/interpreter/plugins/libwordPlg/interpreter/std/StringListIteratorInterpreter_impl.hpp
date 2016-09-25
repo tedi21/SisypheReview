@@ -45,9 +45,9 @@ typename EncodingT::string_t StringListIteratorInterpreter<EncodingT>::toString(
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new StringListIteratorInterpreter<EncodingT>());
+        return boost::shared_ptr< Base<EncodingT> >(new StringListIteratorInterpreter<EncodingT>());
 }
 
 template <class EncodingT>
@@ -57,9 +57,9 @@ typename EncodingT::string_t StringListIteratorInterpreter<EncodingT>::getClassN
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
@@ -82,9 +82,9 @@ shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::invoke(c
 
 // Retourne la valeur courante
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::current() const
+boost::shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::current() const
 {
-	return shared_ptr< Base<EncodingT> > (new String<EncodingT>(*m_object));
+        return boost::shared_ptr< Base<EncodingT> > (new String<EncodingT>(*m_object));
 }
 
 // Retourne l'itérateur du début
@@ -102,9 +102,9 @@ void StringListIteratorInterpreter<EncodingT>::decrement()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::equals(shared_ptr< Base<EncodingT> > const& val) const
+boost::shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::equals(boost::shared_ptr< Base<EncodingT> > const& val) const
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
     StringListIterator ite;     
     if (check_StringListIterator(val, ite))
     {
@@ -114,9 +114,9 @@ shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::equals(s
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::notEquals(shared_ptr< Base<EncodingT> > const& val) const
+boost::shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
     StringListIterator ite;
     if (check_StringListIterator(val, ite))
     {
@@ -126,9 +126,9 @@ shared_ptr< Base<EncodingT> > StringListIteratorInterpreter<EncodingT>::notEqual
 }
 
 template <class EncodingT>
-bool check_StringListIterator(shared_ptr< Base<EncodingT> > const& val, StringListIterator& a)
+bool check_StringListIterator(boost::shared_ptr< Base<EncodingT> > const& val, StringListIterator& a)
 {
-	shared_ptr< StringListIteratorInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListIteratorInterpreter<EncodingT> >(val);
+        boost::shared_ptr< StringListIteratorInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListIteratorInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		a = value->getValue();
@@ -138,13 +138,13 @@ bool check_StringListIterator(shared_ptr< Base<EncodingT> > const& val, StringLi
 		Category * logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "StringListIterator expected, got " << A(val->getClassName());
 	}
-	return value;
+        return (value != NULL);
 }
 
 template <class EncodingT>
-bool reset_StringListIterator(shared_ptr< Base<EncodingT> >& val, StringListIterator const& a)
+bool reset_StringListIterator(boost::shared_ptr< Base<EncodingT> >& val, StringListIterator const& a)
 {
-	shared_ptr< StringListIteratorInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListIteratorInterpreter<EncodingT> >(val);
+        boost::shared_ptr< StringListIteratorInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListIteratorInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		value->setValue(a);
@@ -154,7 +154,7 @@ bool reset_StringListIterator(shared_ptr< Base<EncodingT> >& val, StringListIter
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "StringListIterator expected, got " << A(val->getClassName());
 	}
-	return value;
+        return (value != NULL);
 }
 
 NAMESPACE_END

@@ -6,13 +6,13 @@
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > PredicateOperator<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > PredicateOperator<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        return shared_ptr< Base<EncodingT> >(new Predicate<EncodingT>(c, m_name));
+        return boost::shared_ptr< Base<EncodingT> >(new Predicate<EncodingT>(c, m_name));
     }
 
     template <class EncodingT>
-    bool PredicateOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool PredicateOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
         bool success = prefix<EncodingT>(expr, C("function:"), expr, false) &&

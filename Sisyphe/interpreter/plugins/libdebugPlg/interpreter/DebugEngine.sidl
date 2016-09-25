@@ -101,10 +101,10 @@ enum DebugBreakpointFlag
 interface DebugEngine
 {
   // Initialise le moteur de débogage.
-  static readonly boolean initialize();
+  static boolean initialize();
 
   // Libère les objets debug.
-  static readonly boolean terminate();
+  static boolean terminate();
   
   // Allocate additional memory to the target process.
   static int DvAlloc(in unsigned long size);
@@ -204,15 +204,31 @@ interface IDebugBreakpointPtr
 
   // Sets the flags for a breakpoint.
   long SetFlags(in unsigned long flags);
+  
+  // The SetPassCount method sets the number of times that the target must reach the breakpoint location before the breakpoint is triggered.
+  long SetPassCount(in unsigned long count);
+
+  // The GetPassCount method returns the number of times that the target was originally required to reach the breakpoint location before the breakpoint is triggered.
+  long GetPassCount(out unsigned long* count);
+
+  // The GetCurrentPassCount method returns the remaining number of times that the target must reach the breakpoint location before the breakpoint is triggered.
+  long GetCurrentPassCount(out unsigned long* count);
+  
+  // The GetId method returns a breakpoint ID, which is the engine's unique identifier for a breakpoint.
+  long GetId(out unsigned long* bpId);
 }
 
 // The DEBUG_VALUE structure holds register and expression values.
 interface DEBUG_VALUE
 {
   attribute byte I8;
-  attribute unsigned short I16;
-  attribute unsigned long I32;
-  attribute unsigned long long I64;
+  attribute short I16;
+  attribute long I32;
+  attribute long long I64;
+  attribute unsigned byte UI8;
+  attribute unsigned short UI16;
+  attribute unsigned long UI32;
+  attribute unsigned long long UI64;
   attribute float F32;
   attribute double F64;
   attribute unsigned long Type;

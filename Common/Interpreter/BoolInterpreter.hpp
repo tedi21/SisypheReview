@@ -18,8 +18,8 @@ NAMESPACE_BEGIN(interp)
         BoolConstant(bool data)
         : m_data(data)
         {}
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
 NAMESPACE_END

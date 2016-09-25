@@ -6,22 +6,22 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter()
 {
-	setValue( shared_ptr< _CppInclude<EncodingT> > (new _CppInclude<EncodingT>()) );
+	setValue( boost::shared_ptr< _CppInclude<EncodingT> > (new _CppInclude<EncodingT>()) );
 }
 
 template <class EncodingT>
-CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(shared_ptr< _CppInclude<EncodingT> > const& value)
+CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(boost::shared_ptr< _CppInclude<EncodingT> > const& value)
 {
 	setValue(value);
 }
 
 template <class EncodingT>
-CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(shared_ptr< Base<EncodingT> > const& fileName)
+CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(boost::shared_ptr< Base<EncodingT> > const& fileName)
 {
 	typename EncodingT::string_t nativeFileName;
 	if (check_string<EncodingT>(fileName, nativeFileName))
 	{
-		setValue(shared_ptr< _CppInclude<EncodingT> >(new _CppInclude<EncodingT>(nativeFileName)));
+		setValue(boost::shared_ptr< _CppInclude<EncodingT> >(new _CppInclude<EncodingT>(nativeFileName)));
 	}
 }
 
@@ -30,13 +30,13 @@ CppIncludeInterpreter<EncodingT>::~CppIncludeInterpreter()
 {}
 
 template <class EncodingT>
-shared_ptr< _CppInclude<EncodingT> > CppIncludeInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CppInclude<EncodingT> > CppIncludeInterpreter<EncodingT>::getValue() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CppIncludeInterpreter<EncodingT>::setValue(shared_ptr< _CppInclude<EncodingT> > const& object)
+void CppIncludeInterpreter<EncodingT>::setValue(boost::shared_ptr< _CppInclude<EncodingT> > const& object)
 {
 	m_value = object;
 	String<EncodingT>::setValue(toString());
@@ -44,28 +44,28 @@ void CppIncludeInterpreter<EncodingT>::setValue(shared_ptr< _CppInclude<Encoding
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getIdentifier() const
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getIdentifier() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getFileName() const
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getFileName() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getFileName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getFileName()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getCppFile()
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getCppFile()
 {
-	return shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppFile()) );
 }
 
 
 template <class EncodingT>
-void CppIncludeInterpreter<EncodingT>::setFileName(shared_ptr< Base<EncodingT> > const& fileName)
+void CppIncludeInterpreter<EncodingT>::setFileName(boost::shared_ptr< Base<EncodingT> > const& fileName)
 {
 	typename EncodingT::string_t nativeFileName;
 	if (check_string<EncodingT>(fileName, nativeFileName))
@@ -76,9 +76,9 @@ void CppIncludeInterpreter<EncodingT>::setFileName(shared_ptr< Base<EncodingT> >
 
 
 template <class EncodingT>
-void CppIncludeInterpreter<EncodingT>::setCppFile(shared_ptr< Base<EncodingT> > const& cppFile)
+void CppIncludeInterpreter<EncodingT>::setCppFile(boost::shared_ptr< Base<EncodingT> > const& cppFile)
 {
-	shared_ptr< _CppFile<EncodingT> > nativeCppFile;
+	boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
 	if (check_cppFile(cppFile, nativeCppFile))
 	{
 		getValue()->setCppFile(nativeCppFile);
@@ -87,9 +87,9 @@ void CppIncludeInterpreter<EncodingT>::setCppFile(shared_ptr< Base<EncodingT> > 
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::hasCppFile() const
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::hasCppFile() const
 {
-	return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFile()) );
 }
 
 
@@ -108,9 +108,9 @@ typename EncodingT::string_t CppIncludeInterpreter<EncodingT>::toString() const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppIncludeInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CppIncludeInterpreter<EncodingT>(copy_ptr(getValue())));
 }
 
 template <class EncodingT>
@@ -120,9 +120,9 @@ typename EncodingT::string_t CppIncludeInterpreter<EncodingT>::getClassName() co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -146,9 +146,9 @@ shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::invoke(const typ
 }
 
 template <class EncodingT>
-bool check_cppInclude(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _CppInclude<EncodingT> >& o)
+bool check_cppInclude(boost::shared_ptr< Base<EncodingT> > const& val, boost::shared_ptr< _CppInclude<EncodingT> >& o)
 {
-	shared_ptr< CppIncludeInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppIncludeInterpreter<EncodingT> >(val);
+	boost::shared_ptr< CppIncludeInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppIncludeInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		o = value->getValue();
@@ -158,13 +158,13 @@ bool check_cppInclude(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _Cpp
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "CppInclude expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 template <class EncodingT>
-bool reset_cppInclude(shared_ptr< Base<EncodingT> >& val, shared_ptr< _CppInclude<EncodingT> > const& o)
+bool reset_cppInclude(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr< _CppInclude<EncodingT> > const& o)
 {
-	shared_ptr< CppIncludeInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppIncludeInterpreter<EncodingT> >(val);
+	boost::shared_ptr< CppIncludeInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppIncludeInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		value->setValue(o);
@@ -174,7 +174,7 @@ bool reset_cppInclude(shared_ptr< Base<EncodingT> >& val, shared_ptr< _CppInclud
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "CppInclude expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 NAMESPACE_END

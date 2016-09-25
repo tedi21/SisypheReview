@@ -6,25 +6,25 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CppInheritanceInterpreter<EncodingT>::CppInheritanceInterpreter()
 {
-	setValue( shared_ptr< _CppInheritance<EncodingT> > (new _CppInheritance<EncodingT>()) );
+	setValue( boost::shared_ptr< _CppInheritance<EncodingT> > (new _CppInheritance<EncodingT>()) );
 }
 
 template <class EncodingT>
-CppInheritanceInterpreter<EncodingT>::CppInheritanceInterpreter(shared_ptr< _CppInheritance<EncodingT> > const& value)
+CppInheritanceInterpreter<EncodingT>::CppInheritanceInterpreter(boost::shared_ptr< _CppInheritance<EncodingT> > const& value)
 {
 	setValue(value);
 }
 
 template <class EncodingT>
-CppInheritanceInterpreter<EncodingT>::CppInheritanceInterpreter(shared_ptr< Base<EncodingT> > const& baseClassName,
-				shared_ptr< Base<EncodingT> > const& baseAccess)
+CppInheritanceInterpreter<EncodingT>::CppInheritanceInterpreter(boost::shared_ptr< Base<EncodingT> > const& baseClassName,
+				boost::shared_ptr< Base<EncodingT> > const& baseAccess)
 {
 	typename EncodingT::string_t nativeBaseClassName;
 	typename EncodingT::string_t nativeBaseAccess;
 	if (check_string<EncodingT>(baseClassName, nativeBaseClassName) &&
 		check_string<EncodingT>(baseAccess, nativeBaseAccess))
 	{
-		setValue(shared_ptr< _CppInheritance<EncodingT> >(new _CppInheritance<EncodingT>(nativeBaseClassName,
+		setValue(boost::shared_ptr< _CppInheritance<EncodingT> >(new _CppInheritance<EncodingT>(nativeBaseClassName,
 				nativeBaseAccess)));
 	}
 }
@@ -34,13 +34,13 @@ CppInheritanceInterpreter<EncodingT>::~CppInheritanceInterpreter()
 {}
 
 template <class EncodingT>
-shared_ptr< _CppInheritance<EncodingT> > CppInheritanceInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CppInheritance<EncodingT> > CppInheritanceInterpreter<EncodingT>::getValue() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CppInheritanceInterpreter<EncodingT>::setValue(shared_ptr< _CppInheritance<EncodingT> > const& object)
+void CppInheritanceInterpreter<EncodingT>::setValue(boost::shared_ptr< _CppInheritance<EncodingT> > const& object)
 {
 	m_value = object;
 	String<EncodingT>::setValue(toString());
@@ -48,37 +48,37 @@ void CppInheritanceInterpreter<EncodingT>::setValue(shared_ptr< _CppInheritance<
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getIdentifier() const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getIdentifier() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getBaseClassName() const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getBaseClassName() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getBaseClassName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getBaseClassName()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getBaseAccess() const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getBaseAccess() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getBaseAccess()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getBaseAccess()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getDerived()
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::getDerived()
 {
-	return shared_ptr< Base<EncodingT> >( new CppClassInterpreter<EncodingT>(getValue()->getDerived()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppClassInterpreter<EncodingT>(getValue()->getDerived()) );
 }
 
 
 template <class EncodingT>
-void CppInheritanceInterpreter<EncodingT>::setDerived(shared_ptr< Base<EncodingT> > const& derived)
+void CppInheritanceInterpreter<EncodingT>::setDerived(boost::shared_ptr< Base<EncodingT> > const& derived)
 {
-	shared_ptr< _CppClass<EncodingT> > nativeDerived;
+	boost::shared_ptr< _CppClass<EncodingT> > nativeDerived;
 	if (check_cppClass(derived, nativeDerived))
 	{
 		getValue()->setDerived(nativeDerived);
@@ -87,7 +87,7 @@ void CppInheritanceInterpreter<EncodingT>::setDerived(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void CppInheritanceInterpreter<EncodingT>::setBaseClassName(shared_ptr< Base<EncodingT> > const& baseClassName)
+void CppInheritanceInterpreter<EncodingT>::setBaseClassName(boost::shared_ptr< Base<EncodingT> > const& baseClassName)
 {
 	typename EncodingT::string_t nativeBaseClassName;
 	if (check_string<EncodingT>(baseClassName, nativeBaseClassName))
@@ -98,7 +98,7 @@ void CppInheritanceInterpreter<EncodingT>::setBaseClassName(shared_ptr< Base<Enc
 
 
 template <class EncodingT>
-void CppInheritanceInterpreter<EncodingT>::setBaseAccess(shared_ptr< Base<EncodingT> > const& baseAccess)
+void CppInheritanceInterpreter<EncodingT>::setBaseAccess(boost::shared_ptr< Base<EncodingT> > const& baseAccess)
 {
 	typename EncodingT::string_t nativeBaseAccess;
 	if (check_string<EncodingT>(baseAccess, nativeBaseAccess))
@@ -109,9 +109,9 @@ void CppInheritanceInterpreter<EncodingT>::setBaseAccess(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::hasDerived() const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::hasDerived() const
 {
-	return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullDerived()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullDerived()) );
 }
 
 
@@ -130,9 +130,9 @@ typename EncodingT::string_t CppInheritanceInterpreter<EncodingT>::toString() co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppInheritanceInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CppInheritanceInterpreter<EncodingT>(copy_ptr(getValue())));
 }
 
 template <class EncodingT>
@@ -142,9 +142,9 @@ typename EncodingT::string_t CppInheritanceInterpreter<EncodingT>::getClassName(
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -168,9 +168,9 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreter<EncodingT>::invoke(const
 }
 
 template <class EncodingT>
-bool check_cppInheritance(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _CppInheritance<EncodingT> >& o)
+bool check_cppInheritance(boost::shared_ptr< Base<EncodingT> > const& val, boost::shared_ptr< _CppInheritance<EncodingT> >& o)
 {
-	shared_ptr< CppInheritanceInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppInheritanceInterpreter<EncodingT> >(val);
+	boost::shared_ptr< CppInheritanceInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppInheritanceInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		o = value->getValue();
@@ -180,13 +180,13 @@ bool check_cppInheritance(shared_ptr< Base<EncodingT> > const& val, shared_ptr< 
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "CppInheritance expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 template <class EncodingT>
-bool reset_cppInheritance(shared_ptr< Base<EncodingT> >& val, shared_ptr< _CppInheritance<EncodingT> > const& o)
+bool reset_cppInheritance(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr< _CppInheritance<EncodingT> > const& o)
 {
-	shared_ptr< CppInheritanceInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppInheritanceInterpreter<EncodingT> >(val);
+	boost::shared_ptr< CppInheritanceInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppInheritanceInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		value->setValue(o);
@@ -196,7 +196,7 @@ bool reset_cppInheritance(shared_ptr< Base<EncodingT> >& val, shared_ptr< _CppIn
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "CppInheritance expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 NAMESPACE_END

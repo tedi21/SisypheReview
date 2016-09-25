@@ -44,12 +44,12 @@ _CppEnumConstantAccess<EncodingT>::~_CppEnumConstantAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppEnumConstant<EncodingT> > >
+std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >
 _CppEnumConstantAccess<EncodingT>::getManyCppEnumConstants(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppEnumConstant<EncodingT> > value;
+	boost::shared_ptr< _CppEnumConstant<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -86,21 +86,21 @@ _CppEnumConstantAccess<EncodingT>::getManyCppEnumConstants(typename EncodingT::s
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppEnumConstant<EncodingT> > >
+std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >
 _CppEnumConstantAccess<EncodingT>::getAllCppEnumConstants() const 
 {
 	return getManyCppEnumConstants(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppEnumConstant<EncodingT> >
+boost::shared_ptr< _CppEnumConstant<EncodingT> >
 _CppEnumConstantAccess<EncodingT>::getOneCppEnumConstant(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > result = getManyCppEnumConstants(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > result = getManyCppEnumConstants(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -109,11 +109,11 @@ _CppEnumConstantAccess<EncodingT>::getOneCppEnumConstant(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppEnumConstant<EncodingT> > >
+std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >
 _CppEnumConstantAccess<EncodingT>::selectManyCppEnumConstants(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -145,7 +145,7 @@ _CppEnumConstantAccess<EncodingT>::selectManyCppEnumConstants(typename EncodingT
 			statement.getInt( 2, defaultValue ) &&
 			statement.getInt( 3, startBlock ) &&
 			statement.getInt( 4, lengthBlock )) {
-			tab.push_back(shared_ptr< _CppEnumConstant<EncodingT> >(new _CppEnumConstant<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppEnumConstant<EncodingT> >(new _CppEnumConstant<EncodingT>(
 				identifier,
 				name,
 				defaultValue,
@@ -158,14 +158,14 @@ _CppEnumConstantAccess<EncodingT>::selectManyCppEnumConstants(typename EncodingT
 }
 
 template<class EncodingT>
-shared_ptr< _CppEnumConstant<EncodingT> >
+boost::shared_ptr< _CppEnumConstant<EncodingT> >
 _CppEnumConstantAccess<EncodingT>::selectOneCppEnumConstant(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > result = selectManyCppEnumConstants(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > result = selectManyCppEnumConstants(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -175,7 +175,7 @@ _CppEnumConstantAccess<EncodingT>::selectOneCppEnumConstant(int identifier, bool
 
 template<class EncodingT>
 bool
-_CppEnumConstantAccess<EncodingT>::isSelectedCppEnumConstant(shared_ptr< _CppEnumConstant<EncodingT> > o) const 
+_CppEnumConstantAccess<EncodingT>::isSelectedCppEnumConstant(boost::shared_ptr< _CppEnumConstant<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -210,7 +210,7 @@ _CppEnumConstantAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppEnumConstantAccess<EncodingT>::fillCppEnum(shared_ptr< _CppEnumConstant<EncodingT> > o)  
+_CppEnumConstantAccess<EncodingT>::fillCppEnum(boost::shared_ptr< _CppEnumConstant<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -235,8 +235,8 @@ _CppEnumConstantAccess<EncodingT>::fillCppEnum(shared_ptr< _CppEnumConstant<Enco
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idEnum")), std::vector<typename EncodingT::string_t>(1,C("cppEnumConstant")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppEnumConstant<EncodingT>::CppEnumConstantIDEquality cppEnumConstantIdEquality(o->getIdentifier());
-		shared_ptr< _CppEnum<EncodingT> > val = cppEnumAccess->getOneCppEnum(id);
-		typename std::vector< shared_ptr<_CppEnumConstant<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumConstantIdEquality);
+		boost::shared_ptr< _CppEnum<EncodingT> > val = cppEnumAccess->getOneCppEnum(id);
+		typename std::vector< boost::shared_ptr<_CppEnumConstant<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumConstantIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppEnum(val);
 		}
@@ -250,7 +250,7 @@ _CppEnumConstantAccess<EncodingT>::fillCppEnum(shared_ptr< _CppEnumConstant<Enco
 
 template<class EncodingT>
 bool
-_CppEnumConstantAccess<EncodingT>::isModifiedCppEnumConstant(shared_ptr< _CppEnumConstant<EncodingT> > o) const 
+_CppEnumConstantAccess<EncodingT>::isModifiedCppEnumConstant(boost::shared_ptr< _CppEnumConstant<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -261,7 +261,7 @@ _CppEnumConstantAccess<EncodingT>::isModifiedCppEnumConstant(shared_ptr< _CppEnu
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppEnumConstant<EncodingT>::CppEnumConstantIDEquality cppEnumConstantIdEquality(*o);
-	typename std::vector< shared_ptr< _CppEnumConstant<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumConstantIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumConstantIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -279,7 +279,7 @@ _CppEnumConstantAccess<EncodingT>::isModifiedCppEnumConstant(shared_ptr< _CppEnu
 
 template<class EncodingT>
 void
-_CppEnumConstantAccess<EncodingT>::updateCppEnumConstant(shared_ptr< _CppEnumConstant<EncodingT> > o)  
+_CppEnumConstantAccess<EncodingT>::updateCppEnumConstant(boost::shared_ptr< _CppEnumConstant<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -298,7 +298,7 @@ _CppEnumConstantAccess<EncodingT>::updateCppEnumConstant(shared_ptr< _CppEnumCon
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppEnumConstant<EncodingT>::CppEnumConstantIDEquality cppEnumConstantIdEquality(*o);
-	typename std::vector< shared_ptr< _CppEnumConstant<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumConstantIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumConstantIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -356,7 +356,7 @@ _CppEnumConstantAccess<EncodingT>::updateCppEnumConstant(shared_ptr< _CppEnumCon
 
 template<class EncodingT>
 void
-_CppEnumConstantAccess<EncodingT>::insertCppEnumConstant(shared_ptr< _CppEnumConstant<EncodingT> > o)  
+_CppEnumConstantAccess<EncodingT>::insertCppEnumConstant(boost::shared_ptr< _CppEnumConstant<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -423,7 +423,7 @@ _CppEnumConstantAccess<EncodingT>::insertCppEnumConstant(shared_ptr< _CppEnumCon
 
 template<class EncodingT>
 void
-_CppEnumConstantAccess<EncodingT>::deleteCppEnumConstant(shared_ptr< _CppEnumConstant<EncodingT> > o)  
+_CppEnumConstantAccess<EncodingT>::deleteCppEnumConstant(boost::shared_ptr< _CppEnumConstant<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -440,7 +440,7 @@ _CppEnumConstantAccess<EncodingT>::deleteCppEnumConstant(shared_ptr< _CppEnumCon
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppEnumConstant<EncodingT>::CppEnumConstantIDEquality CppEnumConstantIdEquality(*o);
-	typename std::vector< shared_ptr< _CppEnumConstant<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppEnumConstantIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppEnumConstantIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

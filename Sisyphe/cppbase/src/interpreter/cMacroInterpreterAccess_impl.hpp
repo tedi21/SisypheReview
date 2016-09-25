@@ -21,9 +21,9 @@ typename EncodingT::string_t CMacroInterpreterAccess<EncodingT>::toString() cons
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CMacroInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new CMacroInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t CMacroInterpreterAccess<EncodingT>::getClassName() 
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::invoke(const t
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _CMacro<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _CMacro<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new CMacroInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new CMacroInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getAllCMacros()
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getAllCMacros()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getAllCMacros(
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getManyCMacros(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getManyCMacros(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getManyCMacros
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getOneCMacro(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getOneCMacro(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new CMacroInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CMacroInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getOneCMacro(s
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectOneCMacro(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectOneCMacro(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new CMacroInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CMacroInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectOneCMacr
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectManyCMacros(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectManyCMacros(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void CMacroInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isSelectedCMacro(const shared_ptr< Base<EncodingT> >& cMacro)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isSelectedCMacro(const boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CMacro<EncodingT> > nativeCMacro;
+		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedCMacro(nativeCMacro)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isSelectedCMac
 }
 
 template <class EncodingT>
-void CMacroInterpreterAccess<EncodingT>::fillCppFile(shared_ptr< Base<EncodingT> >& cMacro)
+void CMacroInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CMacro<EncodingT> > nativeCMacro;
+		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
 			m_object->fillCppFile(nativeCMacro);
@@ -224,13 +224,13 @@ void CMacroInterpreterAccess<EncodingT>::fillCppFile(shared_ptr< Base<EncodingT>
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isModifiedCMacro(const shared_ptr< Base<EncodingT> >& cMacro)
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isModifiedCMacro(const boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CMacro<EncodingT> > nativeCMacro;
+		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedCMacro(nativeCMacro)));
@@ -244,12 +244,12 @@ shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isModifiedCMac
 }
 
 template <class EncodingT>
-void CMacroInterpreterAccess<EncodingT>::updateCMacro(shared_ptr< Base<EncodingT> >& cMacro)
+void CMacroInterpreterAccess<EncodingT>::updateCMacro(boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CMacro<EncodingT> > nativeCMacro;
+		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
 			m_object->updateCMacro(nativeCMacro);
@@ -263,12 +263,12 @@ void CMacroInterpreterAccess<EncodingT>::updateCMacro(shared_ptr< Base<EncodingT
 }
 
 template <class EncodingT>
-void CMacroInterpreterAccess<EncodingT>::insertCMacro(shared_ptr< Base<EncodingT> >& cMacro)
+void CMacroInterpreterAccess<EncodingT>::insertCMacro(boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CMacro<EncodingT> > nativeCMacro;
+		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
 			m_object->insertCMacro(nativeCMacro);
@@ -282,12 +282,12 @@ void CMacroInterpreterAccess<EncodingT>::insertCMacro(shared_ptr< Base<EncodingT
 }
 
 template <class EncodingT>
-void CMacroInterpreterAccess<EncodingT>::deleteCMacro(shared_ptr< Base<EncodingT> >& cMacro)
+void CMacroInterpreterAccess<EncodingT>::deleteCMacro(boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CMacro<EncodingT> > nativeCMacro;
+		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
 			m_object->deleteCMacro(nativeCMacro);
@@ -315,14 +315,14 @@ void CMacroInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

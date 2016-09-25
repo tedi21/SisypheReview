@@ -44,12 +44,12 @@ _CppClassAccess<EncodingT>::~_CppClassAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppClass<EncodingT> > >
+std::vector< boost::shared_ptr< _CppClass<EncodingT> > >
 _CppClassAccess<EncodingT>::getManyCppClasss(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppClass<EncodingT> > value;
+	boost::shared_ptr< _CppClass<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppClass<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppClass<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -102,21 +102,21 @@ _CppClassAccess<EncodingT>::getManyCppClasss(typename EncodingT::string_t const&
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppClass<EncodingT> > >
+std::vector< boost::shared_ptr< _CppClass<EncodingT> > >
 _CppClassAccess<EncodingT>::getAllCppClasss() const 
 {
 	return getManyCppClasss(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppClass<EncodingT> >
+boost::shared_ptr< _CppClass<EncodingT> >
 _CppClassAccess<EncodingT>::getOneCppClass(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppClass<EncodingT> > > result = getManyCppClasss(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppClass<EncodingT> > > result = getManyCppClasss(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -125,11 +125,11 @@ _CppClassAccess<EncodingT>::getOneCppClass(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppClass<EncodingT> > >
+std::vector< boost::shared_ptr< _CppClass<EncodingT> > >
 _CppClassAccess<EncodingT>::selectManyCppClasss(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppClass<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppClass<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -173,7 +173,7 @@ _CppClassAccess<EncodingT>::selectManyCppClasss(typename EncodingT::string_t con
 			statement.getInt( 6, lineNumber ) &&
 			statement.getInt( 7, startBlock ) &&
 			statement.getInt( 8, lengthBlock )) {
-			tab.push_back(shared_ptr< _CppClass<EncodingT> >(new _CppClass<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppClass<EncodingT> >(new _CppClass<EncodingT>(
 				identifier,
 				name,
 				isStruct,
@@ -190,14 +190,14 @@ _CppClassAccess<EncodingT>::selectManyCppClasss(typename EncodingT::string_t con
 }
 
 template<class EncodingT>
-shared_ptr< _CppClass<EncodingT> >
+boost::shared_ptr< _CppClass<EncodingT> >
 _CppClassAccess<EncodingT>::selectOneCppClass(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppClass<EncodingT> > > result = selectManyCppClasss(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppClass<EncodingT> > > result = selectManyCppClasss(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -207,7 +207,7 @@ _CppClassAccess<EncodingT>::selectOneCppClass(int identifier, bool nowait, bool 
 
 template<class EncodingT>
 bool
-_CppClassAccess<EncodingT>::isSelectedCppClass(shared_ptr< _CppClass<EncodingT> > o) const 
+_CppClassAccess<EncodingT>::isSelectedCppClass(boost::shared_ptr< _CppClass<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -260,7 +260,7 @@ _CppClassAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillCppFile(shared_ptr< _CppClass<EncodingT> > o)  
+_CppClassAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppClass<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -290,8 +290,8 @@ _CppClassAccess<EncodingT>::fillCppFile(shared_ptr< _CppClass<EncodingT> > o)
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppClass")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-		shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< shared_ptr<_CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
+		typename std::vector< boost::shared_ptr<_CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -305,21 +305,21 @@ _CppClassAccess<EncodingT>::fillCppFile(shared_ptr< _CppClass<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillAllCppInheritances(shared_ptr< _CppClass<EncodingT> > o, bool nowait)  
+_CppClassAccess<EncodingT>::fillAllCppInheritances(boost::shared_ptr< _CppClass<EncodingT> > o, bool nowait)  
 {
 	fillManyCppInheritances(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillOneCppInheritance(shared_ptr< _CppClass<EncodingT> > o, int identifier, bool nowait)  
+_CppClassAccess<EncodingT>::fillOneCppInheritance(boost::shared_ptr< _CppClass<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyCppInheritances(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillManyCppInheritances(shared_ptr< _CppClass<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppClassAccess<EncodingT>::fillManyCppInheritances(boost::shared_ptr< _CppClass<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -334,13 +334,13 @@ _CppClassAccess<EncodingT>::fillManyCppInheritances(shared_ptr< _CppClass<Encodi
 		m_logger->errorStream() << "CppInheritanceAccess class is not initialized.";
 		throw NullPointerException("CppInheritanceAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppInheritance<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > tab;
 	typename EncodingT::string_t cppInheritanceFilter = C("idDerived = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppInheritanceFilter += C(" AND ") + filter;
 	}
 	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename std::vector< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppInheritanceAccess->selectManyCppInheritances(cppInheritanceFilter, nowait);
@@ -357,21 +357,21 @@ _CppClassAccess<EncodingT>::fillManyCppInheritances(shared_ptr< _CppClass<Encodi
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillAllCppFunctions(shared_ptr< _CppClass<EncodingT> > o, bool nowait)  
+_CppClassAccess<EncodingT>::fillAllCppFunctions(boost::shared_ptr< _CppClass<EncodingT> > o, bool nowait)  
 {
 	fillManyCppFunctions(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillOneCppFunction(shared_ptr< _CppClass<EncodingT> > o, int identifier, bool nowait)  
+_CppClassAccess<EncodingT>::fillOneCppFunction(boost::shared_ptr< _CppClass<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyCppFunctions(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillManyCppFunctions(shared_ptr< _CppClass<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppClassAccess<EncodingT>::fillManyCppFunctions(boost::shared_ptr< _CppClass<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -386,13 +386,13 @@ _CppClassAccess<EncodingT>::fillManyCppFunctions(shared_ptr< _CppClass<EncodingT
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppFunction<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
 	typename EncodingT::string_t cppFunctionFilter = C("idClass = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppFunctionFilter += C(" AND ") + filter;
 	}
 	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename std::vector< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait);
@@ -409,21 +409,21 @@ _CppClassAccess<EncodingT>::fillManyCppFunctions(shared_ptr< _CppClass<EncodingT
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillAllCppAttributes(shared_ptr< _CppClass<EncodingT> > o, bool nowait)  
+_CppClassAccess<EncodingT>::fillAllCppAttributes(boost::shared_ptr< _CppClass<EncodingT> > o, bool nowait)  
 {
 	fillManyCppAttributes(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillOneCppAttribute(shared_ptr< _CppClass<EncodingT> > o, int identifier, bool nowait)  
+_CppClassAccess<EncodingT>::fillOneCppAttribute(boost::shared_ptr< _CppClass<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyCppAttributes(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::fillManyCppAttributes(shared_ptr< _CppClass<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppClassAccess<EncodingT>::fillManyCppAttributes(boost::shared_ptr< _CppClass<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -438,13 +438,13 @@ _CppClassAccess<EncodingT>::fillManyCppAttributes(shared_ptr< _CppClass<Encoding
 		m_logger->errorStream() << "CppAttributeAccess class is not initialized.";
 		throw NullPointerException("CppAttributeAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppAttribute<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > > tab;
 	typename EncodingT::string_t cppAttributeFilter = C("idClass = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppAttributeFilter += C(" AND ") + filter;
 	}
 	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename std::vector< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppAttributeAccess->selectManyCppAttributes(cppAttributeFilter, nowait);
@@ -461,7 +461,7 @@ _CppClassAccess<EncodingT>::fillManyCppAttributes(shared_ptr< _CppClass<Encoding
 
 template<class EncodingT>
 bool
-_CppClassAccess<EncodingT>::isModifiedCppClass(shared_ptr< _CppClass<EncodingT> > o) const 
+_CppClassAccess<EncodingT>::isModifiedCppClass(boost::shared_ptr< _CppClass<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -487,7 +487,7 @@ _CppClassAccess<EncodingT>::isModifiedCppClass(shared_ptr< _CppClass<EncodingT> 
 		throw NullPointerException("CppAttributeAccess class is not initialized.");
 	}
 	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*o);
-	typename std::vector< shared_ptr< _CppClass<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename std::vector< boost::shared_ptr< _CppClass<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -563,7 +563,7 @@ _CppClassAccess<EncodingT>::isModifiedCppClass(shared_ptr< _CppClass<EncodingT> 
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)  
+_CppClassAccess<EncodingT>::updateCppClass(boost::shared_ptr< _CppClass<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -597,7 +597,7 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 		throw NullPointerException("CppAttributeAccess class is not initialized.");
 	}
 	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*o);
-	typename std::vector< shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename std::vector< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -647,8 +647,8 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
 			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
-		std::vector< shared_ptr< _CppInheritance<EncodingT> > > listOfCppInheritanceToAdd;
-		std::vector< shared_ptr< _CppInheritance<EncodingT> > > listOfCppInheritanceToUpdate;
+		std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > listOfCppInheritanceToAdd;
+		std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > listOfCppInheritanceToUpdate;
 		typename _CppClass<EncodingT>::CppInheritanceIterator cppInheritance;
 		for ( cppInheritance=o->getCppInheritancesBeginning(); cppInheritance!=o->getCppInheritancesEnd(); ++cppInheritance ) {
 			if (!(*cppInheritance)) {
@@ -665,7 +665,7 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 					listOfCppInheritanceToUpdate.push_back(*cppInheritance);
 			}
 		}
-		std::vector< shared_ptr< _CppInheritance<EncodingT> > > listOfCppInheritanceToRemove;
+		std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > listOfCppInheritanceToRemove;
 		for ( cppInheritance=(*save)->getCppInheritancesBeginning(); cppInheritance<(*save)->getCppInheritancesEnd(); ++cppInheritance ) {
 			if (!(*cppInheritance)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -676,8 +676,8 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 				listOfCppInheritanceToRemove.push_back(*cppInheritance);
 			}
 		}
-		std::vector< shared_ptr< _CppFunction<EncodingT> > > listOfCppFunctionToAdd;
-		std::vector< shared_ptr< _CppFunction<EncodingT> > > listOfCppFunctionToUpdate;
+		std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > listOfCppFunctionToAdd;
+		std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > listOfCppFunctionToUpdate;
 		typename _CppClass<EncodingT>::CppFunctionIterator cppFunction;
 		for ( cppFunction=o->getCppFunctionsBeginning(); cppFunction!=o->getCppFunctionsEnd(); ++cppFunction ) {
 			if (!(*cppFunction)) {
@@ -694,7 +694,7 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 					listOfCppFunctionToUpdate.push_back(*cppFunction);
 			}
 		}
-		std::vector< shared_ptr< _CppFunction<EncodingT> > > listOfCppFunctionToRemove;
+		std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > listOfCppFunctionToRemove;
 		for ( cppFunction=(*save)->getCppFunctionsBeginning(); cppFunction<(*save)->getCppFunctionsEnd(); ++cppFunction ) {
 			if (!(*cppFunction)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -705,8 +705,8 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 				listOfCppFunctionToRemove.push_back(*cppFunction);
 			}
 		}
-		std::vector< shared_ptr< _CppAttribute<EncodingT> > > listOfCppAttributeToAdd;
-		std::vector< shared_ptr< _CppAttribute<EncodingT> > > listOfCppAttributeToUpdate;
+		std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > > listOfCppAttributeToAdd;
+		std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > > listOfCppAttributeToUpdate;
 		typename _CppClass<EncodingT>::CppAttributeIterator cppAttribute;
 		for ( cppAttribute=o->getCppAttributesBeginning(); cppAttribute!=o->getCppAttributesEnd(); ++cppAttribute ) {
 			if (!(*cppAttribute)) {
@@ -723,7 +723,7 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 					listOfCppAttributeToUpdate.push_back(*cppAttribute);
 			}
 		}
-		std::vector< shared_ptr< _CppAttribute<EncodingT> > > listOfCppAttributeToRemove;
+		std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > > listOfCppAttributeToRemove;
 		for ( cppAttribute=(*save)->getCppAttributesBeginning(); cppAttribute<(*save)->getCppAttributesEnd(); ++cppAttribute ) {
 			if (!(*cppAttribute)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -787,7 +787,7 @@ _CppClassAccess<EncodingT>::updateCppClass(shared_ptr< _CppClass<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::insertCppClass(shared_ptr< _CppClass<EncodingT> > o)  
+_CppClassAccess<EncodingT>::insertCppClass(boost::shared_ptr< _CppClass<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -892,7 +892,7 @@ _CppClassAccess<EncodingT>::insertCppClass(shared_ptr< _CppClass<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CppClassAccess<EncodingT>::deleteCppClass(shared_ptr< _CppClass<EncodingT> > o)  
+_CppClassAccess<EncodingT>::deleteCppClass(boost::shared_ptr< _CppClass<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -924,7 +924,7 @@ _CppClassAccess<EncodingT>::deleteCppClass(shared_ptr< _CppClass<EncodingT> > o)
 		throw NullPointerException("CppAttributeAccess class is not initialized.");
 	}
 	typename _CppClass<EncodingT>::CppClassIDEquality CppClassIdEquality(*o);
-	typename std::vector< shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppClassIdEquality);
+	typename std::vector< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppClassIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

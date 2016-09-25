@@ -6,25 +6,25 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 DebugFileInfoInterpreter<EncodingT>::DebugFileInfoInterpreter()
 {
-	setValue( shared_ptr< _DebugFileInfo<EncodingT> > (new _DebugFileInfo<EncodingT>()) );
+	setValue( boost::shared_ptr< _DebugFileInfo<EncodingT> > (new _DebugFileInfo<EncodingT>()) );
 }
 
 template <class EncodingT>
-DebugFileInfoInterpreter<EncodingT>::DebugFileInfoInterpreter(shared_ptr< _DebugFileInfo<EncodingT> > const& value)
+DebugFileInfoInterpreter<EncodingT>::DebugFileInfoInterpreter(boost::shared_ptr< _DebugFileInfo<EncodingT> > const& value)
 {
 	setValue(value);
 }
 
 template <class EncodingT>
-DebugFileInfoInterpreter<EncodingT>::DebugFileInfoInterpreter(shared_ptr< Base<EncodingT> > const& compilandPath,
-				shared_ptr< Base<EncodingT> > const& checksum)
+DebugFileInfoInterpreter<EncodingT>::DebugFileInfoInterpreter(boost::shared_ptr< Base<EncodingT> > const& compilandPath,
+				boost::shared_ptr< Base<EncodingT> > const& checksum)
 {
 	typename EncodingT::string_t nativeCompilandPath;
 	boost::container::vector<unsigned char> nativeChecksum;
 	if (check_string<EncodingT>(compilandPath, nativeCompilandPath) &&
 		check_numeric_array(checksum, nativeChecksum))
 	{
-		setValue(shared_ptr< _DebugFileInfo<EncodingT> >(new _DebugFileInfo<EncodingT>(nativeCompilandPath,
+		setValue(boost::shared_ptr< _DebugFileInfo<EncodingT> >(new _DebugFileInfo<EncodingT>(nativeCompilandPath,
 				nativeChecksum)));
 	}
 }
@@ -34,13 +34,13 @@ DebugFileInfoInterpreter<EncodingT>::~DebugFileInfoInterpreter()
 {}
 
 template <class EncodingT>
-shared_ptr< _DebugFileInfo<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _DebugFileInfo<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getValue() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void DebugFileInfoInterpreter<EncodingT>::setValue(shared_ptr< _DebugFileInfo<EncodingT> > const& object)
+void DebugFileInfoInterpreter<EncodingT>::setValue(boost::shared_ptr< _DebugFileInfo<EncodingT> > const& object)
 {
 	m_value = object;
 	String<EncodingT>::setValue(toString());
@@ -48,35 +48,35 @@ void DebugFileInfoInterpreter<EncodingT>::setValue(shared_ptr< _DebugFileInfo<En
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getIdentifier() const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getIdentifier() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getCompilandPath() const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getCompilandPath() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getCompilandPath()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getCompilandPath()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getChecksum() const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getChecksum() const
 {
 	return convert_numeric_array<EncodingT>(getValue()->getChecksum());
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getCppFile()
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getCppFile()
 {
-	return shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppFile()) );
 }
 
 
 template <class EncodingT>
-void DebugFileInfoInterpreter<EncodingT>::setCompilandPath(shared_ptr< Base<EncodingT> > const& compilandPath)
+void DebugFileInfoInterpreter<EncodingT>::setCompilandPath(boost::shared_ptr< Base<EncodingT> > const& compilandPath)
 {
 	typename EncodingT::string_t nativeCompilandPath;
 	if (check_string<EncodingT>(compilandPath, nativeCompilandPath))
@@ -87,7 +87,7 @@ void DebugFileInfoInterpreter<EncodingT>::setCompilandPath(shared_ptr< Base<Enco
 
 
 template <class EncodingT>
-void DebugFileInfoInterpreter<EncodingT>::setChecksum(shared_ptr< Base<EncodingT> > const& checksum)
+void DebugFileInfoInterpreter<EncodingT>::setChecksum(boost::shared_ptr< Base<EncodingT> > const& checksum)
 {
 	boost::container::vector<unsigned char> nativeChecksum;
 	if (check_numeric_array(checksum, nativeChecksum))
@@ -98,9 +98,9 @@ void DebugFileInfoInterpreter<EncodingT>::setChecksum(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void DebugFileInfoInterpreter<EncodingT>::setCppFile(shared_ptr< Base<EncodingT> > const& cppFile)
+void DebugFileInfoInterpreter<EncodingT>::setCppFile(boost::shared_ptr< Base<EncodingT> > const& cppFile)
 {
-	shared_ptr< _CppFile<EncodingT> > nativeCppFile;
+	boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
 	if (check_cppFile(cppFile, nativeCppFile))
 	{
 		getValue()->setCppFile(nativeCppFile);
@@ -109,9 +109,9 @@ void DebugFileInfoInterpreter<EncodingT>::setCppFile(shared_ptr< Base<EncodingT>
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::hasCppFile() const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::hasCppFile() const
 {
-	return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFile()) );
 }
 
 
@@ -130,9 +130,9 @@ typename EncodingT::string_t DebugFileInfoInterpreter<EncodingT>::toString() con
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new DebugFileInfoInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new DebugFileInfoInterpreter<EncodingT>(copy_ptr(getValue())));
 }
 
 template <class EncodingT>
@@ -142,9 +142,9 @@ typename EncodingT::string_t DebugFileInfoInterpreter<EncodingT>::getClassName()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -168,9 +168,9 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::invoke(const 
 }
 
 template <class EncodingT>
-bool check_debugFileInfo(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _DebugFileInfo<EncodingT> >& o)
+bool check_debugFileInfo(boost::shared_ptr< Base<EncodingT> > const& val, boost::shared_ptr< _DebugFileInfo<EncodingT> >& o)
 {
-	shared_ptr< DebugFileInfoInterpreter<EncodingT> > value  = dynamic_pointer_cast< DebugFileInfoInterpreter<EncodingT> >(val);
+	boost::shared_ptr< DebugFileInfoInterpreter<EncodingT> > value  = dynamic_pointer_cast< DebugFileInfoInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		o = value->getValue();
@@ -180,13 +180,13 @@ bool check_debugFileInfo(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "DebugFileInfo expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 template <class EncodingT>
-bool reset_debugFileInfo(shared_ptr< Base<EncodingT> >& val, shared_ptr< _DebugFileInfo<EncodingT> > const& o)
+bool reset_debugFileInfo(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr< _DebugFileInfo<EncodingT> > const& o)
 {
-	shared_ptr< DebugFileInfoInterpreter<EncodingT> > value  = dynamic_pointer_cast< DebugFileInfoInterpreter<EncodingT> >(val);
+	boost::shared_ptr< DebugFileInfoInterpreter<EncodingT> > value  = dynamic_pointer_cast< DebugFileInfoInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		value->setValue(o);
@@ -196,7 +196,7 @@ bool reset_debugFileInfo(shared_ptr< Base<EncodingT> >& val, shared_ptr< _DebugF
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "DebugFileInfo expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 NAMESPACE_END

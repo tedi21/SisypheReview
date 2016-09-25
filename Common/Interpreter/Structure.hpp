@@ -21,9 +21,9 @@ NAMESPACE_BEGIN(interp)
     : public String<EncodingT>
     {
     private:
-        typedef typename std::map< typename EncodingT::string_t, shared_ptr< Base<EncodingT> > >::iterator itr_t;
-        typedef typename std::map< typename EncodingT::string_t, shared_ptr< Base<EncodingT> > >::const_iterator iterator_t;
-        std::map< typename EncodingT::string_t, shared_ptr< Base<EncodingT> > > m_container;
+        typedef typename std::map< typename EncodingT::string_t, boost::shared_ptr< Base<EncodingT> > >::iterator itr_t;
+        typedef typename std::map< typename EncodingT::string_t, boost::shared_ptr< Base<EncodingT> > >::const_iterator iterator_t;
+        std::map< typename EncodingT::string_t, boost::shared_ptr< Base<EncodingT> > > m_container;
 
     public:
         // Constructor
@@ -34,18 +34,18 @@ NAMESPACE_BEGIN(interp)
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;    
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
         // Dynamic methods
         void removeField(typename EncodingT::string_t const& name);
 
-        void insertField(typename EncodingT::string_t const& name, shared_ptr< Base<EncodingT> > const& value);
+        void insertField(typename EncodingT::string_t const& name, boost::shared_ptr< Base<EncodingT> > const& value);
 
         size_t getFieldsCount() const;
 
-        bool findField(typename EncodingT::string_t const& name, shared_ptr< Base<EncodingT> >& value) const;
+        bool findField(typename EncodingT::string_t const& name, boost::shared_ptr< Base<EncodingT> >& value) const;
 
         iterator_t getField(size_t index) const;
 

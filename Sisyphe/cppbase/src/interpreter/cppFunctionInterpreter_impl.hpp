@@ -6,36 +6,36 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CppFunctionInterpreter<EncodingT>::CppFunctionInterpreter()
 {
-	setValue( shared_ptr< _CppFunction<EncodingT> > (new _CppFunction<EncodingT>()) );
+	setValue( boost::shared_ptr< _CppFunction<EncodingT> > (new _CppFunction<EncodingT>()) );
 }
 
 template <class EncodingT>
-CppFunctionInterpreter<EncodingT>::CppFunctionInterpreter(shared_ptr< _CppFunction<EncodingT> > const& value)
+CppFunctionInterpreter<EncodingT>::CppFunctionInterpreter(boost::shared_ptr< _CppFunction<EncodingT> > const& value)
 {
 	setValue(value);
 }
 
 template <class EncodingT>
-CppFunctionInterpreter<EncodingT>::CppFunctionInterpreter(shared_ptr< Base<EncodingT> > const& name,
-				shared_ptr< Base<EncodingT> > const& accessSpecifier,
-				shared_ptr< Base<EncodingT> > const& returnType,
-				shared_ptr< Base<EncodingT> > const& isConst,
-				shared_ptr< Base<EncodingT> > const& isVirtual,
-				shared_ptr< Base<EncodingT> > const& isVirtualPure,
-				shared_ptr< Base<EncodingT> > const& isStatic,
-				shared_ptr< Base<EncodingT> > const& isOperator,
-				shared_ptr< Base<EncodingT> > const& isDestructor,
-				shared_ptr< Base<EncodingT> > const& isConstructor,
-				shared_ptr< Base<EncodingT> > const& isVariadic,
-				shared_ptr< Base<EncodingT> > const& signature,
-				shared_ptr< Base<EncodingT> > const& startDecBlock,
-				shared_ptr< Base<EncodingT> > const& lengthDecBlock,
-				shared_ptr< Base<EncodingT> > const& decLineNumber,
-				shared_ptr< Base<EncodingT> > const& linesCount,
-				shared_ptr< Base<EncodingT> > const& complexity,
-				shared_ptr< Base<EncodingT> > const& defLineNumber,
-				shared_ptr< Base<EncodingT> > const& startDefBlock,
-				shared_ptr< Base<EncodingT> > const& lengthDefBlock)
+CppFunctionInterpreter<EncodingT>::CppFunctionInterpreter(boost::shared_ptr< Base<EncodingT> > const& name,
+				boost::shared_ptr< Base<EncodingT> > const& accessSpecifier,
+				boost::shared_ptr< Base<EncodingT> > const& returnType,
+				boost::shared_ptr< Base<EncodingT> > const& isConst,
+				boost::shared_ptr< Base<EncodingT> > const& isVirtual,
+				boost::shared_ptr< Base<EncodingT> > const& isVirtualPure,
+				boost::shared_ptr< Base<EncodingT> > const& isStatic,
+				boost::shared_ptr< Base<EncodingT> > const& isOperator,
+				boost::shared_ptr< Base<EncodingT> > const& isDestructor,
+				boost::shared_ptr< Base<EncodingT> > const& isConstructor,
+				boost::shared_ptr< Base<EncodingT> > const& isVariadic,
+				boost::shared_ptr< Base<EncodingT> > const& signature,
+				boost::shared_ptr< Base<EncodingT> > const& startDecBlock,
+				boost::shared_ptr< Base<EncodingT> > const& lengthDecBlock,
+				boost::shared_ptr< Base<EncodingT> > const& decLineNumber,
+				boost::shared_ptr< Base<EncodingT> > const& linesCount,
+				boost::shared_ptr< Base<EncodingT> > const& complexity,
+				boost::shared_ptr< Base<EncodingT> > const& defLineNumber,
+				boost::shared_ptr< Base<EncodingT> > const& startDefBlock,
+				boost::shared_ptr< Base<EncodingT> > const& lengthDefBlock)
 {
 	typename EncodingT::string_t nativeName;
 	typename EncodingT::string_t nativeAccessSpecifier;
@@ -78,7 +78,7 @@ CppFunctionInterpreter<EncodingT>::CppFunctionInterpreter(shared_ptr< Base<Encod
 		check_numeric(startDefBlock, nativeStartDefBlock) &&
 		check_numeric(lengthDefBlock, nativeLengthDefBlock))
 	{
-		setValue(shared_ptr< _CppFunction<EncodingT> >(new _CppFunction<EncodingT>(nativeName,
+		setValue(boost::shared_ptr< _CppFunction<EncodingT> >(new _CppFunction<EncodingT>(nativeName,
 				nativeAccessSpecifier,
 				nativeReturnType,
 				nativeIsConst,
@@ -106,13 +106,13 @@ CppFunctionInterpreter<EncodingT>::~CppFunctionInterpreter()
 {}
 
 template <class EncodingT>
-shared_ptr< _CppFunction<EncodingT> > CppFunctionInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CppFunction<EncodingT> > CppFunctionInterpreter<EncodingT>::getValue() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setValue(shared_ptr< _CppFunction<EncodingT> > const& object)
+void CppFunctionInterpreter<EncodingT>::setValue(boost::shared_ptr< _CppFunction<EncodingT> > const& object)
 {
 	m_value = object;
 	String<EncodingT>::setValue(toString());
@@ -120,177 +120,177 @@ void CppFunctionInterpreter<EncodingT>::setValue(shared_ptr< _CppFunction<Encodi
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIdentifier() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIdentifier() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getName() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getName() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getName()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getAccessSpecifier() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getAccessSpecifier() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getAccessSpecifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getAccessSpecifier()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getReturnType() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getReturnType() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getReturnType()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getReturnType()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsConst() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsConst() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsConst()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsConst()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsVirtual() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsVirtual() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsVirtual()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsVirtual()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsVirtualPure() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsVirtualPure() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsVirtualPure()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsVirtualPure()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsStatic() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsStatic() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsStatic()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsStatic()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsOperator() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsOperator() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsOperator()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsOperator()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsDestructor() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsDestructor() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsDestructor()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsDestructor()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsConstructor() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsConstructor() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsConstructor()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsConstructor()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsVariadic() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getIsVariadic() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsVariadic()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsVariadic()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getSignature() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getSignature() const
 {
-	return shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getSignature()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getSignature()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getStartDecBlock() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getStartDecBlock() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartDecBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartDecBlock()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getLengthDecBlock() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getLengthDecBlock() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthDecBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthDecBlock()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getDecLineNumber() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getDecLineNumber() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDecLineNumber()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDecLineNumber()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getLinesCount() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getLinesCount() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLinesCount()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLinesCount()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getComplexity() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getComplexity() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getComplexity()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getComplexity()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getDefLineNumber() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getDefLineNumber() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDefLineNumber()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDefLineNumber()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getStartDefBlock() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getStartDefBlock() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartDefBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartDefBlock()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getLengthDefBlock() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getLengthDefBlock() const
 {
-	return shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthDefBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthDefBlock()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppDeclarationFile()
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppDeclarationFile()
 {
-	return shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppDeclarationFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppDeclarationFile()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppDefinitionFile()
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppDefinitionFile()
 {
-	return shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppDefinitionFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppDefinitionFile()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppClass()
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppClass()
 {
-	return shared_ptr< Base<EncodingT> >( new CppClassInterpreter<EncodingT>(getValue()->getCppClass()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppClassInterpreter<EncodingT>(getValue()->getCppClass()) );
 }
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setCppDeclarationFile(shared_ptr< Base<EncodingT> > const& cppDeclarationFile)
+void CppFunctionInterpreter<EncodingT>::setCppDeclarationFile(boost::shared_ptr< Base<EncodingT> > const& cppDeclarationFile)
 {
-	shared_ptr< _CppFile<EncodingT> > nativeCppDeclarationFile;
+	boost::shared_ptr< _CppFile<EncodingT> > nativeCppDeclarationFile;
 	if (check_cppFile(cppDeclarationFile, nativeCppDeclarationFile))
 	{
 		getValue()->setCppDeclarationFile(nativeCppDeclarationFile);
@@ -299,9 +299,9 @@ void CppFunctionInterpreter<EncodingT>::setCppDeclarationFile(shared_ptr< Base<E
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setCppDefinitionFile(shared_ptr< Base<EncodingT> > const& cppDefinitionFile)
+void CppFunctionInterpreter<EncodingT>::setCppDefinitionFile(boost::shared_ptr< Base<EncodingT> > const& cppDefinitionFile)
 {
-	shared_ptr< _CppFile<EncodingT> > nativeCppDefinitionFile;
+	boost::shared_ptr< _CppFile<EncodingT> > nativeCppDefinitionFile;
 	if (check_cppFile(cppDefinitionFile, nativeCppDefinitionFile))
 	{
 		getValue()->setCppDefinitionFile(nativeCppDefinitionFile);
@@ -310,7 +310,7 @@ void CppFunctionInterpreter<EncodingT>::setCppDefinitionFile(shared_ptr< Base<En
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setName(shared_ptr< Base<EncodingT> > const& name)
+void CppFunctionInterpreter<EncodingT>::setName(boost::shared_ptr< Base<EncodingT> > const& name)
 {
 	typename EncodingT::string_t nativeName;
 	if (check_string<EncodingT>(name, nativeName))
@@ -321,9 +321,9 @@ void CppFunctionInterpreter<EncodingT>::setName(shared_ptr< Base<EncodingT> > co
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setCppClass(shared_ptr< Base<EncodingT> > const& cppClass)
+void CppFunctionInterpreter<EncodingT>::setCppClass(boost::shared_ptr< Base<EncodingT> > const& cppClass)
 {
-	shared_ptr< _CppClass<EncodingT> > nativeCppClass;
+	boost::shared_ptr< _CppClass<EncodingT> > nativeCppClass;
 	if (check_cppClass(cppClass, nativeCppClass))
 	{
 		getValue()->setCppClass(nativeCppClass);
@@ -332,7 +332,7 @@ void CppFunctionInterpreter<EncodingT>::setCppClass(shared_ptr< Base<EncodingT> 
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setAccessSpecifier(shared_ptr< Base<EncodingT> > const& accessSpecifier)
+void CppFunctionInterpreter<EncodingT>::setAccessSpecifier(boost::shared_ptr< Base<EncodingT> > const& accessSpecifier)
 {
 	typename EncodingT::string_t nativeAccessSpecifier;
 	if (check_string<EncodingT>(accessSpecifier, nativeAccessSpecifier))
@@ -343,7 +343,7 @@ void CppFunctionInterpreter<EncodingT>::setAccessSpecifier(shared_ptr< Base<Enco
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setReturnType(shared_ptr< Base<EncodingT> > const& returnType)
+void CppFunctionInterpreter<EncodingT>::setReturnType(boost::shared_ptr< Base<EncodingT> > const& returnType)
 {
 	typename EncodingT::string_t nativeReturnType;
 	if (check_string<EncodingT>(returnType, nativeReturnType))
@@ -354,7 +354,7 @@ void CppFunctionInterpreter<EncodingT>::setReturnType(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsConst(shared_ptr< Base<EncodingT> > const& isConst)
+void CppFunctionInterpreter<EncodingT>::setIsConst(boost::shared_ptr< Base<EncodingT> > const& isConst)
 {
 	int nativeIsConst;
 	if (check_numeric(isConst, nativeIsConst))
@@ -365,7 +365,7 @@ void CppFunctionInterpreter<EncodingT>::setIsConst(shared_ptr< Base<EncodingT> >
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsVirtual(shared_ptr< Base<EncodingT> > const& isVirtual)
+void CppFunctionInterpreter<EncodingT>::setIsVirtual(boost::shared_ptr< Base<EncodingT> > const& isVirtual)
 {
 	int nativeIsVirtual;
 	if (check_numeric(isVirtual, nativeIsVirtual))
@@ -376,7 +376,7 @@ void CppFunctionInterpreter<EncodingT>::setIsVirtual(shared_ptr< Base<EncodingT>
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsVirtualPure(shared_ptr< Base<EncodingT> > const& isVirtualPure)
+void CppFunctionInterpreter<EncodingT>::setIsVirtualPure(boost::shared_ptr< Base<EncodingT> > const& isVirtualPure)
 {
 	int nativeIsVirtualPure;
 	if (check_numeric(isVirtualPure, nativeIsVirtualPure))
@@ -387,7 +387,7 @@ void CppFunctionInterpreter<EncodingT>::setIsVirtualPure(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsStatic(shared_ptr< Base<EncodingT> > const& isStatic)
+void CppFunctionInterpreter<EncodingT>::setIsStatic(boost::shared_ptr< Base<EncodingT> > const& isStatic)
 {
 	int nativeIsStatic;
 	if (check_numeric(isStatic, nativeIsStatic))
@@ -398,7 +398,7 @@ void CppFunctionInterpreter<EncodingT>::setIsStatic(shared_ptr< Base<EncodingT> 
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsOperator(shared_ptr< Base<EncodingT> > const& isOperator)
+void CppFunctionInterpreter<EncodingT>::setIsOperator(boost::shared_ptr< Base<EncodingT> > const& isOperator)
 {
 	int nativeIsOperator;
 	if (check_numeric(isOperator, nativeIsOperator))
@@ -409,7 +409,7 @@ void CppFunctionInterpreter<EncodingT>::setIsOperator(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsDestructor(shared_ptr< Base<EncodingT> > const& isDestructor)
+void CppFunctionInterpreter<EncodingT>::setIsDestructor(boost::shared_ptr< Base<EncodingT> > const& isDestructor)
 {
 	int nativeIsDestructor;
 	if (check_numeric(isDestructor, nativeIsDestructor))
@@ -420,7 +420,7 @@ void CppFunctionInterpreter<EncodingT>::setIsDestructor(shared_ptr< Base<Encodin
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsConstructor(shared_ptr< Base<EncodingT> > const& isConstructor)
+void CppFunctionInterpreter<EncodingT>::setIsConstructor(boost::shared_ptr< Base<EncodingT> > const& isConstructor)
 {
 	int nativeIsConstructor;
 	if (check_numeric(isConstructor, nativeIsConstructor))
@@ -431,7 +431,7 @@ void CppFunctionInterpreter<EncodingT>::setIsConstructor(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setIsVariadic(shared_ptr< Base<EncodingT> > const& isVariadic)
+void CppFunctionInterpreter<EncodingT>::setIsVariadic(boost::shared_ptr< Base<EncodingT> > const& isVariadic)
 {
 	int nativeIsVariadic;
 	if (check_numeric(isVariadic, nativeIsVariadic))
@@ -442,7 +442,7 @@ void CppFunctionInterpreter<EncodingT>::setIsVariadic(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setSignature(shared_ptr< Base<EncodingT> > const& signature)
+void CppFunctionInterpreter<EncodingT>::setSignature(boost::shared_ptr< Base<EncodingT> > const& signature)
 {
 	typename EncodingT::string_t nativeSignature;
 	if (check_string<EncodingT>(signature, nativeSignature))
@@ -453,7 +453,7 @@ void CppFunctionInterpreter<EncodingT>::setSignature(shared_ptr< Base<EncodingT>
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setStartDecBlock(shared_ptr< Base<EncodingT> > const& startDecBlock)
+void CppFunctionInterpreter<EncodingT>::setStartDecBlock(boost::shared_ptr< Base<EncodingT> > const& startDecBlock)
 {
 	int nativeStartDecBlock;
 	if (check_numeric(startDecBlock, nativeStartDecBlock))
@@ -464,7 +464,7 @@ void CppFunctionInterpreter<EncodingT>::setStartDecBlock(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setLengthDecBlock(shared_ptr< Base<EncodingT> > const& lengthDecBlock)
+void CppFunctionInterpreter<EncodingT>::setLengthDecBlock(boost::shared_ptr< Base<EncodingT> > const& lengthDecBlock)
 {
 	int nativeLengthDecBlock;
 	if (check_numeric(lengthDecBlock, nativeLengthDecBlock))
@@ -475,7 +475,7 @@ void CppFunctionInterpreter<EncodingT>::setLengthDecBlock(shared_ptr< Base<Encod
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setDecLineNumber(shared_ptr< Base<EncodingT> > const& decLineNumber)
+void CppFunctionInterpreter<EncodingT>::setDecLineNumber(boost::shared_ptr< Base<EncodingT> > const& decLineNumber)
 {
 	int nativeDecLineNumber;
 	if (check_numeric(decLineNumber, nativeDecLineNumber))
@@ -486,7 +486,7 @@ void CppFunctionInterpreter<EncodingT>::setDecLineNumber(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setLinesCount(shared_ptr< Base<EncodingT> > const& linesCount)
+void CppFunctionInterpreter<EncodingT>::setLinesCount(boost::shared_ptr< Base<EncodingT> > const& linesCount)
 {
 	int nativeLinesCount;
 	if (check_numeric(linesCount, nativeLinesCount))
@@ -497,7 +497,7 @@ void CppFunctionInterpreter<EncodingT>::setLinesCount(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setComplexity(shared_ptr< Base<EncodingT> > const& complexity)
+void CppFunctionInterpreter<EncodingT>::setComplexity(boost::shared_ptr< Base<EncodingT> > const& complexity)
 {
 	int nativeComplexity;
 	if (check_numeric(complexity, nativeComplexity))
@@ -508,7 +508,7 @@ void CppFunctionInterpreter<EncodingT>::setComplexity(shared_ptr< Base<EncodingT
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setDefLineNumber(shared_ptr< Base<EncodingT> > const& defLineNumber)
+void CppFunctionInterpreter<EncodingT>::setDefLineNumber(boost::shared_ptr< Base<EncodingT> > const& defLineNumber)
 {
 	int nativeDefLineNumber;
 	if (check_numeric(defLineNumber, nativeDefLineNumber))
@@ -519,7 +519,7 @@ void CppFunctionInterpreter<EncodingT>::setDefLineNumber(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setStartDefBlock(shared_ptr< Base<EncodingT> > const& startDefBlock)
+void CppFunctionInterpreter<EncodingT>::setStartDefBlock(boost::shared_ptr< Base<EncodingT> > const& startDefBlock)
 {
 	int nativeStartDefBlock;
 	if (check_numeric(startDefBlock, nativeStartDefBlock))
@@ -530,7 +530,7 @@ void CppFunctionInterpreter<EncodingT>::setStartDefBlock(shared_ptr< Base<Encodi
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::setLengthDefBlock(shared_ptr< Base<EncodingT> > const& lengthDefBlock)
+void CppFunctionInterpreter<EncodingT>::setLengthDefBlock(boost::shared_ptr< Base<EncodingT> > const& lengthDefBlock)
 {
 	int nativeLengthDefBlock;
 	if (check_numeric(lengthDefBlock, nativeLengthDefBlock))
@@ -541,23 +541,23 @@ void CppFunctionInterpreter<EncodingT>::setLengthDefBlock(shared_ptr< Base<Encod
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppDeclarationFile() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppDeclarationFile() const
 {
-	return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppDeclarationFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppDeclarationFile()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppDefinitionFile() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppDefinitionFile() const
 {
-	return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppDefinitionFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppDefinitionFile()) );
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppClass() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppClass() const
 {
-	return shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppClass()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppClass()) );
 }
 
 
@@ -583,7 +583,7 @@ void CppFunctionInterpreter<EncodingT>::removeCppClass()
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::removeCppParameter(shared_ptr< Base<EncodingT> > const& n)
+void CppFunctionInterpreter<EncodingT>::removeCppParameter(boost::shared_ptr< Base<EncodingT> > const& n)
 {
 	int nativePosition;
 	if (check_numeric(n, nativePosition))
@@ -594,7 +594,7 @@ void CppFunctionInterpreter<EncodingT>::removeCppParameter(shared_ptr< Base<Enco
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::removeCppVariable(shared_ptr< Base<EncodingT> > const& n)
+void CppFunctionInterpreter<EncodingT>::removeCppVariable(boost::shared_ptr< Base<EncodingT> > const& n)
 {
 	int nativePosition;
 	if (check_numeric(n, nativePosition))
@@ -605,7 +605,7 @@ void CppFunctionInterpreter<EncodingT>::removeCppVariable(shared_ptr< Base<Encod
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::removeDebugFunctionInfo(shared_ptr< Base<EncodingT> > const& n)
+void CppFunctionInterpreter<EncodingT>::removeDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
 	int nativePosition;
 	if (check_numeric(n, nativePosition))
@@ -616,10 +616,10 @@ void CppFunctionInterpreter<EncodingT>::removeDebugFunctionInfo(shared_ptr< Base
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::insertCppParameter(shared_ptr< Base<EncodingT> > const& n, shared_ptr< Base<EncodingT> > const& cppParameter)
+void CppFunctionInterpreter<EncodingT>::insertCppParameter(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& cppParameter)
 {
 	int nativePosition;
-	shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
+	boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 	if (check_numeric(n, nativePosition) &&
 		check_cppParameter(cppParameter, nativeCppParameter))
 	{
@@ -629,10 +629,10 @@ void CppFunctionInterpreter<EncodingT>::insertCppParameter(shared_ptr< Base<Enco
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::insertCppVariable(shared_ptr< Base<EncodingT> > const& n, shared_ptr< Base<EncodingT> > const& cppVariable)
+void CppFunctionInterpreter<EncodingT>::insertCppVariable(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& cppVariable)
 {
 	int nativePosition;
-	shared_ptr< _CppVariable<EncodingT> > nativeCppVariable;
+	boost::shared_ptr< _CppVariable<EncodingT> > nativeCppVariable;
 	if (check_numeric(n, nativePosition) &&
 		check_cppVariable(cppVariable, nativeCppVariable))
 	{
@@ -642,10 +642,10 @@ void CppFunctionInterpreter<EncodingT>::insertCppVariable(shared_ptr< Base<Encod
 
 
 template <class EncodingT>
-void CppFunctionInterpreter<EncodingT>::insertDebugFunctionInfo(shared_ptr< Base<EncodingT> > const& n, shared_ptr< Base<EncodingT> > const& debugFunctionInfo)
+void CppFunctionInterpreter<EncodingT>::insertDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& debugFunctionInfo)
 {
 	int nativePosition;
-	shared_ptr< _DebugFunctionInfo<EncodingT> > nativeDebugFunctionInfo;
+	boost::shared_ptr< _DebugFunctionInfo<EncodingT> > nativeDebugFunctionInfo;
 	if (check_numeric(n, nativePosition) &&
 		check_debugFunctionInfo(debugFunctionInfo, nativeDebugFunctionInfo))
 	{
@@ -655,9 +655,9 @@ void CppFunctionInterpreter<EncodingT>::insertDebugFunctionInfo(shared_ptr< Base
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppParameter(shared_ptr< Base<EncodingT> > const& n)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppParameter(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
 	int nativePosition;
 	if (check_numeric(n, nativePosition))
 	{
@@ -668,9 +668,9 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppParameter
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppVariable(shared_ptr< Base<EncodingT> > const& n)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppVariable(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	shared_ptr< Base<EncodingT> > res(new CppVariableInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppVariableInterpreter<EncodingT>());
 	int nativePosition;
 	if (check_numeric(n, nativePosition))
 	{
@@ -681,9 +681,9 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppVariable(
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getDebugFunctionInfo(shared_ptr< Base<EncodingT> > const& n)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	shared_ptr< Base<EncodingT> > res(new DebugFunctionInfoInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new DebugFunctionInfoInterpreter<EncodingT>());
 	int nativePosition;
 	if (check_numeric(n, nativePosition))
 	{
@@ -715,44 +715,44 @@ void CppFunctionInterpreter<EncodingT>::clearDebugFunctionInfos()
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppParameters() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppParameters() const
 {
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isCppParametersEmpty()));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isCppParametersEmpty()));
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppVariables() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasCppVariables() const
 {
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isCppVariablesEmpty()));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isCppVariablesEmpty()));
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasDebugFunctionInfos() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::hasDebugFunctionInfos() const
 {
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isDebugFunctionInfosEmpty()));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isDebugFunctionInfosEmpty()));
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::cppParametersCount() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::cppParametersCount() const
 {
-	return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getCppParametersSize()));
+	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getCppParametersSize()));
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::cppVariablesCount() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::cppVariablesCount() const
 {
-	return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getCppVariablesSize()));
+	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getCppVariablesSize()));
 }
 
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::debugFunctionInfosCount() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::debugFunctionInfosCount() const
 {
-	return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getDebugFunctionInfosSize()));
+	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getDebugFunctionInfosSize()));
 }
 
 template <class EncodingT>
@@ -764,9 +764,9 @@ typename EncodingT::string_t CppFunctionInterpreter<EncodingT>::toString() const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppFunctionInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CppFunctionInterpreter<EncodingT>(copy_ptr(getValue())));
 }
 
 template <class EncodingT>
@@ -776,9 +776,9 @@ typename EncodingT::string_t CppFunctionInterpreter<EncodingT>::getClassName() c
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -802,9 +802,9 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::invoke(const ty
 }
 
 template <class EncodingT>
-bool check_cppFunction(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _CppFunction<EncodingT> >& o)
+bool check_cppFunction(boost::shared_ptr< Base<EncodingT> > const& val, boost::shared_ptr< _CppFunction<EncodingT> >& o)
 {
-	shared_ptr< CppFunctionInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppFunctionInterpreter<EncodingT> >(val);
+	boost::shared_ptr< CppFunctionInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppFunctionInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		o = value->getValue();
@@ -814,13 +814,13 @@ bool check_cppFunction(shared_ptr< Base<EncodingT> > const& val, shared_ptr< _Cp
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "CppFunction expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 template <class EncodingT>
-bool reset_cppFunction(shared_ptr< Base<EncodingT> >& val, shared_ptr< _CppFunction<EncodingT> > const& o)
+bool reset_cppFunction(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr< _CppFunction<EncodingT> > const& o)
 {
-	shared_ptr< CppFunctionInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppFunctionInterpreter<EncodingT> >(val);
+	boost::shared_ptr< CppFunctionInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppFunctionInterpreter<EncodingT> >(val);
 	if (value)
 	{
 		value->setValue(o);
@@ -830,7 +830,7 @@ bool reset_cppFunction(shared_ptr< Base<EncodingT> >& val, shared_ptr< _CppFunct
 		Category* logger = &Category::getInstance(LOGNAME);
 		logger->errorStream() << "CppFunction expected, got " << A(val->getClassName());
 	}
-	return value;
+	return (value != NULL);
 }
 
 NAMESPACE_END

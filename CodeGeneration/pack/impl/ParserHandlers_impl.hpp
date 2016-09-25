@@ -60,7 +60,7 @@ namespace dsg {
         // MemoExecutionHandler Operator
         template <class IndexorT, class F1>
         void MemoExecutionHandler<IndexorT,F1>::operator()
-            (UniChar const* szStart, UniChar const* szEnd) const
+            (UniChar const*, UniChar const*) const
         {
             // Searches key 
             dictionnary_t::const_iterator i = m_table->find(m_indexor.getIndex(m_key));
@@ -129,7 +129,7 @@ namespace dsg {
         // MemoExecutionAndRemoveHandler Operator
         template <class IndexorT, class F1>
         void MemoExecutionAndRemoveHandler<IndexorT,F1>::operator()
-            (UniChar const* szStart, UniChar const* szEnd) const
+            (UniChar const*, UniChar const*) const
         {
             // Searches key 
             dictionnary_t::iterator i = m_table->find(m_indexor.getIndex(m_key));
@@ -173,10 +173,10 @@ namespace dsg {
         else
 
     #define IMPL_MODEL_PARSER_HANDLER(NameHandler)                               \
-        NameHandler::NameHandler(const shared_ptr<UniFileItr>& filePosition,     \
-                        const shared_ptr<UniEntityItr>& entityPosition,          \
-                        const shared_ptr<UniRelationItr>& relationPosition,      \
-                        const shared_ptr<UniAttributeItr>& attributePosition)    \
+        NameHandler::NameHandler(const boost::shared_ptr<UniFileItr>& filePosition,     \
+                        const boost::shared_ptr<UniEntityItr>& entityPosition,          \
+                        const boost::shared_ptr<UniRelationItr>& relationPosition,      \
+                        const boost::shared_ptr<UniAttributeItr>& attributePosition)    \
         : m_filePosition(filePosition),                                          \
         m_entityPosition(entityPosition),                                        \
         m_relationPosition(relationPosition),                                    \
@@ -188,10 +188,10 @@ namespace dsg {
                 (UniChar const* szStart, UniChar const* szEnd) const
         
     #define IMPL_MODEL_PARSER_ENUM_HANDLER(NameHandler, Enum, NameEnum)          \
-        NameHandler::NameHandler(const shared_ptr<UniFileItr>& filePosition,     \
-                        const shared_ptr<UniEntityItr>& entityPosition,          \
-                        const shared_ptr<UniRelationItr>& relationPosition,      \
-                        const shared_ptr<UniAttributeItr>& attributePosition,    \
+        NameHandler::NameHandler(const boost::shared_ptr<UniFileItr>& filePosition,     \
+                        const boost::shared_ptr<UniEntityItr>& entityPosition,          \
+                        const boost::shared_ptr<UniRelationItr>& relationPosition,      \
+                        const boost::shared_ptr<UniAttributeItr>& attributePosition,    \
                         Enum NameEnum)                                           \
         : m_filePosition(filePosition),                                          \
         m_entityPosition(entityPosition),                                        \

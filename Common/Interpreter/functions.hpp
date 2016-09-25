@@ -61,40 +61,50 @@ template <class EncodingT>
 typename EncodingT::string_t eat_space(typename EncodingT::string_t const& buf);
 
 template <class EncodingT>
-void tuple_op(typename EncodingT::string_t const& buf, 
-              typename EncodingT::string_t const& op, 
-              std::vector<typename EncodingT::string_t> & tab,
-              bool is_word = false);
+bool always_true(typename EncodingT::string_t const& buffer, size_t index) ;
+
+template <class EncodingT, class PredicateT>
+void tuple_op_if( typename EncodingT::string_t const& buf,
+                  typename EncodingT::string_t const& op,
+                  std::vector<typename EncodingT::string_t> & tab,
+                  PredicateT pred,
+                  bool is_word = false);
 
 template <class EncodingT>
-bool hyphenation(typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               typename EncodingT::string_t & left,
-               typename EncodingT::string_t & right,
-               size_t & start,
+void tuple_op( typename EncodingT::string_t const& buf,
+               typename EncodingT::string_t const& op,
+               std::vector<typename EncodingT::string_t> & tab,
                bool is_word = false);
 
 template <class EncodingT>
-bool hyphenation(typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               typename EncodingT::string_t & left,
-               typename EncodingT::string_t & right,
-               bool is_word = false);
+bool hyphenation(typename EncodingT::string_t const& buf,
+                 typename EncodingT::string_t const& op,
+                 typename EncodingT::string_t & left,
+                 typename EncodingT::string_t & right,
+                 size_t & start,
+                 bool is_word = false);
 
 template <class EncodingT>
-bool reverse_hyphenation(typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               typename EncodingT::string_t & left,
-               typename EncodingT::string_t & right,
-               size_t & start,
-               bool is_word = false);
+bool hyphenation(typename EncodingT::string_t const& buf,
+                 typename EncodingT::string_t const& op,
+                 typename EncodingT::string_t & left,
+                 typename EncodingT::string_t & right,
+                 bool is_word = false);
 
 template <class EncodingT>
-bool reverse_hyphenation(typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               typename EncodingT::string_t & left,
-               typename EncodingT::string_t & right,
-               bool is_word = false);
+bool reverse_hyphenation(typename EncodingT::string_t const& buf,
+                         typename EncodingT::string_t const& op,
+                         typename EncodingT::string_t & left,
+                         typename EncodingT::string_t & right,
+                         size_t & start,
+                         bool is_word = false);
+
+template <class EncodingT>
+bool reverse_hyphenation(typename EncodingT::string_t const& buf,
+                         typename EncodingT::string_t const& op,
+                         typename EncodingT::string_t & left,
+                         typename EncodingT::string_t & right,
+                         bool is_word = false);
 
 template <class EncodingT>
 bool prefix  (typename EncodingT::string_t const& buf, 

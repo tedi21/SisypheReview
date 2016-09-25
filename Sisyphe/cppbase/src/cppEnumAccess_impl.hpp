@@ -44,12 +44,12 @@ _CppEnumAccess<EncodingT>::~_CppEnumAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppEnum<EncodingT> > >
+std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >
 _CppEnumAccess<EncodingT>::getManyCppEnums(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppEnum<EncodingT> > value;
+	boost::shared_ptr< _CppEnum<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppEnum<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -86,21 +86,21 @@ _CppEnumAccess<EncodingT>::getManyCppEnums(typename EncodingT::string_t const&  
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppEnum<EncodingT> > >
+std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >
 _CppEnumAccess<EncodingT>::getAllCppEnums() const 
 {
 	return getManyCppEnums(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppEnum<EncodingT> >
+boost::shared_ptr< _CppEnum<EncodingT> >
 _CppEnumAccess<EncodingT>::getOneCppEnum(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppEnum<EncodingT> > > result = getManyCppEnums(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > result = getManyCppEnums(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -109,11 +109,11 @@ _CppEnumAccess<EncodingT>::getOneCppEnum(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppEnum<EncodingT> > >
+std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >
 _CppEnumAccess<EncodingT>::selectManyCppEnums(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppEnum<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -145,7 +145,7 @@ _CppEnumAccess<EncodingT>::selectManyCppEnums(typename EncodingT::string_t const
 			statement.getInt( 2, lineNumber ) &&
 			statement.getInt( 3, startBlock ) &&
 			statement.getInt( 4, lengthBlock )) {
-			tab.push_back(shared_ptr< _CppEnum<EncodingT> >(new _CppEnum<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppEnum<EncodingT> >(new _CppEnum<EncodingT>(
 				identifier,
 				name,
 				lineNumber,
@@ -158,14 +158,14 @@ _CppEnumAccess<EncodingT>::selectManyCppEnums(typename EncodingT::string_t const
 }
 
 template<class EncodingT>
-shared_ptr< _CppEnum<EncodingT> >
+boost::shared_ptr< _CppEnum<EncodingT> >
 _CppEnumAccess<EncodingT>::selectOneCppEnum(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppEnum<EncodingT> > > result = selectManyCppEnums(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > result = selectManyCppEnums(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -175,7 +175,7 @@ _CppEnumAccess<EncodingT>::selectOneCppEnum(int identifier, bool nowait, bool ad
 
 template<class EncodingT>
 bool
-_CppEnumAccess<EncodingT>::isSelectedCppEnum(shared_ptr< _CppEnum<EncodingT> > o) const 
+_CppEnumAccess<EncodingT>::isSelectedCppEnum(boost::shared_ptr< _CppEnum<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -216,7 +216,7 @@ _CppEnumAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::fillCppFile(shared_ptr< _CppEnum<EncodingT> > o)  
+_CppEnumAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppEnum<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -246,8 +246,8 @@ _CppEnumAccess<EncodingT>::fillCppFile(shared_ptr< _CppEnum<EncodingT> > o)
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppEnum")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
-		shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< shared_ptr<_CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
+		typename std::vector< boost::shared_ptr<_CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -261,21 +261,21 @@ _CppEnumAccess<EncodingT>::fillCppFile(shared_ptr< _CppEnum<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::fillAllCppEnumConstants(shared_ptr< _CppEnum<EncodingT> > o, bool nowait)  
+_CppEnumAccess<EncodingT>::fillAllCppEnumConstants(boost::shared_ptr< _CppEnum<EncodingT> > o, bool nowait)  
 {
 	fillManyCppEnumConstants(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::fillOneCppEnumConstant(shared_ptr< _CppEnum<EncodingT> > o, int identifier, bool nowait)  
+_CppEnumAccess<EncodingT>::fillOneCppEnumConstant(boost::shared_ptr< _CppEnum<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyCppEnumConstants(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::fillManyCppEnumConstants(shared_ptr< _CppEnum<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppEnumAccess<EncodingT>::fillManyCppEnumConstants(boost::shared_ptr< _CppEnum<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -290,13 +290,13 @@ _CppEnumAccess<EncodingT>::fillManyCppEnumConstants(shared_ptr< _CppEnum<Encodin
 		m_logger->errorStream() << "CppEnumConstantAccess class is not initialized.";
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > tab;
 	typename EncodingT::string_t cppEnumConstantFilter = C("idEnum = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppEnumConstantFilter += C(" AND ") + filter;
 	}
 	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppEnumConstantAccess->selectManyCppEnumConstants(cppEnumConstantFilter, nowait);
@@ -313,7 +313,7 @@ _CppEnumAccess<EncodingT>::fillManyCppEnumConstants(shared_ptr< _CppEnum<Encodin
 
 template<class EncodingT>
 bool
-_CppEnumAccess<EncodingT>::isModifiedCppEnum(shared_ptr< _CppEnum<EncodingT> > o) const 
+_CppEnumAccess<EncodingT>::isModifiedCppEnum(boost::shared_ptr< _CppEnum<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -329,7 +329,7 @@ _CppEnumAccess<EncodingT>::isModifiedCppEnum(shared_ptr< _CppEnum<EncodingT> > o
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
 	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(*o);
-	typename std::vector< shared_ptr< _CppEnum<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -365,7 +365,7 @@ _CppEnumAccess<EncodingT>::isModifiedCppEnum(shared_ptr< _CppEnum<EncodingT> > o
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::updateCppEnum(shared_ptr< _CppEnum<EncodingT> > o)  
+_CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -389,7 +389,7 @@ _CppEnumAccess<EncodingT>::updateCppEnum(shared_ptr< _CppEnum<EncodingT> > o)
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
 	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(*o);
-	typename std::vector< shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -423,8 +423,8 @@ _CppEnumAccess<EncodingT>::updateCppEnum(shared_ptr< _CppEnum<EncodingT> > o)
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
 			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
-		std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToAdd;
-		std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToUpdate;
+		std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToAdd;
+		std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToUpdate;
 		typename _CppEnum<EncodingT>::CppEnumConstantIterator cppEnumConstant;
 		for ( cppEnumConstant=o->getCppEnumConstantsBeginning(); cppEnumConstant!=o->getCppEnumConstantsEnd(); ++cppEnumConstant ) {
 			if (!(*cppEnumConstant)) {
@@ -441,7 +441,7 @@ _CppEnumAccess<EncodingT>::updateCppEnum(shared_ptr< _CppEnum<EncodingT> > o)
 					listOfCppEnumConstantToUpdate.push_back(*cppEnumConstant);
 			}
 		}
-		std::vector< shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToRemove;
+		std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToRemove;
 		for ( cppEnumConstant=(*save)->getCppEnumConstantsBeginning(); cppEnumConstant<(*save)->getCppEnumConstantsEnd(); ++cppEnumConstant ) {
 			if (!(*cppEnumConstant)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -485,7 +485,7 @@ _CppEnumAccess<EncodingT>::updateCppEnum(shared_ptr< _CppEnum<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::insertCppEnum(shared_ptr< _CppEnum<EncodingT> > o)  
+_CppEnumAccess<EncodingT>::insertCppEnum(boost::shared_ptr< _CppEnum<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -562,7 +562,7 @@ _CppEnumAccess<EncodingT>::insertCppEnum(shared_ptr< _CppEnum<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CppEnumAccess<EncodingT>::deleteCppEnum(shared_ptr< _CppEnum<EncodingT> > o)  
+_CppEnumAccess<EncodingT>::deleteCppEnum(boost::shared_ptr< _CppEnum<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -584,7 +584,7 @@ _CppEnumAccess<EncodingT>::deleteCppEnum(shared_ptr< _CppEnum<EncodingT> > o)
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
 	typename _CppEnum<EncodingT>::CppEnumIDEquality CppEnumIdEquality(*o);
-	typename std::vector< shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppEnumIdEquality);
+	typename std::vector< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppEnumIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

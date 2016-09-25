@@ -302,6 +302,11 @@
       info.debugStartAddress = $scope.currentFile.linesDebug[index].info.debugStart;
       info.debugEndAddress = $scope.currentFile.linesDebug[index].info.debugEnd;
       info.debugVariables = $scope.currentFile.linesDebug[index].info.debugVariables;
+      for (var i = 0; i < info.debugVariables.length; i++) {
+        info.debugVariables[i].value = 9;
+      }
+      info.debugFunctionId = $scope.currentFile.linesDebug[index].info.debugFunctionId;
+      info.debugReturn = $scope.currentFile.linesDebug[index].info.debugReturn;
       sisypheFactory.startDebug.save({}, info, function() {
         sisypheFactory.fileDebug.query({fileId: $scope.currentFile.id}, function(filedebug){
           for (var i = 0; i < filedebug.debugSymbols.length; i++) {

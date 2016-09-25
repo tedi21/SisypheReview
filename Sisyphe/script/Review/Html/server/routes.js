@@ -138,11 +138,16 @@
     {
       //console.log(req.body.functionName + ' : ' + req.body.functionAddress + ' : ' + req.body.debugStartAddress);
       var srcPath = decodeURIComponent(req.query.src);
-      var script = 'include("Pattern.td");\ninclude("DataBase.td");\ninclude("Parse.td");\ninclude("./Debug/debug.td");\nSourcePath = "' + srcPath + '";\nExePath = "' + config.debugPath + '";\ndebugInfo = new Structure();\ndebugInfo.startAddress = ' + req.body.debugStartAddress + ';\ndebugInfo.endAddress = ' + req.body.debugEndAddress + ';\ndebugInfo.variables = new Array()';
+      var script = 'include("Pattern.td");\ninclude("DataBase.td");\ninclude("Parse.td");\ninclude("./Debug/debug.td");\nSourcePath = "' + srcPath + '";\nExePath = "' + config.debugPath + '";\ndebugInfo = new Structure();\ndebugInfo.idDebugFunction = '
+      + req.body.debugFunctionId + ';\ndebugInfo.startAddress = ' + req.body.debugStartAddress + ';\ndebugInfo.endAddress = ' + req.body.debugEndAddress + ';\ndebugInfo.idVariables = new Array()';
       for (var ivar = 0; ivar < req.body.debugVariables.length; ivar++) {
-        script =  script + ';\ndebugInfo.variables[' + ivar + '] = ' + req.body.debugVariables[ivar].identifier;
+        script =  script + ';\ndebugInfo.idVariables[' + ivar + '] = ' + req.body.debugVariables[ivar].identifier;
       }
-      script =  script + ';\nRunDebug(ExePath, ' + req.body.functionAddress + ', debugInfo);';
+      script =  script + ';\ndebugInfo.variables = new Array()';
+      for (var ivar = 0; ivar < req.body.debugVariables.length; ivar++) {
+        script =  script + ';\ndebugInfo.variables[' + ivar + '] = ' + req.body.debugVariables[ivar].value;
+      }
+      script =  script + ';\ndebugInfo.returnType = "' + req.body.debugReturn + '";\nRunDebug(ExePath, ' + req.body.functionAddress + ', debugInfo);';
       var encoded = iconvlite.encode(script, 'UTF16-LE', {addBOM: true});
       var mainPath = path.join(config.outPath, 'main.td');
       fs.writeFile(mainPath, encoded, function(err) {
@@ -303,11 +308,11 @@
         file.compilandPath = rows.values[0][1];
         file.checksum = rows.values[0][2];
         
-        results = db.exec('SELECT c.name, d.lineNumber, d.address, d.debugStart, d.debugEnd, d.identifier FROM cppFunction c, debugFunctionInfo d WHERE c.idDefFile=' + fileId + ' and c.lengthDefBlock!=0 and c.identifier=d.idFunction;');
+        results = db.exec('SELECT c.name, d.lineNumber, d.address, d.debugStart, d.debugEnd, d.identifier, d.debugReturnType FROM cppFunction c, debugFunctionInfo d WHERE c.idDefFile=' + fileId + ' and c.lengthDefBlock!=0 and c.identifier=d.idFunction;');
         if (results !== null && results.length > 0){
           rows = results[0];
           for (var i = 0; i < rows.values.length; i++) {
-            results = db.exec('SELECT dv.identifier, dv.name, dv.category, dv.type, dv.textValue FROM debugVariableInfo dv WHERE dv.idDebugFunction=' + rows.values[i][5] + ';');
+            results = db.exec('SELECT dv.identifier, dv.name, dv.category, dv.debugType, dv.textValue FROM debugVariableInfo dv WHERE dv.idDebugFunction=' + rows.values[i][5] + ';');
             var debugVars = [];
             if (results !== null && results.length > 0){
               var rowVars = results[0];
@@ -327,6 +332,8 @@
                         'address': rows.values[i][2],
                         'debugStart': rows.values[i][3],
                         'debugEnd': rows.values[i][4],
+                        'debugFunctionId': rows.values[i][5],
+                        'debugReturn': rows.values[i][6],
                         'debugVariables': debugVars
                       });
             //console.log(file.debugSymbols[i].name + " " + file.debugSymbols[i].lineNumber + " " + file.debugSymbols[i].address + " " + file.debugSymbols[i].debugStart + " " + file.debugSymbols[i].debugEnd + " " + file.debugSymbols[i].debugVariables[0].name);

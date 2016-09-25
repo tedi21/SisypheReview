@@ -90,7 +90,7 @@ extern "C" CPPBASEPLG_API void PlugInit(va_list vl, void** res)
     StatementInterpreter<ucs>::register_class();
     DataParametersInterpreter<ucs>::register_class();
 
-    const std::vector<string>& args = *(va_arg(vl,const std::vector<string>*));
+    const std::vector<std::string>& args = *(va_arg(vl,const std::vector<std::string>*));
     if (!args.empty())
     {
         if (!data_access::UniDataConnection::openConnection(L"", 0, encode<ansi,ucs>(args[0]), L"", L""))

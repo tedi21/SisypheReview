@@ -98,7 +98,7 @@ namespace gen {
     template <bool _false, class A>
     struct actor_context_policy<_false, A, 0>
     {
-        static typename A::result_t apply(typename A::functor_t & f, typename A::context_t & c)
+        static typename A::result_t apply(typename A::functor_t & f, typename A::context_t &)
         {
             return f();
         }

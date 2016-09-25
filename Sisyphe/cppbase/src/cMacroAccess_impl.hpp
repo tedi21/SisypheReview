@@ -44,12 +44,12 @@ _CMacroAccess<EncodingT>::~_CMacroAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CMacro<EncodingT> > >
+std::vector< boost::shared_ptr< _CMacro<EncodingT> > >
 _CMacroAccess<EncodingT>::getManyCMacros(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CMacro<EncodingT> > value;
+	boost::shared_ptr< _CMacro<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CMacro<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CMacro<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -94,21 +94,21 @@ _CMacroAccess<EncodingT>::getManyCMacros(typename EncodingT::string_t const&  fi
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CMacro<EncodingT> > >
+std::vector< boost::shared_ptr< _CMacro<EncodingT> > >
 _CMacroAccess<EncodingT>::getAllCMacros() const 
 {
 	return getManyCMacros(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CMacro<EncodingT> >
+boost::shared_ptr< _CMacro<EncodingT> >
 _CMacroAccess<EncodingT>::getOneCMacro(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CMacro<EncodingT> > > result = getManyCMacros(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CMacro<EncodingT> > > result = getManyCMacros(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -117,11 +117,11 @@ _CMacroAccess<EncodingT>::getOneCMacro(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CMacro<EncodingT> > >
+std::vector< boost::shared_ptr< _CMacro<EncodingT> > >
 _CMacroAccess<EncodingT>::selectManyCMacros(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CMacro<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CMacro<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -159,7 +159,7 @@ _CMacroAccess<EncodingT>::selectManyCMacros(typename EncodingT::string_t const& 
 			statement.getInt( 4, lineNumber ) &&
 			statement.getInt( 5, startBlock ) &&
 			statement.getInt( 6, lengthBlock )) {
-			tab.push_back(shared_ptr< _CMacro<EncodingT> >(new _CMacro<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CMacro<EncodingT> >(new _CMacro<EncodingT>(
 				identifier,
 				name,
 				isConst,
@@ -174,14 +174,14 @@ _CMacroAccess<EncodingT>::selectManyCMacros(typename EncodingT::string_t const& 
 }
 
 template<class EncodingT>
-shared_ptr< _CMacro<EncodingT> >
+boost::shared_ptr< _CMacro<EncodingT> >
 _CMacroAccess<EncodingT>::selectOneCMacro(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CMacro<EncodingT> > > result = selectManyCMacros(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CMacro<EncodingT> > > result = selectManyCMacros(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -191,7 +191,7 @@ _CMacroAccess<EncodingT>::selectOneCMacro(int identifier, bool nowait, bool addi
 
 template<class EncodingT>
 bool
-_CMacroAccess<EncodingT>::isSelectedCMacro(shared_ptr< _CMacro<EncodingT> > o) const 
+_CMacroAccess<EncodingT>::isSelectedCMacro(boost::shared_ptr< _CMacro<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -226,7 +226,7 @@ _CMacroAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CMacroAccess<EncodingT>::fillCppFile(shared_ptr< _CMacro<EncodingT> > o)  
+_CMacroAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CMacro<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -256,8 +256,8 @@ _CMacroAccess<EncodingT>::fillCppFile(shared_ptr< _CMacro<EncodingT> > o)
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cMacro")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(o->getIdentifier());
-		shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< shared_ptr<_CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
+		typename std::vector< boost::shared_ptr<_CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -271,7 +271,7 @@ _CMacroAccess<EncodingT>::fillCppFile(shared_ptr< _CMacro<EncodingT> > o)
 
 template<class EncodingT>
 bool
-_CMacroAccess<EncodingT>::isModifiedCMacro(shared_ptr< _CMacro<EncodingT> > o) const 
+_CMacroAccess<EncodingT>::isModifiedCMacro(boost::shared_ptr< _CMacro<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -282,7 +282,7 @@ _CMacroAccess<EncodingT>::isModifiedCMacro(shared_ptr< _CMacro<EncodingT> > o) c
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(*o);
-	typename std::vector< shared_ptr< _CMacro<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
+	typename std::vector< boost::shared_ptr< _CMacro<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -302,7 +302,7 @@ _CMacroAccess<EncodingT>::isModifiedCMacro(shared_ptr< _CMacro<EncodingT> > o) c
 
 template<class EncodingT>
 void
-_CMacroAccess<EncodingT>::updateCMacro(shared_ptr< _CMacro<EncodingT> > o)  
+_CMacroAccess<EncodingT>::updateCMacro(boost::shared_ptr< _CMacro<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -321,7 +321,7 @@ _CMacroAccess<EncodingT>::updateCMacro(shared_ptr< _CMacro<EncodingT> > o)
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(*o);
-	typename std::vector< shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
+	typename std::vector< boost::shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -387,7 +387,7 @@ _CMacroAccess<EncodingT>::updateCMacro(shared_ptr< _CMacro<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CMacroAccess<EncodingT>::insertCMacro(shared_ptr< _CMacro<EncodingT> > o)  
+_CMacroAccess<EncodingT>::insertCMacro(boost::shared_ptr< _CMacro<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -458,7 +458,7 @@ _CMacroAccess<EncodingT>::insertCMacro(shared_ptr< _CMacro<EncodingT> > o)
 
 template<class EncodingT>
 void
-_CMacroAccess<EncodingT>::deleteCMacro(shared_ptr< _CMacro<EncodingT> > o)  
+_CMacroAccess<EncodingT>::deleteCMacro(boost::shared_ptr< _CMacro<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -475,7 +475,7 @@ _CMacroAccess<EncodingT>::deleteCMacro(shared_ptr< _CMacro<EncodingT> > o)
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CMacro<EncodingT>::CMacroIDEquality CMacroIdEquality(*o);
-	typename std::vector< shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CMacroIdEquality);
+	typename std::vector< boost::shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CMacroIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

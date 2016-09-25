@@ -44,12 +44,12 @@ _TextFileAccess<EncodingT>::~_TextFileAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _TextFile<EncodingT> > >
+std::vector< boost::shared_ptr< _TextFile<EncodingT> > >
 _TextFileAccess<EncodingT>::getManyTextFiles(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _TextFile<EncodingT> > value;
+	boost::shared_ptr< _TextFile<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _TextFile<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -74,21 +74,21 @@ _TextFileAccess<EncodingT>::getManyTextFiles(typename EncodingT::string_t const&
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _TextFile<EncodingT> > >
+std::vector< boost::shared_ptr< _TextFile<EncodingT> > >
 _TextFileAccess<EncodingT>::getAllTextFiles() const 
 {
 	return getManyTextFiles(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _TextFile<EncodingT> >
+boost::shared_ptr< _TextFile<EncodingT> >
 _TextFileAccess<EncodingT>::getOneTextFile(long long rowid) const 
 {
 	if ( rowid==-1 ) {
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	std::vector< shared_ptr< _TextFile<EncodingT> > > result = getManyTextFiles(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > result = getManyTextFiles(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -97,11 +97,11 @@ _TextFileAccess<EncodingT>::getOneTextFile(long long rowid) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _TextFile<EncodingT> > >
+std::vector< boost::shared_ptr< _TextFile<EncodingT> > >
 _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _TextFile<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -124,7 +124,7 @@ _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t con
 		typename EncodingT::string_t content;
 		if (statement.getInt64( 0, rowid ) &&
 			statement.getText( 1, content )) {
-			tab.push_back(shared_ptr< _TextFile<EncodingT> >(new _TextFile<EncodingT>(
+			tab.push_back(boost::shared_ptr< _TextFile<EncodingT> >(new _TextFile<EncodingT>(
 				rowid,
 				content)));
 		}
@@ -134,14 +134,14 @@ _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t con
 }
 
 template<class EncodingT>
-shared_ptr< _TextFile<EncodingT> >
+boost::shared_ptr< _TextFile<EncodingT> >
 _TextFileAccess<EncodingT>::selectOneTextFile(long long rowid, bool nowait, bool addition)  
 {
 	if ( rowid==-1 ) {
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	std::vector< shared_ptr< _TextFile<EncodingT> > > result = selectManyTextFiles(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > result = selectManyTextFiles(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -151,7 +151,7 @@ _TextFileAccess<EncodingT>::selectOneTextFile(long long rowid, bool nowait, bool
 
 template<class EncodingT>
 bool
-_TextFileAccess<EncodingT>::isSelectedTextFile(shared_ptr< _TextFile<EncodingT> > o) const 
+_TextFileAccess<EncodingT>::isSelectedTextFile(boost::shared_ptr< _TextFile<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -192,21 +192,21 @@ _TextFileAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::fillAllTextNotices(shared_ptr< _TextFile<EncodingT> > o, bool nowait)  
+_TextFileAccess<EncodingT>::fillAllTextNotices(boost::shared_ptr< _TextFile<EncodingT> > o, bool nowait)  
 {
 	fillManyTextNotices(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::fillOneTextNotice(shared_ptr< _TextFile<EncodingT> > o, long long rowid, bool nowait)  
+_TextFileAccess<EncodingT>::fillOneTextNotice(boost::shared_ptr< _TextFile<EncodingT> > o, long long rowid, bool nowait)  
 {
 	fillManyTextNotices(o, C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::fillManyTextNotices(shared_ptr< _TextFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_TextFileAccess<EncodingT>::fillManyTextNotices(boost::shared_ptr< _TextFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -221,13 +221,13 @@ _TextFileAccess<EncodingT>::fillManyTextNotices(shared_ptr< _TextFile<EncodingT>
 		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
 		throw NullPointerException("TextNoticeAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _TextNotice<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > tab;
 	typename EncodingT::string_t textNoticeFilter = C("idText = ") + C(ToString::parse(o->getRowid()));
 	if (!filter.empty()) {
 		textNoticeFilter += C(" AND ") + filter;
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
-	typename std::vector< shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = textNoticeAccess->selectManyTextNotices(textNoticeFilter, nowait);
@@ -244,7 +244,7 @@ _TextFileAccess<EncodingT>::fillManyTextNotices(shared_ptr< _TextFile<EncodingT>
 
 template<class EncodingT>
 bool
-_TextFileAccess<EncodingT>::isModifiedTextFile(shared_ptr< _TextFile<EncodingT> > o) const 
+_TextFileAccess<EncodingT>::isModifiedTextFile(boost::shared_ptr< _TextFile<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -260,7 +260,7 @@ _TextFileAccess<EncodingT>::isModifiedTextFile(shared_ptr< _TextFile<EncodingT> 
 		throw NullPointerException("TextNoticeAccess class is not initialized.");
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	typename std::vector< shared_ptr< _TextFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -290,7 +290,7 @@ _TextFileAccess<EncodingT>::isModifiedTextFile(shared_ptr< _TextFile<EncodingT> 
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::updateTextFile(shared_ptr< _TextFile<EncodingT> > o)  
+_TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -314,7 +314,7 @@ _TextFileAccess<EncodingT>::updateTextFile(shared_ptr< _TextFile<EncodingT> > o)
 		throw NullPointerException("TextNoticeAccess class is not initialized.");
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	typename std::vector< shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -324,8 +324,8 @@ _TextFileAccess<EncodingT>::updateTextFile(shared_ptr< _TextFile<EncodingT> > o)
 			values.addText( o->getContent() );
 			fields.push_back( C("content") );
 		}
-		std::vector< shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToAdd;
-		std::vector< shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToUpdate;
+		std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToAdd;
+		std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToUpdate;
 		typename _TextFile<EncodingT>::TextNoticeIterator textNotice;
 		for ( textNotice=o->getTextNoticesBeginning(); textNotice!=o->getTextNoticesEnd(); ++textNotice ) {
 			if (!(*textNotice)) {
@@ -342,7 +342,7 @@ _TextFileAccess<EncodingT>::updateTextFile(shared_ptr< _TextFile<EncodingT> > o)
 					listOfTextNoticeToUpdate.push_back(*textNotice);
 			}
 		}
-		std::vector< shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToRemove;
+		std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToRemove;
 		for ( textNotice=(*save)->getTextNoticesBeginning(); textNotice<(*save)->getTextNoticesEnd(); ++textNotice ) {
 			if (!(*textNotice)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -386,7 +386,7 @@ _TextFileAccess<EncodingT>::updateTextFile(shared_ptr< _TextFile<EncodingT> > o)
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::insertTextFile(shared_ptr< _TextFile<EncodingT> > o)  
+_TextFileAccess<EncodingT>::insertTextFile(boost::shared_ptr< _TextFile<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -443,7 +443,7 @@ _TextFileAccess<EncodingT>::insertTextFile(shared_ptr< _TextFile<EncodingT> > o)
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::deleteTextFile(shared_ptr< _TextFile<EncodingT> > o)  
+_TextFileAccess<EncodingT>::deleteTextFile(boost::shared_ptr< _TextFile<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -470,7 +470,7 @@ _TextFileAccess<EncodingT>::deleteTextFile(shared_ptr< _TextFile<EncodingT> > o)
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality TextFileIdEquality(*o);
-	typename std::vector< shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextFileIdEquality);
+	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

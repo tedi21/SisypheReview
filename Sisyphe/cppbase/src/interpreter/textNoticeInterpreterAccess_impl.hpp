@@ -21,9 +21,9 @@ typename EncodingT::string_t TextNoticeInterpreterAccess<EncodingT>::toString() 
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new TextNoticeInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new TextNoticeInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t TextNoticeInterpreterAccess<EncodingT>::getClassNam
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::invoke(con
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _TextNotice<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new TextNoticeInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new TextNoticeInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getAllTextNotices()
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getAllTextNotices()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getAllText
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getManyTextNotices(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getManyTextNotices(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getManyTex
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getOneTextNotice(shared_ptr< Base<EncodingT> > const& rowid)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getOneTextNotice(boost::shared_ptr< Base<EncodingT> > const& rowid)
 {
-	shared_ptr< Base<EncodingT> > res(new TextNoticeInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new TextNoticeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getOneText
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::selectOneTextNotice(shared_ptr< Base<EncodingT> > const& rowid,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::selectOneTextNotice(boost::shared_ptr< Base<EncodingT> > const& rowid,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new TextNoticeInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new TextNoticeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::selectOneT
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::selectManyTextNotices(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::selectManyTextNotices(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void TextNoticeInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::isSelectedTextNotice(const shared_ptr< Base<EncodingT> >& textNotice)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::isSelectedTextNotice(const boost::shared_ptr< Base<EncodingT> >& textNotice)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
+		boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
 		if (check_textNotice(textNotice, nativeTextNotice))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedTextNotice(nativeTextNotice)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::isSelected
 }
 
 template <class EncodingT>
-void TextNoticeInterpreterAccess<EncodingT>::fillTextFile(shared_ptr< Base<EncodingT> >& textNotice)
+void TextNoticeInterpreterAccess<EncodingT>::fillTextFile(boost::shared_ptr< Base<EncodingT> >& textNotice)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
+		boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
 		if (check_textNotice(textNotice, nativeTextNotice))
 		{
 			m_object->fillTextFile(nativeTextNotice);
@@ -224,13 +224,13 @@ void TextNoticeInterpreterAccess<EncodingT>::fillTextFile(shared_ptr< Base<Encod
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::isModifiedTextNotice(const shared_ptr< Base<EncodingT> >& textNotice)
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::isModifiedTextNotice(const boost::shared_ptr< Base<EncodingT> >& textNotice)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
+		boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
 		if (check_textNotice(textNotice, nativeTextNotice))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedTextNotice(nativeTextNotice)));
@@ -244,12 +244,12 @@ shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::isModified
 }
 
 template <class EncodingT>
-void TextNoticeInterpreterAccess<EncodingT>::updateTextNotice(shared_ptr< Base<EncodingT> >& textNotice)
+void TextNoticeInterpreterAccess<EncodingT>::updateTextNotice(boost::shared_ptr< Base<EncodingT> >& textNotice)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
+		boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
 		if (check_textNotice(textNotice, nativeTextNotice))
 		{
 			m_object->updateTextNotice(nativeTextNotice);
@@ -263,12 +263,12 @@ void TextNoticeInterpreterAccess<EncodingT>::updateTextNotice(shared_ptr< Base<E
 }
 
 template <class EncodingT>
-void TextNoticeInterpreterAccess<EncodingT>::insertTextNotice(shared_ptr< Base<EncodingT> >& textNotice)
+void TextNoticeInterpreterAccess<EncodingT>::insertTextNotice(boost::shared_ptr< Base<EncodingT> >& textNotice)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
+		boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
 		if (check_textNotice(textNotice, nativeTextNotice))
 		{
 			m_object->insertTextNotice(nativeTextNotice);
@@ -282,12 +282,12 @@ void TextNoticeInterpreterAccess<EncodingT>::insertTextNotice(shared_ptr< Base<E
 }
 
 template <class EncodingT>
-void TextNoticeInterpreterAccess<EncodingT>::deleteTextNotice(shared_ptr< Base<EncodingT> >& textNotice)
+void TextNoticeInterpreterAccess<EncodingT>::deleteTextNotice(boost::shared_ptr< Base<EncodingT> >& textNotice)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
+		boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
 		if (check_textNotice(textNotice, nativeTextNotice))
 		{
 			m_object->deleteTextNotice(nativeTextNotice);
@@ -315,14 +315,14 @@ void TextNoticeInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > TextNoticeInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

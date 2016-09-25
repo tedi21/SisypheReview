@@ -85,7 +85,7 @@ namespace fctr {
     struct WriteParameter
     {
         template <class MethodT>
-        static void Apply(const MethodT& method, ParameterArray& parameters, size_t index, const typename T::value_t& value)
+        static void Apply(const MethodT&, ParameterArray&, size_t, const typename T::value_t&)
         {}
     };
 

@@ -17,7 +17,7 @@ namespace dsg {
     //////////////////////////////////////////////////////
         typedef std::vector<short>   key_t;
         typedef map<key_t,UniString> dictionnary_t;
-        typedef shared_ptr< map<key_t,UniString> > dictionnary_ptr_t;
+        typedef boost::shared_ptr< map<key_t,UniString> > dictionnary_ptr_t;
     }
 }
 

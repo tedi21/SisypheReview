@@ -19,10 +19,10 @@ NAMESPACE_BEGIN(interp)
 
         virtual ~Base() {}
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method);
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
 
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER    (Base)
@@ -34,7 +34,7 @@ NAMESPACE_BEGIN(interp)
     };
 
     template <class EncodingT>
-    bool check_parameters_array(const std::vector< shared_ptr< Base<EncodingT> > >& params, ParameterArray& out);
+    bool check_parameters_array(const std::vector< boost::shared_ptr< Base<EncodingT> > >& params, ParameterArray& out);
 
     template <class EncodingT>
     bool tryInvoke( Base<EncodingT>* object,

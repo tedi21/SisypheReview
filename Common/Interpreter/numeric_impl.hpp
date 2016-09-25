@@ -21,7 +21,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    Numeric<EncodingT>::Numeric(shared_ptr< Base<EncodingT> > const& value)
+    Numeric<EncodingT>::Numeric(boost::shared_ptr< Base<EncodingT> > const& value)
     {
         double num;     
         if (check_numeric(value, num))
@@ -53,9 +53,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_value));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_value));
     }
 
     template <class EncodingT>
@@ -65,9 +65,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
         
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -91,15 +91,15 @@ NAMESPACE_BEGIN(interp)
     }
     
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::minus() const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::minus() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(-m_value));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(-m_value));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::plus(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::plus(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -109,9 +109,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::minus(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::minus(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -121,9 +121,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::multiply(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::multiply(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -133,9 +133,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::divide(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::divide(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -145,9 +145,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::equals(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::equals(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -157,9 +157,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::notEquals(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -169,9 +169,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::inferior(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::inferior(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -181,9 +181,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::inferiorOrEqual(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::inferiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -193,9 +193,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::superior(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::superior(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -205,9 +205,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::superiorOrEqual(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::superiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         double num;     
         if (check_numeric(val, num))
         {
@@ -229,19 +229,19 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Numeric<EncodingT>::parse(shared_ptr< Base<EncodingT> > const& str)
+    void Numeric<EncodingT>::parse(boost::shared_ptr< Base<EncodingT> > const& str)
     {
         m_value = Convert<double>::parse(str->toString());
     }
     
     template <class EncodingT>
-    void Numeric<EncodingT>::parseHex(shared_ptr< Base<EncodingT> > const& str)
+    void Numeric<EncodingT>::parseHex(boost::shared_ptr< Base<EncodingT> > const& str)
     {
         m_value = Convert<int>::parse(str->toString(), std::ios_base::hex);
     }
 
     template <class EncodingT>
-    void Numeric<EncodingT>::parseBase64(shared_ptr< Base<EncodingT> > const& str, shared_ptr< Base<EncodingT> > const& pos, shared_ptr< Base<EncodingT> > const& size)
+    void Numeric<EncodingT>::parseBase64(boost::shared_ptr< Base<EncodingT> > const& str, boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& size)
     {
         typename EncodingT::string_t text;
         double natPos, natSize;
@@ -260,13 +260,13 @@ NAMESPACE_BEGIN(interp)
                 >
                 binary_text;
             buffer.assign(binary_text(text.begin()), binary_text(text.end()));
-            int bitPos = natPos;
-            int bitSize = natSize;
-            int byteStart = bitPos / 8;
-            int byteEnd = (bitSize + bitPos) / 8;
-            int bitStart = bitPos % 8;
-            int bitEnd = (bitSize + bitPos) % 8;
-            int mask;
+            unsigned int bitPos = natPos;
+            unsigned int bitSize = natSize;
+            unsigned int byteStart = bitPos / 8;
+            unsigned int byteEnd = (bitSize + bitPos) / 8;
+            unsigned int bitStart = bitPos % 8;
+            unsigned int bitEnd = (bitSize + bitPos) % 8;
+            unsigned int mask;
             unsigned long long value = 0;
             if (byteEnd < buffer.size())
             {
@@ -288,15 +288,15 @@ NAMESPACE_BEGIN(interp)
     }
     
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Numeric<EncodingT>::convertHex() const
+    boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::convertHex() const
     {
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(Convert<typename EncodingT::string_t>::parse((int) m_value, std::ios_base::hex)));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(Convert<typename EncodingT::string_t>::parse((int) m_value, std::ios_base::hex)));
     }
 
     template <class EncodingT, class T>
-    bool check_numeric(shared_ptr< Base<EncodingT> > const& val, T& n)
+    bool check_numeric(boost::shared_ptr< Base<EncodingT> > const& val, T& n)
     {
-        shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);        
+        boost::shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);
         if (value)
         {
             n = (T) value->getValue();
@@ -306,13 +306,13 @@ NAMESPACE_BEGIN(interp)
             Category * logger = &Category::getInstance(LOGNAME);
             logger->errorStream() << "Numeric expected, got " << A(val->getClassName());            
         }
-        return value;
+        return (value != NULL);
     }
 
     template <class EncodingT, class T>
-    bool reset_numeric(shared_ptr< Base<EncodingT> >& val, T const& n)
+    bool reset_numeric(boost::shared_ptr< Base<EncodingT> >& val, T const& n)
     {
-        shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);
+        boost::shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);
         if (value)
         {
             value->setValue((double) n);
@@ -322,7 +322,7 @@ NAMESPACE_BEGIN(interp)
             Category * logger = &Category::getInstance(LOGNAME);
             logger->errorStream() << "Numeric expected, got " << A(val->getClassName());
         }
-        return value;
+        return (value != NULL);
     }
 
 NAMESPACE_END

@@ -34,11 +34,11 @@ typename EncodingT::string_t StatementInterpreter<EncodingT>::toString() const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::clone() const
 {
     Category* logger = &Category::getInstance(LOGNAME);
     logger->warnStream() << "Cannot clone Statement object.";
-    return shared_ptr< Base<EncodingT> >(new StatementInterpreter<EncodingT>());
+    return boost::shared_ptr< Base<EncodingT> >(new StatementInterpreter<EncodingT>());
 }
 
 template <class EncodingT>
@@ -48,9 +48,9 @@ typename EncodingT::string_t StatementInterpreter<EncodingT>::getClassName() con
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-    shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
@@ -73,10 +73,10 @@ shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::invoke(const type
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::executeStep()
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -90,10 +90,10 @@ StatementInterpreter<EncodingT>::executeStep()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::executeQuery()
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -107,11 +107,11 @@ StatementInterpreter<EncodingT>::executeQuery()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::setBlob(shared_ptr< Base<EncodingT> > const& index,
-                                         shared_ptr< Base<EncodingT> > const& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::setBlob(boost::shared_ptr< Base<EncodingT> > const& index,
+                                         boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -131,11 +131,11 @@ StatementInterpreter<EncodingT>::setBlob(shared_ptr< Base<EncodingT> > const& in
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::setDouble(shared_ptr< Base<EncodingT> > const& index,
-                                           shared_ptr< Base<EncodingT> > const& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::setDouble(boost::shared_ptr< Base<EncodingT> > const& index,
+                                           boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -155,11 +155,11 @@ StatementInterpreter<EncodingT>::setDouble(shared_ptr< Base<EncodingT> > const& 
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::setInt(shared_ptr< Base<EncodingT> > const& index,
-                                        shared_ptr< Base<EncodingT> > const& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::setInt(boost::shared_ptr< Base<EncodingT> > const& index,
+                                        boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -179,11 +179,11 @@ StatementInterpreter<EncodingT>::setInt(shared_ptr< Base<EncodingT> > const& ind
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::setInt64(shared_ptr< Base<EncodingT> > const& index,
-                                        shared_ptr< Base<EncodingT> > const& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::setInt64(boost::shared_ptr< Base<EncodingT> > const& index,
+                                        boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -203,11 +203,11 @@ StatementInterpreter<EncodingT>::setInt64(shared_ptr< Base<EncodingT> > const& i
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::setText(shared_ptr< Base<EncodingT> > const& index,
-                                         shared_ptr< Base<EncodingT> > const& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::setText(boost::shared_ptr< Base<EncodingT> > const& index,
+                                         boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -227,11 +227,11 @@ StatementInterpreter<EncodingT>::setText(shared_ptr< Base<EncodingT> > const& in
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::getBlob(shared_ptr< Base<EncodingT> > const& column,
-                                         shared_ptr< Base<EncodingT> >& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::getBlob(boost::shared_ptr< Base<EncodingT> > const& column,
+                                         boost::shared_ptr< Base<EncodingT> >& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -251,11 +251,11 @@ StatementInterpreter<EncodingT>::getBlob(shared_ptr< Base<EncodingT> > const& co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::getDouble(shared_ptr< Base<EncodingT> > const& column,
-                                           shared_ptr< Base<EncodingT> >& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::getDouble(boost::shared_ptr< Base<EncodingT> > const& column,
+                                           boost::shared_ptr< Base<EncodingT> >& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -275,11 +275,11 @@ StatementInterpreter<EncodingT>::getDouble(shared_ptr< Base<EncodingT> > const& 
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::getInt(shared_ptr< Base<EncodingT> > const& column,
-                                        shared_ptr< Base<EncodingT> >& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::getInt(boost::shared_ptr< Base<EncodingT> > const& column,
+                                        boost::shared_ptr< Base<EncodingT> >& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -299,11 +299,11 @@ StatementInterpreter<EncodingT>::getInt(shared_ptr< Base<EncodingT> > const& col
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::getInt64(shared_ptr< Base<EncodingT> > const& column,
-                                        shared_ptr< Base<EncodingT> >& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::getInt64(boost::shared_ptr< Base<EncodingT> > const& column,
+                                        boost::shared_ptr< Base<EncodingT> >& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -323,11 +323,11 @@ StatementInterpreter<EncodingT>::getInt64(shared_ptr< Base<EncodingT> > const& c
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-StatementInterpreter<EncodingT>::getText(shared_ptr< Base<EncodingT> > const& column,
-                                         shared_ptr< Base<EncodingT> >& value)
+boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::getText(boost::shared_ptr< Base<EncodingT> > const& column,
+                                         boost::shared_ptr< Base<EncodingT> >& value)
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -361,20 +361,20 @@ void StatementInterpreter<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-    shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+    boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
     if (str)
     {
         str->setValue(C(m_errorText));
     }
-    return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+    return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 template <class EncodingT>
-bool check_statement_pointer(shared_ptr< Base<EncodingT> > const& val, _DataStatement<EncodingT>*& o)
+bool check_statement_pointer(boost::shared_ptr< Base<EncodingT> > const& val, _DataStatement<EncodingT>*& o)
 {
-    shared_ptr< StatementInterpreter<EncodingT> > value  = dynamic_pointer_cast< StatementInterpreter<EncodingT> >(val);
+    boost::shared_ptr< StatementInterpreter<EncodingT> > value  = dynamic_pointer_cast< StatementInterpreter<EncodingT> >(val);
     if (value)
     {
         o = value->getPointer();
@@ -384,7 +384,7 @@ bool check_statement_pointer(shared_ptr< Base<EncodingT> > const& val, _DataStat
         Category* logger = &Category::getInstance(LOGNAME);
         logger->errorStream() << "Statement expected, got " << A(val->getClassName());
     }
-    return value;
+    return (value != NULL);
 }
 
 NAMESPACE_END

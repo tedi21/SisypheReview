@@ -24,8 +24,8 @@ NAMESPACE_BEGIN(interp)
 
         Bool(bool value);
 
-        FACTORY_PROTOTYPE1(Bool, In< shared_ptr< Base<EncodingT> > >)
-        Bool(shared_ptr< Base<EncodingT> > const& value);
+        FACTORY_PROTOTYPE1(Bool, In< boost::shared_ptr< Base<EncodingT> > >)
+        Bool(boost::shared_ptr< Base<EncodingT> > const& value);
 
         // Destructor
         ~Bool();
@@ -36,26 +36,26 @@ NAMESPACE_BEGIN(interp)
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;    
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
         // Dynamic methods
-        shared_ptr< Base<EncodingT> > not_() const;
+        boost::shared_ptr< Base<EncodingT> > not_() const;
 
-        FACTORY_PROTOTYPE1(and_, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > and_(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(and_, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > and_(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(or_, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > or_(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(or_, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > or_(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER    (Bool)
             CLASS_REGISTER1   (Bool)
-            METHOD_REGISTER   (Bool, shared_ptr< Base<EncodingT> >, not_, const_t)
-            METHOD_REGISTER1  (Bool, shared_ptr< Base<EncodingT> >, and_, const_t)
-            METHOD_REGISTER1  (Bool, shared_ptr< Base<EncodingT> >, or_, const_t)
+            METHOD_REGISTER   (Bool, boost::shared_ptr< Base<EncodingT> >, not_, const_t)
+            METHOD_REGISTER1  (Bool, boost::shared_ptr< Base<EncodingT> >, and_, const_t)
+            METHOD_REGISTER1  (Bool, boost::shared_ptr< Base<EncodingT> >, or_, const_t)
         FACTORY_END_REGISTER
 
         // Methods unregistration
@@ -69,7 +69,7 @@ NAMESPACE_BEGIN(interp)
     };
 
     template <class EncodingT>
-    bool check_bool(shared_ptr< Base<EncodingT> > const& val, bool& n);
+    bool check_bool(boost::shared_ptr< Base<EncodingT> > const& val, bool& n);
 
 NAMESPACE_END
 

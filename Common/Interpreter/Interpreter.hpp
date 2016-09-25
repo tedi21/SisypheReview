@@ -25,34 +25,34 @@ template <class EncodingT>
 class Context
 {
 private:
-    std::map< typename EncodingT::string_t,shared_ptr< Base<EncodingT> > >    objects;  
-    typedef typename std::map< typename EncodingT::string_t,shared_ptr< Base<EncodingT> > >::iterator itr_t;
+    std::map< typename EncodingT::string_t,boost::shared_ptr< Base<EncodingT> > >    objects;
+    typedef typename std::map< typename EncodingT::string_t,boost::shared_ptr< Base<EncodingT> > >::iterator itr_t;
 	
-	std::map< typename EncodingT::string_t,shared_ptr< Term<EncodingT> > >    functions;
-    typedef typename std::map< typename EncodingT::string_t,shared_ptr< Term<EncodingT> > >::const_iterator itr_fun_t;
+    std::map< typename EncodingT::string_t,boost::shared_ptr< Term<EncodingT> > >    functions;
+    typedef typename std::map< typename EncodingT::string_t,boost::shared_ptr< Term<EncodingT> > >::const_iterator itr_fun_t;
 
-    std::map< typename EncodingT::string_t,shared_ptr< Base<EncodingT> > >    constants;
+    std::map< typename EncodingT::string_t,boost::shared_ptr< Base<EncodingT> > >    constants;
 
 public:
     Context();
     ~Context();
-    typedef typename std::map< typename EncodingT::string_t,shared_ptr< Base<EncodingT> > >::const_iterator iterator_t;
-    void add(typename EncodingT::string_t const& var, shared_ptr< Base<EncodingT> > const& object);
+    typedef typename std::map< typename EncodingT::string_t,boost::shared_ptr< Base<EncodingT> > >::const_iterator iterator_t;
+    void add(typename EncodingT::string_t const& var, boost::shared_ptr< Base<EncodingT> > const& object);
     void remove(typename EncodingT::string_t const& var);
-	void clear();
-    shared_ptr< Base<EncodingT> > getObject(typename EncodingT::string_t const& var) const;
+    void clear();
+    boost::shared_ptr< Base<EncodingT> > getObject(typename EncodingT::string_t const& var) const;
     iterator_t findObject(typename EncodingT::string_t const& var) const;
-    shared_ptr< Base<EncodingT> > getObject(iterator_t& i) const;
+    boost::shared_ptr< Base<EncodingT> > getObject(iterator_t& i) const;
     typename EncodingT::string_t getIdentifier(iterator_t& i) const;
     size_t size() const;
     iterator_t begin() const;
     iterator_t end() const;
 	 
-    void declare(typename EncodingT::string_t const& name, shared_ptr< Term<EncodingT> > const& function);
-	shared_ptr< Term<EncodingT> > getFunction(typename EncodingT::string_t const& name) const;
+    void declare(typename EncodingT::string_t const& name, boost::shared_ptr< Term<EncodingT> > const& function);
+    boost::shared_ptr< Term<EncodingT> > getFunction(typename EncodingT::string_t const& name) const;
 
-    void define(typename EncodingT::string_t const& name, shared_ptr< Base<EncodingT> > const& constant);
-    shared_ptr< Base<EncodingT> > getConstant(typename EncodingT::string_t const& name) const;
+    void define(typename EncodingT::string_t const& name, boost::shared_ptr< Base<EncodingT> > const& constant);
+    boost::shared_ptr< Base<EncodingT> > getConstant(typename EncodingT::string_t const& name) const;
 };
 
 // Term expression
@@ -61,7 +61,8 @@ template <class EncodingT>
 class Term
 {
 public:
-    virtual shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c) = 0;
+    virtual ~Term(){}
+    virtual boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c) = 0;
 };
 
 // Address value
@@ -71,7 +72,7 @@ class Address
 : public Term<EncodingT>
 {
 public:
-    virtual void allocate(shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c) = 0;
+    virtual void allocate(boost::shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c) = 0;
 };
 
 NAMESPACE_END

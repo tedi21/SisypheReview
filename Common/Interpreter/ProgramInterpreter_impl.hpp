@@ -17,19 +17,19 @@
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Program<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Program<EncodingT>::interpret(Context<EncodingT> & c)
     {
         m_declaration->interpret(c);
         return m_block->interpret(c);
     }
 
     template <class EncodingT>
-    bool Program<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Program<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         bool success = false;
         typename EncodingT::string_t instructions;
-        shared_ptr< Term<EncodingT> > block;
-        shared_ptr< Term<EncodingT> > declaration;
+        boost::shared_ptr< Term<EncodingT> > block;
+        boost::shared_ptr< Term<EncodingT> > declaration;
         success = Declaration<EncodingT>::parse(buf, declaration, instructions) &&
                   Block<EncodingT>::parse(instructions, block, true);
         // clean program analysis
@@ -43,9 +43,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Declaration<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Declaration<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > ret(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > ret(new Base<EncodingT>());
         // Définit les constantes
         for (iterator i = m_constants.begin(); i < m_constants.end(); ++i)
         {
@@ -54,7 +54,7 @@ NAMESPACE_BEGIN(interp)
         // Declare les fonctions
         for (iterator i = m_functions.begin(); i < m_functions.end(); ++i)
         {
-            shared_ptr< Function<EncodingT> > function = dynamic_pointer_cast< Function<EncodingT> >(*i);
+            boost::shared_ptr< Function<EncodingT> > function = dynamic_pointer_cast< Function<EncodingT> >(*i);
             if (function)
             {
                 c.declare(function->getName(), function);
@@ -64,11 +64,11 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool Declaration<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value, typename EncodingT::string_t & instructions)
+    bool Declaration<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value, typename EncodingT::string_t & instructions)
     {
-        vector< shared_ptr< Term<EncodingT> > > constantsList;
-        vector< shared_ptr< Term<EncodingT> > > functionsList;
-        shared_ptr< Term<EncodingT> > declaration;
+        vector< boost::shared_ptr< Term<EncodingT> > > constantsList;
+        vector< boost::shared_ptr< Term<EncodingT> > > functionsList;
+        boost::shared_ptr< Term<EncodingT> > declaration;
         typename EncodingT::string_t sequence;
         Category * logger = &Category::getInstance(LOGNAME);
         typename EncodingT::string_t::const_iterator i = buf.begin();
@@ -149,9 +149,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Block<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Block<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > ret(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > ret(new Base<EncodingT>());
         for (iterator i = m_instructions.begin(); i < m_instructions.end(); ++i)
         {
             ret = (*i)->interpret(c);
@@ -160,10 +160,10 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool Block<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value, bool print)
+    bool Block<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value, bool print)
     {
-        vector< shared_ptr< Term<EncodingT> > > blockList;
-        shared_ptr< Term<EncodingT> > block;
+        vector< boost::shared_ptr< Term<EncodingT> > > blockList;
+        boost::shared_ptr< Term<EncodingT> > block;
         typename EncodingT::string_t sequence;
         Category * logger = &Category::getInstance(LOGNAME);
         typename EncodingT::string_t::const_iterator i = buf.begin();
@@ -251,15 +251,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > InstructionsList<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > InstructionsList<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return m_instruction->interpret(c);
     }
 
     template <class EncodingT>
-    bool InstructionsList<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool InstructionsList<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
-        shared_ptr< Term<EncodingT> > instruction;
+        boost::shared_ptr< Term<EncodingT> > instruction;
         typename EncodingT::string_t expr;
         bool success =  suffix<EncodingT>(buf, C(";"), expr) &&
                         Instruction<EncodingT>::parse(expr, instruction);
@@ -288,15 +288,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > CommentBlock<EncodingT>::interpret(Context<EncodingT>&)
+    boost::shared_ptr< Base<EncodingT> > CommentBlock<EncodingT>::interpret(Context<EncodingT>&)
     {
-        return shared_ptr< Base<EncodingT> >(new Base<EncodingT>());
+        return boost::shared_ptr< Base<EncodingT> >(new Base<EncodingT>());
     }
 
     template <class EncodingT>
-    bool CommentBlock<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool CommentBlock<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
-        shared_ptr< Term<EncodingT> > instruction;
+        boost::shared_ptr< Term<EncodingT> > instruction;
         typename EncodingT::string_t expr;
         bool success =  embrace<EncodingT>(buf, C("/*"), C("*/"), expr);
         if (success)
@@ -321,14 +321,14 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > RepetitiveBlock<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > RepetitiveBlock<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
         bool bool_value = false;
         do
         {
-            shared_ptr< Base<EncodingT> > baseexpr = m_condition->interpret(c);
-            shared_ptr< Bool<EncodingT> > boolexpr = dynamic_pointer_cast< Bool<EncodingT> >(baseexpr);
+            boost::shared_ptr< Base<EncodingT> > baseexpr = m_condition->interpret(c);
+            boost::shared_ptr< Bool<EncodingT> > boolexpr = dynamic_pointer_cast< Bool<EncodingT> >(baseexpr);
             if (boolexpr)
             {
                 bool_value = boolexpr->getValue();
@@ -348,12 +348,12 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool RepetitiveBlock<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool RepetitiveBlock<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
         typename EncodingT::string_t condition, instructions;
-        shared_ptr< Term<EncodingT> > condition_value;
-        shared_ptr< Term<EncodingT> > instructions_value;
+        boost::shared_ptr< Term<EncodingT> > condition_value;
+        boost::shared_ptr< Term<EncodingT> > instructions_value;
         bool success =  prefix<EncodingT>(expr, C("while"), expr, true) &&
                         suffix<EncodingT>(expr, C("endwhile"), expr, true) &&
                         hyphenation<EncodingT>(expr, C("do"), condition, instructions, true) &&
@@ -374,35 +374,52 @@ NAMESPACE_BEGIN(interp)
         k = next_space<EncodingT>(j, end);
         if (equal_symbol<EncodingT>(j, k, C("while")))
         {
+            j = k;
+            int ignore = 0;
             size_t cpt = 1;
             while (cpt != 0 && j != end)
             {
-                j = next_word<EncodingT>(k, end);
-                k = next_space<EncodingT>(j, end);
-                if (equal_symbol<EncodingT>(j, k, C("while")))
+                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("/*")))
+                {
+                    ignore = 1;
+                    j += 1;
+                }
+                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("\"")))
+                {
+                    ignore ^= 2;
+                }
+                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("*/")))
+                {
+                    ignore = 0;
+                    j += 1;
+                }
+                else if ((ignore == 0) && j+5 < end && isspace_(*(j-1)) && isspace_(*(j+5)) && equal_symbol<EncodingT>(j, j+5, C("while")))
                 {
                     ++cpt;
+                    j += 4;
                 }
-                if (equal_symbol<EncodingT>(j, k, C("endwhile")))
+                else if ((ignore == 0) && ((j+8 < end && isspace_(*(j+8))) || (j+8 == end)) && isspace_(*(j-1)) && equal_symbol<EncodingT>(j, j+8, C("endwhile")))
                 {
                     --cpt;
+                    j += 7;
                 }
+                j++;
             }
             // found
             if (cpt == 0)
             {
-                i = k;
+                i = j;
             }
         }
         return i;
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > ConditionalBlock<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > ConditionalBlock<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
-        shared_ptr< Base<EncodingT> > baseexpr = m_condition->interpret(c);
-        shared_ptr< Bool<EncodingT> > boolexpr = dynamic_pointer_cast< Bool<EncodingT> >(baseexpr);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > baseexpr = m_condition->interpret(c);
+        boost::shared_ptr< Bool<EncodingT> > boolexpr = dynamic_pointer_cast< Bool<EncodingT> >(baseexpr);
         if (boolexpr)
         {
             res = boolexpr;
@@ -425,12 +442,12 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool ConditionalBlock<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool ConditionalBlock<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
         typename EncodingT::string_t condition, instructions, if_instructions, else_instructions;
-        shared_ptr< Term<EncodingT> > condition_value;
-        shared_ptr< Term<EncodingT> > if_instructions_value, else_instructions_value;
+        boost::shared_ptr< Term<EncodingT> > condition_value;
+        boost::shared_ptr< Term<EncodingT> > if_instructions_value, else_instructions_value;
         bool success =  prefix<EncodingT>(expr, C("if"), expr, true) &&
                         suffix<EncodingT>(expr, C("endif"), expr, true) &&
                         hyphenation<EncodingT>(expr, C("then"), condition, instructions, true) &&
@@ -462,39 +479,56 @@ NAMESPACE_BEGIN(interp)
         k = next_space<EncodingT>(j, end);
         if (equal_symbol<EncodingT>(j, k, C("if")))
         {
+            j = k;
+            int ignore = 0;
             size_t cpt = 1;
             while (cpt != 0 && j != end)
             {
-                j = next_word<EncodingT>(k, end);
-                k = next_space<EncodingT>(j, end);
-                if (equal_symbol<EncodingT>(j, k, C("if")))
+                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("/*")))
+                {
+                    ignore = 1;
+                    j += 1;
+                }
+                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("\"")))
+                {
+                    ignore ^= 2;
+                }
+                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("*/")))
+                {
+                    ignore = 0;
+                    j += 1;
+                }
+                else if ((ignore == 0) && j+2 < end && isspace_(*(j-1)) && isspace_(*(j+2)) && equal_symbol<EncodingT>(j, j+2, C("if")))
                 {
                     ++cpt;
+                    j += 1;
                 }
-                if (equal_symbol<EncodingT>(j, k, C("endif")))
+                else if ((ignore == 0) && ((j+5 < end && isspace_(*(j+5))) || (j+5 == end)) && isspace_(*(j-1)) && equal_symbol<EncodingT>(j, j+5, C("endif")))
                 {
                     --cpt;
+                    j += 4;
                 }
+                j++;
             }
             // found
             if (cpt == 0)
             {
-                i = k;
+                i = j;
             }
         }
         return i;
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > ConstantsList<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > ConstantsList<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return m_instruction->interpret(c);
     }
 
     template <class EncodingT>
-    bool ConstantsList<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool ConstantsList<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
-        shared_ptr< Term<EncodingT> > instruction;
+        boost::shared_ptr< Term<EncodingT> > instruction;
         typename EncodingT::string_t expr;
         bool success =  suffix<EncodingT>(buf, C(";"), expr) &&
                         ConstantAssignment<EncodingT>::parse(expr, instruction);
@@ -526,7 +560,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Variable<EncodingT>::allocate(shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c)
+    void Variable<EncodingT>::allocate(boost::shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c)
     {
         if (dynamic_pointer_cast< Null<EncodingT> >(value))
         {
@@ -539,13 +573,13 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Variable<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Variable<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return c.getObject(m_name);
     }
 
     template <class EncodingT>
-    bool Variable<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Variable<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t identifier = eat_space<EncodingT>(buf);
         bool success = is_identifier<EncodingT>(identifier);
@@ -557,19 +591,19 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Assignment<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Assignment<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > val = m_instruction->interpret(c);
+        boost::shared_ptr< Base<EncodingT> > val = m_instruction->interpret(c);
         m_object->allocate(val, c);
         return val;
     }
 
     template <class EncodingT>
-    bool Assignment<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Assignment<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t left, right;
-        shared_ptr< Term<EncodingT> > right_value;
-        shared_ptr< Address<EncodingT> > left_value;
+        boost::shared_ptr< Term<EncodingT> > right_value;
+        boost::shared_ptr< Address<EncodingT> > left_value;
         bool success = binary_op<EncodingT>(buf, C("="), left, right) &&
                        Assignable<EncodingT>::parse(left, left_value) &&
                        Instruction<EncodingT>::parse(right, right_value);
@@ -581,19 +615,19 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Copy<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Copy<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > val = m_instruction->interpret(c)->clone();
+        boost::shared_ptr< Base<EncodingT> > val = m_instruction->interpret(c)->clone();
         m_object->allocate(val, c);
         return val;
     }
 
     template <class EncodingT>
-    bool Copy<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Copy<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t left, right;
-        shared_ptr< Term<EncodingT> > right_value;
-        shared_ptr< Address<EncodingT> > left_value;
+        boost::shared_ptr< Term<EncodingT> > right_value;
+        boost::shared_ptr< Address<EncodingT> > left_value;
         bool success = binary_op<EncodingT>(buf, C(":="), left, right) &&
                        Assignable<EncodingT>::parse(left, left_value) &&
                        Instruction<EncodingT>::parse(right, right_value);
@@ -605,16 +639,16 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Bracket<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Bracket<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return m_instruction->interpret(c);
     }
 
     template <class EncodingT>
-    bool Bracket<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Bracket<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr;
-        shared_ptr< Term<EncodingT> > expr_value;
+        boost::shared_ptr< Term<EncodingT> > expr_value;
         bool success = embrace<EncodingT>(buf, C("("), C(")"), expr) &&
                        Instruction<EncodingT>::parse(expr, expr_value);
         if (success)
@@ -632,14 +666,29 @@ NAMESPACE_BEGIN(interp)
         if (start!=end && equal_symbol<EncodingT>(start, start+1, C("(")))
         {
             typename EncodingT::string_t::const_iterator j = start+1;
+            int ignore = 0;
             size_t cpt = 1;
             while (cpt != 0 && j != end)
             {
-                if (equal_symbol<EncodingT>(j, j+1, C("(")))
+                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("/*")))
+                {
+                    ignore = 1;
+                    j += 1;
+                }
+                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("\"")))
+                {
+                    ignore ^= 2;
+                }
+                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("*/")))
+                {
+                    ignore = 0;
+                    j += 1;
+                }
+                else if ((ignore == 0) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("(")))
                 {
                     ++cpt;
                 }
-                if (equal_symbol<EncodingT>(j, j+1, C(")")))
+                else if ((ignore == 0) && j+1 <= end && equal_symbol<EncodingT>(j, j+1, C(")")))
                 {
                     --cpt;
                 }
@@ -655,19 +704,19 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > MemberAccessOperator<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > MemberAccessOperator<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > obj = m_instruction->interpret(c);
-        vector< shared_ptr< Base<EncodingT> > > inparameters, outparameters;
+        boost::shared_ptr< Base<EncodingT> > obj = m_instruction->interpret(c);
+        vector< boost::shared_ptr< Base<EncodingT> > > inparameters, outparameters;
         for (size_t i = 0; i<m_params.size(); ++i)
         {
             inparameters.push_back(m_params[i]->interpret(c));
         }
         outparameters = inparameters;
-        shared_ptr< Base<EncodingT> > ret =  obj->invoke( m_methodName, outparameters );
+        boost::shared_ptr< Base<EncodingT> > ret =  obj->invoke( m_methodName, outparameters );
         for (size_t i = 0; i<m_params.size(); ++i)
         {
-            shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_params[i]);
+            boost::shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_params[i]);
             if (ref)
             {
                 if (outparameters[i] != inparameters[i])
@@ -680,10 +729,10 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void MemberAccessOperator<EncodingT>::allocate(shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c)
+    void MemberAccessOperator<EncodingT>::allocate(boost::shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > obj = m_instruction->interpret(c);
-        vector< shared_ptr< Base<EncodingT> > > parameters;
+        boost::shared_ptr< Base<EncodingT> > obj = m_instruction->interpret(c);
+        vector< boost::shared_ptr< Base<EncodingT> > > parameters;
         for (size_t i = 0; i<m_params.size(); ++i)
         {
             parameters.push_back(m_params[i]->interpret(c));
@@ -700,14 +749,14 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool MemberAccessOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool MemberAccessOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t left, right, method;
-        shared_ptr< Term<EncodingT> > left_value;
-        vector< shared_ptr< Term<EncodingT> > > params_values;
+        boost::shared_ptr< Term<EncodingT> > left_value;
+        vector< boost::shared_ptr< Term<EncodingT> > > params_values;
         bool success = false;
         size_t i = buf.length();
-        while ( i != EncodingT::string_t::npos && !success)
+        while (i != EncodingT::string_t::npos && !success)
         {
             if (rbinary_op<EncodingT>(buf, C("."), left, right, i) &&
                 Instruction<EncodingT>::parse(left, left_value))
@@ -724,12 +773,13 @@ NAMESPACE_BEGIN(interp)
                 {
                     vector<typename EncodingT::string_t> params;
                     size_t j = 0;
-                    tuple_op<EncodingT>(parameters, C(","), params);
+                    ignore_literal_comment<EncodingT> predicat;
+                    tuple_op_if<EncodingT>(parameters, C(","), params, predicat);
                     params_values.clear();
                     while (success && j<params.size())
                     {
-                        shared_ptr< Address<EncodingT> > ref_value;
-                        shared_ptr< Term<EncodingT> >    expr_value;
+                        boost::shared_ptr< Address<EncodingT> > ref_value;
+                        boost::shared_ptr< Term<EncodingT> >    expr_value;
                         success = Assignable<EncodingT>::parse(params[j], ref_value) ||
                                   Instruction<EncodingT>::parse(params[j], expr_value);
                         if (ref_value)
@@ -753,15 +803,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Instruction<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Instruction<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return m_instruction->interpret(c);
     }
 
     template <class EncodingT>
-    bool Instruction<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Instruction<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
-       shared_ptr< Term<EncodingT> > instruction;
+       boost::shared_ptr< Term<EncodingT> > instruction;
        bool success = false;
        typename IntructionsMap::const_iterator i = analyzed.find(buf);
        if (i == analyzed.end())
@@ -769,8 +819,8 @@ NAMESPACE_BEGIN(interp)
            success =
                IncludeInstruction<EncodingT>::parse(buf, instruction)       ||
                PrintInstruction<EncodingT>::parse(buf, instruction)         ||
-			   SystemInstruction<EncodingT>::parse(buf, instruction)        ||
-               Copy<EncodingT>::parse(buf, instruction)               		||
+               SystemInstruction<EncodingT>::parse(buf, instruction)        ||
+               Copy<EncodingT>::parse(buf, instruction)               		  ||
                Assignment<EncodingT>::parse(buf, instruction)               ||
                SaveOperator<EncodingT>::parse(buf, instruction)             ||
                LoadOperator<EncodingT>::parse(buf, instruction)             ||
@@ -826,21 +876,21 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Assignable<EncodingT>::allocate(shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c)
+    void Assignable<EncodingT>::allocate(boost::shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c)
     {
         m_object->allocate(value, c);
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Assignable<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Assignable<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return m_object->interpret(c);
     }
 
     template <class EncodingT>
-    bool Assignable<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Address<EncodingT> > & value)
+    bool Assignable<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Address<EncodingT> > & value)
     {
-       shared_ptr< Term<EncodingT> > instruction;
+       boost::shared_ptr< Term<EncodingT> > instruction;
        bool success = false;
        typename AssignablesMap::const_iterator i = analyzed.find(buf);
        if (i == analyzed.end())
@@ -859,7 +909,7 @@ NAMESPACE_BEGIN(interp)
        }
         if (success)
         {
-            shared_ptr< Address<EncodingT> > object = dynamic_pointer_cast< Address<EncodingT> >(instruction);
+            boost::shared_ptr< Address<EncodingT> > object = dynamic_pointer_cast< Address<EncodingT> >(instruction);
             if (object)
             {
                 value.reset(new Assignable<EncodingT>(object));
@@ -876,6 +926,76 @@ NAMESPACE_BEGIN(interp)
     void Assignable<EncodingT>::clean()
     {
         analyzed.clear();
+    }
+
+    template <class EncodingT>
+    void ignore_literal_comment<EncodingT>::parse(typename EncodingT::string_t const& buffer)
+    {
+        typename EncodingT::string_t::const_iterator i1 = buffer.begin();
+        typename EncodingT::string_t::const_iterator i2 = buffer.begin();
+        typename EncodingT::string_t::const_iterator j = buffer.begin();
+        typename EncodingT::string_t::const_iterator end = buffer.end();
+
+        while (j != end)
+        {
+            if (i1 <= j)
+            {
+                // Search first comment
+                i1 = find_symbol<EncodingT>(j, end, L"/*");
+            }
+            if (i2 <= j)
+            {
+                // Search first quote
+                i2 = find_symbol<EncodingT>(j, end, L"\"");
+            }
+            if ((i1 != end) || (i2 != end))
+            {
+                if (i1 < i2)
+                {
+                    // comment is before quote
+                    j = find_symbol<EncodingT>(i1 + 2, end, L"*/");
+                    if (j != end)
+                    {
+                        j += 2;
+                        m_indices.push_back(pair_indices(i1 - buffer.begin(), j - buffer.begin()));
+                    }
+                }
+                else
+                {
+                    // quote is before comment
+                    j = find_symbol<EncodingT>(i2 + 1, end, L"\"");
+                    if (j != end)
+                    {
+                        j += 1;
+                        m_indices.push_back(pair_indices(i2 - buffer.begin(), j - buffer.begin()));
+                    }
+                }
+            }
+            else
+            {
+                j = end;
+            }
+        }
+    }
+
+    template <class EncodingT>
+    bool ignore_literal_comment<EncodingT>::operator()(typename EncodingT::string_t const& buffer, size_t index)
+    {
+        bool valid = true;
+        if (index == (size_t)-1)
+        {
+            parse(buffer);
+        }
+        else
+        {
+            typename std::list<pair_indices>::const_iterator i = m_indices.begin();
+            while (valid && (i != m_indices.end()) && (index > i->first))
+            {
+                valid = !((i->first < index) && (index < i->second));
+                ++i;
+            }
+        }
+        return valid;
     }
 
 NAMESPACE_END

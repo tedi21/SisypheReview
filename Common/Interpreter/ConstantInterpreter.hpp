@@ -15,14 +15,14 @@ NAMESPACE_BEGIN(interp)
     {
     private:
          typename EncodingT::string_t  m_name;
-         shared_ptr< Term<EncodingT> > m_instruction;
+         boost::shared_ptr< Term<EncodingT> > m_instruction;
 
     public:
-        ConstantAssignment(typename EncodingT::string_t const& name, shared_ptr< Term<EncodingT> > const& instruction)
+        ConstantAssignment(typename EncodingT::string_t const& name, boost::shared_ptr< Term<EncodingT> > const& instruction)
         : m_name(name), m_instruction(instruction)
         {}
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
     // ConstantOperator term
@@ -37,8 +37,8 @@ NAMESPACE_BEGIN(interp)
         ConstantOperator(typename EncodingT::string_t const& name)
         : m_name(name)
         {}    
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
 NAMESPACE_END

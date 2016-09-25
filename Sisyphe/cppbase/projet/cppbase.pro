@@ -89,7 +89,7 @@ HEADERS += \
     ../src/textNoticePredicate.hpp
 
 INCLUDEPATH += \
-    ../../../../../../Libraries/boost_1_54_0 \
+    ../../../../../../Libraries/boost_1_61_0 \
     ../../../../../../Libraries/log4cpp/include \
     ../../../../CodeGeneration/encoding \
     ../../../../CodeGeneration/generator \
@@ -100,14 +100,14 @@ INCLUDEPATH += \
     ../src \
     ../src/config
 
-LIBS += -L../../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5
+LIBS += -L../../../../../../Libraries/log4cpp/lib -llog4cpp
 
 #debug {
 #LIBS += ../bin_qt/debug/Encoding.dll
 #}
 
 release {
-LIBS += ../../../../bin_qt/release/Encoding.dll
+LIBS += ../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll
 }
 
 unix:!symbian {

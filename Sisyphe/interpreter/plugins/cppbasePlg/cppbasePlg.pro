@@ -18,7 +18,7 @@ HEADERS += \
     cppBasePlg.h
 
 INCLUDEPATH += \
-    ../../../../../../../Libraries/boost_1_54_0 \
+    ../../../../../../../Libraries/boost_1_61_0 \
     ../../../../../../../Libraries/log4cpp/include \
     ../../../../../CodeGeneration/encoding \
     ../../../../../CodeGeneration/generator \
@@ -32,7 +32,7 @@ INCLUDEPATH += \
     ../../../cppBase/src/Interpreter
 
 
-LIBS += -L../../../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5
+LIBS += -L../../../../../../../Libraries/log4cpp/lib -llog4cpp
 
 #debug {
 #LIBS += ../../../../../bin_qt/debug/Encoding.dll \
@@ -41,9 +41,9 @@ LIBS += -L../../../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5
 #}
 
 release {
-LIBS += ../../../../../bin_qt/release/Encoding.dll \
+LIBS += ../../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll \
         ../../../cppBase/bin/release/cppBase.dll \
-        ../../../Script/bin/Plugin/release/Plugin.dll
+        ../../../Interpreter/bin/Plugin/release/Plugin.dll
 }
 
 unix:!symbian {

@@ -5,13 +5,13 @@
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > DeleteOperator<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > DeleteOperator<EncodingT>::interpret(Context<EncodingT> &)
     {
-        return shared_ptr< Base<EncodingT> >(new Null<EncodingT>());
+        return boost::shared_ptr< Base<EncodingT> >(new Null<EncodingT>());
     }
 
     template <class EncodingT>
-    bool DeleteOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool DeleteOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t str = eat_space<EncodingT>(buf);
         bool success = (str==C("null"));
@@ -23,9 +23,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > NewOperator<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > NewOperator<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > object(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > object(new Base<EncodingT>());
         ParameterArray parameters;
         for (size_t i = 0; i<m_params.size(); ++i)
         {
@@ -47,13 +47,13 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool NewOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool NewOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t str;
         bool success = false;
         if (prefix<EncodingT>(buf, C("new"), str, true))
         {
-            vector< shared_ptr< Term<EncodingT> > > params_values;
+            vector< boost::shared_ptr< Term<EncodingT> > > params_values;
             typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(str.begin(), str.end(), C("("));
             typename EncodingT::string_t type = eat_space<EncodingT>(typename EncodingT::string_t(
                                                 (typename EncodingT::string_t::const_iterator) str.begin(), i));
@@ -69,7 +69,7 @@ NAMESPACE_BEGIN(interp)
                 tuple_op<EncodingT>(str, C(","), params);
                 while (success && j<params.size())
                 {
-                    shared_ptr< Term<EncodingT> > expr_value;
+                    boost::shared_ptr< Term<EncodingT> > expr_value;
                     success = Instruction<EncodingT>::parse(params[j], expr_value);
                     params_values.push_back(expr_value);
                     ++j;

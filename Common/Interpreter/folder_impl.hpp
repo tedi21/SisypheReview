@@ -15,7 +15,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    Folder<EncodingT>::Folder(shared_ptr< Base<EncodingT> > const& path)
+    Folder<EncodingT>::Folder(boost::shared_ptr< Base<EncodingT> > const& path)
     {
         typename EncodingT::string_t nativePath;
         if (check_string<EncodingT>(path, nativePath))
@@ -35,9 +35,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Folder<EncodingT>(m_path.c_str()));
+        return boost::shared_ptr< Base<EncodingT> >(new Folder<EncodingT>(m_path.c_str()));
     }
 
     template <class EncodingT>
@@ -47,9 +47,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -73,22 +73,22 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::getPath() const
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getPath() const
     {
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(toString()));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(toString()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::getAbsolutePath() const
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getAbsolutePath() const
     {
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(
                files::system_complete( m_path ).c_str()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::getFiles() const
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getFiles() const
     {
-        shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+        boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
         if (files::exists(m_path) && files::is_directory(m_path))
         {
             files::directory_iterator end_iter;
@@ -96,7 +96,7 @@ NAMESPACE_BEGIN(interp)
             {
                 if (files::is_regular_file(dir_iter->status()))
                 {
-                    arr->addValue(shared_ptr< Base<EncodingT> >(new String<EncodingT>(dir_iter->path().filename().c_str())));
+                    arr->addValue(boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(dir_iter->path().filename().c_str())));
                 }
             }
         }
@@ -104,9 +104,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::getFolders() const
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getFolders() const
     {
-        shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+        boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
         if (files::exists(m_path) && files::is_directory(m_path))
         {
             files::directory_iterator end_iter;
@@ -114,7 +114,7 @@ NAMESPACE_BEGIN(interp)
             {
                 if (files::is_directory(dir_iter->status()))
                 {
-                    arr->addValue(shared_ptr< Base<EncodingT> >(new String<EncodingT>(dir_iter->path().filename().c_str())));
+                    arr->addValue(boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(dir_iter->path().filename().c_str())));
                 }
             }
         }
@@ -122,9 +122,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::createFolder(shared_ptr< Base<EncodingT> > const& newName)
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::createFolder(boost::shared_ptr< Base<EncodingT> > const& newName)
     {
-        shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>(false));
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>(false));
         typename EncodingT::string_t nativeName;
         if (check_string<EncodingT>(newName, nativeName))
         {
@@ -142,7 +142,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Folder<EncodingT>::copyTo(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> > const& folder)
+    void Folder<EncodingT>::copyTo(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> > const& folder)
     {
         typename EncodingT::string_t nativeName, nativeFolder;
         if (check_string<EncodingT>(name, nativeName) && check_string<EncodingT>(folder, nativeFolder))
@@ -160,9 +160,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::remove(shared_ptr< Base<EncodingT> > const& name)
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::remove(boost::shared_ptr< Base<EncodingT> > const& name)
     {
-        shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>(0));
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>(0));
         typename EncodingT::string_t nativeName;
         if (check_string<EncodingT>(name, nativeName))
         {
@@ -180,7 +180,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Folder<EncodingT>::rename(shared_ptr< Base<EncodingT> > const& oldName, shared_ptr< Base<EncodingT> > const& newName)
+    void Folder<EncodingT>::rename(boost::shared_ptr< Base<EncodingT> > const& oldName, boost::shared_ptr< Base<EncodingT> > const& newName)
     {
         typename EncodingT::string_t nativeOldName, nativeNewName;
         if (check_string<EncodingT>(oldName, nativeOldName) && check_string<EncodingT>(newName, nativeNewName))
@@ -198,7 +198,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Folder<EncodingT>::getModificationDate() const
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getModificationDate() const
     {
         using namespace boost::posix_time;
         typedef boost::date_time::time_facet<ptime, typename EncodingT::char_t> time_facet_t;
@@ -208,7 +208,7 @@ NAMESPACE_BEGIN(interp)
         std::basic_stringstream<typename EncodingT::char_t> ss;
         ss.imbue(new_locale);
         ss << from_time_t(files::last_write_time(m_path));
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(ss.str()));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(ss.str()));
     }
 
 NAMESPACE_END

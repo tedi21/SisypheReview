@@ -20,24 +20,24 @@ NAMESPACE_BEGIN(interp)
     {}
 
     template <class EncodingT>
-    bool Predicate<EncodingT>::operator()(shared_ptr< Base<EncodingT> > const& value)
+    bool Predicate<EncodingT>::operator()(boost::shared_ptr< Base<EncodingT> > const& value)
     {
-        std::vector< shared_ptr< Base<EncodingT> > > params;
+        std::vector< boost::shared_ptr< Base<EncodingT> > > params;
         params.push_back(value);
         return operate(params);
     }
 
     template <class EncodingT>
-    bool Predicate<EncodingT>::operator()(shared_ptr< Base<EncodingT> > const& value1, shared_ptr< Base<EncodingT> > const& value2)
+    bool Predicate<EncodingT>::operator()(boost::shared_ptr< Base<EncodingT> > const& value1, boost::shared_ptr< Base<EncodingT> > const& value2)
     {
-        std::vector< shared_ptr< Base<EncodingT> > > params;
+        std::vector< boost::shared_ptr< Base<EncodingT> > > params;
         params.push_back(value1);
         params.push_back(value2);
         return operate(params);
     }
 
     template <class EncodingT>
-    bool Predicate<EncodingT>::operate(std::vector< shared_ptr< Base<EncodingT> > > const& params)
+    bool Predicate<EncodingT>::operate(std::vector< boost::shared_ptr< Base<EncodingT> > > const& params)
     {
         bool value = false;
         if (m_function)
@@ -60,9 +60,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Predicate<EncodingT>(m_context, m_function->getName()));
+        return boost::shared_ptr< Base<EncodingT> >(new Predicate<EncodingT>(m_context, m_function->getName()));
     }
 
     template <class EncodingT>
@@ -72,9 +72,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
         
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -97,15 +97,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::call(shared_ptr< Base<EncodingT> > const& params)
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::call(boost::shared_ptr< Base<EncodingT> > const& params)
     {
-        shared_ptr< Base<EncodingT> > val(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > val(new Base<EncodingT>());
         if (m_function)
         {
             std::vector<typename EncodingT::string_t> paramsName = m_function->getParams();
 
             double n;
-            shared_ptr< Array<EncodingT> > arr  = dynamic_pointer_cast< Array<EncodingT> >(params);
+            boost::shared_ptr< Array<EncodingT> > arr  = dynamic_pointer_cast< Array<EncodingT> >(params);
             if (arr)
             {
                 if (check_numeric(arr->size(), n))
@@ -114,7 +114,7 @@ NAMESPACE_BEGIN(interp)
                     for (size_t i = 0; i<lg && i<paramsName.size(); ++i)
                     {
                         m_context.add(paramsName[i],
-                                      arr->getValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))));
+                                      arr->getValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))));
                     }
                     val = m_function->interpret(m_context);
                 }
@@ -129,18 +129,18 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getFunctionName() const
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getFunctionName() const
     {
         typename EncodingT::string_t name;
         if (m_function)
         {
             name = m_function->getName();
         }
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(name));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(name));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getParameters() const
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getParameters() const
     {
         std::vector<typename EncodingT::string_t> paramsName;
         if (m_function)
@@ -151,7 +151,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Predicate<EncodingT>::removeVariable(shared_ptr< Base<EncodingT> > const& name)
+    void Predicate<EncodingT>::removeVariable(boost::shared_ptr< Base<EncodingT> > const& name)
     {
         typename EncodingT::string_t nativeName;
         if (check_string<EncodingT>(name, nativeName))
@@ -161,7 +161,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Predicate<EncodingT>::insertVariable(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> > const& variable)
+    void Predicate<EncodingT>::insertVariable(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> > const& variable)
     {
         typename EncodingT::string_t nativeName;
         if (check_string<EncodingT>(name, nativeName))
@@ -171,15 +171,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getVariablesCount() const
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getVariablesCount() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_context.size()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_context.size()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::findVariable(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> >& variable) const
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::findVariable(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> >& variable) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>(false));
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>(false));
         typename EncodingT::string_t nativeName;
         if (check_string<EncodingT>(name, nativeName))
         {
@@ -194,9 +194,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getVariable(shared_ptr< Base<EncodingT> > const& i) const
+    boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getVariable(boost::shared_ptr< Base<EncodingT> > const& i) const
     {
-        shared_ptr< Base<EncodingT> > res(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > res(new Base<EncodingT>());
         double value = 0;
         if (check_numeric(i, value))
         {
@@ -205,8 +205,8 @@ NAMESPACE_BEGIN(interp)
             {
                 typename Context<EncodingT>::iterator_t i = m_context.begin();
                 std::advance(i, index);
-                shared_ptr< Structure<EncodingT> > st(new Structure<EncodingT>());
-                st->insertField(C("Name"), shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_context.getIdentifier(i))));
+                boost::shared_ptr< Structure<EncodingT> > st(new Structure<EncodingT>());
+                st->insertField(C("Name"), boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_context.getIdentifier(i))));
                 st->insertField(C("Value"), m_context.getObject(i));
                 res = st;
             }

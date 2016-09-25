@@ -76,7 +76,7 @@ namespace fctr {
     }
 #else
     template <class RootT, class ClassT, class ReturnT, class ConstT, class KeyT>
-    ParameterArray BOOST_PP_CAT(Method,n)<RootT,ClassT,ReturnT,ConstT,KeyT>::invoke(RootT * obj, const ParameterArray& parameters) const
+    ParameterArray BOOST_PP_CAT(Method,n)<RootT,ClassT,ReturnT,ConstT,KeyT>::invoke(RootT * obj, const ParameterArray&) const
     {
         ParameterArray out;
         out.push_back(Parameter(FACTORY_RETURN_PARAMETER, (static_cast<ClassT*>(obj)->*ptrMethod)()));
@@ -178,7 +178,7 @@ namespace fctr {
     }
 #else
     template <class RootT, class ClassT, class ConstT, class KeyT>
-    ParameterArray BOOST_PP_CAT(Method,n)<RootT,ClassT,void,ConstT,KeyT>::invoke(RootT * obj, const ParameterArray& parameters) const
+    ParameterArray BOOST_PP_CAT(Method,n)<RootT,ClassT,void,ConstT,KeyT>::invoke(RootT * obj, const ParameterArray&) const
     {
         ParameterArray out;
         (static_cast<ClassT*>(obj)->*ptrMethod)();
@@ -282,7 +282,7 @@ namespace fctr {
     }
 #else
     template <class RootT, class ClassT, class ReturnT, class KeyT>
-    ParameterArray BOOST_PP_CAT(Method,n)<RootT,ClassT,ReturnT,const_t,KeyT>::invoke(RootT * obj, const ParameterArray& parameters) const
+    ParameterArray BOOST_PP_CAT(Method,n)<RootT,ClassT,ReturnT,const_t,KeyT>::invoke(RootT * obj, const ParameterArray&) const
     {
         ParameterArray out;
         out.push_back(Parameter(FACTORY_RETURN_PARAMETER, (static_cast<ClassT*>(obj)->*ptrMethod)()));

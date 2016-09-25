@@ -68,6 +68,7 @@ public:
             tidy();
             copy(lp.p);
         }
+        return *this;
     }
     void reset(T* lp) throw()
     {

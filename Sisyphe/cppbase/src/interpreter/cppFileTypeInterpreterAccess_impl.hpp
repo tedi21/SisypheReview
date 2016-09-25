@@ -21,9 +21,9 @@ typename EncodingT::string_t CppFileTypeInterpreterAccess<EncodingT>::toString()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppFileTypeInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new CppFileTypeInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t CppFileTypeInterpreterAccess<EncodingT>::getClassNa
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::invoke(co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _CppFileType<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new CppFileTypeInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new CppFileTypeInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getAllCppFileTypes()
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getAllCppFileTypes()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getAllCpp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getManyCppFileTypes(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getManyCppFileTypes(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getManyCp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getOneCppFileType(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getOneCppFileType(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getOneCpp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::selectOneCppFileType(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::selectOneCppFileType(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -163,13 +163,13 @@ void CppFileTypeInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isSelectedCppFileType(const shared_ptr< Base<EncodingT> >& cppFileType)
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isSelectedCppFileType(const boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedCppFileType(nativeCppFileType)));
@@ -183,13 +183,13 @@ shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isSelecte
 }
 
 template <class EncodingT>
-void CppFileTypeInterpreterAccess<EncodingT>::fillAllCppFiles(shared_ptr< Base<EncodingT> >& cppFileType, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFileTypeInterpreterAccess<EncodingT>::fillAllCppFiles(boost::shared_ptr< Base<EncodingT> >& cppFileType, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType) && 
 			check_bool(nowait, nativeNoWait))
 		{
@@ -204,16 +204,16 @@ void CppFileTypeInterpreterAccess<EncodingT>::fillAllCppFiles(shared_ptr< Base<E
 }
 
 template <class EncodingT>
-void CppFileTypeInterpreterAccess<EncodingT>::fillOneCppFile(shared_ptr< Base<EncodingT> >& refCppFileType,
-				const shared_ptr< Base<EncodingT> >& textFile,
-				const shared_ptr< Base<EncodingT> >& nowait)
+void CppFileTypeInterpreterAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< Base<EncodingT> >& refCppFileType,
+				const boost::shared_ptr< Base<EncodingT> >& textFile,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFileType<EncodingT> > nativeRefCppFileType;
-		shared_ptr< _TextFile<EncodingT> > nativeTextFile;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeRefCppFileType;
+		boost::shared_ptr< _TextFile<EncodingT> > nativeTextFile;
 		if (check_cppFileType(refCppFileType, nativeRefCppFileType) && 
 			check_textFile(textFile, nativeTextFile) &&
 			check_bool(nowait, nativeNoWait))
@@ -231,14 +231,14 @@ void CppFileTypeInterpreterAccess<EncodingT>::fillOneCppFile(shared_ptr< Base<En
 }
 
 template <class EncodingT>
-void CppFileTypeInterpreterAccess<EncodingT>::fillManyCppFiles(shared_ptr< Base<EncodingT> >& cppFileType, const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFileTypeInterpreterAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< Base<EncodingT> >& cppFileType, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
 		typename EncodingT::string_t nativeFilter;
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType) &&
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
@@ -254,13 +254,13 @@ void CppFileTypeInterpreterAccess<EncodingT>::fillManyCppFiles(shared_ptr< Base<
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isModifiedCppFileType(const shared_ptr< Base<EncodingT> >& cppFileType)
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isModifiedCppFileType(const boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedCppFileType(nativeCppFileType)));
@@ -274,12 +274,12 @@ shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isModifie
 }
 
 template <class EncodingT>
-void CppFileTypeInterpreterAccess<EncodingT>::updateCppFileType(shared_ptr< Base<EncodingT> >& cppFileType)
+void CppFileTypeInterpreterAccess<EncodingT>::updateCppFileType(boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
 			m_object->updateCppFileType(nativeCppFileType);
@@ -293,12 +293,12 @@ void CppFileTypeInterpreterAccess<EncodingT>::updateCppFileType(shared_ptr< Base
 }
 
 template <class EncodingT>
-void CppFileTypeInterpreterAccess<EncodingT>::insertCppFileType(shared_ptr< Base<EncodingT> >& cppFileType)
+void CppFileTypeInterpreterAccess<EncodingT>::insertCppFileType(boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
 			m_object->insertCppFileType(nativeCppFileType);
@@ -312,12 +312,12 @@ void CppFileTypeInterpreterAccess<EncodingT>::insertCppFileType(shared_ptr< Base
 }
 
 template <class EncodingT>
-void CppFileTypeInterpreterAccess<EncodingT>::deleteCppFileType(shared_ptr< Base<EncodingT> >& cppFileType)
+void CppFileTypeInterpreterAccess<EncodingT>::deleteCppFileType(boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
+		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
 			m_object->deleteCppFileType(nativeCppFileType);
@@ -345,14 +345,14 @@ void CppFileTypeInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

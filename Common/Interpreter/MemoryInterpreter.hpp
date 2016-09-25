@@ -17,8 +17,8 @@ NAMESPACE_BEGIN(interp)
     public:
         DeleteOperator()
         {}
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
     template <class EncodingT>
@@ -27,14 +27,14 @@ NAMESPACE_BEGIN(interp)
     {
     private:
         typename EncodingT::string_t m_type;
-        std::vector< shared_ptr< Term<EncodingT> > > m_params;
+        std::vector< boost::shared_ptr< Term<EncodingT> > > m_params;
 
     public:
-        NewOperator(typename EncodingT::string_t const& type, std::vector< shared_ptr< Term<EncodingT> > > const& params)
+        NewOperator(typename EncodingT::string_t const& type, std::vector< boost::shared_ptr< Term<EncodingT> > > const& params)
         : m_type(type), m_params(params)
         {}
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
 NAMESPACE_END

@@ -21,9 +21,9 @@ typename EncodingT::string_t DebugFileInfoInterpreterAccess<EncodingT>::toString
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new DebugFileInfoInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new DebugFileInfoInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t DebugFileInfoInterpreterAccess<EncodingT>::getClass
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::invoke(
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _DebugFileInfo<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new DebugFileInfoInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new DebugFileInfoInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getAllDebugFileInfos()
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getAllDebugFileInfos()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getAllD
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getManyDebugFileInfos(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getManyDebugFileInfos(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getMany
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getOneDebugFileInfo(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getOneDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getOneD
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::selectOneDebugFileInfo(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::selectOneDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::selectO
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::selectManyDebugFileInfos(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::selectManyDebugFileInfos(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void DebugFileInfoInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isSelectedDebugFileInfo(const shared_ptr< Base<EncodingT> >& debugFileInfo)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isSelectedDebugFileInfo(const boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedDebugFileInfo(nativeDebugFileInfo)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isSelec
 }
 
 template <class EncodingT>
-void DebugFileInfoInterpreterAccess<EncodingT>::fillCppFile(shared_ptr< Base<EncodingT> >& debugFileInfo)
+void DebugFileInfoInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
 			m_object->fillCppFile(nativeDebugFileInfo);
@@ -224,13 +224,13 @@ void DebugFileInfoInterpreterAccess<EncodingT>::fillCppFile(shared_ptr< Base<Enc
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isModifiedDebugFileInfo(const shared_ptr< Base<EncodingT> >& debugFileInfo)
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isModifiedDebugFileInfo(const boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedDebugFileInfo(nativeDebugFileInfo)));
@@ -244,12 +244,12 @@ shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isModif
 }
 
 template <class EncodingT>
-void DebugFileInfoInterpreterAccess<EncodingT>::updateDebugFileInfo(shared_ptr< Base<EncodingT> >& debugFileInfo)
+void DebugFileInfoInterpreterAccess<EncodingT>::updateDebugFileInfo(boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
 			m_object->updateDebugFileInfo(nativeDebugFileInfo);
@@ -263,12 +263,12 @@ void DebugFileInfoInterpreterAccess<EncodingT>::updateDebugFileInfo(shared_ptr< 
 }
 
 template <class EncodingT>
-void DebugFileInfoInterpreterAccess<EncodingT>::insertDebugFileInfo(shared_ptr< Base<EncodingT> >& debugFileInfo)
+void DebugFileInfoInterpreterAccess<EncodingT>::insertDebugFileInfo(boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
 			m_object->insertDebugFileInfo(nativeDebugFileInfo);
@@ -282,12 +282,12 @@ void DebugFileInfoInterpreterAccess<EncodingT>::insertDebugFileInfo(shared_ptr< 
 }
 
 template <class EncodingT>
-void DebugFileInfoInterpreterAccess<EncodingT>::deleteDebugFileInfo(shared_ptr< Base<EncodingT> >& debugFileInfo)
+void DebugFileInfoInterpreterAccess<EncodingT>::deleteDebugFileInfo(boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
 			m_object->deleteDebugFileInfo(nativeDebugFileInfo);
@@ -315,14 +315,14 @@ void DebugFileInfoInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

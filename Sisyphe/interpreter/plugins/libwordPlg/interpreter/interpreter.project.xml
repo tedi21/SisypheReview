@@ -169,7 +169,7 @@ xml = null;
     <Entity Class="Data" Name="StringList"/>
 
     <Content Type="Implementation-body" Target="WordXMLNode:getDocument@WordXMLDocumentPtr">
-    shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new WordXMLDocumentInterpreter&lt;EncodingT&gt;());
+    boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new WordXMLDocumentInterpreter&lt;EncodingT&gt;());
     res.reset(new WordXMLDocumentInterpreter&lt;EncodingT&gt;(*m_object.getDocument()));
     return res;
     </Content>

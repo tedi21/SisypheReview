@@ -34,10 +34,10 @@ namespace dsg {
 				math_g(cast_g<int>(size_g(set_g((attr0,attrN), If_IsID_R2))) + 1);
 
 			CreateIDParam_R2 =
-				ListEntityIDParam_R2(str_g("shared_ptr< Base<EncodingT> > const& ") << LAttribute_R2 << ~-CommaParam_R2);		
+				ListEntityIDParam_R2(str_g("boost::shared_ptr< Base<EncodingT> > const& ") << LAttribute_R2 << ~-CommaParam_R2);		
 
 			CreateConstructorParam_R2 =
-				ListEntityParam_R2(str_g("shared_ptr< Base<EncodingT> > const& ") << LAttribute_R2 << ~-CommaParam_R2);
+				ListEntityParam_R2(str_g("boost::shared_ptr< Base<EncodingT> > const& ") << LAttribute_R2 << ~-CommaParam_R2);
 				
 			EntityParamSize_R2 = 
 				(size_g(set_g((attr0,attrN), !If_IsREF_R2 && !If_IsID_R2)))    [If_HasAttribute_R2]
@@ -72,7 +72,7 @@ namespace dsg {
                 << (AttributeClassName_R2)         [If_IsREF_R2];
 
 			AttributeInterpreterType_R2 =
-                (str_g("shared_ptr< Base<EncodingT> >( new ")
+                (str_g("boost::shared_ptr< Base<EncodingT> >( new ")
                     << (AttributeInterpreterTypeName_R2)        [!If_IsREF_R2]
                     << (AttributeClassName_R2 << "Interpreter") [If_IsREF_R2]
 				<< "<EncodingT>(" << $(0) << ") )")[If_IsREF_R2 || !attr_g(getIsAttributeTypeHandler(ATTR_BINARY))]

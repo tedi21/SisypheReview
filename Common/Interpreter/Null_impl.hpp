@@ -19,9 +19,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Null<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Null<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Null<EncodingT>()); 
+        return boost::shared_ptr< Base<EncodingT> >(new Null<EncodingT>());
     }
 
     template <class EncodingT>

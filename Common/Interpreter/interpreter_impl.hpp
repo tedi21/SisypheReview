@@ -17,7 +17,7 @@ Context<EncodingT>::~Context()
 {}
 
 template <class EncodingT>
-void Context<EncodingT>::add(typename EncodingT::string_t const& var, shared_ptr< Base<EncodingT> > const& object)
+void Context<EncodingT>::add(typename EncodingT::string_t const& var, boost::shared_ptr< Base<EncodingT> > const& object)
 {
     iterator_t i = objects.find(var);
     if (i != objects.end() && 
@@ -47,10 +47,10 @@ void Context<EncodingT>::clear()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 Context<EncodingT>::getObject(typename EncodingT::string_t const& var) const
 {
-    shared_ptr< Base<EncodingT> > val;
+    boost::shared_ptr< Base<EncodingT> > val;
     iterator_t i = objects.find(var);
     if (i == objects.end())
     {
@@ -73,7 +73,7 @@ Context<EncodingT>::findObject(typename EncodingT::string_t const& var) const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 Context<EncodingT>::getObject(Context<EncodingT>::iterator_t& i) const
 {
     return i->second;
@@ -108,7 +108,7 @@ Context<EncodingT>::end() const
 }
 
 template <class EncodingT>
-void Context<EncodingT>::declare(typename EncodingT::string_t const& name, shared_ptr< Term<EncodingT> > const& function)
+void Context<EncodingT>::declare(typename EncodingT::string_t const& name, boost::shared_ptr< Term<EncodingT> > const& function)
 {
     itr_fun_t i = functions.find(name);
     if (i != functions.end())
@@ -120,9 +120,9 @@ void Context<EncodingT>::declare(typename EncodingT::string_t const& name, share
 }
 
 template <class EncodingT>
-shared_ptr< Term<EncodingT> > Context<EncodingT>::getFunction(typename EncodingT::string_t const& name) const
+boost::shared_ptr< Term<EncodingT> > Context<EncodingT>::getFunction(typename EncodingT::string_t const& name) const
 {
-    shared_ptr< Term<EncodingT> > val;
+    boost::shared_ptr< Term<EncodingT> > val;
     itr_fun_t i = functions.find(name);
     if (i == functions.end())
     {
@@ -137,7 +137,7 @@ shared_ptr< Term<EncodingT> > Context<EncodingT>::getFunction(typename EncodingT
 }
 
 template <class EncodingT>
-void Context<EncodingT>::define(typename EncodingT::string_t const& name, shared_ptr< Base<EncodingT> > const& constant)
+void Context<EncodingT>::define(typename EncodingT::string_t const& name, boost::shared_ptr< Base<EncodingT> > const& constant)
 {
     itr_t i = constants.find(name);
     if (i != constants.end())
@@ -149,9 +149,9 @@ void Context<EncodingT>::define(typename EncodingT::string_t const& name, shared
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > Context<EncodingT>::getConstant(typename EncodingT::string_t const& name) const
+boost::shared_ptr< Base<EncodingT> > Context<EncodingT>::getConstant(typename EncodingT::string_t const& name) const
 {
-    shared_ptr< Base<EncodingT> > val;
+    boost::shared_ptr< Base<EncodingT> > val;
     iterator_t i = constants.find(name);
     if (i == constants.end())
     {

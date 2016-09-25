@@ -28,10 +28,10 @@ namespace dsg {
         // Shared Data declaration
         //////////////////////////////////////////////////////
         protected :
-            shared_ptr<UniFileItr>            filePosition;
-            shared_ptr<UniEntityItr>          entityPosition;
-            shared_ptr<UniRelationItr>        relationPosition;
-            shared_ptr<UniAttributeItr>       attributePosition;
+            boost::shared_ptr<UniFileItr>            filePosition;
+            boost::shared_ptr<UniEntityItr>          entityPosition;
+            boost::shared_ptr<UniRelationItr>        relationPosition;
+            boost::shared_ptr<UniAttributeItr>       attributePosition;
 
             dictionnary_ptr_t                 table;
             WorkspaceIndexor                  workspace;

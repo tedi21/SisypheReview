@@ -18,11 +18,12 @@ var = new DebugFunctionInfo();
 * Numeric : La valeur de la colonne address.
 * Numeric : La valeur de la colonne debugStart.
 * Numeric : La valeur de la colonne debugEnd.
+* String : La valeur de la colonne debugReturnType.
 
 *Description*
 * Crée une instance de la classe DebugFunctionInfo.
 ```
-var = new DebugFunctionInfo(lineNumber, address, debugStart, debugEnd);
+var = new DebugFunctionInfo(lineNumber, address, debugStart, debugEnd, debugReturnType);
 ```
 
 ## Méthode Identifier
@@ -90,6 +91,19 @@ val = var.DebugStart;
 val = var.DebugEnd;
 ```
 
+## Méthode DebugReturnType
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne debugReturnType.
+
+*Description*
+* Retourne la colonne DebugReturnType.
+```
+val = var.DebugReturnType;
+```
+
 ## Méthode CppFunction
 *Paramètres*
 * None.
@@ -153,6 +167,19 @@ var.DebugStart(debugStart);
 * Définit la colonne debugEnd.
 ```
 var.DebugEnd(debugEnd);
+```
+
+## Méthode DebugReturnType
+*Paramètres*
+* String : La valeur de la colonne debugReturnType.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne debugReturnType.
+```
+var.DebugReturnType(debugReturnType);
 ```
 
 ## Méthode CppFunction

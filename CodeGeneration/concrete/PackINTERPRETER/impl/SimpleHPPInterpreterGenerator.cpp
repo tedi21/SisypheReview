@@ -78,9 +78,9 @@ namespace dsg {
                  <<  line_g(2) << htab_g(2) << "const " << ClassName << "& getValue() const;"
                  <<  line_g(2) << htab_g(2) << "void setValue(" << ClassName << " const& object);") [Has_DynamicMethod || Has_Attribute]
                  << line_g(2) << htab_g(2) << "virtual typename EncodingT::string_t toString() const;"
-                 << line_g(2) << htab_g(2) << "virtual shared_ptr< Base<EncodingT> > clone() const;"
+                 << line_g(2) << htab_g(2) << "virtual boost::shared_ptr< Base<EncodingT> > clone() const;"
                  << line_g(2) << htab_g(2) << "virtual typename EncodingT::string_t getClassName() const;"
-                 << line_g(2) << htab_g(2) << "virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);"
+                 << line_g(2) << htab_g(2) << "virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);"
                  << ListConstant
                     (
                        line_g(1)
@@ -108,10 +108,10 @@ namespace dsg {
                   << line_g(1) << htab_g(1) << "};"
                   << (line_g(1)
                   <<  line_g(1) << htab_g(1) << "template <class EncodingT>"
-                  <<  line_g(1) << htab_g(1) << "bool check_" << ClassName << "(shared_ptr< Base<EncodingT> > const& val, " << ClassName << "& a);"
+                  <<  line_g(1) << htab_g(1) << "bool check_" << ClassName << "(boost::shared_ptr< Base<EncodingT> > const& val, " << ClassName << "& a);"
                   <<  line_g(1)
                   <<  line_g(1) << htab_g(1) << "template <class EncodingT>"
-                  <<  line_g(1) << htab_g(1) << "bool reset_" << ClassName << "(shared_ptr< Base<EncodingT> >& val, " << ClassName << " const& a);") [Has_DynamicMethod || Has_Attribute];
+                  <<  line_g(1) << htab_g(1) << "bool reset_" << ClassName << "(boost::shared_ptr< Base<EncodingT> >& val, " << ClassName << " const& a);") [Has_DynamicMethod || Has_Attribute];
 
             CommentInterpreterMethod =
                    (line_g(1) << htab_g(2) << "//" << ent_g(getEntityCommentHandler()))
@@ -123,11 +123,11 @@ namespace dsg {
                        (
                             str_g("In")   [If_IsReadOnly]
                          << str_g("InOut")[else_g()]
-                         << "< shared_ptr< Base<EncodingT> > >" << ~-str_g(", ")
+                         << "< boost::shared_ptr< Base<EncodingT> > >" << ~-str_g(", ")
                        )
                     << ")")[Has_Parameter]
                 << line_g(1) << htab_g(2)
-                << str_g("shared_ptr< Base<EncodingT> >")[Has_Return]
+                << str_g("boost::shared_ptr< Base<EncodingT> >")[Has_Return]
                 << str_g("void")                         [else_g()]
                 << " " << lower_g(InternalMethodName, 0, 1) << "(" << CreateInterpreterParameters << ")" << str_g(" const")[If_IsConstMethod] << ";";
 
@@ -135,7 +135,7 @@ namespace dsg {
                    ListParameter
                    (
                         str_g("const ")[If_IsReadOnly]
-                     << "shared_ptr< Base<EncodingT> >& " << ParameterName << ~-str_g(", ")
+                     << "boost::shared_ptr< Base<EncodingT> >& " << ParameterName << ~-str_g(", ")
                    );
 
             CommentInterpreterConstant =
@@ -144,7 +144,7 @@ namespace dsg {
 
             CreateInterpreterConstant =
                     line_g(1) << htab_g(2)
-                 << str_g("shared_ptr< Base<EncodingT> > get") << upper_g(InternalConstantName, 0, 1) << "() const;";
+                 << str_g("boost::shared_ptr< Base<EncodingT> > get") << upper_g(InternalConstantName, 0, 1) << "() const;";
 
             CommentInterpreterAttribute =
                    (line_g(1) << htab_g(2) << "//" << attr_g(getAttributeCommentHandler()))
@@ -152,7 +152,7 @@ namespace dsg {
 
             CreateInterpreterAttribute =
                     line_g(1) << htab_g(2)
-                 << str_g("shared_ptr< Base<EncodingT> > get") << lower_g(InternalAttributeName, 0, 1) << "() const;";
+                 << str_g("boost::shared_ptr< Base<EncodingT> > get") << lower_g(InternalAttributeName, 0, 1) << "() const;";
 
             RegisterSize =
                     ParameterSize [Has_Parameter]
@@ -164,7 +164,7 @@ namespace dsg {
                  << ListConstant
                     (
                         line_g(1) << htab_g(3) << "METHOD_KEY_REGISTER ( " << ClassName << "Interpreter, "
-                     << str_g("shared_ptr< Base<EncodingT> >, ")
+                     << str_g("boost::shared_ptr< Base<EncodingT> >, ")
                      << "get" << upper_g(InternalConstantName, 0, 1) << ", "
                      << str_g("const_t, ")
                      << "C(\"" << ClassName << "::" << ConstantName << "\") );"
@@ -172,7 +172,7 @@ namespace dsg {
                  << ListMethod
                     (
                         line_g(1) << htab_g(3) << "METHOD_KEY_REGISTER" << RegisterSize << "( " << MethodClassName << "Interpreter, "
-                     << str_g("shared_ptr< Base<EncodingT> >, ")[Has_Return]
+                     << str_g("boost::shared_ptr< Base<EncodingT> >, ")[Has_Return]
                      << str_g("void, ")                         [else_g()]
                      << lower_g(InternalMethodName, 0, 1) << ", "
                      << str_g("const_t")    [If_IsConstMethod]
@@ -182,7 +182,7 @@ namespace dsg {
                 << ListAttribute
                    (
                        line_g(1) << htab_g(3) << "METHOD_KEY_REGISTER ( " << ClassName << "Interpreter, "
-                    << str_g("shared_ptr< Base<EncodingT> >, ")
+                    << str_g("boost::shared_ptr< Base<EncodingT> >, ")
                     << "get" << lower_g(InternalAttributeName, 0, 1) << ", "
                     << str_g("const_t, ")
                     << "C(\"" << ClassName << "::" << AttributeName << "\") );"

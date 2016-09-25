@@ -17,7 +17,7 @@ HEADERS += \
     LibwordPlg.h
 
 INCLUDEPATH += \
-    ../../../../../../../Libraries/boost_1_54_0 \
+    ../../../../../../../Libraries/boost_1_61_0 \
     ../../../../../../../Libraries/log4cpp/include \
     ../../../../../../../Libraries/xerces-c-3.1.1/src \
     ../../../../../../../Libraries/xalan-c-1.11/src \
@@ -33,9 +33,9 @@ INCLUDEPATH += \
     ./Interpreter/src
 
 
-LIBS += -L../../../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5 \
-        -L../../../../../../../Libraries/xerces-c-3.1.1/src/.libs -lxerces-c-3-1 \
-        -L../../../../../../../Libraries/xalan-c-1.11/lib -lxalan-c1_11_0
+LIBS += -L../../../../../../../Libraries/log4cpp/lib -llog4cpp \
+        -L../../../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c \
+        -L../../../../../../../Libraries/xalan-c-1.11/lib -lxalan-c
 
 #debug {
 #LIBS += ../../../../../bin_qt/debug/Encoding.dll \
@@ -44,9 +44,9 @@ LIBS += -L../../../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5 \
 #}
 
 release {
-LIBS += ../../../../../bin_qt/release/Encoding.dll \
+LIBS += ../../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll \
         ../../../Libword/bin/release/Libword.dll \
-        ../../../Script/bin/Plugin/release/Plugin.dll
+        ../../../Interpreter/bin/Plugin/release/Plugin.dll
 }
 
 unix:!symbian {

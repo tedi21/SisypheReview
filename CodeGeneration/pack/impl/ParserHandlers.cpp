@@ -14,7 +14,7 @@ namespace dsg {
             return key_t(1, key);
         }
 
-        FileIndexor::FileIndexor(const shared_ptr<UniFileItr>& filePosition)
+        FileIndexor::FileIndexor(const boost::shared_ptr<UniFileItr>& filePosition)
         : m_filePosition(filePosition)
         {}
 
@@ -30,8 +30,8 @@ namespace dsg {
             return val;
         }
 
-        EntityIndexor::EntityIndexor(const shared_ptr<UniFileItr>& filePosition,
-                                     const shared_ptr<UniEntityItr>& entityPosition)
+        EntityIndexor::EntityIndexor(const boost::shared_ptr<UniFileItr>& filePosition,
+                                     const boost::shared_ptr<UniEntityItr>& entityPosition)
         : FileIndexor(filePosition),
           m_entityPosition(entityPosition)
         {}
@@ -48,8 +48,8 @@ namespace dsg {
             return val;
         }
 
-        RelationIndexor::RelationIndexor(const shared_ptr<UniFileItr>& filePosition,
-                                         const shared_ptr<UniRelationItr>& relationPosition)
+        RelationIndexor::RelationIndexor(const boost::shared_ptr<UniFileItr>& filePosition,
+                                         const boost::shared_ptr<UniRelationItr>& relationPosition)
         : FileIndexor(filePosition),
           m_relationPosition(relationPosition)
         {}
@@ -66,9 +66,9 @@ namespace dsg {
             return val;
         }
 
-        AttributeIndexor::AttributeIndexor(const shared_ptr<UniFileItr>& filePosition,
-                                           const shared_ptr<UniEntityItr>& entityPosition,
-                                           const shared_ptr<UniAttributeItr>& attributePosition)
+        AttributeIndexor::AttributeIndexor(const boost::shared_ptr<UniFileItr>& filePosition,
+                                           const boost::shared_ptr<UniEntityItr>& entityPosition,
+                                           const boost::shared_ptr<UniAttributeItr>& attributePosition)
         : EntityIndexor(filePosition, entityPosition),
           m_attributePosition(attributePosition)
         {}

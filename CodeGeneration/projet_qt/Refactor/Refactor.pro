@@ -23,7 +23,7 @@ HEADERS += \
     ../../CPlug.h
 
 INCLUDEPATH += \
-    ../../../../../Libraries/boost_1_54_0 \
+    ../../../../../Libraries/boost_1_61_0 \
     ../../../../../Libraries/log4cpp/include \
     ../../../../../Libraries/xerces-c-3.1.1/src \
     ../../encoding \
@@ -32,10 +32,10 @@ INCLUDEPATH += \
     ../../generator \
     ../../core
 
-LIBS += -L../../../../../Libraries/boost_1_54_0/stage/lib -lboost_filesystem-mgw48-mt-1_54 \
-        -L../../../../../Libraries/boost_1_54_0/stage/lib -lboost_system-mgw48-mt-1_54 \
-        -L../../../../../Libraries/xerces-c-3.1.1/src/.libs -lxerces-c-3-1 \
-        -L../../../../../Libraries/log4cpp/src/.libs -llog4cpp-5
+LIBS += -L../../../../../Libraries/boost_1_61_0/stage/lib -lboost_filesystem-mgw61-mt-1_61 \
+        -L../../../../../Libraries/boost_1_61_0/stage/lib -lboost_system-mgw61-mt-1_61 \
+        -L../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c \
+        -L../../../../../Libraries/log4cpp/lib -llog4cpp
 
 #debug {
 #LIBS += ../../bin_qt/Core/Debug/Core.dll \

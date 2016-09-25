@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 
     logger->infoStream() << "Script parsing started";
     ucs::string_t buf;
-    shared_ptr< Term<ucs> > a;
+    boost::shared_ptr< Term<ucs> > a;
     if (readFile(filename, buf) &&
         Program<ucs>::parse(buf, a))
     {

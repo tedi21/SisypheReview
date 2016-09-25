@@ -37,47 +37,47 @@ NAMESPACE_BEGIN(interp)
 
         virtual typename EncodingT::string_t toString() const;
 
-        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
 
         virtual typename EncodingT::string_t getClassName() const;
 
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
 
         // Fill Statement
         FACTORY_PROTOTYPE1(fill,
-                           InOut< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> >
-        fill(shared_ptr< Base<EncodingT> >& statement) const;
+                           InOut< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> >
+        fill(boost::shared_ptr< Base<EncodingT> >& statement) const;
 
         // Add Value
         FACTORY_PROTOTYPE1(addBlob,
-                           In< shared_ptr< Base<EncodingT> > >)
+                           In< boost::shared_ptr< Base<EncodingT> > >)
         void
-        addBlob		(const shared_ptr< Base<EncodingT> >& value);
+        addBlob		(const boost::shared_ptr< Base<EncodingT> >& value);
 
         FACTORY_PROTOTYPE1(addDouble,
-                           In< shared_ptr< Base<EncodingT> > >)
+                           In< boost::shared_ptr< Base<EncodingT> > >)
         void
-        addDouble	(const shared_ptr< Base<EncodingT> >& value);
+        addDouble	(const boost::shared_ptr< Base<EncodingT> >& value);
 
         FACTORY_PROTOTYPE1(addInt,
-                           In< shared_ptr< Base<EncodingT> > >)
+                           In< boost::shared_ptr< Base<EncodingT> > >)
         void
-        addInt		(const shared_ptr< Base<EncodingT> >& value);
+        addInt		(const boost::shared_ptr< Base<EncodingT> >& value);
         
         FACTORY_PROTOTYPE1(addInt64,
-                           In< shared_ptr< Base<EncodingT> > >)
+                           In< boost::shared_ptr< Base<EncodingT> > >)
         void
-        addInt64	(const shared_ptr< Base<EncodingT> >& value);
+        addInt64	(const boost::shared_ptr< Base<EncodingT> >& value);
 
         FACTORY_PROTOTYPE1(addText,
-                           In< shared_ptr< Base<EncodingT> > >)
+                           In< boost::shared_ptr< Base<EncodingT> > >)
         void
-        addText		(const shared_ptr< Base<EncodingT> >& value);
+        addText		(const boost::shared_ptr< Base<EncodingT> >& value);
 
         FACTORY_BEGIN_REGISTER
             CLASS_KEY_REGISTER  ( DataParametersInterpreter, C("DataParameters") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, shared_ptr< Base<EncodingT> >, fill, const_t, C("DataParameters::Fill") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, boost::shared_ptr< Base<EncodingT> >, fill, const_t, C("DataParameters::Fill") );
             METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addBlob, no_const_t, C("DataParameters::AddBlob") );
             METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addDouble, no_const_t, C("DataParameters::AddDouble") );
             METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addInt, no_const_t, C("DataParameters::AddInt") );

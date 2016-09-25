@@ -17,7 +17,7 @@ NAMESPACE_BEGIN(interp)
     typename EncodingT::string_t Array<EncodingT>::toString() const
     {
         typename EncodingT::string_t str = C("[");
-        typename std::vector< shared_ptr< Base<EncodingT> > >::const_iterator i;
+        typename std::vector< boost::shared_ptr< Base<EncodingT> > >::const_iterator i;
         for (i = m_container.begin(); i != m_container.end(); ++i)
         {
             str += (*i)->toString();
@@ -31,11 +31,11 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Array<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::clone() const
     {
-        shared_ptr< Array<EncodingT> > obj(new Array<EncodingT>()); 
+        boost::shared_ptr< Array<EncodingT> > obj(new Array<EncodingT>());
 		
-        typename std::vector< shared_ptr< Base<EncodingT> > >::const_iterator i;
+        typename std::vector< boost::shared_ptr< Base<EncodingT> > >::const_iterator i;
         for (i = m_container.begin(); i != m_container.end(); ++i)
         {
             obj->addValue((*i)->clone());
@@ -50,9 +50,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Array<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -76,13 +76,13 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Array<EncodingT>::addValue(shared_ptr< Base<EncodingT> > const& val)
+    void Array<EncodingT>::addValue(boost::shared_ptr< Base<EncodingT> > const& val)
     {
         insertValue(size(), val);
     }
 
     template <class EncodingT>
-    void Array<EncodingT>::insertValue(shared_ptr< Base<EncodingT> > const& i, shared_ptr< Base<EncodingT> > const& val)
+    void Array<EncodingT>::insertValue(boost::shared_ptr< Base<EncodingT> > const& i, boost::shared_ptr< Base<EncodingT> > const& val)
     {
         double value = 0;     
         if (check_numeric(i, value))
@@ -96,7 +96,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Array<EncodingT>::removeValue(shared_ptr< Base<EncodingT> > const& i)
+    void Array<EncodingT>::removeValue(boost::shared_ptr< Base<EncodingT> > const& i)
     {
         double value = 0;     
         if (check_numeric(i, value))
@@ -116,9 +116,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Array<EncodingT>::getValue(shared_ptr< Base<EncodingT> > const& i) const
+    boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::getValue(boost::shared_ptr< Base<EncodingT> > const& i) const
     {
-        shared_ptr< Base<EncodingT> > res(new Base<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Base<EncodingT>);
         double value = 0;     
         if (check_numeric(i, value))
         {
@@ -132,15 +132,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Array<EncodingT>::size() const
+    boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::size() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_container.size()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_container.size()));
     }
 
     template <class EncodingT>
-    void Array<EncodingT>::sort(shared_ptr< Base<EncodingT> > const& function)
+    void Array<EncodingT>::sort(boost::shared_ptr< Base<EncodingT> > const& function)
     {
-        shared_ptr< Predicate<EncodingT> > value  = dynamic_pointer_cast< Predicate<EncodingT> >(function);
+        boost::shared_ptr< Predicate<EncodingT> > value  = dynamic_pointer_cast< Predicate<EncodingT> >(function);
         if (value)
         {
             std::sort(m_container.begin(), m_container.end(), *value);
@@ -159,13 +159,13 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Array<EncodingT>::find(shared_ptr< Base<EncodingT> > const& function) const
+    boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::find(boost::shared_ptr< Base<EncodingT> > const& function) const
     {
-        shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(m_container.size()));
-        shared_ptr< Predicate<EncodingT> > value  = dynamic_pointer_cast< Predicate<EncodingT> >(function);
+        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(m_container.size()));
+        boost::shared_ptr< Predicate<EncodingT> > value  = dynamic_pointer_cast< Predicate<EncodingT> >(function);
         if (value)
         {
-            typename std::vector< shared_ptr< Base<EncodingT> > >::const_iterator i =
+            typename std::vector< boost::shared_ptr< Base<EncodingT> > >::const_iterator i =
                     std::find_if(m_container.begin(), m_container.end(), *value);
             res.reset(new Numeric<EncodingT>(i - m_container.begin()));
         }
@@ -190,21 +190,21 @@ NAMESPACE_BEGIN(interp)
     }
 	
     template <class EncodingT, class T>
-    shared_ptr< Base<EncodingT> > convert_numeric_array(const bc::vector<T>& value)
+    boost::shared_ptr< Base<EncodingT> > convert_numeric_array(const bc::vector<T>& value)
 	{
-		shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+                boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 		for (size_t i=0; i<value.size(); ++i)
 		{
-			arr->addValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(value[i])));
+                        arr->addValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(value[i])));
 		}
 		return arr;
 	}
 
     template <class EncodingT, class T>
-    bool check_numeric_array(shared_ptr< Base<EncodingT> > const& val, bc::vector<T>& v)
+    bool check_numeric_array(boost::shared_ptr< Base<EncodingT> > const& val, bc::vector<T>& v)
     {
       double n, numeric;
-      shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
+      boost::shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
       if (value)
       {
         v.clear();
@@ -214,7 +214,7 @@ NAMESPACE_BEGIN(interp)
           for (size_t i=0; i<lg; ++i)
           {
             if (check_numeric(
-              value->getValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))),
+              value->getValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))),
               numeric))
             {
               v.push_back(numeric);
@@ -227,26 +227,26 @@ NAMESPACE_BEGIN(interp)
         Category * logger = &Category::getInstance(LOGNAME);
         logger->errorStream() << "Array expected, got " << A(val->getClassName());
       }
-      return value;
+      return (value != NULL);
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > convert_string_array(const std::vector<typename EncodingT::string_t>& value)
+    boost::shared_ptr< Base<EncodingT> > convert_string_array(const std::vector<typename EncodingT::string_t>& value)
     {
-        shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+        boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
         for (size_t i=0; i<value.size(); ++i)
         {
-            arr->addValue(shared_ptr< Base<EncodingT> >(new String<EncodingT>(value[i])));
+            arr->addValue(boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(value[i])));
         }
         return arr;
     }
 
     template <class EncodingT>
-    bool check_string_array(shared_ptr< Base<EncodingT> > const& val, std::vector<typename EncodingT::string_t>& v)
+    bool check_string_array(boost::shared_ptr< Base<EncodingT> > const& val, std::vector<typename EncodingT::string_t>& v)
     {
       double n;
       typename EncodingT::string_t str;
-      shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
+      boost::shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
       if (value)
       {
           v.clear();
@@ -256,7 +256,7 @@ NAMESPACE_BEGIN(interp)
               for (size_t i=0; i<lg; ++i)
               {
                   if (check_string<EncodingT>(
-                      value->getValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))),
+                      value->getValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))),
                       str))
                   {
                       v.push_back(str);
@@ -269,15 +269,15 @@ NAMESPACE_BEGIN(interp)
           Category * logger = &Category::getInstance(LOGNAME);
           logger->errorStream() << "Array expected, got " << A(val->getClassName());
       }
-      return value;
+      return (value != NULL);
     }
     
     template <class EncodingT, class T, class Fct>
-    bool check_array(shared_ptr< Base<EncodingT> > const& val, std::vector<T>& v, Fct check_fct)
+    bool check_array(boost::shared_ptr< Base<EncodingT> > const& val, std::vector<T>& v, Fct check_fct)
     {
       double n;
       T elem;
-      shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
+      boost::shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
       if (value)
       {
           v.clear();
@@ -287,7 +287,7 @@ NAMESPACE_BEGIN(interp)
               for (size_t i=0; i<lg; ++i)
               {
                   if (check_fct(
-                      value->getValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))),
+                      value->getValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))),
                       elem))
                   {
                       v.push_back(elem);
@@ -300,13 +300,13 @@ NAMESPACE_BEGIN(interp)
           Category * logger = &Category::getInstance(LOGNAME);
           logger->errorStream() << "Array expected, got " << A(val->getClassName());
       }
-      return value;
+      return (value != NULL);
     }
     
     template <class EncodingT, class T, class Fct>
-    bool reset_array(shared_ptr< Base<EncodingT> >& val, std::vector<T> const& v, Fct reset_fct)
+    bool reset_array(boost::shared_ptr< Base<EncodingT> >& val, std::vector<T> const& v, Fct reset_fct)
     {
-      shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
+      boost::shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
       if (value)
       {
         size_t lg;
@@ -314,7 +314,7 @@ NAMESPACE_BEGIN(interp)
         {
           for (size_t i = 0; i < v.size() && i < lg; ++i)
           {
-            shared_ptr< Base<EncodingT> > item = value->getValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i)));
+            boost::shared_ptr< Base<EncodingT> > item = value->getValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i)));
             reset_fct(item, v[i]);
           }
         }
@@ -324,7 +324,7 @@ NAMESPACE_BEGIN(interp)
         Category * logger = &Category::getInstance(LOGNAME);
         logger->errorStream() << "Array expected, got " << A(val->getClassName());
       }
-      return value;
+      return (value != NULL);
     }
 
 NAMESPACE_END

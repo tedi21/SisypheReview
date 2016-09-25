@@ -44,12 +44,12 @@ _CppIncludeAccess<EncodingT>::~_CppIncludeAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppInclude<EncodingT> > >
+std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >
 _CppIncludeAccess<EncodingT>::getManyCppIncludes(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppInclude<EncodingT> > value;
+	boost::shared_ptr< _CppInclude<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppInclude<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -74,21 +74,21 @@ _CppIncludeAccess<EncodingT>::getManyCppIncludes(typename EncodingT::string_t co
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppInclude<EncodingT> > >
+std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >
 _CppIncludeAccess<EncodingT>::getAllCppIncludes() const 
 {
 	return getManyCppIncludes(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppInclude<EncodingT> >
+boost::shared_ptr< _CppInclude<EncodingT> >
 _CppIncludeAccess<EncodingT>::getOneCppInclude(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppInclude<EncodingT> > > result = getManyCppIncludes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > result = getManyCppIncludes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -97,11 +97,11 @@ _CppIncludeAccess<EncodingT>::getOneCppInclude(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppInclude<EncodingT> > >
+std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >
 _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppInclude<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -124,7 +124,7 @@ _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t
 		typename EncodingT::string_t fileName;
 		if (statement.getInt( 0, identifier ) &&
 			statement.getText( 1, fileName )) {
-			tab.push_back(shared_ptr< _CppInclude<EncodingT> >(new _CppInclude<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppInclude<EncodingT> >(new _CppInclude<EncodingT>(
 				identifier,
 				fileName)));
 		}
@@ -134,14 +134,14 @@ _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t
 }
 
 template<class EncodingT>
-shared_ptr< _CppInclude<EncodingT> >
+boost::shared_ptr< _CppInclude<EncodingT> >
 _CppIncludeAccess<EncodingT>::selectOneCppInclude(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppInclude<EncodingT> > > result = selectManyCppIncludes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > result = selectManyCppIncludes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -151,7 +151,7 @@ _CppIncludeAccess<EncodingT>::selectOneCppInclude(int identifier, bool nowait, b
 
 template<class EncodingT>
 bool
-_CppIncludeAccess<EncodingT>::isSelectedCppInclude(shared_ptr< _CppInclude<EncodingT> > o) const 
+_CppIncludeAccess<EncodingT>::isSelectedCppInclude(boost::shared_ptr< _CppInclude<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -186,7 +186,7 @@ _CppIncludeAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppIncludeAccess<EncodingT>::fillCppFile(shared_ptr< _CppInclude<EncodingT> > o)  
+_CppIncludeAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppInclude<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -216,8 +216,8 @@ _CppIncludeAccess<EncodingT>::fillCppFile(shared_ptr< _CppInclude<EncodingT> > o
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppInclude")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(o->getIdentifier());
-		shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< shared_ptr<_CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
+		typename std::vector< boost::shared_ptr<_CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -231,7 +231,7 @@ _CppIncludeAccess<EncodingT>::fillCppFile(shared_ptr< _CppInclude<EncodingT> > o
 
 template<class EncodingT>
 bool
-_CppIncludeAccess<EncodingT>::isModifiedCppInclude(shared_ptr< _CppInclude<EncodingT> > o) const 
+_CppIncludeAccess<EncodingT>::isModifiedCppInclude(boost::shared_ptr< _CppInclude<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -242,7 +242,7 @@ _CppIncludeAccess<EncodingT>::isModifiedCppInclude(shared_ptr< _CppInclude<Encod
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(*o);
-	typename std::vector< shared_ptr< _CppInclude<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -257,7 +257,7 @@ _CppIncludeAccess<EncodingT>::isModifiedCppInclude(shared_ptr< _CppInclude<Encod
 
 template<class EncodingT>
 void
-_CppIncludeAccess<EncodingT>::updateCppInclude(shared_ptr< _CppInclude<EncodingT> > o)  
+_CppIncludeAccess<EncodingT>::updateCppInclude(boost::shared_ptr< _CppInclude<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -276,7 +276,7 @@ _CppIncludeAccess<EncodingT>::updateCppInclude(shared_ptr< _CppInclude<EncodingT
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(*o);
-	typename std::vector< shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -322,7 +322,7 @@ _CppIncludeAccess<EncodingT>::updateCppInclude(shared_ptr< _CppInclude<EncodingT
 
 template<class EncodingT>
 void
-_CppIncludeAccess<EncodingT>::insertCppInclude(shared_ptr< _CppInclude<EncodingT> > o)  
+_CppIncludeAccess<EncodingT>::insertCppInclude(boost::shared_ptr< _CppInclude<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -383,7 +383,7 @@ _CppIncludeAccess<EncodingT>::insertCppInclude(shared_ptr< _CppInclude<EncodingT
 
 template<class EncodingT>
 void
-_CppIncludeAccess<EncodingT>::deleteCppInclude(shared_ptr< _CppInclude<EncodingT> > o)  
+_CppIncludeAccess<EncodingT>::deleteCppInclude(boost::shared_ptr< _CppInclude<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -400,7 +400,7 @@ _CppIncludeAccess<EncodingT>::deleteCppInclude(shared_ptr< _CppInclude<EncodingT
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppInclude<EncodingT>::CppIncludeIDEquality CppIncludeIdEquality(*o);
-	typename std::vector< shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppIncludeIdEquality);
+	typename std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppIncludeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

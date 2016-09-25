@@ -44,12 +44,12 @@ _TextNoticeAccess<EncodingT>::~_TextNoticeAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _TextNotice<EncodingT> > >
+std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >
 _TextNoticeAccess<EncodingT>::getManyTextNotices(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _TextNotice<EncodingT> > value;
+	boost::shared_ptr< _TextNotice<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _TextNotice<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -90,21 +90,21 @@ _TextNoticeAccess<EncodingT>::getManyTextNotices(typename EncodingT::string_t co
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _TextNotice<EncodingT> > >
+std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >
 _TextNoticeAccess<EncodingT>::getAllTextNotices() const 
 {
 	return getManyTextNotices(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _TextNotice<EncodingT> >
+boost::shared_ptr< _TextNotice<EncodingT> >
 _TextNoticeAccess<EncodingT>::getOneTextNotice(long long rowid) const 
 {
 	if ( rowid==-1 ) {
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	std::vector< shared_ptr< _TextNotice<EncodingT> > > result = getManyTextNotices(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > result = getManyTextNotices(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -113,11 +113,11 @@ _TextNoticeAccess<EncodingT>::getOneTextNotice(long long rowid) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _TextNotice<EncodingT> > >
+std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >
 _TextNoticeAccess<EncodingT>::selectManyTextNotices(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _TextNotice<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -152,7 +152,7 @@ _TextNoticeAccess<EncodingT>::selectManyTextNotices(typename EncodingT::string_t
 			statement.getInt( 3, lineNumber ) &&
 			statement.getInt( 4, startBlock ) &&
 			statement.getInt( 5, lengthBlock )) {
-			tab.push_back(shared_ptr< _TextNotice<EncodingT> >(new _TextNotice<EncodingT>(
+			tab.push_back(boost::shared_ptr< _TextNotice<EncodingT> >(new _TextNotice<EncodingT>(
 				rowid,
 				description,
 				category,
@@ -166,14 +166,14 @@ _TextNoticeAccess<EncodingT>::selectManyTextNotices(typename EncodingT::string_t
 }
 
 template<class EncodingT>
-shared_ptr< _TextNotice<EncodingT> >
+boost::shared_ptr< _TextNotice<EncodingT> >
 _TextNoticeAccess<EncodingT>::selectOneTextNotice(long long rowid, bool nowait, bool addition)  
 {
 	if ( rowid==-1 ) {
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	std::vector< shared_ptr< _TextNotice<EncodingT> > > result = selectManyTextNotices(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > result = selectManyTextNotices(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -183,7 +183,7 @@ _TextNoticeAccess<EncodingT>::selectOneTextNotice(long long rowid, bool nowait, 
 
 template<class EncodingT>
 bool
-_TextNoticeAccess<EncodingT>::isSelectedTextNotice(shared_ptr< _TextNotice<EncodingT> > o) const 
+_TextNoticeAccess<EncodingT>::isSelectedTextNotice(boost::shared_ptr< _TextNotice<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -218,7 +218,7 @@ _TextNoticeAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_TextNoticeAccess<EncodingT>::fillTextFile(shared_ptr< _TextNotice<EncodingT> > o)  
+_TextNoticeAccess<EncodingT>::fillTextFile(boost::shared_ptr< _TextNotice<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -243,8 +243,8 @@ _TextNoticeAccess<EncodingT>::fillTextFile(shared_ptr< _TextNotice<EncodingT> > 
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idText")), std::vector<typename EncodingT::string_t>(1,C("textNotice")), C("rowid = ") /*+ C("\'") */+ C(ToString::parse(o->getRowid()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(o->getRowid());
-		shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
-		typename std::vector< shared_ptr<_TextNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textNoticeIdEquality);
+		boost::shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
+		typename std::vector< boost::shared_ptr<_TextNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textNoticeIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setTextFile(val);
 		}
@@ -258,7 +258,7 @@ _TextNoticeAccess<EncodingT>::fillTextFile(shared_ptr< _TextNotice<EncodingT> > 
 
 template<class EncodingT>
 bool
-_TextNoticeAccess<EncodingT>::isModifiedTextNotice(shared_ptr< _TextNotice<EncodingT> > o) const 
+_TextNoticeAccess<EncodingT>::isModifiedTextNotice(boost::shared_ptr< _TextNotice<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -269,7 +269,7 @@ _TextNoticeAccess<EncodingT>::isModifiedTextNotice(shared_ptr< _TextNotice<Encod
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
 	typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(*o);
-	typename std::vector< shared_ptr< _TextNotice<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textNoticeIdEquality);
+	typename std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textNoticeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -288,7 +288,7 @@ _TextNoticeAccess<EncodingT>::isModifiedTextNotice(shared_ptr< _TextNotice<Encod
 
 template<class EncodingT>
 void
-_TextNoticeAccess<EncodingT>::updateTextNotice(shared_ptr< _TextNotice<EncodingT> > o)  
+_TextNoticeAccess<EncodingT>::updateTextNotice(boost::shared_ptr< _TextNotice<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -307,7 +307,7 @@ _TextNoticeAccess<EncodingT>::updateTextNotice(shared_ptr< _TextNotice<EncodingT
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(*o);
-	typename std::vector< shared_ptr< _TextNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textNoticeIdEquality);
+	typename std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textNoticeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -369,7 +369,7 @@ _TextNoticeAccess<EncodingT>::updateTextNotice(shared_ptr< _TextNotice<EncodingT
 
 template<class EncodingT>
 void
-_TextNoticeAccess<EncodingT>::insertTextNotice(shared_ptr< _TextNotice<EncodingT> > o)  
+_TextNoticeAccess<EncodingT>::insertTextNotice(boost::shared_ptr< _TextNotice<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -436,7 +436,7 @@ _TextNoticeAccess<EncodingT>::insertTextNotice(shared_ptr< _TextNotice<EncodingT
 
 template<class EncodingT>
 void
-_TextNoticeAccess<EncodingT>::deleteTextNotice(shared_ptr< _TextNotice<EncodingT> > o)  
+_TextNoticeAccess<EncodingT>::deleteTextNotice(boost::shared_ptr< _TextNotice<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -453,7 +453,7 @@ _TextNoticeAccess<EncodingT>::deleteTextNotice(shared_ptr< _TextNotice<EncodingT
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _TextNotice<EncodingT>::TextNoticeIDEquality TextNoticeIdEquality(*o);
-	typename std::vector< shared_ptr< _TextNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextNoticeIdEquality);
+	typename std::vector< boost::shared_ptr< _TextNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextNoticeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

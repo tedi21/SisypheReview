@@ -21,9 +21,9 @@ typename EncodingT::string_t CppFunctionInterpreterAccess<EncodingT>::toString()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppFunctionInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new CppFunctionInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t CppFunctionInterpreterAccess<EncodingT>::getClassNa
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::invoke(co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _CppFunction<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new CppFunctionInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new CppFunctionInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getAllCppFunctions()
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getAllCppFunctions()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getAllCpp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getManyCppFunctions(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getManyCppFunctions(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getManyCp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getOneCppFunction(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getOneCppFunction(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new CppFunctionInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppFunctionInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getOneCpp
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::selectOneCppFunction(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::selectOneCppFunction(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new CppFunctionInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppFunctionInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::selectOne
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::selectManyCppFunctions(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::selectManyCppFunctions(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void CppFunctionInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::isSelectedCppFunction(const shared_ptr< Base<EncodingT> >& cppFunction)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::isSelectedCppFunction(const boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedCppFunction(nativeCppFunction)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::isSelecte
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillCppDeclarationFile(shared_ptr< Base<EncodingT> >& cppFunction)
+void CppFunctionInterpreterAccess<EncodingT>::fillCppDeclarationFile(boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			m_object->fillCppDeclarationFile(nativeCppFunction);
@@ -224,12 +224,12 @@ void CppFunctionInterpreterAccess<EncodingT>::fillCppDeclarationFile(shared_ptr<
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillCppDefinitionFile(shared_ptr< Base<EncodingT> >& cppFunction)
+void CppFunctionInterpreterAccess<EncodingT>::fillCppDefinitionFile(boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			m_object->fillCppDefinitionFile(nativeCppFunction);
@@ -243,12 +243,12 @@ void CppFunctionInterpreterAccess<EncodingT>::fillCppDefinitionFile(shared_ptr< 
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillCppClass(shared_ptr< Base<EncodingT> >& cppFunction)
+void CppFunctionInterpreterAccess<EncodingT>::fillCppClass(boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			m_object->fillCppClass(nativeCppFunction);
@@ -262,13 +262,13 @@ void CppFunctionInterpreterAccess<EncodingT>::fillCppClass(shared_ptr< Base<Enco
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillAllCppParameters(shared_ptr< Base<EncodingT> >& cppFunction, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillAllCppParameters(boost::shared_ptr< Base<EncodingT> >& cppFunction, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction) && 
 			check_bool(nowait, nativeNoWait))
 		{
@@ -283,13 +283,13 @@ void CppFunctionInterpreterAccess<EncodingT>::fillAllCppParameters(shared_ptr< B
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillAllCppVariables(shared_ptr< Base<EncodingT> >& cppFunction, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillAllCppVariables(boost::shared_ptr< Base<EncodingT> >& cppFunction, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction) && 
 			check_bool(nowait, nativeNoWait))
 		{
@@ -304,13 +304,13 @@ void CppFunctionInterpreterAccess<EncodingT>::fillAllCppVariables(shared_ptr< Ba
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillAllDebugFunctionInfos(shared_ptr< Base<EncodingT> >& cppFunction, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillAllDebugFunctionInfos(boost::shared_ptr< Base<EncodingT> >& cppFunction, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction) && 
 			check_bool(nowait, nativeNoWait))
 		{
@@ -325,15 +325,15 @@ void CppFunctionInterpreterAccess<EncodingT>::fillAllDebugFunctionInfos(shared_p
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillOneCppParameter(shared_ptr< Base<EncodingT> >& refCppFunction,
-				const shared_ptr< Base<EncodingT> >& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillOneCppParameter(boost::shared_ptr< Base<EncodingT> >& refCppFunction,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFunction<EncodingT> > nativeRefCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeRefCppFunction;
 		int nativeIdentifier;
 		if (check_cppFunction(refCppFunction, nativeRefCppFunction) && 
 			check_numeric(identifier, nativeIdentifier) &&
@@ -352,15 +352,15 @@ void CppFunctionInterpreterAccess<EncodingT>::fillOneCppParameter(shared_ptr< Ba
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillOneCppVariable(shared_ptr< Base<EncodingT> >& refCppFunction,
-				const shared_ptr< Base<EncodingT> >& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillOneCppVariable(boost::shared_ptr< Base<EncodingT> >& refCppFunction,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFunction<EncodingT> > nativeRefCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeRefCppFunction;
 		int nativeIdentifier;
 		if (check_cppFunction(refCppFunction, nativeRefCppFunction) && 
 			check_numeric(identifier, nativeIdentifier) &&
@@ -379,15 +379,15 @@ void CppFunctionInterpreterAccess<EncodingT>::fillOneCppVariable(shared_ptr< Bas
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillOneDebugFunctionInfo(shared_ptr< Base<EncodingT> >& refCppFunction,
-				const shared_ptr< Base<EncodingT> >& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillOneDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> >& refCppFunction,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
-		shared_ptr< _CppFunction<EncodingT> > nativeRefCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeRefCppFunction;
 		int nativeIdentifier;
 		if (check_cppFunction(refCppFunction, nativeRefCppFunction) && 
 			check_numeric(identifier, nativeIdentifier) &&
@@ -406,14 +406,14 @@ void CppFunctionInterpreterAccess<EncodingT>::fillOneDebugFunctionInfo(shared_pt
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillManyCppParameters(shared_ptr< Base<EncodingT> >& cppFunction, const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillManyCppParameters(boost::shared_ptr< Base<EncodingT> >& cppFunction, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
 		typename EncodingT::string_t nativeFilter;
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction) &&
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
@@ -429,14 +429,14 @@ void CppFunctionInterpreterAccess<EncodingT>::fillManyCppParameters(shared_ptr< 
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillManyCppVariables(shared_ptr< Base<EncodingT> >& cppFunction, const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< Base<EncodingT> >& cppFunction, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
 		typename EncodingT::string_t nativeFilter;
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction) &&
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
@@ -452,14 +452,14 @@ void CppFunctionInterpreterAccess<EncodingT>::fillManyCppVariables(shared_ptr< B
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::fillManyDebugFunctionInfos(shared_ptr< Base<EncodingT> >& cppFunction, const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+void CppFunctionInterpreterAccess<EncodingT>::fillManyDebugFunctionInfos(boost::shared_ptr< Base<EncodingT> >& cppFunction, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
 	{
 		bool nativeNoWait;
 		typename EncodingT::string_t nativeFilter;
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction) &&
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
@@ -475,13 +475,13 @@ void CppFunctionInterpreterAccess<EncodingT>::fillManyDebugFunctionInfos(shared_
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::isModifiedCppFunction(const shared_ptr< Base<EncodingT> >& cppFunction)
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::isModifiedCppFunction(const boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedCppFunction(nativeCppFunction)));
@@ -495,12 +495,12 @@ shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::isModifie
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::updateCppFunction(shared_ptr< Base<EncodingT> >& cppFunction)
+void CppFunctionInterpreterAccess<EncodingT>::updateCppFunction(boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			m_object->updateCppFunction(nativeCppFunction);
@@ -514,12 +514,12 @@ void CppFunctionInterpreterAccess<EncodingT>::updateCppFunction(shared_ptr< Base
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::insertCppFunction(shared_ptr< Base<EncodingT> >& cppFunction)
+void CppFunctionInterpreterAccess<EncodingT>::insertCppFunction(boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			m_object->insertCppFunction(nativeCppFunction);
@@ -533,12 +533,12 @@ void CppFunctionInterpreterAccess<EncodingT>::insertCppFunction(shared_ptr< Base
 }
 
 template <class EncodingT>
-void CppFunctionInterpreterAccess<EncodingT>::deleteCppFunction(shared_ptr< Base<EncodingT> >& cppFunction)
+void CppFunctionInterpreterAccess<EncodingT>::deleteCppFunction(boost::shared_ptr< Base<EncodingT> >& cppFunction)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
+		boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 		if (check_cppFunction(cppFunction, nativeCppFunction))
 		{
 			m_object->deleteCppFunction(nativeCppFunction);
@@ -566,14 +566,14 @@ void CppFunctionInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

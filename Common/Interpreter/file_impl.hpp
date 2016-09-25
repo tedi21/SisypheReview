@@ -83,7 +83,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    File<EncodingT>::File(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> > const& mode, shared_ptr< Base<EncodingT> > const& format)
+    File<EncodingT>::File(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> > const& mode, boost::shared_ptr< Base<EncodingT> > const& format)
     {
         typename EncodingT::string_t nativeName, nativeMode, nativeFormat;
         if (check_string<EncodingT>(name, nativeName) && check_string<EncodingT>(mode, nativeMode) && check_string<EncodingT>(format, nativeFormat))
@@ -108,9 +108,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > File<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > File<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new File<EncodingT>(m_name, m_mode, m_format));
+        return boost::shared_ptr< Base<EncodingT> >(new File<EncodingT>(m_name, m_mode, m_format));
     }
 
     template <class EncodingT>
@@ -120,9 +120,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > File<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > File<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -146,15 +146,15 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > File<EncodingT>::isOpen() const
+    boost::shared_ptr< Base<EncodingT> > File<EncodingT>::isOpen() const
     {
-        return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_stream.is_open()));
+        return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_stream.is_open()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > File<EncodingT>::load(shared_ptr< Base<EncodingT> >& val)
+    boost::shared_ptr< Base<EncodingT> > File<EncodingT>::load(boost::shared_ptr< Base<EncodingT> >& val)
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         typename EncodingT::string_t text;
 
         if (m_stream.is_open())
@@ -204,9 +204,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > File<EncodingT>::save(shared_ptr< Base<EncodingT> > const& val)
+    boost::shared_ptr< Base<EncodingT> > File<EncodingT>::save(boost::shared_ptr< Base<EncodingT> > const& val)
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         typename EncodingT::string_t text;
         if (check_string<EncodingT>(val, text))
         {
@@ -244,9 +244,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > File<EncodingT>::size()
+    boost::shared_ptr< Base<EncodingT> > File<EncodingT>::size()
     {
-        shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(0));
+        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(0));
 
         int length = 0;
         // get length of file:

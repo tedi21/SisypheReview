@@ -44,12 +44,12 @@ _CppFunctionAccess<EncodingT>::~_CppFunctionAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppFunction<EncodingT> > >
+std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >
 _CppFunctionAccess<EncodingT>::getManyCppFunctions(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _CppFunction<EncodingT> > value;
+	boost::shared_ptr< _CppFunction<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppFunction<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -150,21 +150,21 @@ _CppFunctionAccess<EncodingT>::getManyCppFunctions(typename EncodingT::string_t 
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppFunction<EncodingT> > >
+std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >
 _CppFunctionAccess<EncodingT>::getAllCppFunctions() const 
 {
 	return getManyCppFunctions(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _CppFunction<EncodingT> >
+boost::shared_ptr< _CppFunction<EncodingT> >
 _CppFunctionAccess<EncodingT>::getOneCppFunction(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppFunction<EncodingT> > > result = getManyCppFunctions(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > result = getManyCppFunctions(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -173,11 +173,11 @@ _CppFunctionAccess<EncodingT>::getOneCppFunction(int identifier) const
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _CppFunction<EncodingT> > >
+std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >
 _CppFunctionAccess<EncodingT>::selectManyCppFunctions(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _CppFunction<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -257,7 +257,7 @@ _CppFunctionAccess<EncodingT>::selectManyCppFunctions(typename EncodingT::string
 			statement.getInt( 18, defLineNumber ) &&
 			statement.getInt( 19, startDefBlock ) &&
 			statement.getInt( 20, lengthDefBlock )) {
-			tab.push_back(shared_ptr< _CppFunction<EncodingT> >(new _CppFunction<EncodingT>(
+			tab.push_back(boost::shared_ptr< _CppFunction<EncodingT> >(new _CppFunction<EncodingT>(
 				identifier,
 				name,
 				accessSpecifier,
@@ -286,14 +286,14 @@ _CppFunctionAccess<EncodingT>::selectManyCppFunctions(typename EncodingT::string
 }
 
 template<class EncodingT>
-shared_ptr< _CppFunction<EncodingT> >
+boost::shared_ptr< _CppFunction<EncodingT> >
 _CppFunctionAccess<EncodingT>::selectOneCppFunction(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _CppFunction<EncodingT> > > result = selectManyCppFunctions(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > result = selectManyCppFunctions(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -303,7 +303,7 @@ _CppFunctionAccess<EncodingT>::selectOneCppFunction(int identifier, bool nowait,
 
 template<class EncodingT>
 bool
-_CppFunctionAccess<EncodingT>::isSelectedCppFunction(shared_ptr< _CppFunction<EncodingT> > o) const 
+_CppFunctionAccess<EncodingT>::isSelectedCppFunction(boost::shared_ptr< _CppFunction<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -356,7 +356,7 @@ _CppFunctionAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillCppDeclarationFile(shared_ptr< _CppFunction<EncodingT> > o)  
+_CppFunctionAccess<EncodingT>::fillCppDeclarationFile(boost::shared_ptr< _CppFunction<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -386,8 +386,8 @@ _CppFunctionAccess<EncodingT>::fillCppDeclarationFile(shared_ptr< _CppFunction<E
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDecFile")), std::vector<typename EncodingT::string_t>(1,C("cppFunction")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-		shared_ptr< _CppFile<EncodingT> > val = cppDeclarationFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppDeclarationFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
+		typename std::vector< boost::shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppDeclarationFile(val);
 		}
@@ -401,7 +401,7 @@ _CppFunctionAccess<EncodingT>::fillCppDeclarationFile(shared_ptr< _CppFunction<E
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillCppDefinitionFile(shared_ptr< _CppFunction<EncodingT> > o)  
+_CppFunctionAccess<EncodingT>::fillCppDefinitionFile(boost::shared_ptr< _CppFunction<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -431,8 +431,8 @@ _CppFunctionAccess<EncodingT>::fillCppDefinitionFile(shared_ptr< _CppFunction<En
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDefFile")), std::vector<typename EncodingT::string_t>(1,C("cppFunction")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-		shared_ptr< _CppFile<EncodingT> > val = cppDefinitionFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppDefinitionFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
+		typename std::vector< boost::shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppDefinitionFile(val);
 		}
@@ -446,7 +446,7 @@ _CppFunctionAccess<EncodingT>::fillCppDefinitionFile(shared_ptr< _CppFunction<En
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillCppClass(shared_ptr< _CppFunction<EncodingT> > o)  
+_CppFunctionAccess<EncodingT>::fillCppClass(boost::shared_ptr< _CppFunction<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -471,8 +471,8 @@ _CppFunctionAccess<EncodingT>::fillCppClass(shared_ptr< _CppFunction<EncodingT> 
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idClass")), std::vector<typename EncodingT::string_t>(1,C("cppFunction")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-		shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
-		typename std::vector< shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+		boost::shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
+		typename std::vector< boost::shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppClass(val);
 		}
@@ -485,21 +485,21 @@ _CppFunctionAccess<EncodingT>::fillCppClass(shared_ptr< _CppFunction<EncodingT> 
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillAllCppParameters(shared_ptr< _CppFunction<EncodingT> > o, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillAllCppParameters(boost::shared_ptr< _CppFunction<EncodingT> > o, bool nowait)  
 {
 	fillManyCppParameters(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillOneCppParameter(shared_ptr< _CppFunction<EncodingT> > o, int identifier, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillOneCppParameter(boost::shared_ptr< _CppFunction<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyCppParameters(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillManyCppParameters(shared_ptr< _CppFunction<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillManyCppParameters(boost::shared_ptr< _CppFunction<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -514,13 +514,13 @@ _CppFunctionAccess<EncodingT>::fillManyCppParameters(shared_ptr< _CppFunction<En
 		m_logger->errorStream() << "CppParameterAccess class is not initialized.";
 		throw NullPointerException("CppParameterAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppParameter<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > tab;
 	typename EncodingT::string_t cppParameterFilter = C("idFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppParameterFilter += C(" AND ") + filter;
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppParameterAccess->selectManyCppParameters(cppParameterFilter, nowait);
@@ -537,21 +537,21 @@ _CppFunctionAccess<EncodingT>::fillManyCppParameters(shared_ptr< _CppFunction<En
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillAllCppVariables(shared_ptr< _CppFunction<EncodingT> > o, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillAllCppVariables(boost::shared_ptr< _CppFunction<EncodingT> > o, bool nowait)  
 {
 	fillManyCppVariables(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillOneCppVariable(shared_ptr< _CppFunction<EncodingT> > o, int identifier, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillOneCppVariable(boost::shared_ptr< _CppFunction<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyCppVariables(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillManyCppVariables(shared_ptr< _CppFunction<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< _CppFunction<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -566,13 +566,13 @@ _CppFunctionAccess<EncodingT>::fillManyCppVariables(shared_ptr< _CppFunction<Enc
 		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
 		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _CppVariable<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > tab;
 	typename EncodingT::string_t cppVariableFilter = C("idFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppVariableFilter += C(" AND ") + filter;
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = cppVariableAccess->selectManyCppVariables(cppVariableFilter, nowait);
@@ -589,21 +589,21 @@ _CppFunctionAccess<EncodingT>::fillManyCppVariables(shared_ptr< _CppFunction<Enc
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillAllDebugFunctionInfos(shared_ptr< _CppFunction<EncodingT> > o, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillAllDebugFunctionInfos(boost::shared_ptr< _CppFunction<EncodingT> > o, bool nowait)  
 {
 	fillManyDebugFunctionInfos(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillOneDebugFunctionInfo(shared_ptr< _CppFunction<EncodingT> > o, int identifier, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillOneDebugFunctionInfo(boost::shared_ptr< _CppFunction<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyDebugFunctionInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::fillManyDebugFunctionInfos(shared_ptr< _CppFunction<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppFunctionAccess<EncodingT>::fillManyDebugFunctionInfos(boost::shared_ptr< _CppFunction<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -618,13 +618,13 @@ _CppFunctionAccess<EncodingT>::fillManyDebugFunctionInfos(shared_ptr< _CppFuncti
 		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
 		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
 	typename EncodingT::string_t debugFunctionInfoFilter = C("idFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		debugFunctionInfoFilter += C(" AND ") + filter;
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = debugFunctionInfoAccess->selectManyDebugFunctionInfos(debugFunctionInfoFilter, nowait);
@@ -641,7 +641,7 @@ _CppFunctionAccess<EncodingT>::fillManyDebugFunctionInfos(shared_ptr< _CppFuncti
 
 template<class EncodingT>
 bool
-_CppFunctionAccess<EncodingT>::isModifiedCppFunction(shared_ptr< _CppFunction<EncodingT> > o) const 
+_CppFunctionAccess<EncodingT>::isModifiedCppFunction(boost::shared_ptr< _CppFunction<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -667,7 +667,7 @@ _CppFunctionAccess<EncodingT>::isModifiedCppFunction(shared_ptr< _CppFunction<En
 		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(*o);
-	typename std::vector< shared_ptr< _CppFunction<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -761,7 +761,7 @@ _CppFunctionAccess<EncodingT>::isModifiedCppFunction(shared_ptr< _CppFunction<En
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<EncodingT> > o)  
+_CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -795,7 +795,7 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(*o);
-	typename std::vector< shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -917,8 +917,8 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 			values.addText( C("NULL") );
 			fields.push_back( C("idClass") );
 		}
-		std::vector< shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToAdd;
-		std::vector< shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToUpdate;
+		std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToAdd;
+		std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToUpdate;
 		typename _CppFunction<EncodingT>::CppParameterIterator cppParameter;
 		for ( cppParameter=o->getCppParametersBeginning(); cppParameter!=o->getCppParametersEnd(); ++cppParameter ) {
 			if (!(*cppParameter)) {
@@ -935,7 +935,7 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 					listOfCppParameterToUpdate.push_back(*cppParameter);
 			}
 		}
-		std::vector< shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToRemove;
+		std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToRemove;
 		for ( cppParameter=(*save)->getCppParametersBeginning(); cppParameter<(*save)->getCppParametersEnd(); ++cppParameter ) {
 			if (!(*cppParameter)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -946,8 +946,8 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 				listOfCppParameterToRemove.push_back(*cppParameter);
 			}
 		}
-		std::vector< shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToAdd;
-		std::vector< shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToUpdate;
+		std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToAdd;
+		std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToUpdate;
 		typename _CppFunction<EncodingT>::CppVariableIterator cppVariable;
 		for ( cppVariable=o->getCppVariablesBeginning(); cppVariable!=o->getCppVariablesEnd(); ++cppVariable ) {
 			if (!(*cppVariable)) {
@@ -964,7 +964,7 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 					listOfCppVariableToUpdate.push_back(*cppVariable);
 			}
 		}
-		std::vector< shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToRemove;
+		std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToRemove;
 		for ( cppVariable=(*save)->getCppVariablesBeginning(); cppVariable<(*save)->getCppVariablesEnd(); ++cppVariable ) {
 			if (!(*cppVariable)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -975,8 +975,8 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 				listOfCppVariableToRemove.push_back(*cppVariable);
 			}
 		}
-		std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToAdd;
-		std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToUpdate;
+		std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToAdd;
+		std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToUpdate;
 		typename _CppFunction<EncodingT>::DebugFunctionInfoIterator debugFunctionInfo;
 		for ( debugFunctionInfo=o->getDebugFunctionInfosBeginning(); debugFunctionInfo!=o->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
 			if (!(*debugFunctionInfo)) {
@@ -993,7 +993,7 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 					listOfDebugFunctionInfoToUpdate.push_back(*debugFunctionInfo);
 			}
 		}
-		std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToRemove;
+		std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToRemove;
 		for ( debugFunctionInfo=(*save)->getDebugFunctionInfosBeginning(); debugFunctionInfo<(*save)->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
 			if (!(*debugFunctionInfo)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -1055,7 +1055,7 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(shared_ptr< _CppFunction<Encodi
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::insertCppFunction(shared_ptr< _CppFunction<EncodingT> > o)  
+_CppFunctionAccess<EncodingT>::insertCppFunction(boost::shared_ptr< _CppFunction<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -1208,7 +1208,7 @@ _CppFunctionAccess<EncodingT>::insertCppFunction(shared_ptr< _CppFunction<Encodi
 
 template<class EncodingT>
 void
-_CppFunctionAccess<EncodingT>::deleteCppFunction(shared_ptr< _CppFunction<EncodingT> > o)  
+_CppFunctionAccess<EncodingT>::deleteCppFunction(boost::shared_ptr< _CppFunction<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -1240,7 +1240,7 @@ _CppFunctionAccess<EncodingT>::deleteCppFunction(shared_ptr< _CppFunction<Encodi
 		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality CppFunctionIdEquality(*o);
-	typename std::vector< shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFunctionIdEquality);
+	typename std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFunctionIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

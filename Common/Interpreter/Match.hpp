@@ -24,6 +24,7 @@ NAMESPACE_BEGIN(interp)
 	private:
         match_t m_value;
         size_t  m_start;
+
 		
     public:
         // Constructor
@@ -40,32 +41,32 @@ NAMESPACE_BEGIN(interp)
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
         // Dynamic methods
-        shared_ptr< Base<EncodingT> > getString() const;
+        boost::shared_ptr< Base<EncodingT> > getString() const;
 
-        shared_ptr< Base<EncodingT> > getStringPos() const;
+        boost::shared_ptr< Base<EncodingT> > getStringPos() const;
 
-        shared_ptr< Base<EncodingT> > getSubStrings() const;
+        boost::shared_ptr< Base<EncodingT> > getSubStrings() const;
 
-        shared_ptr< Base<EncodingT> > getSubStringsPos() const;
+        boost::shared_ptr< Base<EncodingT> > getSubStringsPos() const;
 
-        shared_ptr< Base<EncodingT> > getPrefix() const;
+        boost::shared_ptr< Base<EncodingT> > getPrefix() const;
 
-        shared_ptr< Base<EncodingT> > getSuffix() const;
+        boost::shared_ptr< Base<EncodingT> > getSuffix() const;
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER    (Match)
-            METHOD_KEY_REGISTER   (Match, shared_ptr< Base<EncodingT> >, getString, const_t, C("Match::String"))
-            METHOD_KEY_REGISTER   (Match, shared_ptr< Base<EncodingT> >, getSubStrings, const_t, C("Match::SubStrings"))
-            METHOD_KEY_REGISTER   (Match, shared_ptr< Base<EncodingT> >, getStringPos, const_t, C("Match::StringPos"))
-            METHOD_KEY_REGISTER   (Match, shared_ptr< Base<EncodingT> >, getSubStringsPos, const_t, C("Match::SubStringsPos"))
-            METHOD_KEY_REGISTER   (Match, shared_ptr< Base<EncodingT> >, getPrefix, const_t, C("Match::Prefix"))
-            METHOD_KEY_REGISTER   (Match, shared_ptr< Base<EncodingT> >, getSuffix, const_t, C("Match::Suffix"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getString, const_t, C("Match::String"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSubStrings, const_t, C("Match::SubStrings"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getStringPos, const_t, C("Match::StringPos"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSubStringsPos, const_t, C("Match::SubStringsPos"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getPrefix, const_t, C("Match::Prefix"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSuffix, const_t, C("Match::Suffix"))
         FACTORY_END_REGISTER
 
         // Methods unregistration

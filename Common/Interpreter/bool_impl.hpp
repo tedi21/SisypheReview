@@ -18,7 +18,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    Bool<EncodingT>::Bool(shared_ptr< Base<EncodingT> > const& value)
+    Bool<EncodingT>::Bool(boost::shared_ptr< Base<EncodingT> > const& value)
     {
         bool boolean;     
         if (check_bool(value, boolean))
@@ -50,9 +50,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Bool<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_value));
+        return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_value));
     }
 
     template <class EncodingT>
@@ -62,9 +62,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Bool<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
         
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -88,15 +88,15 @@ NAMESPACE_BEGIN(interp)
     }
     
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Bool<EncodingT>::not_() const
+    boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::not_() const
     {
-        return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!m_value));
+        return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!m_value));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Bool<EncodingT>::and_(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::and_(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         bool num;     
         if (check_bool(val, num))
         {
@@ -106,9 +106,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Bool<EncodingT>::or_(shared_ptr< Base<EncodingT> > const& val) const
+    boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::or_(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         bool num;     
         if (check_bool(val, num))
         {
@@ -118,9 +118,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool check_bool(shared_ptr< Base<EncodingT> > const& val, bool& n)
+    bool check_bool(boost::shared_ptr< Base<EncodingT> > const& val, bool& n)
     {
-        shared_ptr< Bool<EncodingT> > value  = dynamic_pointer_cast< Bool<EncodingT> >(val);        
+        boost::shared_ptr< Bool<EncodingT> > value  = dynamic_pointer_cast< Bool<EncodingT> >(val);
         if (value)
         {
             n = value->getValue();
@@ -130,13 +130,13 @@ NAMESPACE_BEGIN(interp)
             Category * logger = &Category::getInstance(LOGNAME);
             logger->errorStream() << "Bool expected, got " << A(val->getClassName());            
         }
-        return value;
+        return (value != NULL);
     }
 
     template <class EncodingT>
-    bool reset_bool(shared_ptr< Base<EncodingT> >& val, bool const& n)
+    bool reset_bool(boost::shared_ptr< Base<EncodingT> >& val, bool const& n)
     {
-        shared_ptr< Bool<EncodingT> > value  = dynamic_pointer_cast< Bool<EncodingT> >(val);
+        boost::shared_ptr< Bool<EncodingT> > value  = dynamic_pointer_cast< Bool<EncodingT> >(val);
         if (value)
         {
             value->setValue(n);

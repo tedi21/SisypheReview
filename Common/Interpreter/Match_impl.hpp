@@ -35,13 +35,13 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     typename EncodingT::string_t Match<EncodingT>::toString() const
     {
-        return m_value[0];
+        return m_value.str(0);
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Match<EncodingT>(m_value, m_start));
+        return boost::shared_ptr< Base<EncodingT> >(new Match<EncodingT>(m_value, m_start));
     }
 
     template <class EncodingT>
@@ -51,9 +51,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
         
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -76,49 +76,49 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::getString() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::getString() const
     {
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value[0]));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(toString()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::getSubStrings() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::getSubStrings() const
     {
-        shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+        boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
         for (size_t i=0; i < m_value.size(); i++)
         {
-            arr->addValue(shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value[i])));
+            arr->addValue(boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value.str(i))));
         }
         return arr;
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::getStringPos() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::getStringPos() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_start + m_value.position()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_start + m_value.position()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::getSubStringsPos() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::getSubStringsPos() const
     {
-        shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+        boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
         for (size_t i=0; i < m_value.size(); i++)
         {
-            arr->addValue(shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_start + m_value.position(i))));
+            arr->addValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_start + m_value.position(i))));
         }
         return arr;
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::getPrefix() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::getPrefix() const
     {
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value.prefix()));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value.prefix()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Match<EncodingT>::getSuffix() const
+    boost::shared_ptr< Base<EncodingT> > Match<EncodingT>::getSuffix() const
     {
-        return shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value.suffix()));
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(m_value.suffix()));
     }
 
 NAMESPACE_END

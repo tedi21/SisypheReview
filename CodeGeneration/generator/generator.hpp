@@ -173,7 +173,7 @@ namespace gen {
             try 
             {
                 required_context_t& required_context = dynamic_cast<required_context_t&>(context);
-                g.generate<DataT>(required_context);
+                g.template generate<DataT>(required_context);
             }
             catch (std::bad_cast &)
             {

@@ -30,54 +30,54 @@ NAMESPACE_BEGIN(interp)
 
         Folder(const typename EncodingT::string_t& path);
 
-        FACTORY_PROTOTYPE1(Folder, In< shared_ptr< Base<EncodingT> > >)
-        Folder(shared_ptr< Base<EncodingT> > const& path);
+        FACTORY_PROTOTYPE1(Folder, In< boost::shared_ptr< Base<EncodingT> > >)
+        Folder(boost::shared_ptr< Base<EncodingT> > const& path);
 
         // Destructor
         ~Folder();
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
 
         // Dynamic methods
-        shared_ptr< Base<EncodingT> > getPath() const;
+        boost::shared_ptr< Base<EncodingT> > getPath() const;
 
-        shared_ptr< Base<EncodingT> > getAbsolutePath() const;
+        boost::shared_ptr< Base<EncodingT> > getAbsolutePath() const;
 
-        shared_ptr< Base<EncodingT> > getFiles() const;
+        boost::shared_ptr< Base<EncodingT> > getFiles() const;
 
-        shared_ptr< Base<EncodingT> > getFolders() const;
+        boost::shared_ptr< Base<EncodingT> > getFolders() const;
 
-        FACTORY_PROTOTYPE1(createFolder, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > createFolder(shared_ptr< Base<EncodingT> > const& newName);
+        FACTORY_PROTOTYPE1(createFolder, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > createFolder(boost::shared_ptr< Base<EncodingT> > const& newName);
 
-        FACTORY_PROTOTYPE2(copyTo, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
-        void copyTo(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> > const& folder);
+        FACTORY_PROTOTYPE2(copyTo, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void copyTo(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> > const& folder);
 
-        FACTORY_PROTOTYPE1(remove, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > remove(shared_ptr< Base<EncodingT> > const& name);
+        FACTORY_PROTOTYPE1(remove, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > remove(boost::shared_ptr< Base<EncodingT> > const& name);
 
-        FACTORY_PROTOTYPE2(rename, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
-        void rename(shared_ptr< Base<EncodingT> > const& oldName, shared_ptr< Base<EncodingT> > const& newName);
+        FACTORY_PROTOTYPE2(rename, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void rename(boost::shared_ptr< Base<EncodingT> > const& oldName, boost::shared_ptr< Base<EncodingT> > const& newName);
 
-        shared_ptr< Base<EncodingT> > getModificationDate() const;
+        boost::shared_ptr< Base<EncodingT> > getModificationDate() const;
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER      (Folder)
             CLASS_REGISTER1     (Folder)
-            METHOD_KEY_REGISTER (Folder, shared_ptr< Base<EncodingT> >, getPath, const_t, C("Folder::Path") )
-            METHOD_KEY_REGISTER (Folder, shared_ptr< Base<EncodingT> >, getAbsolutePath, const_t, C("Folder::AbsolutePath") )
-            METHOD_KEY_REGISTER (Folder, shared_ptr< Base<EncodingT> >, getFiles, const_t, C("Folder::Files") )
-            METHOD_KEY_REGISTER (Folder, shared_ptr< Base<EncodingT> >, getFolders, const_t, C("Folder::Folders") )
-            METHOD_KEY_REGISTER1(Folder, shared_ptr< Base<EncodingT> >, createFolder, no_const_t, C("Folder::CreateFolder") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getPath, const_t, C("Folder::Path") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getAbsolutePath, const_t, C("Folder::AbsolutePath") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFiles, const_t, C("Folder::Files") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFolders, const_t, C("Folder::Folders") )
+            METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, createFolder, no_const_t, C("Folder::CreateFolder") )
             METHOD_KEY_REGISTER2(Folder, void, copyTo, no_const_t, C("Folder::CopyTo") )
-            METHOD_KEY_REGISTER1(Folder, shared_ptr< Base<EncodingT> >, remove, no_const_t, C("Folder::Remove") )
+            METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, remove, no_const_t, C("Folder::Remove") )
             METHOD_KEY_REGISTER2(Folder, void, rename, no_const_t, C("Folder::Rename") )
-            METHOD_KEY_REGISTER (Folder, shared_ptr< Base<EncodingT> >, getModificationDate, const_t, C("Folder::ModificationDate") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getModificationDate, const_t, C("Folder::ModificationDate") )
         FACTORY_END_REGISTER
 
         // Methods unregistration

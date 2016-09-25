@@ -48,22 +48,22 @@ NAMESPACE_BEGIN(interp)
 
 		virtual typename EncodingT::string_t toString() const;
 
-		virtual shared_ptr< Base<EncodingT> > clone() const;
+                virtual boost::shared_ptr< Base<EncodingT> > clone() const;
 
 		virtual typename EncodingT::string_t getClassName() const;
 
-		virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+                virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
 
 		// Retourne l'itérateur du début
-		shared_ptr< Base<EncodingT> > begin() const;
+                boost::shared_ptr< Base<EncodingT> > begin() const;
 
 		// Retourne l'itérateur de fin
-		shared_ptr< Base<EncodingT> > end() const;
+                boost::shared_ptr< Base<EncodingT> > end() const;
 
 		FACTORY_BEGIN_REGISTER
 			CLASS_KEY_REGISTER  ( StringListInterpreter, C("StringList") );
-			METHOD_KEY_REGISTER ( StringListInterpreter, shared_ptr< Base<EncodingT> >, begin, const_t, C("StringList::Begin") );
-			METHOD_KEY_REGISTER ( StringListInterpreter, shared_ptr< Base<EncodingT> >, end, const_t, C("StringList::End") );
+                        METHOD_KEY_REGISTER ( StringListInterpreter, boost::shared_ptr< Base<EncodingT> >, begin, const_t, C("StringList::Begin") );
+                        METHOD_KEY_REGISTER ( StringListInterpreter, boost::shared_ptr< Base<EncodingT> >, end, const_t, C("StringList::End") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
@@ -74,10 +74,10 @@ NAMESPACE_BEGIN(interp)
 	};
 
 	template <class EncodingT>
-	bool check_StringList(shared_ptr< Base<EncodingT> > const& val, StringList& a);
+        bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringList& a);
 
 	template <class EncodingT>
-	bool reset_StringList(shared_ptr< Base<EncodingT> >& val, StringList const& a);
+        bool reset_StringList(boost::shared_ptr< Base<EncodingT> >& val, StringList const& a);
 
 NAMESPACE_END
 

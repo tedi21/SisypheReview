@@ -48,14 +48,14 @@ NAMESPACE_BEGIN(interp)
 
 		virtual typename EncodingT::string_t toString() const;
 
-		virtual shared_ptr< Base<EncodingT> > clone() const;
+                virtual boost::shared_ptr< Base<EncodingT> > clone() const;
 
 		virtual typename EncodingT::string_t getClassName() const;
 
-		virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+                virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
         // Retourne la valeur courante
-        shared_ptr< Base<EncodingT> > current() const;
+        boost::shared_ptr< Base<EncodingT> > current() const;
 
 		// Incrémente l'itérateur
         void increment();
@@ -63,17 +63,17 @@ NAMESPACE_BEGIN(interp)
 		// Décrémente l'itérateur
         void decrement();
         
-        FACTORY_PROTOTYPE1(equals, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > equals(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(equals, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > equals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(notEquals, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > notEquals(shared_ptr< Base<EncodingT> > const& val) const;       
+        FACTORY_PROTOTYPE1(notEquals, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
 		FACTORY_BEGIN_REGISTER
 			CLASS_KEY_REGISTER  ( StringListIteratorInterpreter, C("StringListIterator") );
-            METHOD_KEY_REGISTER1( StringListIteratorInterpreter, shared_ptr< Base<EncodingT> >, equals, const_t, C("StringListIterator::equals") );
-            METHOD_KEY_REGISTER1( StringListIteratorInterpreter, shared_ptr< Base<EncodingT> >, notEquals, const_t, C("StringListIterator::notEquals") );
-            METHOD_KEY_REGISTER ( StringListIteratorInterpreter, shared_ptr< Base<EncodingT> >, current, const_t, C("StringListIterator::Current") );
+            METHOD_KEY_REGISTER1( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, equals, const_t, C("StringListIterator::equals") );
+            METHOD_KEY_REGISTER1( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, notEquals, const_t, C("StringListIterator::notEquals") );
+            METHOD_KEY_REGISTER ( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, current, const_t, C("StringListIterator::Current") );
 			METHOD_KEY_REGISTER ( StringListIteratorInterpreter, void, increment, no_const_t, C("StringListIterator::Increment") );
 			METHOD_KEY_REGISTER ( StringListIteratorInterpreter, void, decrement, no_const_t, C("StringListIterator::Decrement") );
 		FACTORY_END_REGISTER
@@ -89,10 +89,10 @@ NAMESPACE_BEGIN(interp)
 	};
 
 	template <class EncodingT>
-	bool check_StringListIterator(shared_ptr< Base<EncodingT> > const& val, StringListIterator& a);
+        bool check_StringListIterator(boost::shared_ptr< Base<EncodingT> > const& val, StringListIterator& a);
 
 	template <class EncodingT>
-	bool reset_StringListIterator(shared_ptr< Base<EncodingT> >& val, StringListIterator const& a);
+        bool reset_StringListIterator(boost::shared_ptr< Base<EncodingT> >& val, StringListIterator const& a);
 
 NAMESPACE_END
 

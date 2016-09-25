@@ -44,12 +44,12 @@ _DebugFunctionInfoAccess<EncodingT>::~_DebugFunctionInfoAccess()
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >
+std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >
 _DebugFunctionInfoAccess<EncodingT>::getManyDebugFunctionInfos(typename EncodingT::string_t const&  filter) const 
 {
-	shared_ptr< _DebugFunctionInfo<EncodingT> > value;
+	boost::shared_ptr< _DebugFunctionInfo<EncodingT> > value;
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -61,6 +61,7 @@ _DebugFunctionInfoAccess<EncodingT>::getManyDebugFunctionInfos(typename Encoding
 	columns.push_back(C("address"));
 	columns.push_back(C("debugStart"));
 	columns.push_back(C("debugEnd"));
+	columns.push_back(C("debugReturnType"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("debugFunctionInfo")), filter) );
 	while( statement.executeStep() ) {
 		int identifier;
@@ -68,17 +69,20 @@ _DebugFunctionInfoAccess<EncodingT>::getManyDebugFunctionInfos(typename Encoding
 		int address;
 		int debugStart;
 		int debugEnd;
+		typename EncodingT::string_t debugReturnType;
 		if (statement.getInt( 0, identifier ) &&
 			statement.getInt( 1, lineNumber ) &&
 			statement.getInt( 2, address ) &&
 			statement.getInt( 3, debugStart ) &&
-			statement.getInt( 4, debugEnd )) {
+			statement.getInt( 4, debugEnd ) &&
+			statement.getText( 5, debugReturnType )) {
 			value.reset(new _DebugFunctionInfo<EncodingT>(
 				identifier,
 				lineNumber,
 				address,
 				debugStart,
-				debugEnd));
+				debugEnd,
+				debugReturnType));
 			tab.push_back(value);
 		}
 	}
@@ -86,21 +90,21 @@ _DebugFunctionInfoAccess<EncodingT>::getManyDebugFunctionInfos(typename Encoding
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >
+std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >
 _DebugFunctionInfoAccess<EncodingT>::getAllDebugFunctionInfos() const 
 {
 	return getManyDebugFunctionInfos(EncodingT::EMPTY);
 }
 
 template<class EncodingT>
-shared_ptr< _DebugFunctionInfo<EncodingT> >
+boost::shared_ptr< _DebugFunctionInfo<EncodingT> >
 _DebugFunctionInfoAccess<EncodingT>::getOneDebugFunctionInfo(int identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > result = getManyDebugFunctionInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > result = getManyDebugFunctionInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -109,11 +113,11 @@ _DebugFunctionInfoAccess<EncodingT>::getOneDebugFunctionInfo(int identifier) con
 }
 
 template<class EncodingT>
-std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >
+std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >
 _DebugFunctionInfoAccess<EncodingT>::selectManyDebugFunctionInfos(typename EncodingT::string_t const&  filter, bool nowait, bool addition)  
 {
 	_DataStatement<EncodingT> statement;
-	std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
@@ -125,6 +129,7 @@ _DebugFunctionInfoAccess<EncodingT>::selectManyDebugFunctionInfos(typename Encod
 	columns.push_back(C("address"));
 	columns.push_back(C("debugStart"));
 	columns.push_back(C("debugEnd"));
+	columns.push_back(C("debugReturnType"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -140,17 +145,20 @@ _DebugFunctionInfoAccess<EncodingT>::selectManyDebugFunctionInfos(typename Encod
 		int address;
 		int debugStart;
 		int debugEnd;
+		typename EncodingT::string_t debugReturnType;
 		if (statement.getInt( 0, identifier ) &&
 			statement.getInt( 1, lineNumber ) &&
 			statement.getInt( 2, address ) &&
 			statement.getInt( 3, debugStart ) &&
-			statement.getInt( 4, debugEnd )) {
-			tab.push_back(shared_ptr< _DebugFunctionInfo<EncodingT> >(new _DebugFunctionInfo<EncodingT>(
+			statement.getInt( 4, debugEnd ) &&
+			statement.getText( 5, debugReturnType )) {
+			tab.push_back(boost::shared_ptr< _DebugFunctionInfo<EncodingT> >(new _DebugFunctionInfo<EncodingT>(
 				identifier,
 				lineNumber,
 				address,
 				debugStart,
-				debugEnd)));
+				debugEnd,
+				debugReturnType)));
 		}
 	}
 	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
@@ -158,14 +166,14 @@ _DebugFunctionInfoAccess<EncodingT>::selectManyDebugFunctionInfos(typename Encod
 }
 
 template<class EncodingT>
-shared_ptr< _DebugFunctionInfo<EncodingT> >
+boost::shared_ptr< _DebugFunctionInfo<EncodingT> >
 _DebugFunctionInfoAccess<EncodingT>::selectOneDebugFunctionInfo(int identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > > result = selectManyDebugFunctionInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > result = selectManyDebugFunctionInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -175,7 +183,7 @@ _DebugFunctionInfoAccess<EncodingT>::selectOneDebugFunctionInfo(int identifier, 
 
 template<class EncodingT>
 bool
-_DebugFunctionInfoAccess<EncodingT>::isSelectedDebugFunctionInfo(shared_ptr< _DebugFunctionInfo<EncodingT> > o) const 
+_DebugFunctionInfoAccess<EncodingT>::isSelectedDebugFunctionInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -216,7 +224,7 @@ _DebugFunctionInfoAccess<EncodingT>::cancelSelection()
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::fillCppFunction(shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
+_DebugFunctionInfoAccess<EncodingT>::fillCppFunction(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -241,8 +249,8 @@ _DebugFunctionInfoAccess<EncodingT>::fillCppFunction(shared_ptr< _DebugFunctionI
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFunction")), std::vector<typename EncodingT::string_t>(1,C("debugFunctionInfo")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
 		typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(o->getIdentifier());
-		shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
-		typename std::vector< shared_ptr<_DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
+		boost::shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
+		typename std::vector< boost::shared_ptr<_DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFunction(val);
 		}
@@ -256,21 +264,21 @@ _DebugFunctionInfoAccess<EncodingT>::fillCppFunction(shared_ptr< _DebugFunctionI
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::fillAllDebugVariableInfos(shared_ptr< _DebugFunctionInfo<EncodingT> > o, bool nowait)  
+_DebugFunctionInfoAccess<EncodingT>::fillAllDebugVariableInfos(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o, bool nowait)  
 {
 	fillManyDebugVariableInfos(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::fillOneDebugVariableInfo(shared_ptr< _DebugFunctionInfo<EncodingT> > o, int identifier, bool nowait)  
+_DebugFunctionInfoAccess<EncodingT>::fillOneDebugVariableInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o, int identifier, bool nowait)  
 {
 	fillManyDebugVariableInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::fillManyDebugVariableInfos(shared_ptr< _DebugFunctionInfo<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_DebugFunctionInfoAccess<EncodingT>::fillManyDebugVariableInfos(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -285,13 +293,13 @@ _DebugFunctionInfoAccess<EncodingT>::fillManyDebugVariableInfos(shared_ptr< _Deb
 		m_logger->errorStream() << "DebugVariableInfoAccess class is not initialized.";
 		throw NullPointerException("DebugVariableInfoAccess class is not initialized.");
 	}
-	std::vector< shared_ptr< _DebugVariableInfo<EncodingT> > > tab;
+	std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > > tab;
 	typename EncodingT::string_t debugVariableInfoFilter = C("idDebugFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		debugVariableInfoFilter += C(" AND ") + filter;
 	}
 	typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(o->getIdentifier());
-	typename std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
+	typename std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
 	if (save != m_backup.end())
 	{
 		tab = debugVariableInfoAccess->selectManyDebugVariableInfos(debugVariableInfoFilter, nowait);
@@ -308,7 +316,7 @@ _DebugFunctionInfoAccess<EncodingT>::fillManyDebugVariableInfos(shared_ptr< _Deb
 
 template<class EncodingT>
 bool
-_DebugFunctionInfoAccess<EncodingT>::isModifiedDebugFunctionInfo(shared_ptr< _DebugFunctionInfo<EncodingT> > o) const 
+_DebugFunctionInfoAccess<EncodingT>::isModifiedDebugFunctionInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o) const 
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -324,7 +332,7 @@ _DebugFunctionInfoAccess<EncodingT>::isModifiedDebugFunctionInfo(shared_ptr< _De
 		throw NullPointerException("DebugVariableInfoAccess class is not initialized.");
 	}
 	typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(*o);
-	typename std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
+	typename std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -334,6 +342,7 @@ _DebugFunctionInfoAccess<EncodingT>::isModifiedDebugFunctionInfo(shared_ptr< _De
 	bUpdate = bUpdate || ((*save)->getAddress() != o->getAddress());
 	bUpdate = bUpdate || ((*save)->getDebugStart() != o->getDebugStart());
 	bUpdate = bUpdate || ((*save)->getDebugEnd() != o->getDebugEnd());
+	bUpdate = bUpdate || ((*save)->getDebugReturnType() != o->getDebugReturnType());
 	bUpdate = bUpdate || (!(*save)->isNullCppFunction() && !o->isNullCppFunction() && !typename _CppFunction<EncodingT>::CppFunctionIDEquality(*(*save)->getCppFunction())(o->getCppFunction()))
 		|| ((*save)->isNullCppFunction() && !o->isNullCppFunction()) 
 		|| (!(*save)->isNullCppFunction() && o->isNullCppFunction());
@@ -360,7 +369,7 @@ _DebugFunctionInfoAccess<EncodingT>::isModifiedDebugFunctionInfo(shared_ptr< _De
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
+_DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -384,7 +393,7 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(shared_ptr< _DebugF
 		throw NullPointerException("DebugVariableInfoAccess class is not initialized.");
 	}
 	typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(*o);
-	typename std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
+	typename std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -406,6 +415,10 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(shared_ptr< _DebugF
 			values.addInt( o->getDebugEnd() );
 			fields.push_back( C("debugEnd") );
 		}
+		if ( (*save)->getDebugReturnType() != o->getDebugReturnType() ) {
+			values.addText( o->getDebugReturnType() );
+			fields.push_back( C("debugReturnType") );
+		}
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
 			m_logger->errorStream() << "idFunction : Identifier is null.";
 			throw InvalidQueryException("idFunction : Identifier is null.");
@@ -418,8 +431,8 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(shared_ptr< _DebugF
 			m_logger->errorStream() << "idFunction : null reference is forbidden.";
 			throw InvalidQueryException("idFunction : null reference is forbidden.");
 		}
-		std::vector< shared_ptr< _DebugVariableInfo<EncodingT> > > listOfDebugVariableInfoToAdd;
-		std::vector< shared_ptr< _DebugVariableInfo<EncodingT> > > listOfDebugVariableInfoToUpdate;
+		std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > > listOfDebugVariableInfoToAdd;
+		std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > > listOfDebugVariableInfoToUpdate;
 		typename _DebugFunctionInfo<EncodingT>::DebugVariableInfoIterator debugVariableInfo;
 		for ( debugVariableInfo=o->getDebugVariableInfosBeginning(); debugVariableInfo!=o->getDebugVariableInfosEnd(); ++debugVariableInfo ) {
 			if (!(*debugVariableInfo)) {
@@ -436,7 +449,7 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(shared_ptr< _DebugF
 					listOfDebugVariableInfoToUpdate.push_back(*debugVariableInfo);
 			}
 		}
-		std::vector< shared_ptr< _DebugVariableInfo<EncodingT> > > listOfDebugVariableInfoToRemove;
+		std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > > listOfDebugVariableInfoToRemove;
 		for ( debugVariableInfo=(*save)->getDebugVariableInfosBeginning(); debugVariableInfo<(*save)->getDebugVariableInfosEnd(); ++debugVariableInfo ) {
 			if (!(*debugVariableInfo)) {
 				m_logger->errorStream() << "Aggregate is null.";
@@ -480,7 +493,7 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(shared_ptr< _DebugF
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::insertDebugFunctionInfo(shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
+_DebugFunctionInfoAccess<EncodingT>::insertDebugFunctionInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -516,6 +529,8 @@ _DebugFunctionInfoAccess<EncodingT>::insertDebugFunctionInfo(shared_ptr< _DebugF
 		fields.push_back( C("debugStart") );
 		values.addInt( o->getDebugEnd() );
 		fields.push_back( C("debugEnd") );
+		values.addText( o->getDebugReturnType() );
+		fields.push_back( C("debugReturnType") );
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
 			m_logger->errorStream() << "idFunction : Identifier is null.";
 			throw InvalidQueryException("idFunction : Identifier is null.");
@@ -557,7 +572,7 @@ _DebugFunctionInfoAccess<EncodingT>::insertDebugFunctionInfo(shared_ptr< _DebugF
 
 template<class EncodingT>
 void
-_DebugFunctionInfoAccess<EncodingT>::deleteDebugFunctionInfo(shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
+_DebugFunctionInfoAccess<EncodingT>::deleteDebugFunctionInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -579,7 +594,7 @@ _DebugFunctionInfoAccess<EncodingT>::deleteDebugFunctionInfo(shared_ptr< _DebugF
 		throw NullPointerException("DebugVariableInfoAccess class is not initialized.");
 	}
 	typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality DebugFunctionInfoIdEquality(*o);
-	typename std::vector< shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), DebugFunctionInfoIdEquality);
+	typename std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), DebugFunctionInfoIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

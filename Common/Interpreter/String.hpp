@@ -32,8 +32,8 @@ NAMESPACE_BEGIN(interp)
 
         String(typename EncodingT::char_t const& value);
 
-        FACTORY_PROTOTYPE1(String, In< shared_ptr< Base<EncodingT> > >)
-        String(shared_ptr< Base<EncodingT> > const& value);
+        FACTORY_PROTOTYPE1(String, In< boost::shared_ptr< Base<EncodingT> > >)
+        String(boost::shared_ptr< Base<EncodingT> > const& value);
 
         // Destructor
         virtual ~String();
@@ -44,83 +44,83 @@ NAMESPACE_BEGIN(interp)
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
         // Dynamic methods
-        FACTORY_PROTOTYPE1(concat, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > concat(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(concat, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > concat(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(equals, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > equals(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(equals, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > equals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(notEquals, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > notEquals(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(notEquals, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(iequals, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > iequals(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(iequals, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > iequals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(notIEquals, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > notIEquals(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(notIEquals, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > notIEquals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(inferior, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > inferior(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(inferior, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > inferior(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(inferiorOrEqual, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > inferiorOrEqual(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(inferiorOrEqual, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > inferiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(superior, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > superior(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(superior, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > superior(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        FACTORY_PROTOTYPE1(superiorOrEqual, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > superiorOrEqual(shared_ptr< Base<EncodingT> > const& val) const;
+        FACTORY_PROTOTYPE1(superiorOrEqual, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > superiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
-        shared_ptr< Base<EncodingT> > size() const;
+        boost::shared_ptr< Base<EncodingT> > size() const;
 
-        FACTORY_PROTOTYPE2(match, In< shared_ptr< Base<EncodingT> > >, InOut< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > match(shared_ptr< Base<EncodingT> > const& regex, shared_ptr< Base<EncodingT> >& matches) const;
+        FACTORY_PROTOTYPE2(match, In< boost::shared_ptr< Base<EncodingT> > >, InOut< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > match(boost::shared_ptr< Base<EncodingT> > const& regex, boost::shared_ptr< Base<EncodingT> >& matches) const;
 
-        FACTORY_PROTOTYPE5(search, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >, InOut< shared_ptr< Base<EncodingT> > >, InOut< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > search(shared_ptr< Base<EncodingT> > const& start, shared_ptr< Base<EncodingT> > const& end,
-                                             shared_ptr< Base<EncodingT> > const& regex, shared_ptr< Base<EncodingT> >& matches, shared_ptr< Base<EncodingT> >& next) const;
+        FACTORY_PROTOTYPE5(search, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, InOut< boost::shared_ptr< Base<EncodingT> > >, InOut< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > search(boost::shared_ptr< Base<EncodingT> > const& start, boost::shared_ptr< Base<EncodingT> > const& end,
+                                             boost::shared_ptr< Base<EncodingT> > const& regex, boost::shared_ptr< Base<EncodingT> >& matches, boost::shared_ptr< Base<EncodingT> >& next) const;
 
-        FACTORY_PROTOTYPE1(split, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > split(shared_ptr< Base<EncodingT> > const& regex) const;
+        FACTORY_PROTOTYPE1(split, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > split(boost::shared_ptr< Base<EncodingT> > const& regex) const;
 
-        FACTORY_PROTOTYPE1(append, In< shared_ptr< Base<EncodingT> > >)
-        void append(shared_ptr< Base<EncodingT> > const& val);
+        FACTORY_PROTOTYPE1(append, In< boost::shared_ptr< Base<EncodingT> > >)
+        void append(boost::shared_ptr< Base<EncodingT> > const& val);
 
-        FACTORY_PROTOTYPE2(insert, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
-        void insert(shared_ptr< Base<EncodingT> > const& pos, shared_ptr< Base<EncodingT> > const& val);
+        FACTORY_PROTOTYPE2(insert, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void insert(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& val);
 
-        FACTORY_PROTOTYPE2(remove, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
-        void remove(shared_ptr< Base<EncodingT> > const& pos, shared_ptr< Base<EncodingT> > const& len);
+        FACTORY_PROTOTYPE2(remove, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void remove(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& len);
 
-        FACTORY_PROTOTYPE2(substring, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > substring(shared_ptr< Base<EncodingT> > const& pos, shared_ptr< Base<EncodingT> > const& len) const;
+        FACTORY_PROTOTYPE2(substring, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > substring(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& len) const;
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER    (String)
             CLASS_REGISTER1   (String)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, concat, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, inferior, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, inferiorOrEqual, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, superior, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, superiorOrEqual, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, equals, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, notEquals, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, iequals, const_t)
-            METHOD_REGISTER1  (String, shared_ptr< Base<EncodingT> >, notIEquals, const_t)
-            METHOD_REGISTER   (String, shared_ptr< Base<EncodingT> >, size, const_t)
-            METHOD_KEY_REGISTER2  (String, shared_ptr< Base<EncodingT> >, match, const_t, C("String::Match"))
-            METHOD_KEY_REGISTER5  (String, shared_ptr< Base<EncodingT> >, search, const_t, C("String::Search"))
-            METHOD_KEY_REGISTER1  (String, shared_ptr< Base<EncodingT> >, split, const_t, C("String::Split"))
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, concat, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, inferior, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, inferiorOrEqual, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, superior, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, superiorOrEqual, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, equals, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, notEquals, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, iequals, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, notIEquals, const_t)
+            METHOD_REGISTER   (String, boost::shared_ptr< Base<EncodingT> >, size, const_t)
+            METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, match, const_t, C("String::Match"))
+            METHOD_KEY_REGISTER5  (String, boost::shared_ptr< Base<EncodingT> >, search, const_t, C("String::Search"))
+            METHOD_KEY_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, split, const_t, C("String::Split"))
             METHOD_KEY_REGISTER1  (String, void, append, no_const_t, C("String::Append"))
             METHOD_KEY_REGISTER2  (String, void, insert, no_const_t, C("String::Insert"))
             METHOD_KEY_REGISTER2  (String, void, remove, no_const_t, C("String::Remove"))
-            METHOD_KEY_REGISTER2  (String, shared_ptr< Base<EncodingT> >, substring, const_t, C("String::SubString"))
+            METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, substring, const_t, C("String::SubString"))
         FACTORY_END_REGISTER
 
         // Methods unregistration
@@ -148,13 +148,13 @@ NAMESPACE_BEGIN(interp)
     };
 
     template <class EncodingT2, class EncodingT>
-    bool check_string(shared_ptr< Base<EncodingT> > const& val, typename EncodingT2::string_t& n);
+    bool check_string(boost::shared_ptr< Base<EncodingT> > const& val, typename EncodingT2::string_t& n);
 
     template <class EncodingT2, class EncodingT>
-    bool check_char(shared_ptr< Base<EncodingT> > const& val, typename EncodingT2::char_t& n);
+    bool check_char(boost::shared_ptr< Base<EncodingT> > const& val, typename EncodingT2::char_t& n);
         
     template <class EncodingT2, class EncodingT>
-    bool reset_string(shared_ptr< Base<EncodingT> >& val, typename EncodingT2::string_t const& n);
+    bool reset_string(boost::shared_ptr< Base<EncodingT> >& val, typename EncodingT2::string_t const& n);
 
 NAMESPACE_END
 

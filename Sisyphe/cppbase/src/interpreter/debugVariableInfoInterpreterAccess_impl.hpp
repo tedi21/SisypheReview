@@ -21,9 +21,9 @@ typename EncodingT::string_t DebugVariableInfoInterpreterAccess<EncodingT>::toSt
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new DebugVariableInfoInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new DebugVariableInfoInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t DebugVariableInfoInterpreterAccess<EncodingT>::getC
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::inv
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _DebugVariableInfo<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new DebugVariableInfoInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new DebugVariableInfoInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getAllDebugVariableInfos()
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getAllDebugVariableInfos()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::get
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getManyDebugVariableInfos(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getManyDebugVariableInfos(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::get
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getOneDebugVariableInfo(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getOneDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::get
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::selectOneDebugVariableInfo(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::selectOneDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::sel
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::selectManyDebugVariableInfos(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::selectManyDebugVariableInfos(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void DebugVariableInfoInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::isSelectedDebugVariableInfo(const shared_ptr< Base<EncodingT> >& debugVariableInfo)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::isSelectedDebugVariableInfo(const boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedDebugVariableInfo(nativeDebugVariableInfo)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::isS
 }
 
 template <class EncodingT>
-void DebugVariableInfoInterpreterAccess<EncodingT>::fillDebugFunctionInfo(shared_ptr< Base<EncodingT> >& debugVariableInfo)
+void DebugVariableInfoInterpreterAccess<EncodingT>::fillDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			m_object->fillDebugFunctionInfo(nativeDebugVariableInfo);
@@ -224,13 +224,13 @@ void DebugVariableInfoInterpreterAccess<EncodingT>::fillDebugFunctionInfo(shared
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::isModifiedDebugVariableInfo(const shared_ptr< Base<EncodingT> >& debugVariableInfo)
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::isModifiedDebugVariableInfo(const boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedDebugVariableInfo(nativeDebugVariableInfo)));
@@ -244,12 +244,12 @@ shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::isM
 }
 
 template <class EncodingT>
-void DebugVariableInfoInterpreterAccess<EncodingT>::updateDebugVariableInfo(shared_ptr< Base<EncodingT> >& debugVariableInfo)
+void DebugVariableInfoInterpreterAccess<EncodingT>::updateDebugVariableInfo(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			m_object->updateDebugVariableInfo(nativeDebugVariableInfo);
@@ -263,12 +263,12 @@ void DebugVariableInfoInterpreterAccess<EncodingT>::updateDebugVariableInfo(shar
 }
 
 template <class EncodingT>
-void DebugVariableInfoInterpreterAccess<EncodingT>::insertDebugVariableInfo(shared_ptr< Base<EncodingT> >& debugVariableInfo)
+void DebugVariableInfoInterpreterAccess<EncodingT>::insertDebugVariableInfo(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			m_object->insertDebugVariableInfo(nativeDebugVariableInfo);
@@ -282,12 +282,12 @@ void DebugVariableInfoInterpreterAccess<EncodingT>::insertDebugVariableInfo(shar
 }
 
 template <class EncodingT>
-void DebugVariableInfoInterpreterAccess<EncodingT>::deleteDebugVariableInfo(shared_ptr< Base<EncodingT> >& debugVariableInfo)
+void DebugVariableInfoInterpreterAccess<EncodingT>::deleteDebugVariableInfo(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			m_object->deleteDebugVariableInfo(nativeDebugVariableInfo);
@@ -315,14 +315,14 @@ void DebugVariableInfoInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

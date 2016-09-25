@@ -435,7 +435,7 @@ xml = null;
       <Relation Multiplicity="Zero-One" Name="R_WordXMLNode:insertString@Boolean@UInt32@String@WordXMLNodeList_WordXMLNodeList" Source="WordXMLNodeList" SourceREF="Id" Target="WordXMLNode:insertString@Boolean@UInt32@String@WordXMLNodeList" TargetREF="insertString"/>
       <Relation Multiplicity="Zero-One" Name="R_WordXMLNode:insertString@Boolean@UInt32@String@WordXMLNodeList_WordXMLNode" Source="WordXMLNode" SourceREF="Id" Target="WordXMLNode:insertString@Boolean@UInt32@String@WordXMLNodeList" TargetREF="WordXMLNode"/>
       <Content Target="WordXMLNode:getDocument@WordXMLDocumentPtr" Type="Implementation-body">
-    shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new WordXMLDocumentInterpreter&lt;EncodingT&gt;());
+    boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new WordXMLDocumentInterpreter&lt;EncodingT&gt;());
     res.reset(new WordXMLDocumentInterpreter&lt;EncodingT&gt;(*m_object.getDocument()));
     return res;
     </Content>

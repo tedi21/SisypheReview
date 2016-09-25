@@ -14,7 +14,7 @@ NAMESPACE_BEGIN(interp)
     {}
 
     template <class EncodingT>
-    Date<EncodingT>::Date(shared_ptr< Base<EncodingT> > const& year, shared_ptr< Base<EncodingT> > const& month, shared_ptr< Base<EncodingT> > const& day)
+    Date<EncodingT>::Date(boost::shared_ptr< Base<EncodingT> > const& year, boost::shared_ptr< Base<EncodingT> > const& month, boost::shared_ptr< Base<EncodingT> > const& day)
     {
         double nativeYear, nativeMonth, nativeDay;
         if (check_numeric(year, nativeYear)   &&
@@ -36,9 +36,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Date<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::clone() const
     {
-        return shared_ptr< Base<EncodingT> >(new Date<EncodingT>(m_date));
+        return boost::shared_ptr< Base<EncodingT> >(new Date<EncodingT>(m_date));
     }
 
     template <class EncodingT>
@@ -48,9 +48,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Date<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
@@ -74,27 +74,27 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Date<EncodingT>::getCurrentDate() const
+    boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getCurrentDate() const
     {
-        return shared_ptr< Base<EncodingT> >(new Date<EncodingT>(dates::day_clock::local_day()));
+        return boost::shared_ptr< Base<EncodingT> >(new Date<EncodingT>(dates::day_clock::local_day()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Date<EncodingT>::getDay() const
+    boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getDay() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.day()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.day()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Date<EncodingT>::getMonth() const
+    boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getMonth() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.month()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.month()));
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Date<EncodingT>::getYear() const
+    boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getYear() const
     {
-        return shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.year()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.year()));
     }
 
 NAMESPACE_END

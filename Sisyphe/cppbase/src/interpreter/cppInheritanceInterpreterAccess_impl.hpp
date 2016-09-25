@@ -21,9 +21,9 @@ typename EncodingT::string_t CppInheritanceInterpreterAccess<EncodingT>::toStrin
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::clone() const
 {
-	return shared_ptr< Base<EncodingT> >(new CppInheritanceInterpreterAccess<EncodingT>());
+	return boost::shared_ptr< Base<EncodingT> >(new CppInheritanceInterpreterAccess<EncodingT>());
 }
 
 template <class EncodingT>
@@ -33,9 +33,9 @@ typename EncodingT::string_t CppInheritanceInterpreterAccess<EncodingT>::getClas
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-	shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
@@ -58,20 +58,20 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::invoke
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::convert_array(const std::vector< shared_ptr< _CppInheritance<EncodingT> > >& value) const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::convert_array(const std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > >& value) const
 {
-	shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
+	boost::shared_ptr< Array<EncodingT> > arr(new Array<EncodingT>());
 	for (size_t i=0; i<value.size(); ++i)
 	{
-		arr->addValue(shared_ptr< Base<EncodingT> >(new CppInheritanceInterpreter<EncodingT>(value[i])));
+		arr->addValue(boost::shared_ptr< Base<EncodingT> >(new CppInheritanceInterpreter<EncodingT>(value[i])));
 	}
 	return arr;
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getAllCppInheritances()
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getAllCppInheritances()
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -85,9 +85,9 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getAll
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getManyCppInheritances(const shared_ptr< Base<EncodingT> >& filter)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getManyCppInheritances(const boost::shared_ptr< Base<EncodingT> >& filter)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -105,9 +105,9 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getMan
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getOneCppInheritance(shared_ptr< Base<EncodingT> > const& identifier)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getOneCppInheritance(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	shared_ptr< Base<EncodingT> > res(new CppInheritanceInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppInheritanceInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -125,10 +125,10 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getOne
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::selectOneCppInheritance(shared_ptr< Base<EncodingT> > const& identifier,
-				const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::selectOneCppInheritance(boost::shared_ptr< Base<EncodingT> > const& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new CppInheritanceInterpreter<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new CppInheritanceInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -149,9 +149,9 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::select
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::selectManyCppInheritances(const shared_ptr< Base<EncodingT> >& filter, const shared_ptr< Base<EncodingT> >& nowait)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::selectManyCppInheritances(const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Array<EncodingT>());
 	clearError();
 	try
 	{
@@ -185,13 +185,13 @@ void CppInheritanceInterpreterAccess<EncodingT>::cancelSelection()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::isSelectedCppInheritance(const shared_ptr< Base<EncodingT> >& cppInheritance)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::isSelectedCppInheritance(const boost::shared_ptr< Base<EncodingT> >& cppInheritance)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
+		boost::shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
 		if (check_cppInheritance(cppInheritance, nativeCppInheritance))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isSelectedCppInheritance(nativeCppInheritance)));
@@ -205,12 +205,12 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::isSele
 }
 
 template <class EncodingT>
-void CppInheritanceInterpreterAccess<EncodingT>::fillDerived(shared_ptr< Base<EncodingT> >& cppInheritance)
+void CppInheritanceInterpreterAccess<EncodingT>::fillDerived(boost::shared_ptr< Base<EncodingT> >& cppInheritance)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
+		boost::shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
 		if (check_cppInheritance(cppInheritance, nativeCppInheritance))
 		{
 			m_object->fillDerived(nativeCppInheritance);
@@ -224,13 +224,13 @@ void CppInheritanceInterpreterAccess<EncodingT>::fillDerived(shared_ptr< Base<En
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::isModifiedCppInheritance(const shared_ptr< Base<EncodingT> >& cppInheritance)
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::isModifiedCppInheritance(const boost::shared_ptr< Base<EncodingT> >& cppInheritance)
 {
-	shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
-		shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
+		boost::shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
 		if (check_cppInheritance(cppInheritance, nativeCppInheritance))
 		{
 			res.reset(new Bool<EncodingT>(m_object->isModifiedCppInheritance(nativeCppInheritance)));
@@ -244,12 +244,12 @@ shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::isModi
 }
 
 template <class EncodingT>
-void CppInheritanceInterpreterAccess<EncodingT>::updateCppInheritance(shared_ptr< Base<EncodingT> >& cppInheritance)
+void CppInheritanceInterpreterAccess<EncodingT>::updateCppInheritance(boost::shared_ptr< Base<EncodingT> >& cppInheritance)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
+		boost::shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
 		if (check_cppInheritance(cppInheritance, nativeCppInheritance))
 		{
 			m_object->updateCppInheritance(nativeCppInheritance);
@@ -263,12 +263,12 @@ void CppInheritanceInterpreterAccess<EncodingT>::updateCppInheritance(shared_ptr
 }
 
 template <class EncodingT>
-void CppInheritanceInterpreterAccess<EncodingT>::insertCppInheritance(shared_ptr< Base<EncodingT> >& cppInheritance)
+void CppInheritanceInterpreterAccess<EncodingT>::insertCppInheritance(boost::shared_ptr< Base<EncodingT> >& cppInheritance)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
+		boost::shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
 		if (check_cppInheritance(cppInheritance, nativeCppInheritance))
 		{
 			m_object->insertCppInheritance(nativeCppInheritance);
@@ -282,12 +282,12 @@ void CppInheritanceInterpreterAccess<EncodingT>::insertCppInheritance(shared_ptr
 }
 
 template <class EncodingT>
-void CppInheritanceInterpreterAccess<EncodingT>::deleteCppInheritance(shared_ptr< Base<EncodingT> >& cppInheritance)
+void CppInheritanceInterpreterAccess<EncodingT>::deleteCppInheritance(boost::shared_ptr< Base<EncodingT> >& cppInheritance)
 {
 	clearError();
 	try
 	{
-		shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
+		boost::shared_ptr< _CppInheritance<EncodingT> > nativeCppInheritance;
 		if (check_cppInheritance(cppInheritance, nativeCppInheritance))
 		{
 			m_object->deleteCppInheritance(nativeCppInheritance);
@@ -315,14 +315,14 @@ void CppInheritanceInterpreterAccess<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-	shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
 		str->setValue(C(m_errorText));
 	}
-	return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

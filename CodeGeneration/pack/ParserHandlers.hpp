@@ -31,10 +31,10 @@ namespace dsg {
         : public WorkspaceIndexor
         {
         protected:
-            shared_ptr<UniFileItr> m_filePosition; 
+            boost::shared_ptr<UniFileItr> m_filePosition; 
 
         public:
-            FileIndexor(const shared_ptr<UniFileItr>& filePosition);
+            FileIndexor(const boost::shared_ptr<UniFileItr>& filePosition);
 
             key_t getIndex(short key) const;
         };
@@ -44,11 +44,11 @@ namespace dsg {
         : public FileIndexor
         {
         protected:
-            shared_ptr<UniEntityItr> m_entityPosition; 
+            boost::shared_ptr<UniEntityItr> m_entityPosition; 
 
         public:
-            EntityIndexor(const shared_ptr<UniFileItr>&   filePosition,
-                          const shared_ptr<UniEntityItr>& entityPosition);
+            EntityIndexor(const boost::shared_ptr<UniFileItr>&   filePosition,
+                          const boost::shared_ptr<UniEntityItr>& entityPosition);
 
             key_t getIndex(short key) const;
         };
@@ -58,11 +58,11 @@ namespace dsg {
         : public FileIndexor
         {
         protected:
-            shared_ptr<UniRelationItr> m_relationPosition; 
+            boost::shared_ptr<UniRelationItr> m_relationPosition; 
 
         public:
-            RelationIndexor(const shared_ptr<UniFileItr>&     filePosition,
-                            const shared_ptr<UniRelationItr>& relationPosition);
+            RelationIndexor(const boost::shared_ptr<UniFileItr>&     filePosition,
+                            const boost::shared_ptr<UniRelationItr>& relationPosition);
 
             key_t getIndex(short key) const;
         };
@@ -72,12 +72,12 @@ namespace dsg {
         : public EntityIndexor
         {
         protected:
-            shared_ptr<UniAttributeItr> m_attributePosition; 
+            boost::shared_ptr<UniAttributeItr> m_attributePosition; 
 
         public:
-            AttributeIndexor(const shared_ptr<UniFileItr>&      filePosition,
-                             const shared_ptr<UniEntityItr>&    entityPosition,
-                             const shared_ptr<UniAttributeItr>& attributePosition);
+            AttributeIndexor(const boost::shared_ptr<UniFileItr>&      filePosition,
+                             const boost::shared_ptr<UniEntityItr>&    entityPosition,
+                             const boost::shared_ptr<UniAttributeItr>& attributePosition);
 
             key_t getIndex(short key) const;
         };
@@ -191,17 +191,17 @@ namespace dsg {
         class Api NameHandler                                                       \
         {                                                                           \
         private:                                                                    \
-            shared_ptr<UniFileItr>            m_filePosition;                       \
-            shared_ptr<UniEntityItr>          m_entityPosition;                     \
-            shared_ptr<UniRelationItr>        m_relationPosition;                   \
-            shared_ptr<UniAttributeItr>       m_attributePosition;                  \
+            boost::shared_ptr<UniFileItr>            m_filePosition;                       \
+            boost::shared_ptr<UniEntityItr>          m_entityPosition;                     \
+            boost::shared_ptr<UniRelationItr>        m_relationPosition;                   \
+            boost::shared_ptr<UniAttributeItr>       m_attributePosition;                  \
             Category*                         m_logger;                             \
                                                                                     \
         public:                                                                     \
-            NameHandler(const shared_ptr<UniFileItr>&      filePosition,            \
-                        const shared_ptr<UniEntityItr>&    entityPosition,          \
-                        const shared_ptr<UniRelationItr>&  relationPosition,        \
-                        const shared_ptr<UniAttributeItr>& attributePosition);      \
+            NameHandler(const boost::shared_ptr<UniFileItr>&      filePosition,            \
+                        const boost::shared_ptr<UniEntityItr>&    entityPosition,          \
+                        const boost::shared_ptr<UniRelationItr>&  relationPosition,        \
+                        const boost::shared_ptr<UniAttributeItr>& attributePosition);      \
                                                                                     \
             void operator()                                                         \
                 (UniChar const* szStart, UniChar const* szEnd) const;               \
@@ -214,18 +214,18 @@ namespace dsg {
         class Api NameHandler                                                       \
         {                                                                           \
         private:                                                                    \
-            shared_ptr<UniFileItr>            m_filePosition;                       \
-            shared_ptr<UniEntityItr>          m_entityPosition;                     \
-            shared_ptr<UniRelationItr>        m_relationPosition;                   \
-            shared_ptr<UniAttributeItr>       m_attributePosition;                  \
+            boost::shared_ptr<UniFileItr>            m_filePosition;                       \
+            boost::shared_ptr<UniEntityItr>          m_entityPosition;                     \
+            boost::shared_ptr<UniRelationItr>        m_relationPosition;                   \
+            boost::shared_ptr<UniAttributeItr>       m_attributePosition;                  \
             Enum                              m_##NameEnum;                         \
             Category*                         m_logger;                             \
                                                                                     \
         public:                                                                     \
-            NameHandler(const shared_ptr<UniFileItr>&      filePosition,            \
-                        const shared_ptr<UniEntityItr>&    entityPosition,          \
-                        const shared_ptr<UniRelationItr>&  relationPosition,        \
-                        const shared_ptr<UniAttributeItr>& attributePosition,       \
+            NameHandler(const boost::shared_ptr<UniFileItr>&      filePosition,            \
+                        const boost::shared_ptr<UniEntityItr>&    entityPosition,          \
+                        const boost::shared_ptr<UniRelationItr>&  relationPosition,        \
+                        const boost::shared_ptr<UniAttributeItr>& attributePosition,       \
                         Enum NameEnum);                                             \
                                                                                     \
             void operator()                                                         \

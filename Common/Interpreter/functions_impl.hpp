@@ -127,26 +127,38 @@ typename EncodingT::string_t eat_space(typename EncodingT::string_t const& buf)
 }
 
 template <class EncodingT>
-void tuple_op( typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               std::vector<typename EncodingT::string_t> & tab,
-               bool space)
+inline bool always_true(typename EncodingT::string_t const&, size_t)
+{
+    return true;
+}
+
+template <class EncodingT, class PredicateT>
+void tuple_op_if( typename EncodingT::string_t const& buf,
+                  typename EncodingT::string_t const& op,
+                  std::vector<typename EncodingT::string_t> & tab,
+                  PredicateT pred,
+                  bool space)
 {
     typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
     typename EncodingT::string_t val;
     size_t npos = EncodingT::string_t::npos;
-    size_t first = 0, last = 0;
+    size_t first = 0, last = 0, pos = 0;
 
     tab.clear();
-    while ((last = expr.find(op, first))!=npos)
+    pred(expr, -1);
+    while ((last = expr.find(op, pos))!=npos)
     {
-        // search spaces before and after separator
-        if (!space || (is_space<EncodingT>(expr, last-1) && is_space<EncodingT>(expr, last+op.size())))
+        if (pred(expr, last))
         {
-            val = expr.substr(first, last-first);
-            tab.push_back(eat_space<EncodingT>(val));
+            // search spaces before and after separator
+            if ((!space || (is_space<EncodingT>(expr, last-1) && is_space<EncodingT>(expr, last+op.size()))))
+            {
+                val = expr.substr(first, last-first);
+                tab.push_back(eat_space<EncodingT>(val));
+            }
+            first = last + op.size();
         }
-        first = last + op.size();
+        pos = last + op.size();
     }
     // add last element
     val = expr.substr(first, expr.size()-first);
@@ -154,12 +166,21 @@ void tuple_op( typename EncodingT::string_t const& buf,
 }
 
 template <class EncodingT>
-bool hyphenation(typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               typename EncodingT::string_t & left,
-               typename EncodingT::string_t & right,
-               size_t & start,
+void tuple_op( typename EncodingT::string_t const& buf,
+               typename EncodingT::string_t const& op,
+               std::vector<typename EncodingT::string_t> & tab,
                bool space)
+{
+    tuple_op_if<EncodingT>(buf, op, tab, always_true<EncodingT>, space);
+}
+
+template <class EncodingT>
+bool hyphenation(typename EncodingT::string_t const& buf, 
+                 typename EncodingT::string_t const& op,
+                 typename EncodingT::string_t & left,
+                 typename EncodingT::string_t & right,
+                 size_t & start,
+                 bool space)
 {
     typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
     size_t npos = EncodingT::string_t::npos;
@@ -193,23 +214,23 @@ bool hyphenation(typename EncodingT::string_t const& buf,
 }
 
 template <class EncodingT>
-bool hyphenation(typename EncodingT::string_t const& buf, 
-               typename EncodingT::string_t const& op, 
-               typename EncodingT::string_t & left,
-               typename EncodingT::string_t & right,
-               bool space)
+bool hyphenation(typename EncodingT::string_t const& buf,
+                 typename EncodingT::string_t const& op,
+                 typename EncodingT::string_t & left,
+                 typename EncodingT::string_t & right,
+                 bool space)
 {
     size_t i = 0;
     return hyphenation<EncodingT>(buf, op, left, right, i, space);
 }
 
 template <class EncodingT>
-bool reverse_hyphenation(typename EncodingT::string_t const& buf, 
-                       typename EncodingT::string_t const& op, 
-                       typename EncodingT::string_t & left,
-                       typename EncodingT::string_t & right,
-                       size_t & start,
-                       bool space)
+bool reverse_hyphenation(typename EncodingT::string_t const& buf,
+                         typename EncodingT::string_t const& op,
+                         typename EncodingT::string_t & left,
+                         typename EncodingT::string_t & right,
+                         size_t & start,
+						 bool space)
 {
     typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
     size_t npos = EncodingT::string_t::npos;
@@ -237,11 +258,11 @@ bool reverse_hyphenation(typename EncodingT::string_t const& buf,
 }
 
 template <class EncodingT>
-bool reverse_hyphenation(typename EncodingT::string_t const& buf, 
-                       typename EncodingT::string_t const& op, 
-                       typename EncodingT::string_t & left,
-                       typename EncodingT::string_t & right,
-                       bool space)
+bool reverse_hyphenation(typename EncodingT::string_t const& buf,
+                         typename EncodingT::string_t const& op,
+                         typename EncodingT::string_t & left,
+                         typename EncodingT::string_t & right,
+                         bool space)
 {
     size_t i = EncodingT::string_t::npos;
     return reverse_hyphenation<EncodingT>(buf, op, left, right, i, space);
@@ -284,12 +305,12 @@ bool suffix  (typename EncodingT::string_t const& buf,
 
 template <class EncodingT>
 bool embrace(typename EncodingT::string_t const& buf, 
-              typename EncodingT::string_t const& left, 
-              typename EncodingT::string_t const& right, 
-              typename EncodingT::string_t & inside,
-              bool space)
+             typename EncodingT::string_t const& left, 
+             typename EncodingT::string_t const& right, 
+             typename EncodingT::string_t & inside,
+             bool space)
 {
-    return prefix<EncodingT>(buf, left, inside, space) && 
+    return prefix<EncodingT>(buf, left, inside, space) &&
            suffix<EncodingT>(inside, right, inside, space);
 }
 

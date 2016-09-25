@@ -21,11 +21,11 @@ typename EncodingT::string_t DataParametersInterpreter<EncodingT>::toString() co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DataParametersInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > DataParametersInterpreter<EncodingT>::clone() const
 {
     Category* logger = &Category::getInstance(LOGNAME);
     logger->warnStream() << "Cannot clone DataParameters object.";
-    return shared_ptr< Base<EncodingT> >(new DataParametersInterpreter<EncodingT>());
+    return boost::shared_ptr< Base<EncodingT> >(new DataParametersInterpreter<EncodingT>());
 }
 
 template <class EncodingT>
@@ -35,9 +35,9 @@ typename EncodingT::string_t DataParametersInterpreter<EncodingT>::getClassName(
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > DataParametersInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > DataParametersInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-    shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
@@ -60,10 +60,10 @@ shared_ptr< Base<EncodingT> > DataParametersInterpreter<EncodingT>::invoke(const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-DataParametersInterpreter<EncodingT>::fill(shared_ptr< Base<EncodingT> >& statement) const
+boost::shared_ptr< Base<EncodingT> >
+DataParametersInterpreter<EncodingT>::fill(boost::shared_ptr< Base<EncodingT> >& statement) const
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
 
     _DataStatement<EncodingT>* nativeStatement;
     if (check_statement_pointer(statement, nativeStatement))
@@ -75,7 +75,7 @@ DataParametersInterpreter<EncodingT>::fill(shared_ptr< Base<EncodingT> >& statem
 
 template <class EncodingT>
 void
-DataParametersInterpreter<EncodingT>::addBlob(const shared_ptr< Base<EncodingT> >& value)
+DataParametersInterpreter<EncodingT>::addBlob(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     boost::container::vector<unsigned char> nativeValue;
     if (check_numeric_array(value, nativeValue))
@@ -86,7 +86,7 @@ DataParametersInterpreter<EncodingT>::addBlob(const shared_ptr< Base<EncodingT> 
 
 template <class EncodingT>
 void
-DataParametersInterpreter<EncodingT>::addDouble(const shared_ptr< Base<EncodingT> >& value)
+DataParametersInterpreter<EncodingT>::addDouble(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     double nativeValue;
     if (check_numeric(value, nativeValue))
@@ -97,7 +97,7 @@ DataParametersInterpreter<EncodingT>::addDouble(const shared_ptr< Base<EncodingT
 
 template <class EncodingT>
 void
-DataParametersInterpreter<EncodingT>::addInt(const shared_ptr< Base<EncodingT> >& value)
+DataParametersInterpreter<EncodingT>::addInt(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     double nativeValue;
     if (check_numeric(value, nativeValue))
@@ -108,7 +108,7 @@ DataParametersInterpreter<EncodingT>::addInt(const shared_ptr< Base<EncodingT> >
 
 template <class EncodingT>
 void
-DataParametersInterpreter<EncodingT>::addInt64(const shared_ptr< Base<EncodingT> >& value)
+DataParametersInterpreter<EncodingT>::addInt64(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     double nativeValue;
     if (check_numeric(value, nativeValue))
@@ -119,7 +119,7 @@ DataParametersInterpreter<EncodingT>::addInt64(const shared_ptr< Base<EncodingT>
 
 template <class EncodingT>
 void
-DataParametersInterpreter<EncodingT>::addText(const shared_ptr< Base<EncodingT> >& value)
+DataParametersInterpreter<EncodingT>::addText(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     typename EncodingT::string_t nativeValue;
     if (check_string<EncodingT>(value, nativeValue))

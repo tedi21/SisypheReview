@@ -21,12 +21,12 @@ HEADERS += xerces.h\
     ../../xerces/XEncodingExport.hpp
 
 INCLUDEPATH += \
-    ../../../../../Libraries/boost_1_54_0 \
+    ../../../../../Libraries/boost_1_61_0 \
     ../../../../../Libraries/xerces-c-3.1.1/src \
     ../../generator \
     ../../encoding
 
-LIBS += -L../../../../../Libraries/xerces-c-3.1.1/src/.libs -lxerces-c-3-1
+LIBS += -L../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c
 
 unix:!symbian {
     maemo5 {

@@ -246,6 +246,7 @@ lineNumber        INT             NOT NULL,
 address           INT             NOT NULL,
 debugStart        INT             NOT NULL,
 debugEnd          INT             NOT NULL,
+debugReturnType   VARCHAR(256)    NOT NULL,
 idFunction        INT             NOT NULL,
 
 CONSTRAINT PK_DEBUGFUNCTION           PRIMARY KEY(identifier),
@@ -256,7 +257,7 @@ CONSTRAINT FK_DEBUGFUNCTION_FUNCTION  FOREIGN KEY(idFunction) REFERENCES cppFunc
 CREATE TABLE debugVariableInfo (
 identifier        INT             NOT NULL,
 category          VARCHAR(256)    NOT NULL,
-type              VARCHAR(256)    NOT NULL,
+debugType         VARCHAR(256)    NOT NULL,
 name              VARCHAR(256)    NOT NULL,
 textValue         VARCHAR(256),
 idDebugFunction   INT             NOT NULL,

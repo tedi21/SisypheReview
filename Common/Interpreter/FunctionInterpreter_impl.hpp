@@ -18,13 +18,13 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Function<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > Function<EncodingT>::interpret(Context<EncodingT> & c)
     {
         return m_block->interpret(c);
     }
 
     template <class EncodingT>
-    bool Function<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool Function<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         bool success =  false;
         const typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
@@ -37,7 +37,7 @@ NAMESPACE_BEGIN(interp)
             typename EncodingT::string_t name(expr.begin(), i), block(j, expr.end());
             name = eat_space<EncodingT>(name);
             block = eat_space<EncodingT>(block);
-            shared_ptr< Term<EncodingT> > block_value;
+            boost::shared_ptr< Term<EncodingT> > block_value;
             std::vector<typename EncodingT::string_t> params;
             success =   prefix<EncodingT>(name, C("function"), name, true) &&
                         suffix<EncodingT>(block, C("endfunction"), block, true) &&
@@ -77,16 +77,16 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > FunctionCall<EncodingT>::interpret(Context<EncodingT> & c)
+    boost::shared_ptr< Base<EncodingT> > FunctionCall<EncodingT>::interpret(Context<EncodingT> & c)
     {
-        shared_ptr< Base<EncodingT> > val(new Base<EncodingT>());
-        shared_ptr< Function<EncodingT> > fct = dynamic_pointer_cast< Function<EncodingT> >(c.getFunction(m_name));
+        boost::shared_ptr< Base<EncodingT> > val(new Base<EncodingT>());
+        boost::shared_ptr< Function<EncodingT> > fct = dynamic_pointer_cast< Function<EncodingT> >(c.getFunction(m_name));
         if (fct)
         {
             Context<EncodingT> new_context(c);
             new_context.clear();
             std::vector<typename EncodingT::string_t> paramsName = fct->getParams();
-            std::vector< shared_ptr< Base<EncodingT> > > in;
+            std::vector< boost::shared_ptr< Base<EncodingT> > > in;
             for (size_t i = 0; i<m_params.size() && i<paramsName.size(); ++i)
             {
                 in.push_back(m_params[i]->interpret(c));
@@ -95,10 +95,10 @@ NAMESPACE_BEGIN(interp)
             val = fct->interpret(new_context);
             for (size_t i = 0; i<m_params.size() && i<paramsName.size(); ++i)
             {
-                shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_params[i]);
+                boost::shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_params[i]);
                 if (ref)
                 {
-                    shared_ptr< Base<EncodingT> > out = new_context.getObject(paramsName[i]);
+                    boost::shared_ptr< Base<EncodingT> > out = new_context.getObject(paramsName[i]);
                     if (out != in[i])
                     {
                         ref->allocate(out, c);
@@ -110,10 +110,10 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool FunctionCall<EncodingT>::parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value)
+    bool FunctionCall<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t name;
-        vector< shared_ptr< Term<EncodingT> > > params_values;
+        vector< boost::shared_ptr< Term<EncodingT> > > params_values;
         typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(buf.begin(), buf.end(), C("("));
         typename EncodingT::string_t parameters(i, buf.end());
         name = eat_space<EncodingT>(typename EncodingT::string_t(buf.begin(), i));
@@ -124,11 +124,12 @@ NAMESPACE_BEGIN(interp)
         {
             vector<typename EncodingT::string_t> params;
             size_t j = 0;
-            tuple_op<EncodingT>(parameters, C(","), params);
+            ignore_literal_comment<EncodingT> predicat;
+            tuple_op_if<EncodingT>(parameters, C(","), params, predicat);
             while (success && j<params.size())
             {
-                shared_ptr< Address<EncodingT> > ref_value;
-                shared_ptr< Term<EncodingT> >    expr_value;
+                boost::shared_ptr< Address<EncodingT> > ref_value;
+                boost::shared_ptr< Term<EncodingT> >    expr_value;
                 success = Assignable<EncodingT>::parse(params[j], ref_value) ||
                           Instruction<EncodingT>::parse(params[j], expr_value);
                 if (ref_value)

@@ -22,9 +22,9 @@ typename EncodingT::string_t ConnectionInterpreter<EncodingT>::toString() const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::clone() const
+boost::shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::clone() const
 {
-    return shared_ptr< Base<EncodingT> >(new ConnectionInterpreter<EncodingT>());
+    return boost::shared_ptr< Base<EncodingT> >(new ConnectionInterpreter<EncodingT>());
 }
 
 template <class EncodingT>
@@ -34,9 +34,9 @@ typename EncodingT::string_t ConnectionInterpreter<EncodingT>::getClassName() co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+boost::shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
 {
-    shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
 
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
@@ -59,12 +59,12 @@ shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::invoke(const typ
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-ConnectionInterpreter<EncodingT>::select(shared_ptr< Base<EncodingT> > const& columns,
-                                         shared_ptr< Base<EncodingT> > const& tables,
-                                         shared_ptr< Base<EncodingT> > const& filter)
+boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::select(boost::shared_ptr< Base<EncodingT> > const& columns,
+                                         boost::shared_ptr< Base<EncodingT> > const& tables,
+                                         boost::shared_ptr< Base<EncodingT> > const& filter)
 {
-   shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+   boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
    clearError();
    try
    {
@@ -85,13 +85,13 @@ ConnectionInterpreter<EncodingT>::select(shared_ptr< Base<EncodingT> > const& co
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-ConnectionInterpreter<EncodingT>::selectForUpdate(shared_ptr< Base<EncodingT> > const& columns,
-                                                  shared_ptr< Base<EncodingT> > const& tables,
-                                                  shared_ptr< Base<EncodingT> > const& filter,
-                                                  shared_ptr< Base<EncodingT> > const& nowait)
+boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::selectForUpdate(boost::shared_ptr< Base<EncodingT> > const& columns,
+                                                  boost::shared_ptr< Base<EncodingT> > const& tables,
+                                                  boost::shared_ptr< Base<EncodingT> > const& filter,
+                                                  boost::shared_ptr< Base<EncodingT> > const& nowait)
 {
-    shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
     clearError();
     try
     {
@@ -114,11 +114,11 @@ ConnectionInterpreter<EncodingT>::selectForUpdate(shared_ptr< Base<EncodingT> > 
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-ConnectionInterpreter<EncodingT>::insert(shared_ptr< Base<EncodingT> > const& table,
-                                         shared_ptr< Base<EncodingT> > const& columns)
+boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::insert(boost::shared_ptr< Base<EncodingT> > const& table,
+                                         boost::shared_ptr< Base<EncodingT> > const& columns)
 {
-    shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
     clearError();
     try
     {
@@ -138,11 +138,11 @@ ConnectionInterpreter<EncodingT>::insert(shared_ptr< Base<EncodingT> > const& ta
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-ConnectionInterpreter<EncodingT>::deleteFrom(shared_ptr< Base<EncodingT> > const& table,
-                                             shared_ptr< Base<EncodingT> > const& filter)
+boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::deleteFrom(boost::shared_ptr< Base<EncodingT> > const& table,
+                                             boost::shared_ptr< Base<EncodingT> > const& filter)
 {
-    shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
     clearError();
     try
     {
@@ -162,12 +162,12 @@ ConnectionInterpreter<EncodingT>::deleteFrom(shared_ptr< Base<EncodingT> > const
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-ConnectionInterpreter<EncodingT>::update(shared_ptr< Base<EncodingT> > const& table,
-                                         shared_ptr< Base<EncodingT> > const& columns,
-                                         shared_ptr< Base<EncodingT> > const& filter)
+boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::update(boost::shared_ptr< Base<EncodingT> > const& table,
+                                         boost::shared_ptr< Base<EncodingT> > const& columns,
+                                         boost::shared_ptr< Base<EncodingT> > const& filter)
 {
-    shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
     clearError();
     try
     {
@@ -188,10 +188,10 @@ ConnectionInterpreter<EncodingT>::update(shared_ptr< Base<EncodingT> > const& ta
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::getLastInsertID()
 {
-    shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>());
     clearError();
     try
     {
@@ -205,11 +205,11 @@ ConnectionInterpreter<EncodingT>::getLastInsertID()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
-ConnectionInterpreter<EncodingT>::selectMaxID(shared_ptr< Base<EncodingT> > const& columnid,
-                                              shared_ptr< Base<EncodingT> > const& table)
+boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::selectMaxID(boost::shared_ptr< Base<EncodingT> > const& columnid,
+                                              boost::shared_ptr< Base<EncodingT> > const& table)
 {
-    shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>());
     clearError();
     try
     {
@@ -228,10 +228,10 @@ ConnectionInterpreter<EncodingT>::selectMaxID(shared_ptr< Base<EncodingT> > cons
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::commit()
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -245,10 +245,10 @@ ConnectionInterpreter<EncodingT>::commit()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::rollback()
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -262,10 +262,10 @@ ConnectionInterpreter<EncodingT>::rollback()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::startTransaction()
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -279,10 +279,10 @@ ConnectionInterpreter<EncodingT>::startTransaction()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> >
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::isTransactionInProgress()
 {
-    shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -297,7 +297,7 @@ ConnectionInterpreter<EncodingT>::isTransactionInProgress()
 
 template <class EncodingT>
 void
-ConnectionInterpreter<EncodingT>::setPragma(shared_ptr< Base<EncodingT> > const& pragma)
+ConnectionInterpreter<EncodingT>::setPragma(boost::shared_ptr< Base<EncodingT> > const& pragma)
 {
     clearError();
     try
@@ -329,14 +329,14 @@ void ConnectionInterpreter<EncodingT>::clearError()
 }
 
 template <class EncodingT>
-shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::getError(shared_ptr< Base<EncodingT> >& text) const
+boost::shared_ptr< Base<EncodingT> > ConnectionInterpreter<EncodingT>::getError(boost::shared_ptr< Base<EncodingT> >& text) const
 {
-    shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
+    boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
     if (str)
     {
         str->setValue(C(m_errorText));
     }
-    return shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
+    return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }
 
 NAMESPACE_END

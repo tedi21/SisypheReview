@@ -16,17 +16,17 @@ NAMESPACE_BEGIN(interp)
     private:
         typename EncodingT::string_t m_name;
         std::vector<typename EncodingT::string_t> m_params;
-        shared_ptr< Term<EncodingT> > m_block;
+        boost::shared_ptr< Term<EncodingT> > m_block;
         typedef typename EncodingT::string_t::const_iterator    char_iterator;
 
     public:
-        Function(typename EncodingT::string_t const& name, std::vector<typename EncodingT::string_t> const& params, shared_ptr< Term<EncodingT> > const& block)
+        Function(typename EncodingT::string_t const& name, std::vector<typename EncodingT::string_t> const& params, boost::shared_ptr< Term<EncodingT> > const& block)
         : m_name(name), m_params(params), m_block(block)
         {}
         typename EncodingT::string_t const& getName() const;
         std::vector<typename EncodingT::string_t> const& getParams() const;
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
         static char_iterator look_for(char_iterator start, char_iterator end);
     };
 
@@ -37,14 +37,14 @@ NAMESPACE_BEGIN(interp)
     {
     private:
         typename EncodingT::string_t m_name;
-        std::vector< shared_ptr< Term<EncodingT> > > m_params;
+        std::vector< boost::shared_ptr< Term<EncodingT> > > m_params;
 
     public:
-        FunctionCall(typename EncodingT::string_t const& name, std::vector< shared_ptr< Term<EncodingT> > > const& params)
+        FunctionCall(typename EncodingT::string_t const& name, std::vector< boost::shared_ptr< Term<EncodingT> > > const& params)
         : m_name(name), m_params(params)
         {}
-        shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
-        static bool parse(typename EncodingT::string_t const& buf, shared_ptr< Term<EncodingT> > & value);
+        boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
+        static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);
     };
 
 NAMESPACE_END

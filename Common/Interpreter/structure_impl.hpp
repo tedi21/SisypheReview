@@ -33,9 +33,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Structure<EncodingT>::clone() const
+    boost::shared_ptr< Base<EncodingT> > Structure<EncodingT>::clone() const
     {
-        shared_ptr< Structure<EncodingT> > obj(new Structure<EncodingT>());
+        boost::shared_ptr< Structure<EncodingT> > obj(new Structure<EncodingT>());
 		
         for (iterator_t i = m_container.begin(); i != m_container.end(); ++i)
         {
@@ -51,9 +51,9 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    shared_ptr< Base<EncodingT> > Structure<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params)
+    boost::shared_ptr< Base<EncodingT> > Structure<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)
     {
-        shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
+        boost::shared_ptr< Base<EncodingT> > obj(new Base<EncodingT>());
         
         if (method == C("Fields") && params.size() == 2)
         {
@@ -92,8 +92,8 @@ NAMESPACE_BEGIN(interp)
                 if (check_index(value, m_container.size(), index))
                 {
                     iterator_t i = this->getField(index);
-                    shared_ptr< Structure<EncodingT> > st(new Structure<EncodingT>());
-                    st->insertField(C("Name"), shared_ptr< Base<EncodingT> >(new String<EncodingT>(i->first)));
+                    boost::shared_ptr< Structure<EncodingT> > st(new Structure<EncodingT>());
+                    st->insertField(C("Name"), boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(i->first)));
                     st->insertField(C("Value"), i->second);
                     obj = st;
                 }
@@ -157,7 +157,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    void Structure<EncodingT>::insertField(typename EncodingT::string_t const& name, shared_ptr< Base<EncodingT> > const& value)
+    void Structure<EncodingT>::insertField(typename EncodingT::string_t const& name, boost::shared_ptr< Base<EncodingT> > const& value)
     {
         m_container[name] = value;
     }
@@ -169,7 +169,7 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    bool Structure<EncodingT>::findField(typename EncodingT::string_t const& name, shared_ptr< Base<EncodingT> >& value) const
+    bool Structure<EncodingT>::findField(typename EncodingT::string_t const& name, boost::shared_ptr< Base<EncodingT> >& value) const
     {
         bool found = false;
         iterator_t i = m_container.find(name);

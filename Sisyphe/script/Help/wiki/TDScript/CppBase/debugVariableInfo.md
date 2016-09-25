@@ -15,14 +15,14 @@ var = new DebugVariableInfo();
 ## Constructeur DebugVariableInfo
 *Paramètres*
 * String : La valeur de la colonne category.
-* String : La valeur de la colonne type.
+* String : La valeur de la colonne debugType.
 * String : La valeur de la colonne name.
 * String : La valeur de la colonne textValue.
 
 *Description*
 * Crée une instance de la classe DebugVariableInfo.
 ```
-var = new DebugVariableInfo(category, type, name, textValue);
+var = new DebugVariableInfo(category, debugType, name, textValue);
 ```
 
 ## Méthode Identifier
@@ -51,17 +51,17 @@ val = var.Identifier;
 val = var.Category;
 ```
 
-## Méthode Type
+## Méthode DebugType
 *Paramètres*
 * None.
 
 *Retour*
-* String : La colonne type.
+* String : La colonne debugType.
 
 *Description*
-* Retourne la colonne Type.
+* Retourne la colonne DebugType.
 ```
-val = var.Type;
+val = var.DebugType;
 ```
 
 ## Méthode Name
@@ -116,17 +116,17 @@ debugFunctionInfo = var.DebugFunctionInfo;
 var.Category(category);
 ```
 
-## Méthode Type
+## Méthode DebugType
 *Paramètres*
-* String : La valeur de la colonne type.
+* String : La valeur de la colonne debugType.
 
 *Retour*
 * None.
 
 *Description*
-* Définit la colonne type.
+* Définit la colonne debugType.
 ```
-var.Type(type);
+var.DebugType(debugType);
 ```
 
 ## Méthode Name

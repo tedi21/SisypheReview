@@ -26,7 +26,7 @@ namespace gen {
         typedef context<ContainerT, typename generator_t::context_t> context_t;
 
         context_t context(container.begin(), container.end());
-        g.derived().generate<generator_t>(context);
+        g.derived().template generate<generator_t>(context);
         return context.str();
       } 
 

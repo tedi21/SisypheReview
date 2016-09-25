@@ -33,37 +33,37 @@ NAMESPACE_BEGIN(interp)
 
         File(const typename EncodingT::string_t& name, const typename EncodingT::string_t& mode, const typename EncodingT::string_t& format);
 
-        FACTORY_PROTOTYPE3(File, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >, In< shared_ptr< Base<EncodingT> > >)
-        File(shared_ptr< Base<EncodingT> > const& name, shared_ptr< Base<EncodingT> > const& mode, shared_ptr< Base<EncodingT> > const& format);
+        FACTORY_PROTOTYPE3(File, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        File(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> > const& mode, boost::shared_ptr< Base<EncodingT> > const& format);
 
         // Destructor
         ~File();
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
-        virtual shared_ptr< Base<EncodingT> > clone() const;
+        virtual boost::shared_ptr< Base<EncodingT> > clone() const;
         virtual typename EncodingT::string_t getClassName() const;
-        virtual shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< shared_ptr< Base<EncodingT> > >& params);
+        virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
 
         // Dynamic methods
-        shared_ptr< Base<EncodingT> > isOpen() const;
+        boost::shared_ptr< Base<EncodingT> > isOpen() const;
 
-        FACTORY_PROTOTYPE1(load, InOut< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > load(shared_ptr< Base<EncodingT> >& val);
+        FACTORY_PROTOTYPE1(load, InOut< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > load(boost::shared_ptr< Base<EncodingT> >& val);
 
-        FACTORY_PROTOTYPE1(save, In< shared_ptr< Base<EncodingT> > >)
-        shared_ptr< Base<EncodingT> > save(shared_ptr< Base<EncodingT> > const& val);
+        FACTORY_PROTOTYPE1(save, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > save(boost::shared_ptr< Base<EncodingT> > const& val);
 
-        shared_ptr< Base<EncodingT> > size();
+        boost::shared_ptr< Base<EncodingT> > size();
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER      (File)
             CLASS_REGISTER3     (File)
-            METHOD_KEY_REGISTER (File, shared_ptr< Base<EncodingT> >, isOpen, const_t, C("File::Open") )
-            METHOD_REGISTER1    (File, shared_ptr< Base<EncodingT> >, load, no_const_t)
-            METHOD_REGISTER1    (File, shared_ptr< Base<EncodingT> >, save, no_const_t)
-            METHOD_REGISTER     (File, shared_ptr< Base<EncodingT> >, size, no_const_t)
+            METHOD_KEY_REGISTER (File, boost::shared_ptr< Base<EncodingT> >, isOpen, const_t, C("File::Open") )
+            METHOD_REGISTER1    (File, boost::shared_ptr< Base<EncodingT> >, load, no_const_t)
+            METHOD_REGISTER1    (File, boost::shared_ptr< Base<EncodingT> >, save, no_const_t)
+            METHOD_REGISTER     (File, boost::shared_ptr< Base<EncodingT> >, size, no_const_t)
         FACTORY_END_REGISTER
 
         // Methods unregistration
