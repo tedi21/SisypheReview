@@ -16,3 +16,5 @@ In the web interface, click on *Verify* menu.
 ![Sisyphe screenshot](/screen.png "Sisyphe screenshot")
 
 Select *Run* item and set the sources path. Click *Ok*.
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tedi21/SisypheReview/master)
