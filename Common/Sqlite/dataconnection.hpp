@@ -15,7 +15,8 @@
 #include "DBExport.h"
 #include "encoding.hpp"
 #include "datastatement.hpp"
-#include <boost/container/vector.hpp>
+#include <vector>
+#include <map>
 
 #include <sqlite3.h>
 
@@ -29,17 +30,18 @@ template <class EncodingT>
 class DB_API _DataConnection
 { 
 private:
-	// Static members
-    static sqlite3* connection_handle;
-    static _DataConnection<EncodingT>* m_instance;
+	  // Static members
+    static std::map<typename EncodingT::string_t,sqlite3*> connection_handles;
+    static std::map<typename EncodingT::string_t,_DataConnection<EncodingT>*> m_instances;
 	
-	// Private members
+	  // Private members
     Category* m_logger;
+    sqlite3* connection_handle;
     bool transaction_inProgress;
     _DataStatement<EncodingT> current_statement;
 
     // Private constructor
-    _DataConnection();
+    _DataConnection(sqlite3* handle);
 	
     _DataStatement<EncodingT>&
     prepareStatement(typename ucs::string_t const& query);
@@ -55,80 +57,80 @@ private:
                  bool forUpdate = false, bool noWait = false) const;
 
     typename EncodingT::string_t
-	formatInsert(typename EncodingT::string_t const& table,
+	  formatInsert(typename EncodingT::string_t const& table,
                  std::vector<typename EncodingT::string_t> const& columns) const;
 
     typename EncodingT::string_t
-	formatDeleteFrom(typename EncodingT::string_t const& table,
+	  formatDeleteFrom(typename EncodingT::string_t const& table,
                      typename EncodingT::string_t const& filter = EncodingT::EMPTY) const;
 
     typename EncodingT::string_t 
-	formatUpdate(typename EncodingT::string_t const& table,
+	  formatUpdate(typename EncodingT::string_t const& table,
                  std::vector<typename EncodingT::string_t> const& columns,
                  typename EncodingT::string_t const& filter = EncodingT::EMPTY) const;
 
 public:
-	// Static methods
-	// Open connection to sqlite
+	  // Static methods
+	  // Open connection to sqlite
     static bool 
-	openConnection(typename EncodingT::string_t const& host,
+	  openConnection(typename EncodingT::string_t const& host,
                    int port,
                    typename EncodingT::string_t const& db,
                    typename EncodingT::string_t const& user,
                    typename EncodingT::string_t const& passwd);
 
-	// Close connection
+	  // Close connection
     static void 
-	closeConnection();
+	  closeConnection(typename EncodingT::string_t const& db = EncodingT::EMPTY);
 
-	// Get single instance of DataConnection object
+	  // Get single instance of DataConnection object
     static _DataConnection<EncodingT>* 
-	getInstance();
+	  getInstance(typename EncodingT::string_t const& db = EncodingT::EMPTY);
 
-	// Get prepared statement
+	  // Get prepared statement
     _DataStatement<EncodingT>&
-	select(std::vector<typename EncodingT::string_t> const& columns,
+	  select(std::vector<typename EncodingT::string_t> const& columns,
            std::vector<typename EncodingT::string_t> const& tables,
            typename EncodingT::string_t const& filter = EncodingT::EMPTY);
 
     _DataStatement<EncodingT>&
-	selectForUpdate(std::vector<typename EncodingT::string_t> const& columns,
+	  selectForUpdate(std::vector<typename EncodingT::string_t> const& columns,
                     std::vector<typename EncodingT::string_t> const& tables,
                     typename EncodingT::string_t const& filter = EncodingT::EMPTY,
                     bool nowait = false);
 
     _DataStatement<EncodingT>&
-	insert(typename EncodingT::string_t const& table,
+	  insert(typename EncodingT::string_t const& table,
            std::vector<typename EncodingT::string_t> const& columns);
 
     _DataStatement<EncodingT>&
-	deleteFrom(typename EncodingT::string_t const& table,
+	  deleteFrom(typename EncodingT::string_t const& table,
                typename EncodingT::string_t const& filter = EncodingT::EMPTY);
 
     _DataStatement<EncodingT>&
-	update(typename EncodingT::string_t const& table,
+	  update(typename EncodingT::string_t const& table,
            std::vector<typename EncodingT::string_t> const& columns,
            typename EncodingT::string_t const& filter = EncodingT::EMPTY);
 
-	// Unary query
+	  // Unary query
     int 
-	getLastInsertID() const;
+	  getLastInsertID() const;
 
     int 
-	selectMaxID(typename EncodingT::string_t const& columnid,
+	  selectMaxID(typename EncodingT::string_t const& columnid,
                 typename EncodingT::string_t const& table) const;
 
     bool 
-	commit();
+	  commit();
 
     bool 
-	rollback();
+	  rollback();
 
     bool
-	startTransaction();
+	  startTransaction();
 
     bool
-	isTransactionInProgress() const;
+	  isTransactionInProgress() const;
 
     void
     setPragma(typename EncodingT::string_t const& pragma);

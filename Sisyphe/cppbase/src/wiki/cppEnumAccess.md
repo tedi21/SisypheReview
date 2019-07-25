@@ -118,6 +118,19 @@ var = access.IsSelectedCppEnum(cppEnum);
 access.FillCppFile(cppEnum);
 ```
 
+## Méthode FillCppClass
+*Paramètres*
+* CppEnum : L'objet à remplir.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée cppClass dans la base de données.
+```
+access.FillCppClass(cppEnum);
+```
+
 ## Méthode FillAllCppEnumConstants
 *Paramètres*
 * CppEnum : L'objet à remplir.

@@ -32,7 +32,7 @@ HEADERS += \
     ../../encoding/impl/utf16_codecvt_impl.hpp
 
 INCLUDEPATH += \
-    ../../../../../Libraries/boost_1_61_0 \
+    ../../../../../Libraries/boost_1_66_0 \
     ../../generator \
     ../../encoding
 

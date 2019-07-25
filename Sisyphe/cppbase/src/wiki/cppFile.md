@@ -14,15 +14,29 @@ var = new CppFile();
 
 ## Constructeur CppFile
 *Paramètres*
-* TextFile : La valeur de la colonne textFile.
 * String : La valeur de la colonne path.
 * String : La valeur de la colonne name.
 * Numeric : La valeur de la colonne linesCount.
+* Numeric : La valeur de la colonne hash.
+* Numeric : La valeur de la colonne analyzed.
 
 *Description*
 * Crée une instance de la classe CppFile.
 ```
-var = new CppFile(textFile, path, name, linesCount);
+var = new CppFile(path, name, linesCount, hash, analyzed);
+```
+
+## Méthode Identifier
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne identifier.
+
+*Description*
+* Retourne la colonne Identifier.
+```
+val = var.Identifier;
 ```
 
 ## Méthode Path
@@ -62,6 +76,32 @@ val = var.Name;
 * Retourne la colonne LinesCount.
 ```
 val = var.LinesCount;
+```
+
+## Méthode Hash
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne hash.
+
+*Description*
+* Retourne la colonne Hash.
+```
+val = var.Hash;
+```
+
+## Méthode Analyzed
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne analyzed.
+
+*Description*
+* Retourne la colonne Analyzed.
+```
+val = var.Analyzed;
 ```
 
 ## Méthode TextFile
@@ -155,6 +195,32 @@ var.CppFileType(cppFileType);
 var.LinesCount(linesCount);
 ```
 
+## Méthode Hash
+*Paramètres*
+* Numeric : La valeur de la colonne hash.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne hash.
+```
+var.Hash(hash);
+```
+
+## Méthode Analyzed
+*Paramètres*
+* Numeric : La valeur de la colonne analyzed.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne analyzed.
+```
+var.Analyzed(analyzed);
+```
+
 ## Méthode HasTextFile
 *Paramètres*
 * None.
@@ -233,6 +299,19 @@ var.CppDeclarationFunctions(0) = null;
 var.CppDefinitionFunctions(0) = null;
 ```
 
+## Méthode removeCppClasss
+*Paramètres*
+* Numeric : La position de l'élément à supprimer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime l'élément à la position *n* dans la liste de CppClasss.
+```
+var.CppClasss(0) = null;
+```
+
 ## Méthode removeCppIncludes
 *Paramètres*
 * Numeric : La position de l'élément à supprimer dans la liste.
@@ -246,7 +325,7 @@ var.CppDefinitionFunctions(0) = null;
 var.CppIncludes(0) = null;
 ```
 
-## Méthode removeCppClasss
+## Méthode removeCppVariables
 *Paramètres*
 * Numeric : La position de l'élément à supprimer dans la liste.
 
@@ -254,9 +333,9 @@ var.CppIncludes(0) = null;
 * None.
 
 *Description*
-* Supprime l'élément à la position *n* dans la liste de CppClasss.
+* Supprime l'élément à la position *n* dans la liste de CppVariables.
 ```
-var.CppClasss(0) = null;
+var.CppVariables(0) = null;
 ```
 
 ## Méthode removeCppEnums
@@ -285,7 +364,7 @@ var.CppEnums(0) = null;
 var.CMacros(0) = null;
 ```
 
-## Méthode removeDebugFileInfos
+## Méthode removeCppNotices
 *Paramètres*
 * Numeric : La position de l'élément à supprimer dans la liste.
 
@@ -293,9 +372,9 @@ var.CMacros(0) = null;
 * None.
 
 *Description*
-* Supprime l'élément à la position *n* dans la liste de DebugFileInfos.
+* Supprime l'élément à la position *n* dans la liste de CppNotices.
 ```
-var.DebugFileInfos(0) = null;
+var.CppNotices(0) = null;
 ```
 
 ## Méthode CppDeclarationFunctions
@@ -326,6 +405,20 @@ var.CppDeclarationFunctions(0) = cppDeclarationFunction;
 var.CppDefinitionFunctions(0) = cppDefinitionFunction;
 ```
 
+## Méthode CppClasss
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* CppClass : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de CppClasss.
+```
+var.CppClasss(0) = cppClass;
+```
+
 ## Méthode CppIncludes
 *Paramètres*
 * Numeric : La position de l'élément à insérer dans la liste.
@@ -340,18 +433,18 @@ var.CppDefinitionFunctions(0) = cppDefinitionFunction;
 var.CppIncludes(0) = cppInclude;
 ```
 
-## Méthode CppClasss
+## Méthode CppVariables
 *Paramètres*
 * Numeric : La position de l'élément à insérer dans la liste.
-* CppClass : L'élément à insérer dans la liste.
+* CppVariable : L'élément à insérer dans la liste.
 
 *Retour*
 * None.
 
 *Description*
-* Insère un élément à la position *n* dans la liste de CppClasss.
+* Insère un élément à la position *n* dans la liste de CppVariables.
 ```
-var.CppClasss(0) = cppClass;
+var.CppVariables(0) = cppVariable;
 ```
 
 ## Méthode CppEnums
@@ -382,18 +475,18 @@ var.CppEnums(0) = cppEnum;
 var.CMacros(0) = cMacro;
 ```
 
-## Méthode DebugFileInfos
+## Méthode CppNotices
 *Paramètres*
 * Numeric : La position de l'élément à insérer dans la liste.
-* DebugFileInfo : L'élément à insérer dans la liste.
+* CppNotice : L'élément à insérer dans la liste.
 
 *Retour*
 * None.
 
 *Description*
-* Insère un élément à la position *n* dans la liste de DebugFileInfos.
+* Insère un élément à la position *n* dans la liste de CppNotices.
 ```
-var.DebugFileInfos(0) = debugFileInfo;
+var.CppNotices(0) = cppNotice;
 ```
 
 ## Méthode CppDeclarationFunctions
@@ -422,6 +515,19 @@ val = var.CppDeclarationFunctions(0);
 val = var.CppDefinitionFunctions(0);
 ```
 
+## Méthode CppClasss
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* CppClass : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de CppClasss.
+```
+val = var.CppClasss(0);
+```
+
 ## Méthode CppIncludes
 *Paramètres*
 * Numeric : La position de l'élément dans la liste.
@@ -435,17 +541,17 @@ val = var.CppDefinitionFunctions(0);
 val = var.CppIncludes(0);
 ```
 
-## Méthode CppClasss
+## Méthode CppVariables
 *Paramètres*
 * Numeric : La position de l'élément dans la liste.
 
 *Retour*
-* CppClass : L'élément dans la liste.
+* CppVariable : L'élément dans la liste.
 
 *Description*
-* Retourne l'élément à la position *n* dans la liste de CppClasss.
+* Retourne l'élément à la position *n* dans la liste de CppVariables.
 ```
-val = var.CppClasss(0);
+val = var.CppVariables(0);
 ```
 
 ## Méthode CppEnums
@@ -474,17 +580,17 @@ val = var.CppEnums(0);
 val = var.CMacros(0);
 ```
 
-## Méthode DebugFileInfos
+## Méthode CppNotices
 *Paramètres*
 * Numeric : La position de l'élément dans la liste.
 
 *Retour*
-* DebugFileInfo : L'élément dans la liste.
+* CppNotice : L'élément dans la liste.
 
 *Description*
-* Retourne l'élément à la position *n* dans la liste de DebugFileInfos.
+* Retourne l'élément à la position *n* dans la liste de CppNotices.
 ```
-val = var.DebugFileInfos(0);
+val = var.CppNotices(0);
 ```
 
 ## Méthode ClearCppDeclarationFunctions
@@ -513,6 +619,19 @@ var.ClearCppDeclarationFunctions();
 var.ClearCppDefinitionFunctions();
 ```
 
+## Méthode ClearCppClasss
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearCppClasss();
+```
+
 ## Méthode ClearCppIncludes
 *Paramètres*
 * None.
@@ -526,7 +645,7 @@ var.ClearCppDefinitionFunctions();
 var.ClearCppIncludes();
 ```
 
-## Méthode ClearCppClasss
+## Méthode ClearCppVariables
 *Paramètres*
 * None.
 
@@ -536,7 +655,7 @@ var.ClearCppIncludes();
 *Description*
 * Supprime tous les éléments de liste.
 ```
-var.ClearCppClasss();
+var.ClearCppVariables();
 ```
 
 ## Méthode ClearCppEnums
@@ -565,7 +684,7 @@ var.ClearCppEnums();
 var.ClearCMacros();
 ```
 
-## Méthode ClearDebugFileInfos
+## Méthode ClearCppNotices
 *Paramètres*
 * None.
 
@@ -575,7 +694,7 @@ var.ClearCMacros();
 *Description*
 * Supprime tous les éléments de liste.
 ```
-var.ClearDebugFileInfos();
+var.ClearCppNotices();
 ```
 
 ## Méthode HasCppDeclarationFunctions
@@ -604,6 +723,19 @@ val = var.HasCppDeclarationFunctions();
 val = var.HasCppDefinitionFunctions();
 ```
 
+## Méthode HasCppClasss
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasCppClasss();
+```
+
 ## Méthode HasCppIncludes
 *Paramètres*
 * None.
@@ -617,7 +749,7 @@ val = var.HasCppDefinitionFunctions();
 val = var.HasCppIncludes();
 ```
 
-## Méthode HasCppClasss
+## Méthode HasCppVariables
 *Paramètres*
 * None.
 
@@ -627,7 +759,7 @@ val = var.HasCppIncludes();
 *Description*
 * Indique si la liste n'est pas vide.
 ```
-val = var.HasCppClasss();
+val = var.HasCppVariables();
 ```
 
 ## Méthode HasCppEnums
@@ -656,7 +788,7 @@ val = var.HasCppEnums();
 val = var.HasCMacros();
 ```
 
-## Méthode HasDebugFileInfos
+## Méthode HasCppNotices
 *Paramètres*
 * None.
 
@@ -666,7 +798,7 @@ val = var.HasCMacros();
 *Description*
 * Indique si la liste n'est pas vide.
 ```
-val = var.HasDebugFileInfos();
+val = var.HasCppNotices();
 ```
 
 ## Méthode CppDeclarationFunctionsCount
@@ -695,6 +827,19 @@ val = var.CppDeclarationFunctionsCount();
 val = var.CppDefinitionFunctionsCount();
 ```
 
+## Méthode CppClasssCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.CppClasssCount();
+```
+
 ## Méthode CppIncludesCount
 *Paramètres*
 * None.
@@ -708,7 +853,7 @@ val = var.CppDefinitionFunctionsCount();
 val = var.CppIncludesCount();
 ```
 
-## Méthode CppClasssCount
+## Méthode CppVariablesCount
 *Paramètres*
 * None.
 
@@ -718,7 +863,7 @@ val = var.CppIncludesCount();
 *Description*
 * Retourne le nombre d'élément contenus dans la liste.
 ```
-val = var.CppClasssCount();
+val = var.CppVariablesCount();
 ```
 
 ## Méthode CppEnumsCount
@@ -747,7 +892,7 @@ val = var.CppEnumsCount();
 val = var.CMacrosCount();
 ```
 
-## Méthode DebugFileInfosCount
+## Méthode CppNoticesCount
 *Paramètres*
 * None.
 
@@ -757,5 +902,5 @@ val = var.CMacrosCount();
 *Description*
 * Retourne le nombre d'élément contenus dans la liste.
 ```
-val = var.DebugFileInfosCount();
+val = var.CppNoticesCount();
 ```

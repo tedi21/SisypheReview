@@ -119,11 +119,12 @@ namespace dsg {
                     Type = 
                         (as_lower_d["varchar"] >> '(' >>  uint_p >> ')')    [getAttributeTypeHandler(ATTR_STRING)] | 
                         (as_lower_d["numeric"] >> '(' >>  uint_p >> ')')    [getAttributeTypeHandler(ATTR_DOUBLE)] | 
-                        (as_lower_d["tinyint"])                             [getAttributeTypeHandler(ATTR_SBYTE)]  | 
+                        (as_lower_d["integer"])                             [getAttributeTypeHandler(ATTR_INT64)]  |
+                        (as_lower_d["tinyint"])                             [getAttributeTypeHandler(ATTR_SBYTE)]  |
                         (as_lower_d["smallint"])                            [getAttributeTypeHandler(ATTR_INT16)]  | 
                         (as_lower_d["mediumint"])                           [getAttributeTypeHandler(ATTR_INT32)]  | 
                         (as_lower_d["int"])                                 [getAttributeTypeHandler(ATTR_INT)]    |
-                        (as_lower_d["bigint"])                              [getAttributeTypeHandler(ATTR_INT64)]  | 
+                        (as_lower_d["bigint"])                              [getAttributeTypeHandler(ATTR_INT64)]  |
                         (as_lower_d["text"])                                [getAttributeTypeHandler(ATTR_TEXT)]   |
                         (as_lower_d["date"])                                [getAttributeTypeHandler(ATTR_DATE)]   |
                         (as_lower_d["time"])                                [getAttributeTypeHandler(ATTR_TIME)]   |

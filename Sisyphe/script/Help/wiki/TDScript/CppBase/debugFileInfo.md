@@ -14,13 +14,14 @@ var = new DebugFileInfo();
 
 ## Constructeur DebugFileInfo
 *Paramètres*
+* String : La valeur de la colonne name.
 * String : La valeur de la colonne compilandPath.
 * Array[Numeric] : La valeur de la colonne checksum.
 
 *Description*
 * Crée une instance de la classe DebugFileInfo.
 ```
-var = new DebugFileInfo(compilandPath, checksum);
+var = new DebugFileInfo(name, compilandPath, checksum);
 ```
 
 ## Méthode Identifier
@@ -34,6 +35,19 @@ var = new DebugFileInfo(compilandPath, checksum);
 * Retourne la colonne Identifier.
 ```
 val = var.Identifier;
+```
+
+## Méthode Name
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne name.
+
+*Description*
+* Retourne la colonne Name.
+```
+val = var.Name;
 ```
 
 ## Méthode CompilandPath
@@ -62,17 +76,43 @@ val = var.CompilandPath;
 val = var.Checksum;
 ```
 
-## Méthode CppFile
+## Méthode TextFile
 *Paramètres*
 * None.
 
 *Retour*
-* CppFile : La colonne cppFile.
+* TextFile : La colonne textFile.
 
 *Description*
-* Retourne la colonne CppFile.
+* Retourne la colonne TextFile.
 ```
-cppFile = var.CppFile;
+textFile = var.TextFile;
+```
+
+## Méthode TextFile
+*Paramètres*
+* TextFile : La valeur de la colonne textFile.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne textFile.
+```
+var.TextFile(textFile);
+```
+
+## Méthode Name
+*Paramètres*
+* String : La valeur de la colonne name.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne name.
+```
+var.Name(name);
 ```
 
 ## Méthode CompilandPath
@@ -101,33 +141,20 @@ var.CompilandPath(compilandPath);
 var.Checksum(checksum);
 ```
 
-## Méthode CppFile
-*Paramètres*
-* CppFile : La valeur de la colonne cppFile.
-
-*Retour*
-* None.
-
-*Description*
-* Définit la colonne cppFile.
-```
-var.CppFile(cppFile);
-```
-
-## Méthode HasCppFile
+## Méthode HasTextFile
 *Paramètres*
 * None.
 
 *Retour*
-* Bool : Une valeur est définie pour la colonne cppFile.
+* Bool : Une valeur est définie pour la colonne textFile.
 
 *Description*
-* Indique si la colonne CppFile a une valeur définie.
+* Indique si la colonne TextFile a une valeur définie.
 ```
-val = var.HasCppFile;
+val = var.HasTextFile;
 ```
 
-## Méthode removeCppFile
+## Méthode removeTextFile
 *Paramètres*
 * None.
 
@@ -135,7 +162,165 @@ val = var.HasCppFile;
 * None.
 
 *Description*
-* Supprime la valeur définie pour la colonne cppFile.
+* Supprime la valeur définie pour la colonne textFile.
 ```
-var.CppFile = null;
+var.TextFile = null;
+```
+
+## Méthode removeDebugFunctionInfos
+*Paramètres*
+* Numeric : La position de l'élément à supprimer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime l'élément à la position *n* dans la liste de DebugFunctionInfos.
+```
+var.DebugFunctionInfos(0) = null;
+```
+
+## Méthode removeDebugStubInfos
+*Paramètres*
+* Numeric : La position de l'élément à supprimer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime l'élément à la position *n* dans la liste de DebugStubInfos.
+```
+var.DebugStubInfos(0) = null;
+```
+
+## Méthode DebugFunctionInfos
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* DebugFunctionInfo : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de DebugFunctionInfos.
+```
+var.DebugFunctionInfos(0) = debugFunctionInfo;
+```
+
+## Méthode DebugStubInfos
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* DebugStubInfo : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de DebugStubInfos.
+```
+var.DebugStubInfos(0) = debugStubInfo;
+```
+
+## Méthode DebugFunctionInfos
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* DebugFunctionInfo : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de DebugFunctionInfos.
+```
+val = var.DebugFunctionInfos(0);
+```
+
+## Méthode DebugStubInfos
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* DebugStubInfo : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de DebugStubInfos.
+```
+val = var.DebugStubInfos(0);
+```
+
+## Méthode ClearDebugFunctionInfos
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearDebugFunctionInfos();
+```
+
+## Méthode ClearDebugStubInfos
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearDebugStubInfos();
+```
+
+## Méthode HasDebugFunctionInfos
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasDebugFunctionInfos();
+```
+
+## Méthode HasDebugStubInfos
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasDebugStubInfos();
+```
+
+## Méthode DebugFunctionInfosCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.DebugFunctionInfosCount();
+```
+
+## Méthode DebugStubInfosCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.DebugStubInfosCount();
 ```

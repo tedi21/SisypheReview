@@ -91,7 +91,7 @@ access.CancelSelection();
 var = access.IsSelectedTextFile(textFile);
 ```
 
-## Méthode FillAllTextNotices
+## Méthode FillAllCppFiles
 *Paramètres*
 * TextFile : L'objet à remplir.
 * Bool : non utilisé.
@@ -100,27 +100,56 @@ var = access.IsSelectedTextFile(textFile);
 * None.
 
 *Description*
-* Recupère les données TextNotice dans la base de données.
+* Recupère les données CppFile dans la base de données.
 ```
-access.FillAllTextNotices(textFile, false);
+access.FillAllCppFiles(textFile, false);
 ```
 
-## Méthode FillOneTextNotice
+## Méthode FillAllDebugFileInfos
 *Paramètres*
 * TextFile : L'objet à remplir.
-* Numeric : L'identifiant rowid de la table textNotice.
 * Bool : non utilisé.
 
 *Retour*
 * None.
 
 *Description*
-* Recupère la donnée TextNotice dans la base de données.
+* Recupère les données DebugFileInfo dans la base de données.
 ```
-access.FillOneTextNotice(textFile, rowid, false);
+access.FillAllDebugFileInfos(textFile, false);
 ```
 
-## Méthode FillManyTextNotices
+## Méthode FillOneCppFile
+*Paramètres*
+* TextFile : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table cppFile.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée CppFile dans la base de données.
+```
+access.FillOneCppFile(textFile, identifier, false);
+```
+
+## Méthode FillOneDebugFileInfo
+*Paramètres*
+* TextFile : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table debugFileInfo.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée DebugFileInfo dans la base de données.
+```
+access.FillOneDebugFileInfo(textFile, identifier, false);
+```
+
+## Méthode FillManyCppFiles
 *Paramètres*
 * TextFile : L'objet à remplir.
 * String : clause WHERE de la recherche SQL.
@@ -130,9 +159,24 @@ access.FillOneTextNotice(textFile, rowid, false);
 * None.
 
 *Description*
-* Recupère les données TextNotice dans la base de données.
+* Recupère les données CppFile dans la base de données.
 ```
-access.FillManyTextNotices(textFile, "rowid = " & value, false);
+access.FillManyCppFiles(textFile, "identifier = " & value, false);
+```
+
+## Méthode FillManyDebugFileInfos
+*Paramètres*
+* TextFile : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugFileInfo dans la base de données.
+```
+access.FillManyDebugFileInfos(textFile, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedTextFile

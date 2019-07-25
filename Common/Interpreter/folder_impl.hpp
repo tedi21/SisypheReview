@@ -25,10 +25,6 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    Folder<EncodingT>::~Folder()
-    {}
-
-    template <class EncodingT>
     typename EncodingT::string_t Folder<EncodingT>::toString() const
     {
         return m_path.c_str();
@@ -55,7 +51,7 @@ NAMESPACE_BEGIN(interp)
         if (check_parameters_array(params, args))
         {
             if (tryInvoke(this, C("Folder"), method, args, ret) ||
-                tryInvoke(this, C("String"), method, args, ret))
+                tryInvoke(this, C("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -84,7 +80,21 @@ NAMESPACE_BEGIN(interp)
         return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(
                files::system_complete( m_path ).c_str()));
     }
-
+    
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getParentPath() const
+    {
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(
+               m_path.parent_path().c_str()));
+    }
+    
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getFilename() const
+    {
+        return boost::shared_ptr< Base<EncodingT> >(new String<EncodingT>(
+               m_path.filename().c_str()));
+    }
+    
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::getFiles() const
     {
@@ -121,6 +131,22 @@ NAMESPACE_BEGIN(interp)
         return arr;
     }
 
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::exists() const
+    {
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>(false));
+        try
+        {
+            res.reset(new Bool<EncodingT>(files::exists(m_path)));
+        }
+        catch (files::filesystem_error& ex)
+        {
+            Category * logger = &Category::getInstance(LOGNAME);
+            logger->errorStream() << ex.what();
+        }
+        return res;
+    }
+    
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Folder<EncodingT>::createFolder(boost::shared_ptr< Base<EncodingT> > const& newName)
     {

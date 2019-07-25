@@ -14,43 +14,15 @@
           </button>
           <!-- brand logo -->
           <div class="brand navbar-brand">
-            <img src="/imgs/logo.png" class="logo" alt="Sisyphe logo" height="30" width="71">
+            <img src="imgs/logo.png" class="logo" alt="Sisyphe logo" height="30" width="71" ng-click="logoClicked()"/>
           </div>
         </div>
         <!-- Collapsed menu for small screen -->
         <div class="navbar-collapse navbar-ex1-collapse" uib-collapse="isNavBarCollased" id="appNavBar">
-          <!-- Menu -->
-          <ul class="nav navbar-nav">
-            <!-- Verify menu --> 
-            <li class="dropdown" uib-dropdown>                     
-              <a aria-expanded="false" aria-haspopup="true" href="#/" class="dropdown-toggle" data-toggle="dropdown" role="button" uib-dropdown-toggle>
-                <span class="glyphicon glyphicon-sunglasses"></span>
-                Verify 
-                <span class="caret" ng-show="!loading"></span>
-                <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="spinning"></span>
-              </a>
-              <ul class="dropdown-menu uib-dropdown-menu" ng-show="!loading">
-                <li><a href="#/" ng-click="configVerifierClicked()">Parameters</a></li>
-                <li><a href="#/" ng-click="runVerifierClicked()">Run</a></li>
-              </ul>
-            </li>
-            <!-- Debug menu --> 
-            <li class="dropdown" uib-dropdown>
-              <a aria-expanded="false" aria-haspopup="true" href="#/" class="dropdown-toggle" data-toggle="dropdown" role="button" uib-dropdown-toggle>
-                <span class="glyphicon glyphicon-wrench"></span>
-                Debug 
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu uib-dropdown-menu">
-                <li><a href="#/" ng-click="configDebuggerClicked()">Parameters</a></li>
-                <li><a href="#/" ng-click="runDebuggerClicked()">Run</a></li>
-              </ul>
-            </li>
-          </ul>
           <!-- Search bar -->
           <form class="navbar-form navbar-right" role="search">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search" ng-model="searchInput">
+              <input type="text" class="form-control" placeholder="Search" ng-model="searchInput"/>
               <div class="input-group-btn">
                 <button class="btn btn-default" type="submit" ng-click="searchClicked(searchInput)">
                   <span class="glyphicon glyphicon-search"></span>
@@ -64,8 +36,8 @@
   </header>
 
   <div id="view">
-    <!-- right panel -->
-    <div id="right-panel" class="col-xs-12 col-sm-3">
+    <!-- left panel -->
+    <div id="left-panel" class="col-xs-12 col-sm-3">
       <!-- explorer view -->
       <div id="explorer-panel">
         <p class="table-header">Explorer</p>
@@ -97,8 +69,12 @@
                 <td>{{currentFile.linesCount}}</td>
               </tr>
               <tr>
-                <td>Errors count:</td>
-                <td>{{currentFile.errorsCount}}</td>
+                <td>Errors count:
+                <div ng-show="currentFilter.name=='Diff'">(-solved +new)</div>
+                </td>
+                <td>{{currentFile.errorsCount}}
+                <div ng-show="currentFilter.name=='Diff'">(-{{currentFilter.solved}} +{{currentFilter.new}})</div>
+                </td>
               </tr>
               <tr>
                 <td>Classes count:</td>
@@ -137,26 +113,7 @@
     <div id="main-panel" class="col-xs-12 col-sm-9">
       <!-- main panel -->
       <div id="code-panel">
-        <table id="debug-panel">
-          <tr>
-            <td id="debug-column">
-              <table>
-                <tr ng-repeat="line in currentFile.linesDebug">
-                  <td>
-                    <div id="debug-cell">
-                      <button class="debug-button" ng-click="debugFunction($index)" ng-show="line.isVisible">
-                        <span class="glyphicon glyphicon-plus"></span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-            <td>
-              <prettify content="{{currentFile.content}}"></prettify>
-            </td>
-          </tr>
-        </table>
+        <prettify content="{{currentFile.content}}" error-click=errorClicked(index,event)></prettify>
       </div>
       <!-- bottom panel -->
       <div id="bottom-panel">
@@ -179,6 +136,9 @@
                   <td class="columnIcon">
                     <div ng-switch on="currentFilter.name">
                       <div ng-switch-when="Errors">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                      </div>
+                      <div ng-switch-when="Diff">
                         <span class="glyphicon glyphicon-exclamation-sign"></span>
                       </div>
                       <div ng-switch-default>

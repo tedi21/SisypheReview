@@ -1,17 +1,18 @@
 (function() {
   'use strict';
 
-  var siPrettify = angular.module('siPrettify', ['siCppBuffer']);
+  var siPrettify = angular.module('siPrettify', []);
 
-  siPrettify.directive('prettify', ['$compile', 'cppBuffer', function ($compile, cppBuffer) {
+  siPrettify.directive('prettify', ['$compile', function ($compile) {
     return {
       restrict: 'E',
-      scope: true,
+      scope: {
+        errorClick : '&'
+      },
       link: function ( scope, element, attrs ) {
         attrs.$observe( 'content', function ( content ) {
           if ( angular.isDefined(content) ) {
-            var prettified = prettyPrintOne(cppBuffer.html(content), 'cpp', true);
-            var angularElt = $compile('<pre class="prettyprint linenums">' + prettified + '</pre>')( scope );
+            var angularElt = $compile('<pre class="prettyprint linenums">' + content + '</pre>')( scope );
             element.html('');
             element.append(angularElt);
           }

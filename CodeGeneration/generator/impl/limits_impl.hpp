@@ -25,7 +25,7 @@ namespace gen {
         MarkerT copy = factory.make();
 
         // Enumerates 
-        copy.enumerate<DataT>(context);
+        copy.template enumerate<DataT>(context);
 
         return limits<MarkerT>(copy, factory.make(m_end.get_cursor(), m_end.get_offset()));
     }

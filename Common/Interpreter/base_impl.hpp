@@ -55,6 +55,18 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > Base<EncodingT>::isType(boost::shared_ptr< Base<EncodingT> > const& val) const
+    {
+        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        typename EncodingT::string_t str;
+        if (check_string<EncodingT>(val, str))
+        {
+            res.reset(new Bool<EncodingT>(this->getClassName() == str));
+        }
+        return res;
+    }
+
+    template <class EncodingT>
     bool check_parameters_array(const std::vector< boost::shared_ptr< Base<EncodingT> > >& params, ParameterArray& out)
     { 
         for (size_t i=0; i<params.size(); ++i)

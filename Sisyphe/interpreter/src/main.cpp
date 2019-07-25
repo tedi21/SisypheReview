@@ -173,6 +173,7 @@ int main(int argc, char *argv[])
             if (i != modulesArgs.end())
             {
                 args = i->second;
+                logger->debugStream() << "set module parameters";
             }
             const char* plugName = dll->GetPlugIn(1, (const std::vector<string>*) &args);
             dllplugged.push_back(dll);
@@ -202,8 +203,8 @@ int main(int argc, char *argv[])
     }
 
     logger->debugStream() << "unplug modules";
-    ptr_vector<CPlug<void> >::iterator j;
-    for (j = dllplugged.begin(); j < dllplugged.end(); ++j)
+    boost::ptr_vector<CPlug<char> >::iterator j;
+    for (j = dllplugged.begin(); j != dllplugged.end(); ++j)
     {
         j->ReleasePlugIn();
     }

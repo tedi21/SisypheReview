@@ -5,7 +5,7 @@
 #include <boost/algorithm/string/regex.hpp>
 #include "config.hpp"
 #include "macros.hpp"
-#include "base.hpp"
+#include "Base.hpp"
 
 #define C(str) encode<ansi,EncodingT>(str)
 
@@ -21,23 +21,25 @@ NAMESPACE_BEGIN(interp)
     public:
         typedef boost::match_results<typename EncodingT::string_t::const_iterator> match_t;
 
-	private:
+    private:
         match_t m_value;
         size_t  m_start;
 
+        mutable boost::shared_ptr< Base<EncodingT> > m_string;
+        mutable boost::shared_ptr< Base<EncodingT> > m_stringPos;
+        mutable boost::shared_ptr< Base<EncodingT> > m_subStrings;
+        mutable boost::shared_ptr< Base<EncodingT> > m_subStringsPos;
+        mutable boost::shared_ptr< Base<EncodingT> > m_prefix;
+        mutable boost::shared_ptr< Base<EncodingT> > m_suffix;
 		
     public:
         // Constructor
         Match();
-
         Match(match_t const& value, size_t start = 0);
 
-        // Destructor
-        virtual ~Match();
-
         // Accessors
-        match_t const& getValue() const;
-        void setValue(match_t const& value, size_t start = 0);
+        match_t const& value() const;
+        void value(match_t const& val, size_t start = 0);
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
@@ -45,6 +47,19 @@ NAMESPACE_BEGIN(interp)
         virtual typename EncodingT::string_t getClassName() const;
         virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
+        // Prepare objects for multiple function calls
+        boost::shared_ptr< Base<EncodingT> > transformString() const;
+
+        boost::shared_ptr< Base<EncodingT> > transformStringPos() const;
+
+        boost::shared_ptr< Base<EncodingT> > transformSubStrings() const;
+
+        boost::shared_ptr< Base<EncodingT> > transformSubStringsPos() const;
+
+        boost::shared_ptr< Base<EncodingT> > transformPrefix() const;
+
+        boost::shared_ptr< Base<EncodingT> > transformSuffix() const;
+
         // Dynamic methods
         boost::shared_ptr< Base<EncodingT> > getString() const;
 

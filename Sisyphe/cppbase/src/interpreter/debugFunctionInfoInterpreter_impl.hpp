@@ -6,115 +6,128 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 DebugFunctionInfoInterpreter<EncodingT>::DebugFunctionInfoInterpreter()
 {
-	setValue( boost::shared_ptr< _DebugFunctionInfo<EncodingT> > (new _DebugFunctionInfo<EncodingT>()) );
+	m_value = boost::make_shared< _DebugFunctionInfo<EncodingT> >();
 }
 
 template <class EncodingT>
 DebugFunctionInfoInterpreter<EncodingT>::DebugFunctionInfoInterpreter(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > const& value)
 {
-	setValue(value);
+	m_value = value;
 }
 
 template <class EncodingT>
-DebugFunctionInfoInterpreter<EncodingT>::DebugFunctionInfoInterpreter(boost::shared_ptr< Base<EncodingT> > const& lineNumber,
-				boost::shared_ptr< Base<EncodingT> > const& address,
-				boost::shared_ptr< Base<EncodingT> > const& debugStart,
-				boost::shared_ptr< Base<EncodingT> > const& debugEnd,
-				boost::shared_ptr< Base<EncodingT> > const& debugReturnType)
+DebugFunctionInfoInterpreter<EncodingT>::DebugFunctionInfoInterpreter(boost::shared_ptr< Base<EncodingT> > const& name,
+				boost::shared_ptr< Base<EncodingT> > const& firstLineNumber,
+				boost::shared_ptr< Base<EncodingT> > const& lastLineNumber,
+				boost::shared_ptr< Base<EncodingT> > const& address)
 {
-	int nativeLineNumber;
-	int nativeAddress;
-	int nativeDebugStart;
-	int nativeDebugEnd;
-	typename EncodingT::string_t nativeDebugReturnType;
-	if (check_numeric(lineNumber, nativeLineNumber) &&
-		check_numeric(address, nativeAddress) &&
-		check_numeric(debugStart, nativeDebugStart) &&
-		check_numeric(debugEnd, nativeDebugEnd) &&
-		check_string<EncodingT>(debugReturnType, nativeDebugReturnType))
+	typename EncodingT::string_t nativeName;
+	long long nativeFirstLineNumber;
+	long long nativeLastLineNumber;
+	long long nativeAddress;
+	if (check_string<EncodingT>(name, nativeName) &&
+		check_numeric_i(firstLineNumber, nativeFirstLineNumber) &&
+		check_numeric_i(lastLineNumber, nativeLastLineNumber) &&
+		check_numeric_i(address, nativeAddress))
 	{
-		setValue(boost::shared_ptr< _DebugFunctionInfo<EncodingT> >(new _DebugFunctionInfo<EncodingT>(nativeLineNumber,
-				nativeAddress,
-				nativeDebugStart,
-				nativeDebugEnd,
-				nativeDebugReturnType)));
+		m_value = boost::make_shared< _DebugFunctionInfo<EncodingT> >(nativeName,
+				nativeFirstLineNumber,
+				nativeLastLineNumber,
+				nativeAddress);
 	}
 }
 
 template <class EncodingT>
-DebugFunctionInfoInterpreter<EncodingT>::~DebugFunctionInfoInterpreter()
-{}
-
-template <class EncodingT>
-boost::shared_ptr< _DebugFunctionInfo<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _DebugFunctionInfo<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::value() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::setValue(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > const& object)
+void DebugFunctionInfoInterpreter<EncodingT>::value(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > const& object)
 {
 	m_value = object;
-	String<EncodingT>::setValue(toString());
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getIdentifier() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIdentifier()) );
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getLineNumber() const
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getName() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLineNumber()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getName()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getFirstLineNumber() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getFirstLineNumber()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getLastLineNumber() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLastLineNumber()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getAddress() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getAddress()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getAddress()) );
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugStart() const
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugTypeInfo()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDebugStart()) );
+	return boost::shared_ptr< Base<EncodingT> >( new DebugTypeInfoInterpreter<EncodingT>(m_value->getDebugTypeInfo()) );
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugEnd() const
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugFileInfo()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDebugEnd()) );
+	return boost::shared_ptr< Base<EncodingT> >( new DebugFileInfoInterpreter<EncodingT>(m_value->getDebugFileInfo()) );
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugReturnType() const
+void DebugFunctionInfoInterpreter<EncodingT>::setName(boost::shared_ptr< Base<EncodingT> > const& name)
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getDebugReturnType()) );
-}
-
-
-template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getCppFunction()
-{
-	return boost::shared_ptr< Base<EncodingT> >( new CppFunctionInterpreter<EncodingT>(getValue()->getCppFunction()) );
-}
-
-
-template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::setLineNumber(boost::shared_ptr< Base<EncodingT> > const& lineNumber)
-{
-	int nativeLineNumber;
-	if (check_numeric(lineNumber, nativeLineNumber))
+	typename EncodingT::string_t nativeName;
+	if (check_string<EncodingT>(name, nativeName))
 	{
-		getValue()->setLineNumber(nativeLineNumber);
+		m_value->setName(nativeName);
+	}
+}
+
+
+template <class EncodingT>
+void DebugFunctionInfoInterpreter<EncodingT>::setFirstLineNumber(boost::shared_ptr< Base<EncodingT> > const& firstLineNumber)
+{
+	long long nativeFirstLineNumber;
+	if (check_numeric_i(firstLineNumber, nativeFirstLineNumber))
+	{
+		m_value->setFirstLineNumber(nativeFirstLineNumber);
+	}
+}
+
+
+template <class EncodingT>
+void DebugFunctionInfoInterpreter<EncodingT>::setLastLineNumber(boost::shared_ptr< Base<EncodingT> > const& lastLineNumber)
+{
+	long long nativeLastLineNumber;
+	if (check_numeric_i(lastLineNumber, nativeLastLineNumber))
+	{
+		m_value->setLastLineNumber(nativeLastLineNumber);
 	}
 }
 
@@ -122,79 +135,71 @@ void DebugFunctionInfoInterpreter<EncodingT>::setLineNumber(boost::shared_ptr< B
 template <class EncodingT>
 void DebugFunctionInfoInterpreter<EncodingT>::setAddress(boost::shared_ptr< Base<EncodingT> > const& address)
 {
-	int nativeAddress;
-	if (check_numeric(address, nativeAddress))
+	long long nativeAddress;
+	if (check_numeric_i(address, nativeAddress))
 	{
-		getValue()->setAddress(nativeAddress);
+		m_value->setAddress(nativeAddress);
 	}
 }
 
 
 template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::setDebugStart(boost::shared_ptr< Base<EncodingT> > const& debugStart)
+void DebugFunctionInfoInterpreter<EncodingT>::setDebugTypeInfo(boost::shared_ptr< Base<EncodingT> > const& debugTypeInfo)
 {
-	int nativeDebugStart;
-	if (check_numeric(debugStart, nativeDebugStart))
+	boost::shared_ptr< _DebugTypeInfo<EncodingT> > nativeDebugTypeInfo;
+	if (check_debugTypeInfo(debugTypeInfo, nativeDebugTypeInfo))
 	{
-		getValue()->setDebugStart(nativeDebugStart);
+		m_value->setDebugTypeInfo(nativeDebugTypeInfo);
 	}
 }
 
 
 template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::setDebugEnd(boost::shared_ptr< Base<EncodingT> > const& debugEnd)
+void DebugFunctionInfoInterpreter<EncodingT>::setDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& debugFileInfo)
 {
-	int nativeDebugEnd;
-	if (check_numeric(debugEnd, nativeDebugEnd))
+	boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+	if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 	{
-		getValue()->setDebugEnd(nativeDebugEnd);
+		m_value->setDebugFileInfo(nativeDebugFileInfo);
 	}
 }
 
 
 template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::setDebugReturnType(boost::shared_ptr< Base<EncodingT> > const& debugReturnType)
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::hasDebugTypeInfo() const
 {
-	typename EncodingT::string_t nativeDebugReturnType;
-	if (check_string<EncodingT>(debugReturnType, nativeDebugReturnType))
-	{
-		getValue()->setDebugReturnType(nativeDebugReturnType);
-	}
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!m_value->isNullDebugTypeInfo()) );
 }
 
 
 template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::setCppFunction(boost::shared_ptr< Base<EncodingT> > const& cppFunction)
+boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::hasDebugFileInfo() const
 {
-	boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
-	if (check_cppFunction(cppFunction, nativeCppFunction))
-	{
-		getValue()->setCppFunction(nativeCppFunction);
-	}
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!m_value->isNullDebugFileInfo()) );
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::hasCppFunction() const
+void DebugFunctionInfoInterpreter<EncodingT>::removeDebugTypeInfo()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFunction()) );
+	m_value->eraseDebugTypeInfo();
 }
 
 
 template <class EncodingT>
-void DebugFunctionInfoInterpreter<EncodingT>::removeCppFunction()
+void DebugFunctionInfoInterpreter<EncodingT>::removeDebugFileInfo()
 {
-	getValue()->eraseCppFunction();
+	m_value->eraseDebugFileInfo();
 }
 
 
 template <class EncodingT>
 void DebugFunctionInfoInterpreter<EncodingT>::removeDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	int nativePosition;
-	if (check_numeric(n, nativePosition))
+	size_t nativePosition;
+	if (check_numeric_i(n, nativePosition))
 	{
-		getValue()->eraseDebugVariableInfo(getValue()->getDebugVariableInfosBeginning()+nativePosition);
+		m_value->eraseDebugVariableInfo(m_value->getDebugVariableInfosBeginning()+nativePosition);
 	}
 }
 
@@ -202,12 +207,12 @@ void DebugFunctionInfoInterpreter<EncodingT>::removeDebugVariableInfo(boost::sha
 template <class EncodingT>
 void DebugFunctionInfoInterpreter<EncodingT>::insertDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& debugVariableInfo)
 {
-	int nativePosition;
+	size_t nativePosition;
 	boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
-	if (check_numeric(n, nativePosition) &&
+	if (check_numeric_i(n, nativePosition) &&
 		check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 	{
-		getValue()->insertDebugVariableInfo(getValue()->getDebugVariableInfosBeginning()+nativePosition, nativeDebugVariableInfo);
+		m_value->insertDebugVariableInfo(m_value->getDebugVariableInfosBeginning()+nativePosition, nativeDebugVariableInfo);
 	}
 }
 
@@ -216,10 +221,10 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
 	boost::shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
-	int nativePosition;
-	if (check_numeric(n, nativePosition))
+	size_t nativePosition;
+	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugVariableInfoInterpreter<EncodingT>(getValue()->getDebugVariableInfoAt(nativePosition)));
+		res.reset(new DebugVariableInfoInterpreter<EncodingT>(m_value->getDebugVariableInfoAt(nativePosition)));
 	}
 	return res;
 }
@@ -228,35 +233,35 @@ boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::ge
 template <class EncodingT>
 void DebugFunctionInfoInterpreter<EncodingT>::clearDebugVariableInfos()
 {
-	getValue()->clearDebugVariableInfos();
+	m_value->clearDebugVariableInfos();
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::hasDebugVariableInfos() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isDebugVariableInfosEmpty()));
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!m_value->isDebugVariableInfosEmpty()));
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::debugVariableInfosCount() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getDebugVariableInfosSize()));
+	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_value->getDebugVariableInfosSize()));
 }
 
 template <class EncodingT>
 typename EncodingT::string_t DebugFunctionInfoInterpreter<EncodingT>::toString() const
 {
 	std::stringstream stream;
-	stream << *(getValue());
+	stream << *m_value;
 	return C(stream.str());
 }
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::clone() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new DebugFunctionInfoInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new DebugFunctionInfoInterpreter<EncodingT>(copy_ptr(m_value)));
 }
 
 template <class EncodingT>
@@ -274,7 +279,7 @@ boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::in
 	if (check_parameters_array(params, args))
 	{
 		if (tryInvoke(this, C("DebugFunctionInfo"), method, args, ret) ||
-			tryInvoke(this, C("String"), method, args, ret))
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -297,7 +302,7 @@ bool check_debugFunctionInfo(boost::shared_ptr< Base<EncodingT> > const& val, bo
 	boost::shared_ptr< DebugFunctionInfoInterpreter<EncodingT> > value  = dynamic_pointer_cast< DebugFunctionInfoInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		o = value->getValue();
+		o = value->value();
 	}
 	else
 	{
@@ -313,7 +318,7 @@ bool reset_debugFunctionInfo(boost::shared_ptr< Base<EncodingT> >& val, boost::s
 	boost::shared_ptr< DebugFunctionInfoInterpreter<EncodingT> > value  = dynamic_pointer_cast< DebugFunctionInfoInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		value->setValue(o);
+		value->value(o);
 	}
 	else
 	{

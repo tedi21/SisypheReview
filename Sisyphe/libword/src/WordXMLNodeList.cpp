@@ -92,9 +92,6 @@ NAMESPACE_BEGIN(libword)
         m_list.reset(new WordXMLNodeVector(list));
     }
 
-    WordXMLNodeList::~WordXMLNodeList()
-    {}
-
     // Retourne le noeud à l'index i
     WordXMLNode WordXMLNodeList::item(size_t i) const
     {

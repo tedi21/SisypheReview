@@ -185,6 +185,38 @@ n = #a;
 /* n = 15 */
 ```
 
+## Méthode insertValue `[]`
+*Paramètres*
+* Numeric : Position d'insertion du caractère.
+* Object : Caractère à ajouter dans la chaîne de caractères
+
+*Retour*
+* None.
+
+*Description*
+* Insère un caractère à une position donnée.
+```
+/*Insère toujours au début*/
+str = new String();
+str[0] = "b";
+str[0] = "a";
+/*str = "ab"*/
+```
+
+## Méthode getValue `[]`
+*Paramètres*
+* Numeric : Position du caractère..
+
+*Retour*
+* Object : Caractère à la position donnée.
+
+*Description*
+* Retourne un caractère à une position donnée.
+```
+str = "ab";
+print(str[0]);
+```
+
 ## Méthode Append
 *Paramètres*
 * String : Texte à ajouter.
@@ -248,6 +280,56 @@ w = content.SubString(5, 6);
 /* w = "world " */
 ```
 
+## Méthode insertValue `[]`
+*Paramètres*
+* Numeric : Position d'insertion de la valeur dans la chaîne de caractères.
+* String : Caractère à ajouter.
+
+*Retour*
+* None.
+
+*Description*
+* Insère une valeur à une position donnée.
+```
+/*Insère toujours au début*/
+str = new String();
+str[0] = "b";
+str[0] = "a";
+/*str = "ab"*/
+```
+
+## Méthode removeValue `[]`
+*Paramètres*
+* Numeric : Position de suppression dans la chaîne de caractères.
+
+*Retour*
+* None.
+
+*Description*
+* Suppression d'une valeur à une position donnée.
+```
+str = new String();
+str[0] = "a";
+str[1] = "b";
+str[0] = null;
+/*str = "b"*/
+```
+
+## Méthode getValue `[]`
+*Paramètres*
+* Numeric : Position de la valeur dans la chaîne de caractères.
+
+*Retour*
+* String : Le caractère à la position donnée.
+
+*Description*
+* Retourne un caractère à une position donnée.
+```
+str = new String();
+str[0] = "a";
+print(str[0]);
+```
+
 ## Méthode Match
 *Paramètres*
 * String : Expression régulière.
@@ -303,4 +385,19 @@ endwhile
 content = "Hello world !!!";
 words = content.Split("\s+");
 /* words = [hello,world,!!!] */
+```
+
+## Méthode ReplaceAll
+*Paramètres*
+* String : Chaîne de caractères à rechercher.
+* String : Chaîne de caractères à remplacer.
+
+*Retour*
+* None.
+
+*Description*
+* Remplace toutes les occurences par une valeur de remplacement.
+```
+content = "Hello world !!!";
+content.ReplaceAll("world", "everybody");
 ```

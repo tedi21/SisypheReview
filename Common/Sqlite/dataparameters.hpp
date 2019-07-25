@@ -28,14 +28,14 @@ namespace bc = boost::container;
 
 // Class representing sqlite parameters
 template <class EncodingT>
-class _DataParameters
+class DB_API _DataParameters
 { 
 private:
-  typedef boost::ptr_vector< _DataBaseParameter<EncodingT> > vector_parameters;
+	typedef boost::ptr_vector< _DataBaseParameter<EncodingT> > vector_parameters;
 	typedef typename vector_parameters::const_iterator  parameters_const_iterator;
 	typedef typename vector_parameters::iterator  		parameters_iterator;
 	// Private members
-  Category* m_logger;
+	Category* m_logger;
 	vector_parameters m_parameters;
 	
 
@@ -49,7 +49,7 @@ public:
 	
 	// Add Value
 	void 
-  addBlob		(const bc::vector<unsigned char>& value);
+	addBlob		(const bc::vector<unsigned char>& value);
 	
 	void 
 	addDouble	(double value);
@@ -58,11 +58,13 @@ public:
 	addInt		(int value);
 	
 	void 
-	addInt64  (long long value);
-  
+	addInt64	(long long value);
+	
 	void 
 	addText		(const typename EncodingT::string_t& value);
-
+	
+	void 
+	addNull		();
 };
 
 typedef _DataParameters<ucs>        UniDataParameters;
@@ -70,5 +72,8 @@ typedef _DataParameters<ansi>       DataParameters;
 
 NAMESPACE_END
 
+#if !defined(HAS_DB_DLL) || defined(BUILD_DB_DLL)
 #include "DataParameters_impl.hpp"
+#endif // !defined(HAS_DB_DLL) || defined(BUILD_DB_DLL)
+
 #endif

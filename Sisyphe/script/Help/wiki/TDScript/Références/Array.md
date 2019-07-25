@@ -31,6 +31,27 @@ collection[0] = "a";
 /*collection = [a,b]*/
 ```
 
+## Méthode insertList `[*]`
+*Paramètres*
+* Numeric : Position d'insertion de la valeur dans le tableau.
+* Object : Liste à ajouter dans le tableau.
+
+*Retour*
+* None.
+
+*Description*
+* Insère une valeur à une position donnée.
+```
+/*Insère toujours au début*/
+collection = new Array();
+collection[0] = "b";
+collection[1] = "a";
+collection2 = new Array();
+collection2[0*] = collection;
+collection2[2] = "c";
+/*collection2 = [a,b,c]*/
+```
+
 ## Méthode removeValue `[]`
 *Paramètres*
 * Numeric : Position de suppression dans le tableau.
@@ -61,6 +82,24 @@ collection[0] = null;
 collection = new Array();
 collection[0] = "a";
 print(collection[0]);
+```
+
+## Méthode getList `[*]`
+*Paramètres*
+* Numeric : Position de la valeur dans le tableau.
+
+*Retour*
+* Object : La liste restante à la position donnée.
+
+*Description*
+* Retourne une valeur à une position donnée.
+```
+collection = new Array();
+collection[0] = "a";
+collection[1] = "b";
+collection[2] = "c";
+print(collection[1*]);
+/*collection[1*] = [b,c]*/
 ```
 
 ## Méthode size `#`

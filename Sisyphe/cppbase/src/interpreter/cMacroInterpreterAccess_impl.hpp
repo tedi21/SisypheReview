@@ -11,10 +11,6 @@ CMacroInterpreterAccess<EncodingT>::CMacroInterpreterAccess()
 }
 
 template <class EncodingT>
-CMacroInterpreterAccess<EncodingT>::~CMacroInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t CMacroInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::invoke(
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CMacroAccess"), method, args, ret))
+		if (tryInvoke(this, C("CMacroAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -111,8 +108,8 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getOneC
 	clearError();
 	try
 	{
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
 			res.reset(new CMacroInterpreter<EncodingT>(m_object->getOneCMacro(nativeIdentifier)));
 		}
@@ -133,8 +130,8 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectO
 	try
 	{
 		bool nativeNoWait;
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			res.reset(new CMacroInterpreter<EncodingT>(m_object->selectOneCMacro(nativeIdentifier,
@@ -320,7 +317,7 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getErro
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

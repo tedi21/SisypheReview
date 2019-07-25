@@ -7,7 +7,7 @@ namespace gen {
     {
         typedef typename DerivedT::template etat<DataT> etat_t;
         static etat_t etat(this->derived()); // only one instance
-        etat.start().generate<DataT>(context);
+        etat.start().template generate<DataT>(context);
     }
 
 }

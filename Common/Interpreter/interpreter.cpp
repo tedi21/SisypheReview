@@ -16,6 +16,7 @@ template class fctr::ClassManager< Base<ucs>, typename ucs::string_t >;
 FACTORY_EXPORT_FILE(Base<ucs>, Interp)
 FACTORY_EXPORT_FILE(Array<ucs>, Interp)
 FACTORY_EXPORT_FILE(Match<ucs>, Interp)
+FACTORY_EXPORT_FILE(Regex<ucs>, Interp)
 FACTORY_EXPORT_FILE(String<ucs>, Interp)
 FACTORY_EXPORT_FILE(Numeric<ucs>, Interp)
 FACTORY_EXPORT_FILE(Bool<ucs>, Interp)
@@ -38,13 +39,26 @@ bool readFile(string const& filename, ucs::string_t & buf)
     std::locale old_locale;
     std::codecvt<wchar_t, char, std::mbstate_t> * codecvt_facet;
     wifstream in_file(filename.c_str(), ios::binary);
-    codecvt_facet = new utf16LE_codecvt_facet;
-    std::locale new_locale(old_locale,codecvt_facet);
-    in_file.imbue(new_locale);
-
     if (in_file.is_open())
     {
+        // read BOM
+        int c = in_file.get();
+        c = in_file.get() << 8 | c;
+        if (c == static_cast<int>(utf16LE_codecvt_facet::BOM))
+        {
+          codecvt_facet = new utf16LE_codecvt_facet;
+          std::locale new_locale(old_locale,codecvt_facet);
+          in_file.imbue(new_locale);
+        }
+        else
+        {
+          codecvt_facet = new iso_8859_15_codecvt_facet;
+          std::locale new_locale(old_locale,codecvt_facet);
+          in_file.imbue(new_locale);
+        }
+
         // get length of file.
+        in_file.clear();
         in_file.seekg (0, ios::end);
         length = in_file.tellg();
         in_file.seekg (0, ios::beg);
@@ -57,7 +71,14 @@ bool readFile(string const& filename, ucs::string_t & buf)
         in_file.read(buffer.get(), length);
         in_file.close();
 
-        buf.assign(buffer.get() + 1);
+        if (c == static_cast<int>(utf16LE_codecvt_facet::BOM))
+        {
+            buf.assign(buffer.get() + 1);
+        }
+        else
+        {
+            buf.assign(buffer.get());
+        }
         success = true;
     }
     return success;

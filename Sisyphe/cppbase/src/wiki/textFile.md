@@ -61,7 +61,7 @@ val = var.Content;
 var.Content(content);
 ```
 
-## Méthode removeTextNotices
+## Méthode removeCppFiles
 *Paramètres*
 * Numeric : La position de l'élément à supprimer dans la liste.
 
@@ -69,39 +69,79 @@ var.Content(content);
 * None.
 
 *Description*
-* Supprime l'élément à la position *n* dans la liste de TextNotices.
+* Supprime l'élément à la position *n* dans la liste de CppFiles.
 ```
-var.TextNotices(0) = null;
+var.CppFiles(0) = null;
 ```
 
-## Méthode TextNotices
+## Méthode removeDebugFileInfos
 *Paramètres*
-* Numeric : La position de l'élément à insérer dans la liste.
-* TextNotice : L'élément à insérer dans la liste.
+* Numeric : La position de l'élément à supprimer dans la liste.
 
 *Retour*
 * None.
 
 *Description*
-* Insère un élément à la position *n* dans la liste de TextNotices.
+* Supprime l'élément à la position *n* dans la liste de DebugFileInfos.
 ```
-var.TextNotices(0) = textNotice;
+var.DebugFileInfos(0) = null;
 ```
 
-## Méthode TextNotices
+## Méthode CppFiles
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* CppFile : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de CppFiles.
+```
+var.CppFiles(0) = cppFile;
+```
+
+## Méthode DebugFileInfos
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* DebugFileInfo : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de DebugFileInfos.
+```
+var.DebugFileInfos(0) = debugFileInfo;
+```
+
+## Méthode CppFiles
 *Paramètres*
 * Numeric : La position de l'élément dans la liste.
 
 *Retour*
-* TextNotice : L'élément dans la liste.
+* CppFile : L'élément dans la liste.
 
 *Description*
-* Retourne l'élément à la position *n* dans la liste de TextNotices.
+* Retourne l'élément à la position *n* dans la liste de CppFiles.
 ```
-val = var.TextNotices(0);
+val = var.CppFiles(0);
 ```
 
-## Méthode ClearTextNotices
+## Méthode DebugFileInfos
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* DebugFileInfo : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de DebugFileInfos.
+```
+val = var.DebugFileInfos(0);
+```
+
+## Méthode ClearCppFiles
 *Paramètres*
 * None.
 
@@ -111,10 +151,23 @@ val = var.TextNotices(0);
 *Description*
 * Supprime tous les éléments de liste.
 ```
-var.ClearTextNotices();
+var.ClearCppFiles();
 ```
 
-## Méthode HasTextNotices
+## Méthode ClearDebugFileInfos
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearDebugFileInfos();
+```
+
+## Méthode HasCppFiles
 *Paramètres*
 * None.
 
@@ -124,10 +177,23 @@ var.ClearTextNotices();
 *Description*
 * Indique si la liste n'est pas vide.
 ```
-val = var.HasTextNotices();
+val = var.HasCppFiles();
 ```
 
-## Méthode TextNoticesCount
+## Méthode HasDebugFileInfos
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasDebugFileInfos();
+```
+
+## Méthode CppFilesCount
 *Paramètres*
 * None.
 
@@ -137,5 +203,18 @@ val = var.HasTextNotices();
 *Description*
 * Retourne le nombre d'élément contenus dans la liste.
 ```
-val = var.TextNoticesCount();
+val = var.CppFilesCount();
+```
+
+## Méthode DebugFileInfosCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.DebugFileInfosCount();
 ```

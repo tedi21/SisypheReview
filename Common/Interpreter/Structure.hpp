@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 #include "macros.hpp"
-#include "String.hpp"
+#include "Base.hpp"
 #include "numeric.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/container/vector.hpp>
@@ -18,7 +18,7 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class Structure
-    : public String<EncodingT>
+    : public Base<EncodingT>
     {
     private:
         typedef typename std::map< typename EncodingT::string_t, boost::shared_ptr< Base<EncodingT> > >::iterator itr_t;
@@ -28,9 +28,6 @@ NAMESPACE_BEGIN(interp)
     public:
         // Constructor
         Structure();
-
-        // Destructor
-        ~Structure();
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;

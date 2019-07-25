@@ -35,27 +35,34 @@ HEADERS += \
     ../src/WordXMLNode.h \
     ../src/WordXMLFunctions.h
 
-LIBS += -luuid -loleaut32 -lOle32
-LIBS += -L../../../../../../Libraries/log4cpp/lib -llog4cpp
-LIBS += -L../../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c
-LIBS += -L../../../../../../Libraries/xalan-c-1.11/lib -lxalan-c
-
-release {
-LIBS += ../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll \
-        ../../../../CodeGeneration/bin_qt/Xerces/release/XercesEncoding.dll
-}
-
 INCLUDEPATH += \
-    ../../../../../../Libraries/boost_1_61_0 \
-    ../../../../../../Libraries/log4cpp/include \
-    ../../../../../../Libraries/xerces-c-3.1.1/src \
-    ../../../../CodeGeneration/generator \
-    ../../../../CodeGeneration/encoding \
-    ../../../../CodeGeneration/xerces \
-    ../../../../../../Libraries/xalan-c-1.11/src \
-    ../../../../../../Libraries/xalan-c-1.11/nls/include \
+    ../../../../../Libraries/boost_1_66_0 \
+    ../../../../../Libraries/log4cpp/include \
+    ../../../../../Libraries/xerces-c-3.2.1/src \
+    ../../../CodeGeneration/generator \
+    ../../../CodeGeneration/encoding \
+    ../../../CodeGeneration/xerces \
+    ../../../../../Libraries/xalan-c-1.11/c/src \
+    ../../../../../Libraries/xalan-c-1.11/c/nls/include \
     ../src \
     ../src/config
+
+
+LIBS += -luuid -loleaut32 -lOle32
+
+CONFIG(MinGW-64): LIBS += -L../../../../../Libraries/log4cpp/lib64 -llog4cpp \
+                          -L../../../../../Libraries/xerces-c-3.2.1/lib64 -lxerces-c \
+                          -L../../../../../Libraries/xalan-c-1.11/c/lib64 -lxalan-c
+
+CONFIG(MinGW-64): LIBS += ../../../CodeGeneration/bin_qt/Encoding64/release/Encoding.dll \
+                          ../../../CodeGeneration/bin_qt/Xerces64/release/XercesEncoding.dll
+
+CONFIG(MinGW-32): LIBS += -L../../../../../Libraries/log4cpp/lib32 -llog4cpp \
+                          -L../../../../../Libraries/xerces-c-3.2.1/lib32 -lxerces-c \
+                          -L../../../../../Libraries/xalan-c-1.11/c/lib32 -lxalan-c
+
+CONFIG(MinGW-32): LIBS += ../../../CodeGeneration/bin_qt/Encoding32/release/Encoding.dll \
+                          ../../../CodeGeneration/bin_qt/Xerces32/release/XercesEncoding.dll
 
 unix:!symbian {
     maemo5 {

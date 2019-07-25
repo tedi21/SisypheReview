@@ -67,6 +67,7 @@
     m_allocated = false;
     </Content>
       <Content Type="Value-body">
+    assert(m_object);
     return *m_object;
     </Content>
       <Content Target="WordXMLDocument:getDocumentNode@WordXMLNode" TargetREF="getDocumentNode" Type="ReturnDescription">

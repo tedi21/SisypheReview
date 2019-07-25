@@ -5,7 +5,7 @@ namespace gen {
     bool
     else_expr::evaluate(TYPE_CONTEXT(DataT) & c) const
     {
-        return declare_context<DataT>::else_condition().evaluate<DataT>(c);
+        return declare_context<DataT>::else_condition().template evaluate<DataT>(c);
     }
 
     inline else_expr

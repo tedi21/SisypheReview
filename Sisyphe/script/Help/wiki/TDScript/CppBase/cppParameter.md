@@ -16,18 +16,21 @@ var = new CppParameter();
 *Paramètres*
 * Numeric : La valeur de la colonne paramOrder.
 * String : La valeur de la colonne paramType.
+* Numeric : La valeur de la colonne isConst.
 * String : La valeur de la colonne defaultValue.
 * String : La valeur de la colonne decName.
+* Numeric : La valeur de la colonne decLineNumber.
 * Numeric : La valeur de la colonne startDecBlock.
 * Numeric : La valeur de la colonne lengthDecBlock.
 * String : La valeur de la colonne defName.
+* Numeric : La valeur de la colonne defLineNumber.
 * Numeric : La valeur de la colonne startDefBlock.
 * Numeric : La valeur de la colonne lengthDefBlock.
 
 *Description*
 * Crée une instance de la classe CppParameter.
 ```
-var = new CppParameter(paramOrder, paramType, defaultValue, decName, startDecBlock, lengthDecBlock, defName, startDefBlock, lengthDefBlock);
+var = new CppParameter(paramOrder, paramType, isConst, defaultValue, decName, decLineNumber, startDecBlock, lengthDecBlock, defName, defLineNumber, startDefBlock, lengthDefBlock);
 ```
 
 ## Méthode Identifier
@@ -69,6 +72,19 @@ val = var.ParamOrder;
 val = var.ParamType;
 ```
 
+## Méthode IsConst
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isConst.
+
+*Description*
+* Retourne la colonne IsConst.
+```
+val = var.IsConst;
+```
+
 ## Méthode DefaultValue
 *Paramètres*
 * None.
@@ -93,6 +109,19 @@ val = var.DefaultValue;
 * Retourne la colonne DecName.
 ```
 val = var.DecName;
+```
+
+## Méthode DecLineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne decLineNumber.
+
+*Description*
+* Retourne la colonne DecLineNumber.
+```
+val = var.DecLineNumber;
 ```
 
 ## Méthode StartDecBlock
@@ -132,6 +161,19 @@ val = var.LengthDecBlock;
 * Retourne la colonne DefName.
 ```
 val = var.DefName;
+```
+
+## Méthode DefLineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne defLineNumber.
+
+*Description*
+* Retourne la colonne DefLineNumber.
+```
+val = var.DefLineNumber;
 ```
 
 ## Méthode StartDefBlock
@@ -199,6 +241,19 @@ var.ParamOrder(paramOrder);
 var.ParamType(paramType);
 ```
 
+## Méthode IsConst
+*Paramètres*
+* Numeric : La valeur de la colonne isConst.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isConst.
+```
+var.IsConst(isConst);
+```
+
 ## Méthode DefaultValue
 *Paramètres*
 * String : La valeur de la colonne defaultValue.
@@ -238,6 +293,19 @@ var.CppFunction(cppFunction);
 var.DecName(decName);
 ```
 
+## Méthode DecLineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne decLineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne decLineNumber.
+```
+var.DecLineNumber(decLineNumber);
+```
+
 ## Méthode StartDecBlock
 *Paramètres*
 * Numeric : La valeur de la colonne startDecBlock.
@@ -275,6 +343,19 @@ var.LengthDecBlock(lengthDecBlock);
 * Définit la colonne defName.
 ```
 var.DefName(defName);
+```
+
+## Méthode DefLineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne defLineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne defLineNumber.
+```
+var.DefLineNumber(defLineNumber);
 ```
 
 ## Méthode StartDefBlock

@@ -208,3 +208,49 @@ RemoveBreakpoint();
 ```
 SetExpressionSyntax();
 ```
+
+## Méthode IsPointer64Bit
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  The IsPointer64Bit method determines if the effective processor uses 64-bit pointers.
+```
+IsPointer64Bit();
+```
+
+## Méthode GetStackTrace
+*Paramètres*
+* Numeric : 
+* Numeric : 
+* Numeric : 
+* DEBUG_STACK_FRAME : 
+* Numeric : 
+* Numeric : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  The GetStackTrace method returns the frames at the top of the specified call stack.
+```
+GetStackTrace();
+```
+
+## Méthode GetNearInstruction
+*Paramètres*
+* Numeric : 
+* Numeric : 
+* Numeric : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  The GetNearInstruction method returns the location of a processor instruction relative to a given location.
+```
+GetNearInstruction();
+```

@@ -39,7 +39,7 @@
   overflow:auto;
 }
 
-#right-panel {
+#left-panel {
   padding-left:5px;
   padding-right:5px;
   height:90vh;
@@ -120,6 +120,27 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 .debug-button {
   height:18px;
   font-size:12px;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
+  color:white;
+}
+
+.stub-button {
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
+  color:white;
+  transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
 }
 
 .center {
@@ -183,4 +204,43 @@ pre  {
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
+}
+
+.about-container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 145px;
+}
+
+#about-img{
+  display: block;
+  position: absolute;
+  left: 30%;
+  width: 200px;
+  height: 145px;
+  background: url("../imgs/canard.png") 0 0 no-repeat;
+  -webkit-animation: fly 800ms steps(3) infinite;
+  animation: fly 800ms steps(3) infinite;
+}
+
+#about-img:hover,
+#about-img:active{
+  background-position: -600px 0px;
+  animation: none
+}
+
+/* on décale l'image de fond */
+@-webkit-keyframes fly {
+  100% { background-position: -600px; } 
+}
+@keyframes fly {
+  100% { background-position: -600px; }
+}
+
+.about-bottom-left {
+  flex-direction: column;
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
 }

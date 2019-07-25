@@ -3,19 +3,39 @@
 
   var sisypheApp = angular.module('sisypheApp');
   
-  sisypheApp.controller('sisypheCtrl', ['$scope', '$timeout', '$uibModal', 'sisypheFactory', 'searchFactory', 'codeSearch', 'codeSelection', 'codeError', 'ScrollTo', function ($scope, $timeout, $uibModal, sisypheFactory, searchFactory, codeSearch, codeSelection, codeError, ScrollTo) {
-    // init btn view details : folded by default
-    $scope.btnViewDetailsIcon = 'folded';
-    $scope.isCollapsed = true;
+  sisypheApp.controller('sisypheCtrl', ['$scope', '$timeout', '$uibModal', 'sisypheFactory', 'searchFactory', 'codeSearch', 'cppBuffer', 'codeSelection', 'codeError', 'ScrollTo', function ($scope, $timeout, $uibModal, sisypheFactory, searchFactory, codeSearch, cppBuffer, codeSelection, codeError, ScrollTo) {
+    var attributes = {
+      diff_files : [],
+      all_files  : []
+    };
+    
+    // init btn view details : unfolded by default
+    $scope.btnViewDetailsIcon = 'unfolded';
+    $scope.isCollapsed = false;
     
     // init filters
-    $scope.filters = ['Errors', 'Classes', 'Functions', 'Attributes', 'Enumerations', 'Macros', 'Search'];
+    $scope.filters = ['Errors', 'Search', 'Diff'];
     $scope.currentFilter = {'name': 'Errors', 'list': []};
+    
+    var filter_diff_files = function (files) {
+        attributes.diff_files = []
+        for (var i = 0; i < files.length; i++) { 
+          (function(file){   //Closure. This line does the magic!!
+            sisypheFactory.fileEntities.query({fileId: files[i].id, filterName: 'diff'}, function(filter){
+              if (filter.new > 0) {
+                attributes.diff_files.push(file);
+              }
+            });
+          })(files[i]); //This one too
+        }
+    }
     
     // init files 
     var refresh = function() {
       sisypheFactory.files.query(function(files){
         $scope.files = files;
+        attributes.all_files = files;
+        filter_diff_files(files);
         if (files.length > 0) {
           updateCurrentFile(files[0]);
         }
@@ -30,12 +50,19 @@
       codeError.deSelect();
       codeSearch.deSelect();
       if (name != 'Search') {
-        sisypheFactory.filterList.query({fileId: id, filterName: name}, function(filter){
+        sisypheFactory.fileEntities.query({fileId: id, filterName: name.toLowerCase()}, function(filter){
           // Fill filter list
           $scope.currentFilter = filter;
-          if (filter.name == 'Errors') {
+          if (filter.name == 'Errors' || filter.name == 'Diff') {
             $scope.currentFile.content = codeError.select($scope.currentFile.content, filter.list);
           }
+        }, function(error){
+          console.log('resource not found : ' + name + ', ' + id);
+          var filter = {'name': name,
+                        'solved': 0,
+                        'new': 0,
+                        'list': []};
+          $scope.currentFilter = filter;
         });
       }
       else {
@@ -51,19 +78,10 @@
       // Fill content
       sisypheFactory.fileContent.query({fileId: file.id}, function(file){
         $scope.currentFile = file;
-        $scope.currentFile.linesDebug = [];
-        for (var i = 0; i < $scope.currentFile.linesCount-1; i++) {
-          $scope.currentFile.linesDebug.push({'isVisible': false, 'info': undefined});
-        }
+
+        var pos = 10;
+        ScrollTo.idOrName('code-panel', pos);
         updateCurrentFilter(file.id, $scope.currentFilter.name);
-        // Retrieve debug information for the file
-        sisypheFactory.fileDebug.query({fileId: file.id}, function(filedebug){
-          for (var i = 0; i < filedebug.debugSymbols.length; i++) {
-            var lineNumber = filedebug.debugSymbols[i].lineNumber-1;
-            $scope.currentFile.linesDebug[lineNumber].isVisible = true;
-            $scope.currentFile.linesDebug[lineNumber].info = filedebug.debugSymbols[i];
-          }
-        });
       });
     };
     
@@ -95,7 +113,36 @@
     // set filters click handler
     $scope.setFilter = function(filter) {
       clearSelection();
-      updateCurrentFilter($scope.currentFile.id, filter);
+      if (($scope.currentFilter.name == 'Diff' || filter == 'Diff') && 
+          ($scope.currentFilter.name != filter)) {
+          // Disable old files
+          for (var i = 0; i < $scope.files.length; i++) {
+            $scope.files[i].status = '';
+          }
+          // Set files
+          if (filter == 'Diff') {
+            $scope.files = attributes.diff_files;
+          }
+          else {
+            $scope.files = attributes.all_files;
+          }
+          // Set filter name
+          $scope.currentFilter = 
+                       {'name': filter,
+                        'solved': 0,
+                        'new': 0,
+                        'list': []};
+          // Load file data
+          if ($scope.files.length > 0) {
+            // Remove search
+            searchFactory.clear();
+            // Update filter
+            updateCurrentFile($scope.files[0]);
+          }
+      }
+      else {
+        updateCurrentFilter($scope.currentFile.id, filter);
+      }
     };
     
     // set changeViewDetails click handler
@@ -163,7 +210,8 @@
     };
     
     // set error click handler
-    $scope.errorClicked = function (index) {
+    $scope.errorClicked = function (index, ev) {
+      ev.stopPropagation();
       updateCurrentCode(index);
       var item = $scope.currentFilter.list[index];
       if (item.clicked === true) {
@@ -186,143 +234,12 @@
       }
     };
     
-    // set verify parameters click handler
-    $scope.configVerifierClicked = function () {
-      var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: '../partials/configVerifier.html',
-        controller: 'configVerifierCtrl',
-        resolve: {
-          param: function () {
-            return {
-              onFinish: function () {
-                refresh();
-                $scope.spinning = false;
-                $timeout(function () {
-                  $scope.loading = false;
-                }, 1500);
-              }
-            };
-          }
-        }
-      });
-            
-      modalInstance.result.then(function(files) {
-        // ok
-        $scope.loading = true;
-        $scope.spinning = true;
-      }, function () {
-        // cancel 
-      });
-    };
-    
-    // set run click handler
-    $scope.runVerifierClicked = function () {
-      var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: '../partials/runVerifier.html',
-        controller: 'runVerifierCtrl',
-        resolve: {
-          param: function () {
-            var srcPath = '';
-            if ($scope.currentFile) {
-              var indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
-              srcPath = $scope.currentFile.path.substr(0, indexName+1);
-            }
-            return {
-              sourcePath: srcPath,
-              onFinish: function () {
-                refresh();
-                $scope.spinning = false;
-                $timeout(function () {
-                  $scope.loading = false;
-                }, 1500);
-              }
-            };
-          }
-        }
-      });
-      
-      modalInstance.result.then(function(files) {
-        // ok
-        $scope.loading = true;
-        $scope.spinning = true;
-      }, function () {
-        // cancel 
-      });
-    };
-    
-    // set config click handler
-    $scope.configDebuggerClicked = function () {
-      var modalInstance = $uibModal.open({
-        animation: true,
-        templateUrl: '../partials/configDebugger.html',
-        controller: 'configDebuggerCtrl',
-        resolve: {
-          param: function () {
-            return {
-              onFinish: function () {
-                /*refresh();
-                $scope.spinning = false;
-                $timeout(function () {
-                  $scope.loading = false;
-                }, 1500);*/
-              }
-            };
-          }
-        }
-      });
-      
-      modalInstance.result.then(function(files) {
-        // ok
-        //$scope.loading = true;
-        //$scope.spinning = true;
-      }, function () {
-        // cancel 
-      });
-    };
-    
-    // set run click handler
-    $scope.runDebuggerClicked = function () {
-      var srcPath = '';
-      if ($scope.currentFile) {
-        var indexName = Math.max($scope.currentFile.path.lastIndexOf('\\'), $scope.currentFile.path.lastIndexOf('/'));
-        srcPath = $scope.currentFile.path.substr(0, indexName+1);
-      }
-      sisypheFactory.debugDB.query({src: srcPath}, function() {
-        refresh();
-      });
-    };
-    
-    // set debug function
-    $scope.debugFunction = function (index) {
-      var info = {};
-      info.functionName = $scope.currentFile.linesDebug[index].info.name;
-      info.functionAddress = $scope.currentFile.linesDebug[index].info.address;
-      info.debugStartAddress = $scope.currentFile.linesDebug[index].info.debugStart;
-      info.debugEndAddress = $scope.currentFile.linesDebug[index].info.debugEnd;
-      info.debugVariables = $scope.currentFile.linesDebug[index].info.debugVariables;
-      for (var i = 0; i < info.debugVariables.length; i++) {
-        info.debugVariables[i].value = 9;
-      }
-      info.debugFunctionId = $scope.currentFile.linesDebug[index].info.debugFunctionId;
-      info.debugReturn = $scope.currentFile.linesDebug[index].info.debugReturn;
-      sisypheFactory.startDebug.save({}, info, function() {
-        sisypheFactory.fileDebug.query({fileId: $scope.currentFile.id}, function(filedebug){
-          for (var i = 0; i < filedebug.debugSymbols.length; i++) {
-            var lineNumber = filedebug.debugSymbols[i].lineNumber-1;
-            if (lineNumber == index) {
-              var debug = {};
-              debug.variablesList = filedebug.debugSymbols[i].debugVariables;
-              var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: '../partials/debugResult.html',
-                controller: 'debugResultCtrl',
-                resolve: {debug}
-              });
-              break;
-            }
-          }
+    $scope.logoClicked = function (index) {
+      sisypheFactory.aboutHtml.then(function(html){
+        var modalInstance = $uibModal.open({
+          animation: true,
+          template: html.data,
+          controller: 'logoCtrl',
         });
       });
     };

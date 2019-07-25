@@ -42,7 +42,7 @@ namespace dsg {
 											ExportAPI_R2);
 
 			CreatePrivateMembers_R2 =
-                   "\tstd::vector< boost::shared_ptr< " << EntityClass_R2 << " > > m_backup;"               "\r\n"
+                   "\tstd::list< boost::shared_ptr< " << EntityClass_R2 << " > > m_backup;"          "\r\n"
 				   "\t// Is a transaction in progress before queries ?"                              "\r\n"
 				   "\tbool m_transactionOwner;"                                                      "\r\n"
 				   "\tstatic " << AccessClass_R2 << "* m_instance; "                                 "\r\n\r\n"

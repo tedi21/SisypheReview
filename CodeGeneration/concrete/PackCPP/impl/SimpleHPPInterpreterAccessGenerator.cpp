@@ -43,7 +43,7 @@ namespace dsg {
 			CreateInterpreterAccessClass_R2 =
 				str_g("template <class EncodingT>")
 				<< line_g(1) << "class " << UEntity_R2 << "InterpreterAccess"
-				<< line_g(1) << ": public Base<EncodingT>"
+                << line_g(1) << ": public Base<EncodingT>"
 				<< line_g(1) << "{"
 				<< line_g(1) << "private:"
 				<< line_g(1) << htab_g(1) << AccessClass_R2 << "* m_object;"
@@ -51,7 +51,6 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "bool m_error;"
 				<< line_g(2) << "public:"
 				<< line_g(1) << htab_g(1) << UEntity_R2 << "InterpreterAccess();"
-				<< line_g(2) << htab_g(1) << "~" << UEntity_R2 << "InterpreterAccess();"
 				<< line_g(2) << htab_g(1) << "virtual typename EncodingT::string_t toString() const;"
                 << line_g(2) << htab_g(1) << "virtual boost::shared_ptr< Base<EncodingT> > clone() const;"
 				<< line_g(2) << htab_g(1) << "virtual typename EncodingT::string_t getClassName() const;"

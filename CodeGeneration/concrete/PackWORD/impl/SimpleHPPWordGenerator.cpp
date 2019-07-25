@@ -81,7 +81,7 @@ namespace dsg {
                 << line_g(1) << htab_g(2) << "// Destructor"
                 << line_g(1) << htab_g(2) << "~" << ClassName << "();"
                 << line_g(1) << htab_g(2) << "// Assignment operator"
-                << line_g(1) << htab_g(2) << "const " << ClassName << "& operator=(const " << ClassName << "& copy);"
+                << line_g(1) << htab_g(2) << ClassName << "& operator=(const " << ClassName << "& copy);"
                 << line_g(1) << htab_g(2) << "// Cast operator"
                 << line_g(1) << htab_g(2) << "operator IDispatch*() const;")       [!Has_Base]
                 << line_g(1) << htab_g(2) << ListAttribute

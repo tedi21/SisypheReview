@@ -31,6 +31,8 @@ namespace dsg {
                     [ent0, entN]
                     [file0, fileN]
                     << str_g("template class _DataConnection<ucs>;\r\n")
+                    << str_g("template class _DataStatement<ucs>;\r\n")
+                    << str_g("template class _DataParameters<ucs>;\r\n")
                     << "\r\n";
         }
     }

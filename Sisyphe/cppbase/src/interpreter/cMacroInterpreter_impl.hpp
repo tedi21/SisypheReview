@@ -6,13 +6,13 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CMacroInterpreter<EncodingT>::CMacroInterpreter()
 {
-	setValue( boost::shared_ptr< _CMacro<EncodingT> > (new _CMacro<EncodingT>()) );
+	m_value = boost::make_shared< _CMacro<EncodingT> >();
 }
 
 template <class EncodingT>
 CMacroInterpreter<EncodingT>::CMacroInterpreter(boost::shared_ptr< _CMacro<EncodingT> > const& value)
 {
-	setValue(value);
+	m_value = value;
 }
 
 template <class EncodingT>
@@ -24,98 +24,93 @@ CMacroInterpreter<EncodingT>::CMacroInterpreter(boost::shared_ptr< Base<Encoding
 				boost::shared_ptr< Base<EncodingT> > const& lengthBlock)
 {
 	typename EncodingT::string_t nativeName;
-	int nativeIsConst;
+	long long nativeIsConst;
 	typename EncodingT::string_t nativeConstValue;
-	int nativeLineNumber;
-	int nativeStartBlock;
-	int nativeLengthBlock;
+	long long nativeLineNumber;
+	long long nativeStartBlock;
+	long long nativeLengthBlock;
 	if (check_string<EncodingT>(name, nativeName) &&
-		check_numeric(isConst, nativeIsConst) &&
+		check_numeric_i(isConst, nativeIsConst) &&
 		check_string<EncodingT>(constValue, nativeConstValue) &&
-		check_numeric(lineNumber, nativeLineNumber) &&
-		check_numeric(startBlock, nativeStartBlock) &&
-		check_numeric(lengthBlock, nativeLengthBlock))
+		check_numeric_i(lineNumber, nativeLineNumber) &&
+		check_numeric_i(startBlock, nativeStartBlock) &&
+		check_numeric_i(lengthBlock, nativeLengthBlock))
 	{
-		setValue(boost::shared_ptr< _CMacro<EncodingT> >(new _CMacro<EncodingT>(nativeName,
+		m_value = boost::make_shared< _CMacro<EncodingT> >(nativeName,
 				nativeIsConst,
 				nativeConstValue,
 				nativeLineNumber,
 				nativeStartBlock,
-				nativeLengthBlock)));
+				nativeLengthBlock);
 	}
 }
 
 template <class EncodingT>
-CMacroInterpreter<EncodingT>::~CMacroInterpreter()
-{}
-
-template <class EncodingT>
-boost::shared_ptr< _CMacro<EncodingT> > CMacroInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CMacro<EncodingT> > CMacroInterpreter<EncodingT>::value() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CMacroInterpreter<EncodingT>::setValue(boost::shared_ptr< _CMacro<EncodingT> > const& object)
+void CMacroInterpreter<EncodingT>::value(boost::shared_ptr< _CMacro<EncodingT> > const& object)
 {
 	m_value = object;
-	String<EncodingT>::setValue(toString());
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getIdentifier() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIdentifier()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getName() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getName()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getIsConst() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIsConst()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIsConst()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getConstValue() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getConstValue()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getConstValue()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getLineNumber() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLineNumber()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLineNumber()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getStartBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getStartBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getLengthBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLengthBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::getCppFile()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(m_value->getCppFile()) );
 }
 
 
@@ -125,7 +120,7 @@ void CMacroInterpreter<EncodingT>::setName(boost::shared_ptr< Base<EncodingT> > 
 	typename EncodingT::string_t nativeName;
 	if (check_string<EncodingT>(name, nativeName))
 	{
-		getValue()->setName(nativeName);
+		m_value->setName(nativeName);
 	}
 }
 
@@ -133,10 +128,10 @@ void CMacroInterpreter<EncodingT>::setName(boost::shared_ptr< Base<EncodingT> > 
 template <class EncodingT>
 void CMacroInterpreter<EncodingT>::setIsConst(boost::shared_ptr< Base<EncodingT> > const& isConst)
 {
-	int nativeIsConst;
-	if (check_numeric(isConst, nativeIsConst))
+	long long nativeIsConst;
+	if (check_numeric_i(isConst, nativeIsConst))
 	{
-		getValue()->setIsConst(nativeIsConst);
+		m_value->setIsConst(nativeIsConst);
 	}
 }
 
@@ -147,7 +142,7 @@ void CMacroInterpreter<EncodingT>::setConstValue(boost::shared_ptr< Base<Encodin
 	typename EncodingT::string_t nativeConstValue;
 	if (check_string<EncodingT>(constValue, nativeConstValue))
 	{
-		getValue()->setConstValue(nativeConstValue);
+		m_value->setConstValue(nativeConstValue);
 	}
 }
 
@@ -158,7 +153,7 @@ void CMacroInterpreter<EncodingT>::setCppFile(boost::shared_ptr< Base<EncodingT>
 	boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
 	if (check_cppFile(cppFile, nativeCppFile))
 	{
-		getValue()->setCppFile(nativeCppFile);
+		m_value->setCppFile(nativeCppFile);
 	}
 }
 
@@ -166,10 +161,10 @@ void CMacroInterpreter<EncodingT>::setCppFile(boost::shared_ptr< Base<EncodingT>
 template <class EncodingT>
 void CMacroInterpreter<EncodingT>::setLineNumber(boost::shared_ptr< Base<EncodingT> > const& lineNumber)
 {
-	int nativeLineNumber;
-	if (check_numeric(lineNumber, nativeLineNumber))
+	long long nativeLineNumber;
+	if (check_numeric_i(lineNumber, nativeLineNumber))
 	{
-		getValue()->setLineNumber(nativeLineNumber);
+		m_value->setLineNumber(nativeLineNumber);
 	}
 }
 
@@ -177,10 +172,10 @@ void CMacroInterpreter<EncodingT>::setLineNumber(boost::shared_ptr< Base<Encodin
 template <class EncodingT>
 void CMacroInterpreter<EncodingT>::setStartBlock(boost::shared_ptr< Base<EncodingT> > const& startBlock)
 {
-	int nativeStartBlock;
-	if (check_numeric(startBlock, nativeStartBlock))
+	long long nativeStartBlock;
+	if (check_numeric_i(startBlock, nativeStartBlock))
 	{
-		getValue()->setStartBlock(nativeStartBlock);
+		m_value->setStartBlock(nativeStartBlock);
 	}
 }
 
@@ -188,10 +183,10 @@ void CMacroInterpreter<EncodingT>::setStartBlock(boost::shared_ptr< Base<Encodin
 template <class EncodingT>
 void CMacroInterpreter<EncodingT>::setLengthBlock(boost::shared_ptr< Base<EncodingT> > const& lengthBlock)
 {
-	int nativeLengthBlock;
-	if (check_numeric(lengthBlock, nativeLengthBlock))
+	long long nativeLengthBlock;
+	if (check_numeric_i(lengthBlock, nativeLengthBlock))
 	{
-		getValue()->setLengthBlock(nativeLengthBlock);
+		m_value->setLengthBlock(nativeLengthBlock);
 	}
 }
 
@@ -199,28 +194,28 @@ void CMacroInterpreter<EncodingT>::setLengthBlock(boost::shared_ptr< Base<Encodi
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::hasCppFile() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!m_value->isNullCppFile()) );
 }
 
 
 template <class EncodingT>
 void CMacroInterpreter<EncodingT>::removeCppFile()
 {
-	getValue()->eraseCppFile();
+	m_value->eraseCppFile();
 }
 
 template <class EncodingT>
 typename EncodingT::string_t CMacroInterpreter<EncodingT>::toString() const
 {
 	std::stringstream stream;
-	stream << *(getValue());
+	stream << *m_value;
 	return C(stream.str());
 }
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::clone() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new CMacroInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CMacroInterpreter<EncodingT>(copy_ptr(m_value)));
 }
 
 template <class EncodingT>
@@ -238,7 +233,7 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::invoke(const 
 	if (check_parameters_array(params, args))
 	{
 		if (tryInvoke(this, C("CMacro"), method, args, ret) ||
-			tryInvoke(this, C("String"), method, args, ret))
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -261,7 +256,7 @@ bool check_cMacro(boost::shared_ptr< Base<EncodingT> > const& val, boost::shared
 	boost::shared_ptr< CMacroInterpreter<EncodingT> > value  = dynamic_pointer_cast< CMacroInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		o = value->getValue();
+		o = value->value();
 	}
 	else
 	{
@@ -277,7 +272,7 @@ bool reset_cMacro(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr< 
 	boost::shared_ptr< CMacroInterpreter<EncodingT> > value  = dynamic_pointer_cast< CMacroInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		value->setValue(o);
+		value->value(o);
 	}
 	else
 	{

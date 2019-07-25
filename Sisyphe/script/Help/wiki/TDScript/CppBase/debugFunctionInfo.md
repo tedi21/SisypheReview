@@ -14,16 +14,15 @@ var = new DebugFunctionInfo();
 
 ## Constructeur DebugFunctionInfo
 *Paramètres*
-* Numeric : La valeur de la colonne lineNumber.
+* String : La valeur de la colonne name.
+* Numeric : La valeur de la colonne firstLineNumber.
+* Numeric : La valeur de la colonne lastLineNumber.
 * Numeric : La valeur de la colonne address.
-* Numeric : La valeur de la colonne debugStart.
-* Numeric : La valeur de la colonne debugEnd.
-* String : La valeur de la colonne debugReturnType.
 
 *Description*
 * Crée une instance de la classe DebugFunctionInfo.
 ```
-var = new DebugFunctionInfo(lineNumber, address, debugStart, debugEnd, debugReturnType);
+var = new DebugFunctionInfo(name, firstLineNumber, lastLineNumber, address);
 ```
 
 ## Méthode Identifier
@@ -39,17 +38,43 @@ var = new DebugFunctionInfo(lineNumber, address, debugStart, debugEnd, debugRetu
 val = var.Identifier;
 ```
 
-## Méthode LineNumber
+## Méthode Name
 *Paramètres*
 * None.
 
 *Retour*
-* Numeric : La colonne lineNumber.
+* String : La colonne name.
 
 *Description*
-* Retourne la colonne LineNumber.
+* Retourne la colonne Name.
 ```
-val = var.LineNumber;
+val = var.Name;
+```
+
+## Méthode FirstLineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne firstLineNumber.
+
+*Description*
+* Retourne la colonne FirstLineNumber.
+```
+val = var.FirstLineNumber;
+```
+
+## Méthode LastLineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne lastLineNumber.
+
+*Description*
+* Retourne la colonne LastLineNumber.
+```
+val = var.LastLineNumber;
 ```
 
 ## Méthode Address
@@ -65,69 +90,69 @@ val = var.LineNumber;
 val = var.Address;
 ```
 
-## Méthode DebugStart
+## Méthode DebugTypeInfo
 *Paramètres*
 * None.
 
 *Retour*
-* Numeric : La colonne debugStart.
+* DebugTypeInfo : La colonne debugTypeInfo.
 
 *Description*
-* Retourne la colonne DebugStart.
+* Retourne la colonne DebugTypeInfo.
 ```
-val = var.DebugStart;
+debugTypeInfo = var.DebugTypeInfo;
 ```
 
-## Méthode DebugEnd
+## Méthode DebugFileInfo
 *Paramètres*
 * None.
 
 *Retour*
-* Numeric : La colonne debugEnd.
+* DebugFileInfo : La colonne debugFileInfo.
 
 *Description*
-* Retourne la colonne DebugEnd.
+* Retourne la colonne DebugFileInfo.
 ```
-val = var.DebugEnd;
+debugFileInfo = var.DebugFileInfo;
 ```
 
-## Méthode DebugReturnType
+## Méthode Name
 *Paramètres*
-* None.
-
-*Retour*
-* String : La colonne debugReturnType.
-
-*Description*
-* Retourne la colonne DebugReturnType.
-```
-val = var.DebugReturnType;
-```
-
-## Méthode CppFunction
-*Paramètres*
-* None.
-
-*Retour*
-* CppFunction : La colonne cppFunction.
-
-*Description*
-* Retourne la colonne CppFunction.
-```
-cppFunction = var.CppFunction;
-```
-
-## Méthode LineNumber
-*Paramètres*
-* Numeric : La valeur de la colonne lineNumber.
+* String : La valeur de la colonne name.
 
 *Retour*
 * None.
 
 *Description*
-* Définit la colonne lineNumber.
+* Définit la colonne name.
 ```
-var.LineNumber(lineNumber);
+var.Name(name);
+```
+
+## Méthode FirstLineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne firstLineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne firstLineNumber.
+```
+var.FirstLineNumber(firstLineNumber);
+```
+
+## Méthode LastLineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne lastLineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne lastLineNumber.
+```
+var.LastLineNumber(lastLineNumber);
 ```
 
 ## Méthode Address
@@ -143,72 +168,59 @@ var.LineNumber(lineNumber);
 var.Address(address);
 ```
 
-## Méthode DebugStart
+## Méthode DebugTypeInfo
 *Paramètres*
-* Numeric : La valeur de la colonne debugStart.
+* DebugTypeInfo : La valeur de la colonne debugTypeInfo.
 
 *Retour*
 * None.
 
 *Description*
-* Définit la colonne debugStart.
+* Définit la colonne debugTypeInfo.
 ```
-var.DebugStart(debugStart);
+var.DebugTypeInfo(debugTypeInfo);
 ```
 
-## Méthode DebugEnd
+## Méthode DebugFileInfo
 *Paramètres*
-* Numeric : La valeur de la colonne debugEnd.
+* DebugFileInfo : La valeur de la colonne debugFileInfo.
 
 *Retour*
 * None.
 
 *Description*
-* Définit la colonne debugEnd.
+* Définit la colonne debugFileInfo.
 ```
-var.DebugEnd(debugEnd);
-```
-
-## Méthode DebugReturnType
-*Paramètres*
-* String : La valeur de la colonne debugReturnType.
-
-*Retour*
-* None.
-
-*Description*
-* Définit la colonne debugReturnType.
-```
-var.DebugReturnType(debugReturnType);
+var.DebugFileInfo(debugFileInfo);
 ```
 
-## Méthode CppFunction
-*Paramètres*
-* CppFunction : La valeur de la colonne cppFunction.
-
-*Retour*
-* None.
-
-*Description*
-* Définit la colonne cppFunction.
-```
-var.CppFunction(cppFunction);
-```
-
-## Méthode HasCppFunction
+## Méthode HasDebugTypeInfo
 *Paramètres*
 * None.
 
 *Retour*
-* Bool : Une valeur est définie pour la colonne cppFunction.
+* Bool : Une valeur est définie pour la colonne debugTypeInfo.
 
 *Description*
-* Indique si la colonne CppFunction a une valeur définie.
+* Indique si la colonne DebugTypeInfo a une valeur définie.
 ```
-val = var.HasCppFunction;
+val = var.HasDebugTypeInfo;
 ```
 
-## Méthode removeCppFunction
+## Méthode HasDebugFileInfo
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : Une valeur est définie pour la colonne debugFileInfo.
+
+*Description*
+* Indique si la colonne DebugFileInfo a une valeur définie.
+```
+val = var.HasDebugFileInfo;
+```
+
+## Méthode removeDebugTypeInfo
 *Paramètres*
 * None.
 
@@ -216,9 +228,22 @@ val = var.HasCppFunction;
 * None.
 
 *Description*
-* Supprime la valeur définie pour la colonne cppFunction.
+* Supprime la valeur définie pour la colonne debugTypeInfo.
 ```
-var.CppFunction = null;
+var.DebugTypeInfo = null;
+```
+
+## Méthode removeDebugFileInfo
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime la valeur définie pour la colonne debugFileInfo.
+```
+var.DebugFileInfo = null;
 ```
 
 ## Méthode removeDebugVariableInfos

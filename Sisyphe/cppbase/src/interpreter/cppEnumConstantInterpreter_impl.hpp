@@ -6,94 +6,100 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CppEnumConstantInterpreter<EncodingT>::CppEnumConstantInterpreter()
 {
-	setValue( boost::shared_ptr< _CppEnumConstant<EncodingT> > (new _CppEnumConstant<EncodingT>()) );
+	m_value = boost::make_shared< _CppEnumConstant<EncodingT> >();
 }
 
 template <class EncodingT>
 CppEnumConstantInterpreter<EncodingT>::CppEnumConstantInterpreter(boost::shared_ptr< _CppEnumConstant<EncodingT> > const& value)
 {
-	setValue(value);
+	m_value = value;
 }
 
 template <class EncodingT>
 CppEnumConstantInterpreter<EncodingT>::CppEnumConstantInterpreter(boost::shared_ptr< Base<EncodingT> > const& name,
 				boost::shared_ptr< Base<EncodingT> > const& defaultValue,
+				boost::shared_ptr< Base<EncodingT> > const& lineNumber,
 				boost::shared_ptr< Base<EncodingT> > const& startBlock,
 				boost::shared_ptr< Base<EncodingT> > const& lengthBlock)
 {
 	typename EncodingT::string_t nativeName;
-	int nativeDefaultValue;
-	int nativeStartBlock;
-	int nativeLengthBlock;
+	long long nativeDefaultValue;
+	long long nativeLineNumber;
+	long long nativeStartBlock;
+	long long nativeLengthBlock;
 	if (check_string<EncodingT>(name, nativeName) &&
-		check_numeric(defaultValue, nativeDefaultValue) &&
-		check_numeric(startBlock, nativeStartBlock) &&
-		check_numeric(lengthBlock, nativeLengthBlock))
+		check_numeric_i(defaultValue, nativeDefaultValue) &&
+		check_numeric_i(lineNumber, nativeLineNumber) &&
+		check_numeric_i(startBlock, nativeStartBlock) &&
+		check_numeric_i(lengthBlock, nativeLengthBlock))
 	{
-		setValue(boost::shared_ptr< _CppEnumConstant<EncodingT> >(new _CppEnumConstant<EncodingT>(nativeName,
+		m_value = boost::make_shared< _CppEnumConstant<EncodingT> >(nativeName,
 				nativeDefaultValue,
+				nativeLineNumber,
 				nativeStartBlock,
-				nativeLengthBlock)));
+				nativeLengthBlock);
 	}
 }
 
 template <class EncodingT>
-CppEnumConstantInterpreter<EncodingT>::~CppEnumConstantInterpreter()
-{}
-
-template <class EncodingT>
-boost::shared_ptr< _CppEnumConstant<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CppEnumConstant<EncodingT> > CppEnumConstantInterpreter<EncodingT>::value() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CppEnumConstantInterpreter<EncodingT>::setValue(boost::shared_ptr< _CppEnumConstant<EncodingT> > const& object)
+void CppEnumConstantInterpreter<EncodingT>::value(boost::shared_ptr< _CppEnumConstant<EncodingT> > const& object)
 {
 	m_value = object;
-	String<EncodingT>::setValue(toString());
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getIdentifier() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIdentifier()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getName() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getName()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getDefaultValue() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getDefaultValue()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getDefaultValue()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getLineNumber() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLineNumber()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getStartBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getStartBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getLengthBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLengthBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::getCppEnum()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new CppEnumInterpreter<EncodingT>(getValue()->getCppEnum()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppEnumInterpreter<EncodingT>(m_value->getCppEnum()) );
 }
 
 
@@ -103,7 +109,7 @@ void CppEnumConstantInterpreter<EncodingT>::setName(boost::shared_ptr< Base<Enco
 	typename EncodingT::string_t nativeName;
 	if (check_string<EncodingT>(name, nativeName))
 	{
-		getValue()->setName(nativeName);
+		m_value->setName(nativeName);
 	}
 }
 
@@ -111,10 +117,10 @@ void CppEnumConstantInterpreter<EncodingT>::setName(boost::shared_ptr< Base<Enco
 template <class EncodingT>
 void CppEnumConstantInterpreter<EncodingT>::setDefaultValue(boost::shared_ptr< Base<EncodingT> > const& defaultValue)
 {
-	int nativeDefaultValue;
-	if (check_numeric(defaultValue, nativeDefaultValue))
+	long long nativeDefaultValue;
+	if (check_numeric_i(defaultValue, nativeDefaultValue))
 	{
-		getValue()->setDefaultValue(nativeDefaultValue);
+		m_value->setDefaultValue(nativeDefaultValue);
 	}
 }
 
@@ -125,7 +131,18 @@ void CppEnumConstantInterpreter<EncodingT>::setCppEnum(boost::shared_ptr< Base<E
 	boost::shared_ptr< _CppEnum<EncodingT> > nativeCppEnum;
 	if (check_cppEnum(cppEnum, nativeCppEnum))
 	{
-		getValue()->setCppEnum(nativeCppEnum);
+		m_value->setCppEnum(nativeCppEnum);
+	}
+}
+
+
+template <class EncodingT>
+void CppEnumConstantInterpreter<EncodingT>::setLineNumber(boost::shared_ptr< Base<EncodingT> > const& lineNumber)
+{
+	long long nativeLineNumber;
+	if (check_numeric_i(lineNumber, nativeLineNumber))
+	{
+		m_value->setLineNumber(nativeLineNumber);
 	}
 }
 
@@ -133,10 +150,10 @@ void CppEnumConstantInterpreter<EncodingT>::setCppEnum(boost::shared_ptr< Base<E
 template <class EncodingT>
 void CppEnumConstantInterpreter<EncodingT>::setStartBlock(boost::shared_ptr< Base<EncodingT> > const& startBlock)
 {
-	int nativeStartBlock;
-	if (check_numeric(startBlock, nativeStartBlock))
+	long long nativeStartBlock;
+	if (check_numeric_i(startBlock, nativeStartBlock))
 	{
-		getValue()->setStartBlock(nativeStartBlock);
+		m_value->setStartBlock(nativeStartBlock);
 	}
 }
 
@@ -144,10 +161,10 @@ void CppEnumConstantInterpreter<EncodingT>::setStartBlock(boost::shared_ptr< Bas
 template <class EncodingT>
 void CppEnumConstantInterpreter<EncodingT>::setLengthBlock(boost::shared_ptr< Base<EncodingT> > const& lengthBlock)
 {
-	int nativeLengthBlock;
-	if (check_numeric(lengthBlock, nativeLengthBlock))
+	long long nativeLengthBlock;
+	if (check_numeric_i(lengthBlock, nativeLengthBlock))
 	{
-		getValue()->setLengthBlock(nativeLengthBlock);
+		m_value->setLengthBlock(nativeLengthBlock);
 	}
 }
 
@@ -155,28 +172,28 @@ void CppEnumConstantInterpreter<EncodingT>::setLengthBlock(boost::shared_ptr< Ba
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::hasCppEnum() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppEnum()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!m_value->isNullCppEnum()) );
 }
 
 
 template <class EncodingT>
 void CppEnumConstantInterpreter<EncodingT>::removeCppEnum()
 {
-	getValue()->eraseCppEnum();
+	m_value->eraseCppEnum();
 }
 
 template <class EncodingT>
 typename EncodingT::string_t CppEnumConstantInterpreter<EncodingT>::toString() const
 {
 	std::stringstream stream;
-	stream << *(getValue());
+	stream << *m_value;
 	return C(stream.str());
 }
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::clone() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new CppEnumConstantInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CppEnumConstantInterpreter<EncodingT>(copy_ptr(m_value)));
 }
 
 template <class EncodingT>
@@ -194,7 +211,7 @@ boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreter<EncodingT>::invo
 	if (check_parameters_array(params, args))
 	{
 		if (tryInvoke(this, C("CppEnumConstant"), method, args, ret) ||
-			tryInvoke(this, C("String"), method, args, ret))
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -217,7 +234,7 @@ bool check_cppEnumConstant(boost::shared_ptr< Base<EncodingT> > const& val, boos
 	boost::shared_ptr< CppEnumConstantInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppEnumConstantInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		o = value->getValue();
+		o = value->value();
 	}
 	else
 	{
@@ -233,7 +250,7 @@ bool reset_cppEnumConstant(boost::shared_ptr< Base<EncodingT> >& val, boost::sha
 	boost::shared_ptr< CppEnumConstantInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppEnumConstantInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		value->setValue(o);
+		value->value(o);
 	}
 	else
 	{

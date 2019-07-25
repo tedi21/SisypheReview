@@ -13,10 +13,6 @@ Context<EncodingT>::Context()
 {}
 
 template <class EncodingT>
-Context<EncodingT>::~Context()
-{}
-
-template <class EncodingT>
 void Context<EncodingT>::add(typename EncodingT::string_t const& var, boost::shared_ptr< Base<EncodingT> > const& object)
 {
     iterator_t i = objects.find(var);

@@ -127,6 +127,18 @@ _DataStatement<EncodingT>::setInt64		(int index, long long value)
 
 template <class EncodingT>
 bool 
+_DataStatement<EncodingT>::setNull		(int index)
+{
+	if (!m_statement)
+	{
+        m_logger->fatalStream() << "bad statement : prepared statement not initialized";
+        throw BadSqlQueryException("bad statement : prepared statement not initialized");
+	}
+	return sqlite3_bind_null(m_statement, index) == SQLITE_OK;
+}
+
+template <class EncodingT>
+bool 
 _DataStatement<EncodingT>::setText		(int index, const typename ucs::string_t& value)
 {
 	if (!m_statement)

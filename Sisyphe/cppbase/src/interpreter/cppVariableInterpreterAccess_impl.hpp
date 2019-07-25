@@ -11,10 +11,6 @@ CppVariableInterpreterAccess<EncodingT>::CppVariableInterpreterAccess()
 }
 
 template <class EncodingT>
-CppVariableInterpreterAccess<EncodingT>::~CppVariableInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t CppVariableInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppVariableInterpreterAccess<EncodingT>::in
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppVariableAccess"), method, args, ret))
+		if (tryInvoke(this, C("CppVariableAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -111,8 +108,8 @@ boost::shared_ptr< Base<EncodingT> > CppVariableInterpreterAccess<EncodingT>::ge
 	clearError();
 	try
 	{
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
 			res.reset(new CppVariableInterpreter<EncodingT>(m_object->getOneCppVariable(nativeIdentifier)));
 		}
@@ -133,8 +130,8 @@ boost::shared_ptr< Base<EncodingT> > CppVariableInterpreterAccess<EncodingT>::se
 	try
 	{
 		bool nativeNoWait;
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			res.reset(new CppVariableInterpreter<EncodingT>(m_object->selectOneCppVariable(nativeIdentifier,
@@ -214,6 +211,25 @@ void CppVariableInterpreterAccess<EncodingT>::fillCppFunction(boost::shared_ptr<
 		if (check_cppVariable(cppVariable, nativeCppVariable))
 		{
 			m_object->fillCppFunction(nativeCppVariable);
+			reset_cppVariable(cppVariable, nativeCppVariable);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void CppVariableInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<EncodingT> >& cppVariable)
+{
+	clearError();
+	try
+	{
+		boost::shared_ptr< _CppVariable<EncodingT> > nativeCppVariable;
+		if (check_cppVariable(cppVariable, nativeCppVariable))
+		{
+			m_object->fillCppFile(nativeCppVariable);
 			reset_cppVariable(cppVariable, nativeCppVariable);
 		}
 	}
@@ -320,7 +336,7 @@ boost::shared_ptr< Base<EncodingT> > CppVariableInterpreterAccess<EncodingT>::ge
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

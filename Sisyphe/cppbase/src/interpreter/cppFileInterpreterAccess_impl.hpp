@@ -11,10 +11,6 @@ CppFileInterpreterAccess<EncodingT>::CppFileInterpreterAccess()
 }
 
 template <class EncodingT>
-CppFileInterpreterAccess<EncodingT>::~CppFileInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t CppFileInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::invoke
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppFileAccess"), method, args, ret))
+		if (tryInvoke(this, C("CppFileAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -105,16 +102,16 @@ boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::getMan
 }
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::getOneCppFile(boost::shared_ptr< Base<EncodingT> > const& textFile)
+boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::getOneCppFile(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
 	boost::shared_ptr< Base<EncodingT> > res(new CppFileInterpreter<EncodingT>());
 	clearError();
 	try
 	{
-		boost::shared_ptr< _TextFile<EncodingT> > nativeTextFile;
-		if (check_textFile(textFile, nativeTextFile))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppFileInterpreter<EncodingT>(m_object->getOneCppFile(nativeTextFile)));
+			res.reset(new CppFileInterpreter<EncodingT>(m_object->getOneCppFile(nativeIdentifier)));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +122,7 @@ boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::getOne
 }
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::selectOneCppFile(boost::shared_ptr< Base<EncodingT> > const& textFile,
+boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::selectOneCppFile(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	boost::shared_ptr< Base<EncodingT> > res(new CppFileInterpreter<EncodingT>());
@@ -133,11 +130,11 @@ boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::select
 	try
 	{
 		bool nativeNoWait;
-		boost::shared_ptr< _TextFile<EncodingT> > nativeTextFile;
-		if (check_textFile(textFile, nativeTextFile) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppFileInterpreter<EncodingT>(m_object->selectOneCppFile(nativeTextFile,
+			res.reset(new CppFileInterpreter<EncodingT>(m_object->selectOneCppFile(nativeIdentifier,
 				nativeNoWait)));
 		}
 	}
@@ -205,6 +202,25 @@ boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::isSele
 }
 
 template <class EncodingT>
+void CppFileInterpreterAccess<EncodingT>::fillTextFile(boost::shared_ptr< Base<EncodingT> >& cppFile)
+{
+	clearError();
+	try
+	{
+		boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
+		if (check_cppFile(cppFile, nativeCppFile))
+		{
+			m_object->fillTextFile(nativeCppFile);
+			reset_cppFile(cppFile, nativeCppFile);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppFileInterpreterAccess<EncodingT>::fillCppFileType(boost::shared_ptr< Base<EncodingT> >& cppFile)
 {
 	clearError();
@@ -266,6 +282,27 @@ void CppFileInterpreterAccess<EncodingT>::fillAllCppDefinitionFunctions(boost::s
 }
 
 template <class EncodingT>
+void CppFileInterpreterAccess<EncodingT>::fillAllCppClasss(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
+		if (check_cppFile(cppFile, nativeCppFile) && 
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillAllCppClasss(nativeCppFile, nativeNoWait);
+			reset_cppFile(cppFile, nativeCppFile);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppFileInterpreterAccess<EncodingT>::fillAllCppIncludes(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
@@ -287,7 +324,7 @@ void CppFileInterpreterAccess<EncodingT>::fillAllCppIncludes(boost::shared_ptr< 
 }
 
 template <class EncodingT>
-void CppFileInterpreterAccess<EncodingT>::fillAllCppClasss(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& nowait)
+void CppFileInterpreterAccess<EncodingT>::fillAllCppVariables(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
@@ -297,7 +334,7 @@ void CppFileInterpreterAccess<EncodingT>::fillAllCppClasss(boost::shared_ptr< Ba
 		if (check_cppFile(cppFile, nativeCppFile) && 
 			check_bool(nowait, nativeNoWait))
 		{
-			m_object->fillAllCppClasss(nativeCppFile, nativeNoWait);
+			m_object->fillAllCppVariables(nativeCppFile, nativeNoWait);
 			reset_cppFile(cppFile, nativeCppFile);
 		}
 	}
@@ -350,7 +387,7 @@ void CppFileInterpreterAccess<EncodingT>::fillAllCMacros(boost::shared_ptr< Base
 }
 
 template <class EncodingT>
-void CppFileInterpreterAccess<EncodingT>::fillAllDebugFileInfos(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& nowait)
+void CppFileInterpreterAccess<EncodingT>::fillAllCppNotices(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
@@ -360,7 +397,7 @@ void CppFileInterpreterAccess<EncodingT>::fillAllDebugFileInfos(boost::shared_pt
 		if (check_cppFile(cppFile, nativeCppFile) && 
 			check_bool(nowait, nativeNoWait))
 		{
-			m_object->fillAllDebugFileInfos(nativeCppFile, nativeNoWait);
+			m_object->fillAllCppNotices(nativeCppFile, nativeNoWait);
 			reset_cppFile(cppFile, nativeCppFile);
 		}
 	}
@@ -380,9 +417,9 @@ void CppFileInterpreterAccess<EncodingT>::fillOneCppDeclarationFunction(boost::s
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppDeclarationFunction(nativeRefCppFile,
@@ -407,39 +444,12 @@ void CppFileInterpreterAccess<EncodingT>::fillOneCppDefinitionFunction(boost::sh
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppDefinitionFunction(nativeRefCppFile,
-				nativeIdentifier,
-				nativeNoWait);
-			reset_cppFile(refCppFile, nativeRefCppFile);
-		}
-	}
-	catch (std::exception& e)
-	{
-		setError(e);
-	}
-}
-
-template <class EncodingT>
-void CppFileInterpreterAccess<EncodingT>::fillOneCppInclude(boost::shared_ptr< Base<EncodingT> >& refCppFile,
-				const boost::shared_ptr< Base<EncodingT> >& identifier,
-				const boost::shared_ptr< Base<EncodingT> >& nowait)
-{
-	clearError();
-	try
-	{
-		bool nativeNoWait;
-		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
-		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
-			check_bool(nowait, nativeNoWait))
-		{
-			m_object->fillOneCppInclude(nativeRefCppFile,
 				nativeIdentifier,
 				nativeNoWait);
 			reset_cppFile(refCppFile, nativeRefCppFile);
@@ -461,12 +471,66 @@ void CppFileInterpreterAccess<EncodingT>::fillOneCppClass(boost::shared_ptr< Bas
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppClass(nativeRefCppFile,
+				nativeIdentifier,
+				nativeNoWait);
+			reset_cppFile(refCppFile, nativeRefCppFile);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void CppFileInterpreterAccess<EncodingT>::fillOneCppInclude(boost::shared_ptr< Base<EncodingT> >& refCppFile,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
+		long long nativeIdentifier;
+		if (check_cppFile(refCppFile, nativeRefCppFile) && 
+			check_numeric_i(identifier, nativeIdentifier) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillOneCppInclude(nativeRefCppFile,
+				nativeIdentifier,
+				nativeNoWait);
+			reset_cppFile(refCppFile, nativeRefCppFile);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void CppFileInterpreterAccess<EncodingT>::fillOneCppVariable(boost::shared_ptr< Base<EncodingT> >& refCppFile,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
+		long long nativeIdentifier;
+		if (check_cppFile(refCppFile, nativeRefCppFile) && 
+			check_numeric_i(identifier, nativeIdentifier) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillOneCppVariable(nativeRefCppFile,
 				nativeIdentifier,
 				nativeNoWait);
 			reset_cppFile(refCppFile, nativeRefCppFile);
@@ -488,9 +552,9 @@ void CppFileInterpreterAccess<EncodingT>::fillOneCppEnum(boost::shared_ptr< Base
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppEnum(nativeRefCppFile,
@@ -515,9 +579,9 @@ void CppFileInterpreterAccess<EncodingT>::fillOneCMacro(boost::shared_ptr< Base<
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCMacro(nativeRefCppFile,
@@ -533,7 +597,7 @@ void CppFileInterpreterAccess<EncodingT>::fillOneCMacro(boost::shared_ptr< Base<
 }
 
 template <class EncodingT>
-void CppFileInterpreterAccess<EncodingT>::fillOneDebugFileInfo(boost::shared_ptr< Base<EncodingT> >& refCppFile,
+void CppFileInterpreterAccess<EncodingT>::fillOneCppNotice(boost::shared_ptr< Base<EncodingT> >& refCppFile,
 				const boost::shared_ptr< Base<EncodingT> >& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
@@ -542,12 +606,12 @@ void CppFileInterpreterAccess<EncodingT>::fillOneDebugFileInfo(boost::shared_ptr
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFile<EncodingT> > nativeRefCppFile;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppFile(refCppFile, nativeRefCppFile) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			m_object->fillOneDebugFileInfo(nativeRefCppFile,
+			m_object->fillOneCppNotice(nativeRefCppFile,
 				nativeIdentifier,
 				nativeNoWait);
 			reset_cppFile(refCppFile, nativeRefCppFile);
@@ -606,6 +670,29 @@ void CppFileInterpreterAccess<EncodingT>::fillManyCppDefinitionFunctions(boost::
 }
 
 template <class EncodingT>
+void CppFileInterpreterAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		typename EncodingT::string_t nativeFilter;
+		boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
+		if (check_cppFile(cppFile, nativeCppFile) &&
+			check_string<EncodingT>(filter, nativeFilter) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillManyCppClasss(nativeCppFile, nativeFilter, nativeNoWait);
+			reset_cppFile(cppFile, nativeCppFile);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppFileInterpreterAccess<EncodingT>::fillManyCppIncludes(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
@@ -629,7 +716,7 @@ void CppFileInterpreterAccess<EncodingT>::fillManyCppIncludes(boost::shared_ptr<
 }
 
 template <class EncodingT>
-void CppFileInterpreterAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
+void CppFileInterpreterAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
@@ -641,7 +728,7 @@ void CppFileInterpreterAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< B
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			m_object->fillManyCppClasss(nativeCppFile, nativeFilter, nativeNoWait);
+			m_object->fillManyCppVariables(nativeCppFile, nativeFilter, nativeNoWait);
 			reset_cppFile(cppFile, nativeCppFile);
 		}
 	}
@@ -698,7 +785,7 @@ void CppFileInterpreterAccess<EncodingT>::fillManyCMacros(boost::shared_ptr< Bas
 }
 
 template <class EncodingT>
-void CppFileInterpreterAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
+void CppFileInterpreterAccess<EncodingT>::fillManyCppNotices(boost::shared_ptr< Base<EncodingT> >& cppFile, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
 	try
@@ -710,7 +797,7 @@ void CppFileInterpreterAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_p
 			check_string<EncodingT>(filter, nativeFilter) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			m_object->fillManyDebugFileInfos(nativeCppFile, nativeFilter, nativeNoWait);
+			m_object->fillManyCppNotices(nativeCppFile, nativeFilter, nativeNoWait);
 			reset_cppFile(cppFile, nativeCppFile);
 		}
 	}
@@ -817,7 +904,7 @@ boost::shared_ptr< Base<EncodingT> > CppFileInterpreterAccess<EncodingT>::getErr
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

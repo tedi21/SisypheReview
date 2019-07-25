@@ -12,23 +12,23 @@ class Name                                                                      
 : public Term<EncodingT>                                                                                \
 {                                                                                                       \
 private:                                                                                                \
-    boost::shared_ptr< Term<EncodingT> > m_left;                                                               \
-    boost::shared_ptr< Term<EncodingT> > m_right;                                                              \
+    boost::shared_ptr< Term<EncodingT> > m_left;                                                        \
+    boost::shared_ptr< Term<EncodingT> > m_right;                                                       \
 public:                                                                                                 \
-    Name(boost::shared_ptr< Term<EncodingT> > const& left, boost::shared_ptr< Term<EncodingT> > const& right)         \
+    Name(boost::shared_ptr< Term<EncodingT> > const& left, boost::shared_ptr< Term<EncodingT> > const& right)\
     : m_left(left), m_right(right)                                                                      \
     {}                                                                                                  \
-    boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);                                    \
-    static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);  \
+    boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);                             \
+    static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);\
 };
 
 #define    BINARY_OP_INTERPRET( Name, MethodName )                                                      \
 template <class EncodingT>                                                                              \
-boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                        \
+boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                 \
 {                                                                                                       \
-    boost::shared_ptr< Base<EncodingT> > var = m_left->interpret(c);                                           \
-    boost::shared_ptr< Base<EncodingT> > rhs = m_right->interpret(c);                                          \
-    vector<boost::shared_ptr< Base<EncodingT> > > params;                                                      \
+    boost::shared_ptr< Base<EncodingT> > var = m_left->interpret(c);                                    \
+    boost::shared_ptr< Base<EncodingT> > rhs = m_right->interpret(c);                                   \
+    vector<boost::shared_ptr< Base<EncodingT> > > params;                                               \
     params.push_back(rhs);                                                                              \
     return var->invoke(C( #MethodName ), params);                                                       \
 }
@@ -38,7 +38,7 @@ template <class EncodingT>                                                      
 bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)\
 {                                                                                                       \
     typename EncodingT::string_t left, right;                                                           \
-    boost::shared_ptr< Term<EncodingT> > left_value, right_value;                                              \
+    boost::shared_ptr< Term<EncodingT> > left_value, right_value;                                       \
     size_t i = buf.length();                                                                            \
     bool success = false;                                                                               \
     while ( i != EncodingT::string_t::npos && !success)                                                 \
@@ -58,16 +58,41 @@ bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shar
     BINARY_OP_PARSE( Name, Op )                                                                         \
     BINARY_OP_INTERPRET( Name, MethodName )
 
+#define    BINARY_OP_PARSE_SPACE( Name, Op )                                                            \
+template <class EncodingT>                                                                              \
+bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)\
+{                                                                                                       \
+    typename EncodingT::string_t left, right;                                                           \
+    boost::shared_ptr< Term<EncodingT> > left_value, right_value;                                       \
+    size_t i = buf.length();                                                                            \
+    bool success = false;                                                                               \
+    while ( i != EncodingT::string_t::npos && !success)                                                 \
+    {                                                                                                   \
+        success = reverse_hyphenation<EncodingT>(buf, C( #Op ), left, right, i, true) &&                \
+                  Instruction<EncodingT>::parse(left, left_value) &&                                    \
+                  Instruction<EncodingT>::parse(right, right_value);                                    \
+    }                                                                                                   \
+    if (success)                                                                                        \
+    {                                                                                                   \
+        value.reset( new Name<EncodingT>(left_value, right_value) );                                    \
+    }                                                                                                   \
+    return success;                                                                                     \
+}    
+
+#define    BINARY_OP_IMPL_SPACE( Name, MethodName, Op )                                                 \
+    BINARY_OP_PARSE_SPACE( Name, Op )                                                                   \
+    BINARY_OP_INTERPRET( Name, MethodName )
+
 #define    BINARY_OP_INTERPRET_REF( Name, MethodName )                                                  \
 template <class EncodingT>                                                                              \
-boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                        \
+boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                 \
 {                                                                                                       \
-    boost::shared_ptr< Base<EncodingT> > var = m_left->interpret(c);                                           \
-    boost::shared_ptr< Base<EncodingT> > rhs = m_right->interpret(c);                                          \
-    vector<boost::shared_ptr< Base<EncodingT> > > params;                                                      \
+    boost::shared_ptr< Base<EncodingT> > var = m_left->interpret(c);                                    \
+    boost::shared_ptr< Base<EncodingT> > rhs = m_right->interpret(c);                                   \
+    vector<boost::shared_ptr< Base<EncodingT> > > params;                                               \
     params.push_back(rhs);                                                                              \
-    boost::shared_ptr< Base<EncodingT> >    ret = var->invoke(C( #MethodName ), params);                       \
-    boost::shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_right);         \
+    boost::shared_ptr< Base<EncodingT> >    ret = var->invoke(C( #MethodName ), params);                \
+    boost::shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_right);  \
     if (ref)                                                                                            \
     {                                                                                                   \
         ref->allocate(params[0], c);                                                                    \
@@ -80,8 +105,8 @@ template <class EncodingT>                                                      
 bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)\
 {                                                                                                       \
     typename EncodingT::string_t left, right;                                                           \
-    boost::shared_ptr< Term<EncodingT> > left_value;                                                           \
-    boost::shared_ptr< Address<EncodingT> > ref_right_value;                                                   \
+    boost::shared_ptr< Term<EncodingT> > left_value;                                                    \
+    boost::shared_ptr< Address<EncodingT> > ref_right_value;                                            \
     size_t i = buf.length();                                                                            \
     bool success = false;                                                                               \
     while ( i != EncodingT::string_t::npos && !success)                                                 \
@@ -107,20 +132,20 @@ class Name                                                                      
 : public Term<EncodingT>                                                                                \
 {                                                                                                       \
 private:                                                                                                \
-    boost::shared_ptr< Term<EncodingT> > m_right;                                                              \
+    boost::shared_ptr< Term<EncodingT> > m_right;                                                       \
 public:                                                                                                 \
-    Name(boost::shared_ptr< Term<EncodingT> > const& right)                                                    \
+    Name(boost::shared_ptr< Term<EncodingT> > const& right)                                             \
     : m_right(right)                                                                                    \
     {}                                                                                                  \
-    boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);                                    \
-    static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);  \
+    boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);                             \
+    static bool parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value);\
 };
 
 #define    UNARY_OP_INTERPRET( Name, MethodName )                                                       \
 template <class EncodingT>                                                                              \
-boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                        \
+boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                 \
 {                                                                                                       \
-    boost::shared_ptr< Base<EncodingT> >  var   = m_right->interpret(c);                                       \
+    boost::shared_ptr< Base<EncodingT> >  var   = m_right->interpret(c);                                \
     return var->invoke(C( #MethodName ));                                                               \
 }
 

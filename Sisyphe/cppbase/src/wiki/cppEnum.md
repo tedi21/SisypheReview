@@ -15,6 +15,7 @@ var = new CppEnum();
 ## Constructeur CppEnum
 *Paramètres*
 * String : La valeur de la colonne name.
+* String : La valeur de la colonne accessSpecifier.
 * Numeric : La valeur de la colonne lineNumber.
 * Numeric : La valeur de la colonne startBlock.
 * Numeric : La valeur de la colonne lengthBlock.
@@ -22,7 +23,7 @@ var = new CppEnum();
 *Description*
 * Crée une instance de la classe CppEnum.
 ```
-var = new CppEnum(name, lineNumber, startBlock, lengthBlock);
+var = new CppEnum(name, accessSpecifier, lineNumber, startBlock, lengthBlock);
 ```
 
 ## Méthode Identifier
@@ -49,6 +50,19 @@ val = var.Identifier;
 * Retourne la colonne Name.
 ```
 val = var.Name;
+```
+
+## Méthode AccessSpecifier
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne accessSpecifier.
+
+*Description*
+* Retourne la colonne AccessSpecifier.
+```
+val = var.AccessSpecifier;
 ```
 
 ## Méthode LineNumber
@@ -103,6 +117,19 @@ val = var.LengthBlock;
 cppFile = var.CppFile;
 ```
 
+## Méthode CppClass
+*Paramètres*
+* None.
+
+*Retour*
+* CppClass : La colonne cppClass.
+
+*Description*
+* Retourne la colonne CppClass.
+```
+cppClass = var.CppClass;
+```
+
 ## Méthode Name
 *Paramètres*
 * String : La valeur de la colonne name.
@@ -127,6 +154,32 @@ var.Name(name);
 * Définit la colonne cppFile.
 ```
 var.CppFile(cppFile);
+```
+
+## Méthode CppClass
+*Paramètres*
+* CppClass : La valeur de la colonne cppClass.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne cppClass.
+```
+var.CppClass(cppClass);
+```
+
+## Méthode AccessSpecifier
+*Paramètres*
+* String : La valeur de la colonne accessSpecifier.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne accessSpecifier.
+```
+var.AccessSpecifier(accessSpecifier);
 ```
 
 ## Méthode LineNumber
@@ -181,6 +234,19 @@ var.LengthBlock(lengthBlock);
 val = var.HasCppFile;
 ```
 
+## Méthode HasCppClass
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : Une valeur est définie pour la colonne cppClass.
+
+*Description*
+* Indique si la colonne CppClass a une valeur définie.
+```
+val = var.HasCppClass;
+```
+
 ## Méthode removeCppFile
 *Paramètres*
 * None.
@@ -192,6 +258,19 @@ val = var.HasCppFile;
 * Supprime la valeur définie pour la colonne cppFile.
 ```
 var.CppFile = null;
+```
+
+## Méthode removeCppClass
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime la valeur définie pour la colonne cppClass.
+```
+var.CppClass = null;
 ```
 
 ## Méthode removeCppEnumConstants

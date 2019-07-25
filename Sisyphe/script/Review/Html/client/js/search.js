@@ -10,20 +10,21 @@
       searchFactory.search = function (buffer, exp) {
         var list = [];
         if (exp !== '' && exp !== undefined) {
-          var foundIndex = buffer.search(exp);
+          var rawBuffer = cppBuffer.raw(buffer);
+          var foundIndex = rawBuffer.search(exp);
           var bufferIndex = foundIndex;
-          while (foundIndex != -1 && bufferIndex < buffer.length) {
+          while (foundIndex != -1 && bufferIndex < rawBuffer.length) {
             list.push({
-                        'lineNumber': cppBuffer.countLine(buffer, bufferIndex),
+                        'lineNumber': cppBuffer.countLine(rawBuffer, bufferIndex),
                         'start': bufferIndex,
                         'length': exp.length,
                         'category': 'search ' + exp,
-                        'description': buffer.substring(cppBuffer.expandLeft(buffer, bufferIndex), 
-                                                        cppBuffer.expandRight(buffer, bufferIndex+exp.length))
+                        'description': rawBuffer.substring(cppBuffer.expandLeft(rawBuffer, bufferIndex), 
+                                                        cppBuffer.expandRight(rawBuffer, bufferIndex+exp.length))
                       });
             //console.log(list[list.length - 1].lineNumber + ' ' + list[list.length - 1].category + ' ' + list[list.length - 1].description);
             bufferIndex += 1;
-            foundIndex = buffer.substring(bufferIndex).search(exp);
+            foundIndex = rawBuffer.substring(bufferIndex).search(exp);
             bufferIndex += foundIndex;
           }
         }

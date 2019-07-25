@@ -25,10 +25,16 @@ var = new CppFunction();
 * Numeric : La valeur de la colonne isDestructor.
 * Numeric : La valeur de la colonne isConstructor.
 * Numeric : La valeur de la colonne isVariadic.
+* Numeric : La valeur de la colonne isTemplate.
+* Numeric : La valeur de la colonne isInline.
+* Numeric : La valeur de la colonne isConstexpr.
+* Numeric : La valeur de la colonne isOverride.
+* Numeric : La valeur de la colonne isFinal.
+* Numeric : La valeur de la colonne isNoexcept.
 * String : La valeur de la colonne signature.
+* Numeric : La valeur de la colonne decLineNumber.
 * Numeric : La valeur de la colonne startDecBlock.
 * Numeric : La valeur de la colonne lengthDecBlock.
-* Numeric : La valeur de la colonne decLineNumber.
 * Numeric : La valeur de la colonne linesCount.
 * Numeric : La valeur de la colonne complexity.
 * Numeric : La valeur de la colonne defLineNumber.
@@ -38,7 +44,7 @@ var = new CppFunction();
 *Description*
 * Crée une instance de la classe CppFunction.
 ```
-var = new CppFunction(name, accessSpecifier, returnType, isConst, isVirtual, isVirtualPure, isStatic, isOperator, isDestructor, isConstructor, isVariadic, signature, startDecBlock, lengthDecBlock, decLineNumber, linesCount, complexity, defLineNumber, startDefBlock, lengthDefBlock);
+var = new CppFunction(name, accessSpecifier, returnType, isConst, isVirtual, isVirtualPure, isStatic, isOperator, isDestructor, isConstructor, isVariadic, isTemplate, isInline, isConstexpr, isOverride, isFinal, isNoexcept, signature, decLineNumber, startDecBlock, lengthDecBlock, linesCount, complexity, defLineNumber, startDefBlock, lengthDefBlock);
 ```
 
 ## Méthode Identifier
@@ -197,6 +203,84 @@ val = var.IsConstructor;
 val = var.IsVariadic;
 ```
 
+## Méthode IsTemplate
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isTemplate.
+
+*Description*
+* Retourne la colonne IsTemplate.
+```
+val = var.IsTemplate;
+```
+
+## Méthode IsInline
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isInline.
+
+*Description*
+* Retourne la colonne IsInline.
+```
+val = var.IsInline;
+```
+
+## Méthode IsConstexpr
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isConstexpr.
+
+*Description*
+* Retourne la colonne IsConstexpr.
+```
+val = var.IsConstexpr;
+```
+
+## Méthode IsOverride
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isOverride.
+
+*Description*
+* Retourne la colonne IsOverride.
+```
+val = var.IsOverride;
+```
+
+## Méthode IsFinal
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isFinal.
+
+*Description*
+* Retourne la colonne IsFinal.
+```
+val = var.IsFinal;
+```
+
+## Méthode IsNoexcept
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isNoexcept.
+
+*Description*
+* Retourne la colonne IsNoexcept.
+```
+val = var.IsNoexcept;
+```
+
 ## Méthode Signature
 *Paramètres*
 * None.
@@ -208,6 +292,19 @@ val = var.IsVariadic;
 * Retourne la colonne Signature.
 ```
 val = var.Signature;
+```
+
+## Méthode DecLineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne decLineNumber.
+
+*Description*
+* Retourne la colonne DecLineNumber.
+```
+val = var.DecLineNumber;
 ```
 
 ## Méthode StartDecBlock
@@ -234,19 +331,6 @@ val = var.StartDecBlock;
 * Retourne la colonne LengthDecBlock.
 ```
 val = var.LengthDecBlock;
-```
-
-## Méthode DecLineNumber
-*Paramètres*
-* None.
-
-*Retour*
-* Numeric : La colonne decLineNumber.
-
-*Description*
-* Retourne la colonne DecLineNumber.
-```
-val = var.DecLineNumber;
 ```
 
 ## Méthode LinesCount
@@ -535,6 +619,84 @@ var.IsConstructor(isConstructor);
 var.IsVariadic(isVariadic);
 ```
 
+## Méthode IsTemplate
+*Paramètres*
+* Numeric : La valeur de la colonne isTemplate.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isTemplate.
+```
+var.IsTemplate(isTemplate);
+```
+
+## Méthode IsInline
+*Paramètres*
+* Numeric : La valeur de la colonne isInline.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isInline.
+```
+var.IsInline(isInline);
+```
+
+## Méthode IsConstexpr
+*Paramètres*
+* Numeric : La valeur de la colonne isConstexpr.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isConstexpr.
+```
+var.IsConstexpr(isConstexpr);
+```
+
+## Méthode IsOverride
+*Paramètres*
+* Numeric : La valeur de la colonne isOverride.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isOverride.
+```
+var.IsOverride(isOverride);
+```
+
+## Méthode IsFinal
+*Paramètres*
+* Numeric : La valeur de la colonne isFinal.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isFinal.
+```
+var.IsFinal(isFinal);
+```
+
+## Méthode IsNoexcept
+*Paramètres*
+* Numeric : La valeur de la colonne isNoexcept.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isNoexcept.
+```
+var.IsNoexcept(isNoexcept);
+```
+
 ## Méthode Signature
 *Paramètres*
 * String : La valeur de la colonne signature.
@@ -546,6 +708,19 @@ var.IsVariadic(isVariadic);
 * Définit la colonne signature.
 ```
 var.Signature(signature);
+```
+
+## Méthode DecLineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne decLineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne decLineNumber.
+```
+var.DecLineNumber(decLineNumber);
 ```
 
 ## Méthode StartDecBlock
@@ -572,19 +747,6 @@ var.StartDecBlock(startDecBlock);
 * Définit la colonne lengthDecBlock.
 ```
 var.LengthDecBlock(lengthDecBlock);
-```
-
-## Méthode DecLineNumber
-*Paramètres*
-* Numeric : La valeur de la colonne decLineNumber.
-
-*Retour*
-* None.
-
-*Description*
-* Définit la colonne decLineNumber.
-```
-var.DecLineNumber(decLineNumber);
 ```
 
 ## Méthode LinesCount
@@ -756,19 +918,6 @@ var.CppParameters(0) = null;
 var.CppVariables(0) = null;
 ```
 
-## Méthode removeDebugFunctionInfos
-*Paramètres*
-* Numeric : La position de l'élément à supprimer dans la liste.
-
-*Retour*
-* None.
-
-*Description*
-* Supprime l'élément à la position *n* dans la liste de DebugFunctionInfos.
-```
-var.DebugFunctionInfos(0) = null;
-```
-
 ## Méthode CppParameters
 *Paramètres*
 * Numeric : La position de l'élément à insérer dans la liste.
@@ -797,20 +946,6 @@ var.CppParameters(0) = cppParameter;
 var.CppVariables(0) = cppVariable;
 ```
 
-## Méthode DebugFunctionInfos
-*Paramètres*
-* Numeric : La position de l'élément à insérer dans la liste.
-* DebugFunctionInfo : L'élément à insérer dans la liste.
-
-*Retour*
-* None.
-
-*Description*
-* Insère un élément à la position *n* dans la liste de DebugFunctionInfos.
-```
-var.DebugFunctionInfos(0) = debugFunctionInfo;
-```
-
 ## Méthode CppParameters
 *Paramètres*
 * Numeric : La position de l'élément dans la liste.
@@ -835,19 +970,6 @@ val = var.CppParameters(0);
 * Retourne l'élément à la position *n* dans la liste de CppVariables.
 ```
 val = var.CppVariables(0);
-```
-
-## Méthode DebugFunctionInfos
-*Paramètres*
-* Numeric : La position de l'élément dans la liste.
-
-*Retour*
-* DebugFunctionInfo : L'élément dans la liste.
-
-*Description*
-* Retourne l'élément à la position *n* dans la liste de DebugFunctionInfos.
-```
-val = var.DebugFunctionInfos(0);
 ```
 
 ## Méthode ClearCppParameters
@@ -876,19 +998,6 @@ var.ClearCppParameters();
 var.ClearCppVariables();
 ```
 
-## Méthode ClearDebugFunctionInfos
-*Paramètres*
-* None.
-
-*Retour*
-* None.
-
-*Description*
-* Supprime tous les éléments de liste.
-```
-var.ClearDebugFunctionInfos();
-```
-
 ## Méthode HasCppParameters
 *Paramètres*
 * None.
@@ -915,19 +1024,6 @@ val = var.HasCppParameters();
 val = var.HasCppVariables();
 ```
 
-## Méthode HasDebugFunctionInfos
-*Paramètres*
-* None.
-
-*Retour*
-* Bool : True si la liste n'est pas vide, False sinon.
-
-*Description*
-* Indique si la liste n'est pas vide.
-```
-val = var.HasDebugFunctionInfos();
-```
-
 ## Méthode CppParametersCount
 *Paramètres*
 * None.
@@ -952,17 +1048,4 @@ val = var.CppParametersCount();
 * Retourne le nombre d'élément contenus dans la liste.
 ```
 val = var.CppVariablesCount();
-```
-
-## Méthode DebugFunctionInfosCount
-*Paramètres*
-* None.
-
-*Retour*
-* Numeric : Le nombre d'éléments contenus dans la liste.
-
-*Description*
-* Retourne le nombre d'élément contenus dans la liste.
-```
-val = var.DebugFunctionInfosCount();
 ```

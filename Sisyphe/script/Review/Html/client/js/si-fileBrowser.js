@@ -9,9 +9,11 @@
       scope: {
         fileSettings: '=filesettings'
       },
-      templateUrl: '../partials/fileBrowser.html',
+      templateUrl: '../partials/filebrowser.html',
       link: function (scope, element, attr) {
-        scope.currentPath = scope.fileSettings.selectedPath.substr(0, scope.fileSettings.selectedPath.lastIndexOf('\\') + 1);
+        if (scope.fileSettings.selectedPath != undefined) {
+          scope.currentPath = scope.fileSettings.selectedPath.substr(0, scope.fileSettings.selectedPath.lastIndexOf('\\') + 1);
+        }
         fileBrowserFactory.drives.query(function(drives) {
           scope.drives = drives;
         });
@@ -79,7 +81,7 @@
   siFileBrowser.filter('fileBrowserFilter', function() {
    return function( items, input) {
     var filtered = [];
-    var specialCharacters = /([.\\+?[^\]$(){}=!<>|:-])/g;
+    var specialCharacters = /([.])/g;
     var patt = new RegExp('^' + input.replace(specialCharacters, "\\$1").replace(/\*/g, '.*'));
     angular.forEach(items, function(item) {
        if(item.isDirectory || item.name.match(patt)) {

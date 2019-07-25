@@ -3,9 +3,12 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/algorithm/string.hpp>
+#include <functional>
+#include <string>
 #include "config.hpp"
 #include "macros.hpp"
-#include "base.hpp"
+#include "Base.hpp"
+#include "Indexable.hpp"
 
 #define C(str) encode<ansi,EncodingT>(str)
 
@@ -19,11 +22,12 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class String
-    : public Base<EncodingT>
+    : public Base<EncodingT>,
+      public Indexable<EncodingT>
     {
-	private:
-		typename EncodingT::string_t m_value;
-		
+    private:
+        typename EncodingT::string_t m_value;
+
     public:
         // Constructor
         String();
@@ -35,12 +39,11 @@ NAMESPACE_BEGIN(interp)
         FACTORY_PROTOTYPE1(String, In< boost::shared_ptr< Base<EncodingT> > >)
         String(boost::shared_ptr< Base<EncodingT> > const& value);
 
-        // Destructor
-        virtual ~String();
-
         // Accessors
-		typename EncodingT::string_t const& getValue() const;
-        void setValue(typename EncodingT::string_t const& value);
+        typename EncodingT::string_t const& value() const;
+        void value(typename EncodingT::string_t const& value);
+        virtual boost::shared_ptr< Base<EncodingT> > valueAt(size_t i) const;
+        virtual size_t length() const;
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
@@ -77,6 +80,27 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > superiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
         boost::shared_ptr< Base<EncodingT> > size() const;
+        
+        FACTORY_PROTOTYPE1(addValue, In< boost::shared_ptr< Base<EncodingT> > >)
+        void addValue(boost::shared_ptr< Base<EncodingT> > const& val);
+
+        FACTORY_PROTOTYPE2(insertValue, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void insertValue(boost::shared_ptr< Base<EncodingT> > const& i, boost::shared_ptr< Base<EncodingT> > const& val);
+        
+        FACTORY_PROTOTYPE3(insertList, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void insertList(boost::shared_ptr< Base<EncodingT> > const& i1, boost::shared_ptr< Base<EncodingT> > const& i2, boost::shared_ptr< Base<EncodingT> > const& val);
+
+        FACTORY_PROTOTYPE1(removeValue, In< boost::shared_ptr< Base<EncodingT> > >)
+        void removeValue(boost::shared_ptr< Base<EncodingT> > const& i);
+        
+        FACTORY_PROTOTYPE2(removeList, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void removeList(boost::shared_ptr< Base<EncodingT> > const& i1, boost::shared_ptr< Base<EncodingT> > const& i2);
+        
+        FACTORY_PROTOTYPE1(getValue, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > getValue(boost::shared_ptr< Base<EncodingT> > const& i) const;
+        
+        FACTORY_PROTOTYPE2(getList, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> > getList(boost::shared_ptr< Base<EncodingT> > const& i1, boost::shared_ptr< Base<EncodingT> > const& i2) const;
 
         FACTORY_PROTOTYPE2(match, In< boost::shared_ptr< Base<EncodingT> > >, InOut< boost::shared_ptr< Base<EncodingT> > >)
         boost::shared_ptr< Base<EncodingT> > match(boost::shared_ptr< Base<EncodingT> > const& regex, boost::shared_ptr< Base<EncodingT> >& matches) const;
@@ -87,6 +111,13 @@ NAMESPACE_BEGIN(interp)
 
         FACTORY_PROTOTYPE1(split, In< boost::shared_ptr< Base<EncodingT> > >)
         boost::shared_ptr< Base<EncodingT> > split(boost::shared_ptr< Base<EncodingT> > const& regex) const;
+        
+        FACTORY_PROTOTYPE2(replaceAll, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void replaceAll(boost::shared_ptr< Base<EncodingT> > const& search, boost::shared_ptr< Base<EncodingT> > const& replace);
+        
+        FACTORY_PROTOTYPE4(replaceRegex, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
+        void replaceRegex(boost::shared_ptr< Base<EncodingT> > const& start, boost::shared_ptr< Base<EncodingT> > const& end,
+                          boost::shared_ptr< Base<EncodingT> > const& regex, boost::shared_ptr< Base<EncodingT> > const& replace);
 
         FACTORY_PROTOTYPE1(append, In< boost::shared_ptr< Base<EncodingT> > >)
         void append(boost::shared_ptr< Base<EncodingT> > const& val);
@@ -99,6 +130,10 @@ NAMESPACE_BEGIN(interp)
 
         FACTORY_PROTOTYPE2(substring, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
         boost::shared_ptr< Base<EncodingT> > substring(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& len) const;
+        
+        boost::shared_ptr< Base<EncodingT> > hash() const;
+        
+        void trim();
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
@@ -114,13 +149,24 @@ NAMESPACE_BEGIN(interp)
             METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, iequals, const_t)
             METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, notIEquals, const_t)
             METHOD_REGISTER   (String, boost::shared_ptr< Base<EncodingT> >, size, const_t)
+            METHOD_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, getValue, const_t)
+            METHOD_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, getList, const_t)
+            METHOD_REGISTER1  (String, void, addValue, no_const_t)
+            METHOD_REGISTER2  (String, void, insertValue, no_const_t)
+            METHOD_REGISTER3  (String, void, insertList, no_const_t)
+            METHOD_REGISTER1  (String, void, removeValue, no_const_t)
+            METHOD_REGISTER2  (String, void, removeList, no_const_t)
             METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, match, const_t, C("String::Match"))
             METHOD_KEY_REGISTER5  (String, boost::shared_ptr< Base<EncodingT> >, search, const_t, C("String::Search"))
             METHOD_KEY_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, split, const_t, C("String::Split"))
+            METHOD_KEY_REGISTER2  (String, void, replaceAll, no_const_t, C("String::ReplaceAll"))
+            METHOD_KEY_REGISTER4  (String, void, replaceRegex, no_const_t, C("String::ReplaceRegex"))
             METHOD_KEY_REGISTER1  (String, void, append, no_const_t, C("String::Append"))
             METHOD_KEY_REGISTER2  (String, void, insert, no_const_t, C("String::Insert"))
             METHOD_KEY_REGISTER2  (String, void, remove, no_const_t, C("String::Remove"))
             METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, substring, const_t, C("String::SubString"))
+            METHOD_KEY_REGISTER   (String, boost::shared_ptr< Base<EncodingT> >, hash, const_t, C("String::Hash"))
+            METHOD_KEY_REGISTER   (String, void, trim, no_const_t, C("String::Trim"))
         FACTORY_END_REGISTER
 
         // Methods unregistration
@@ -137,13 +183,24 @@ NAMESPACE_BEGIN(interp)
             METHOD_UNREGISTER1(String, iequals)
             METHOD_UNREGISTER1(String, notIEquals)
             METHOD_UNREGISTER (String, size)
+            METHOD_UNREGISTER1(String, getValue)
+            METHOD_UNREGISTER2(String, getList)
+            METHOD_UNREGISTER1(String, addValue)
+            METHOD_UNREGISTER2(String, insertValue)
+            METHOD_UNREGISTER3(String, insertList)
+            METHOD_UNREGISTER1(String, removeValue)
+            METHOD_UNREGISTER2(String, removeList)
             METHOD_KEY_UNREGISTER2(C("String::Match"))
             METHOD_KEY_UNREGISTER5(C("String::Search"))
             METHOD_KEY_UNREGISTER1(C("String::Split"))
+            METHOD_KEY_UNREGISTER2(C("String::ReplaceAll"))
+            METHOD_KEY_UNREGISTER4(C("String::ReplaceRegex"))
             METHOD_KEY_UNREGISTER1(C("String::Append"))
             METHOD_KEY_UNREGISTER2(C("String::Insert"))
             METHOD_KEY_UNREGISTER2(C("String::Remove"))
             METHOD_KEY_UNREGISTER2(C("String::SubString"))
+            METHOD_KEY_UNREGISTER (C("String::Hash"))
+            METHOD_KEY_UNREGISTER (C("String::Trim"))
         FACTORY_END_UNREGISTER
     };
 

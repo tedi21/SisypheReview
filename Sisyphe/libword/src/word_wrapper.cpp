@@ -25,11 +25,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Application& Application::operator=(const Application& copy)
+	Application& Application::operator=(const Application& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -376,11 +379,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Documents& Documents::operator=(const Documents& copy)
+	Documents& Documents::operator=(const Documents& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -553,11 +559,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Document& Document::operator=(const Document& copy)
+	Document& Document::operator=(const Document& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1019,11 +1028,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Paragraphs& Paragraphs::operator=(const Paragraphs& copy)
+	Paragraphs& Paragraphs::operator=(const Paragraphs& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1108,11 +1120,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Paragraph& Paragraph::operator=(const Paragraph& copy)
+	Paragraph& Paragraph::operator=(const Paragraph& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1248,11 +1263,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const TablesOfContents& TablesOfContents::operator=(const TablesOfContents& copy)
+	TablesOfContents& TablesOfContents::operator=(const TablesOfContents& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1337,11 +1355,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const TableOfContents& TableOfContents::operator=(const TableOfContents& copy)
+	TableOfContents& TableOfContents::operator=(const TableOfContents& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1545,11 +1566,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Range& Range::operator=(const Range& copy)
+	Range& Range::operator=(const Range& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1826,11 +1850,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Cell& Cell::operator=(const Cell& copy)
+	Cell& Cell::operator=(const Cell& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1887,11 +1914,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Tables& Tables::operator=(const Tables& copy)
+	Tables& Tables::operator=(const Tables& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -1976,11 +2006,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Table& Table::operator=(const Table& copy)
+	Table& Table::operator=(const Table& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2140,11 +2173,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Rows& Rows::operator=(const Rows& copy)
+	Rows& Rows::operator=(const Rows& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2275,11 +2311,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Row& Row::operator=(const Row& copy)
+	Row& Row::operator=(const Row& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2382,11 +2421,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Cells& Cells::operator=(const Cells& copy)
+	Cells& Cells::operator=(const Cells& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2471,11 +2513,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Fields& Fields::operator=(const Fields& copy)
+	Fields& Fields::operator=(const Fields& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2560,11 +2605,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Field& Field::operator=(const Field& copy)
+	Field& Field::operator=(const Field& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2717,11 +2765,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const HeadingStyles& HeadingStyles::operator=(const HeadingStyles& copy)
+	HeadingStyles& HeadingStyles::operator=(const HeadingStyles& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2806,11 +2857,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const HeadingStyle& HeadingStyle::operator=(const HeadingStyle& copy)
+	HeadingStyle& HeadingStyle::operator=(const HeadingStyle& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -2946,11 +3000,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Selection& Selection::operator=(const Selection& copy)
+	Selection& Selection::operator=(const Selection& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -3547,11 +3604,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Characters& Characters::operator=(const Characters& copy)
+	Characters& Characters::operator=(const Characters& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -3682,11 +3742,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Find& Find::operator=(const Find& copy)
+	Find& Find::operator=(const Find& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4043,11 +4106,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Words& Words::operator=(const Words& copy)
+	Words& Words::operator=(const Words& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4178,11 +4244,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Sentences& Sentences::operator=(const Sentences& copy)
+	Sentences& Sentences::operator=(const Sentences& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4313,11 +4382,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Columns& Columns::operator=(const Columns& copy)
+	Columns& Columns::operator=(const Columns& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4448,11 +4520,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Column& Column::operator=(const Column& copy)
+	Column& Column::operator=(const Column& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4532,11 +4607,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Options& Options::operator=(const Options& copy)
+	Options& Options::operator=(const Options& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4621,11 +4699,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Window& Window::operator=(const Window& copy)
+	Window& Window::operator=(const Window& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4733,11 +4814,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const View& View::operator=(const View& copy)
+	View& View::operator=(const View& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4822,11 +4906,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const Template& Template::operator=(const Template& copy)
+	Template& Template::operator=(const Template& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4860,11 +4947,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const CommandBars& CommandBars::operator=(const CommandBars& copy)
+	CommandBars& CommandBars::operator=(const CommandBars& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -4949,11 +5039,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const CommandBar& CommandBar::operator=(const CommandBar& copy)
+	CommandBar& CommandBar::operator=(const CommandBar& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -5010,11 +5103,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const CommandBarControls& CommandBarControls::operator=(const CommandBarControls& copy)
+	CommandBarControls& CommandBarControls::operator=(const CommandBarControls& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 
@@ -5129,11 +5225,14 @@ namespace word
 		if (m_pObject != NULL) m_pObject->Release();
 	}
 
-	const CommandBarControl& CommandBarControl::operator=(const CommandBarControl& copy)
+	CommandBarControl& CommandBarControl::operator=(const CommandBarControl& copy)
 	{
-		if (m_pObject != NULL) m_pObject->Release();
-		m_pObject = copy.m_pObject;
-		if (m_pObject != NULL) m_pObject->AddRef();
+		if (this != &copy)
+		{
+			if (m_pObject != NULL) m_pObject->Release();
+			m_pObject = copy.m_pObject;
+			if (m_pObject != NULL) m_pObject->AddRef();
+		}
 		return *this;
 	}
 

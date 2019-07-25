@@ -6,8 +6,8 @@ namespace gen {
     bool
     or_expr<CompositorT1,CompositorT2>::evaluate(TYPE_CONTEXT(DataT) & c) const
     {
-        return    expr1.evaluate<DataT>(c) ||
-                expr2.evaluate<DataT>(c);
+        return expr1.template evaluate<DataT>(c) ||
+               expr2.template evaluate<DataT>(c);
     }
 
     template <class DerivedT>

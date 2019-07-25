@@ -30,13 +30,13 @@ StringListInterpreter<EncodingT>::StringListInterpreter(const StringList& object
 {}
 
 template <class EncodingT>
-const StringList& StringListInterpreter<EncodingT>::getValue() const
+const StringList& StringListInterpreter<EncodingT>::value() const
 {
 	return m_object;
 }
 
 template <class EncodingT>
-void StringListInterpreter<EncodingT>::setValue(StringList const& object)
+void StringListInterpreter<EncodingT>::value(StringList const& object)
 {
 	m_object = object;
 }
@@ -66,7 +66,8 @@ boost::shared_ptr< Base<EncodingT> > StringListInterpreter<EncodingT>::invoke(co
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("StringList"), method, args, ret))
+		if (tryInvoke(this, C("StringList"), method, args, ret) ||
+		    tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -104,33 +105,33 @@ boost::shared_ptr< Base<EncodingT> > StringListInterpreter<EncodingT>::end() con
 template <class EncodingT>
 bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringList& a)
 {
-        boost::shared_ptr< StringListInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListInterpreter<EncodingT> >(val);
-	if (value)
-	{
-		a = value->getValue();
-	}
-	else
-	{
-		Category * logger = &Category::getInstance(LOGNAME);
-		logger->errorStream() << "StringList expected, got " << A(val->getClassName());
-	}
-	return value;
+  boost::shared_ptr< StringListInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListInterpreter<EncodingT> >(val);
+  if (value)
+  {
+    a = value->value();
+  }
+  else
+  {
+    Category * logger = &Category::getInstance(LOGNAME);
+    logger->errorStream() << "StringList expected, got " << A(val->getClassName());
+  }
+  return value;
 }
 
 template <class EncodingT>
 bool reset_StringList(boost::shared_ptr< Base<EncodingT> >& val, StringList const& a)
 {
-        boost::shared_ptr< StringListInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListInterpreter<EncodingT> >(val);
-	if (value)
-	{
-		value->setValue(a);
-	}
-	else
-	{
-		Category* logger = &Category::getInstance(LOGNAME);
-		logger->errorStream() << "StringList expected, got " << A(val->getClassName());
-	}
-	return value;
+  boost::shared_ptr< StringListInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListInterpreter<EncodingT> >(val);
+  if (value)
+  {
+    value->value(a);
+  }
+  else
+  {
+    Category* logger = &Category::getInstance(LOGNAME);
+    logger->errorStream() << "StringList expected, got " << A(val->getClassName());
+  }
+  return value;
 }
 
 NAMESPACE_END

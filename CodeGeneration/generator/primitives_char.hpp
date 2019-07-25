@@ -15,7 +15,6 @@
 
 #ifndef NO_CHAR_TRAITS
 #  include <string> // char_traits
-using namespace std;
 #endif
 
 #if defined(BOOST_MSVC)

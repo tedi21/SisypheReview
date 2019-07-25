@@ -34,7 +34,7 @@ namespace gen {
             }
             context.defineDomain(first, end, size);
             context.position(positionSaved);
-            this->left().generate<DataT>(context);
+            this->left().template generate<DataT>(context);
             // restore domain
             context.defineDomain(firstSaved, endSaved, sizeSaved);
         }

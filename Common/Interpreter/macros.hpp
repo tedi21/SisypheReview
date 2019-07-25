@@ -69,6 +69,24 @@ using namespace enc;
 #define FACTORY_PROTOTYPE20(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20) \
     typedef Prototype20< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20 > Name##20;
 
+#define FACTORY_PROTOTYPE21(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21) \
+    typedef Prototype21< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21 > Name##21;
+
+#define FACTORY_PROTOTYPE22(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22) \
+    typedef Prototype22< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22 > Name##22;
+
+#define FACTORY_PROTOTYPE23(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23) \
+    typedef Prototype23< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23 > Name##23;
+
+#define FACTORY_PROTOTYPE24(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24) \
+    typedef Prototype24< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24 > Name##24;
+
+#define FACTORY_PROTOTYPE25(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25) \
+    typedef Prototype25< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25 > Name##25;
+
+#define FACTORY_PROTOTYPE26(Name, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26) \
+    typedef Prototype26< P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P21, P22, P23, P24, P25, P26 > Name##26;
+
 #define FACTORY_BASE\
     Base<EncodingT>
 
@@ -92,6 +110,36 @@ using namespace enc;
 
 #define FACTORY_END_UNREGISTER\
     }
+
+#define CLASS_KEY_REGISTER26(Class, Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->registerClass(\
+        new Factory26<FACTORY_BASE,Class,Class::Class##26,FACTORY_KEY,FACTORY_PARAMETER_POLICY>(Key + KEY(26)) );
+
+#define CLASS_KEY_REGISTER25(Class, Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->registerClass(\
+        new Factory25<FACTORY_BASE,Class,Class::Class##25,FACTORY_KEY,FACTORY_PARAMETER_POLICY>(Key + KEY(25)) );
+
+#define CLASS_KEY_REGISTER24(Class, Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->registerClass(\
+        new Factory24<FACTORY_BASE,Class,Class::Class##24,FACTORY_KEY,FACTORY_PARAMETER_POLICY>(Key + KEY(24)) );
+
+#define CLASS_KEY_REGISTER23(Class, Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->registerClass(\
+        new Factory23<FACTORY_BASE,Class,Class::Class##23,FACTORY_KEY,FACTORY_PARAMETER_POLICY>(Key + KEY(23)) );
+
+#define CLASS_KEY_REGISTER22(Class, Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->registerClass(\
+        new Factory22<FACTORY_BASE,Class,Class::Class##22,FACTORY_KEY,FACTORY_PARAMETER_POLICY>(Key + KEY(22)) );
+
+#define CLASS_KEY_REGISTER21(Class, Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->registerClass(\
+        new Factory21<FACTORY_BASE,Class,Class::Class##21,FACTORY_KEY,FACTORY_PARAMETER_POLICY>(Key + KEY(21)) );
 
 #define CLASS_KEY_REGISTER20(Class, Key) \
     FACTORY_MANAGER::getInstance()\
@@ -196,6 +244,30 @@ using namespace enc;
 #define CLASS_KEY_REGISTER(Class, Key) \
     FACTORY_MANAGER::getInstance()\
     ->registerClass( new Factory0<FACTORY_BASE,Class,FACTORY_KEY>(Key + KEY(0)) );
+
+#define CLASS_KEY_UNREGISTER26(Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->unRegisterClass( Key + KEY(26) );
+
+#define CLASS_KEY_UNREGISTER25(Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->unRegisterClass( Key + KEY(25) );
+
+#define CLASS_KEY_UNREGISTER24(Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->unRegisterClass( Key + KEY(24) );
+
+#define CLASS_KEY_UNREGISTER23(Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->unRegisterClass( Key + KEY(23) );
+
+#define CLASS_KEY_UNREGISTER22(Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->unRegisterClass( Key + KEY(22) );
+
+#define CLASS_KEY_UNREGISTER21(Key) \
+    FACTORY_MANAGER::getInstance()\
+    ->unRegisterClass( Key + KEY(21) );
 
 #define CLASS_KEY_UNREGISTER20(Key) \
     FACTORY_MANAGER::getInstance()\
@@ -515,6 +587,9 @@ using namespace enc;
 #define CLASS_UNREGISTER(Class) \
     CLASS_KEY_UNREGISTER(KEY(Class))
 
+#define METHOD_REGISTER3(Class, Return, Method, Const) \
+    METHOD_KEY_REGISTER3(Class, Return, Method, Const, KEY(Class::Method))
+
 #define METHOD_REGISTER2(Class, Return, Method, Const) \
     METHOD_KEY_REGISTER2(Class, Return, Method, Const, KEY(Class::Method))
 
@@ -523,6 +598,9 @@ using namespace enc;
 
 #define METHOD_REGISTER(Class, Return, Method, Const) \
     METHOD_KEY_REGISTER(Class, Return, Method, Const, KEY(Class::Method))
+
+#define METHOD_UNREGISTER3(Class, Method) \
+    METHOD_KEY_UNREGISTER3(KEY(Class::Method))
 
 #define METHOD_UNREGISTER2(Class, Method) \
     METHOD_KEY_UNREGISTER2(KEY(Class::Method))

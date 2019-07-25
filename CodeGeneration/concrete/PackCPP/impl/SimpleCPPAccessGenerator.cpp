@@ -328,7 +328,16 @@ namespace dsg {
                    "tab.push_back(boost::shared_ptr< " << EntityClass_R2 << " >(new " << EntityClass_R2 << "(" << SelEnumAttrLoop_R2 << ")));\r\n\t\t"
 				   "}"                                                                      "\r\n\t"
 				   "}"                                                                      "\r\n\t"
+                   "if (tab.empty()) {"                                                     "\r\n\t\t"
+                   "if (connection->isTransactionInProgress() && m_transactionOwner) {"     "\r\n\t\t\t"
+				   "connection->rollback();"                                                "\r\n\t\t\t"
+                   "m_transactionOwner = false;"                                            "\r\n\t\t\t"
+                   "m_transactionSignal(OPERATION_ACCESS_ROLLBACK);"                        "\r\n\t\t"
+                   "}"                                                                      "\r\n\t"
+                   "}"                                                                      "\r\n\t"
+				   "else {"                                                                 "\r\n\t\t"
                    "m_backup.insert(m_backup.end(), tab.begin(), tab.end());"               "\r\n\t"
+				   "}"                                                                      "\r\n\t"
 				   "return copy_ptr(tab);";
 
 			CancelSelectMeth_R2 =
@@ -401,7 +410,7 @@ namespace dsg {
                 << AttributeType_R2 << " val = "
                 << GetReferencedAttribute_R2(LAttribute_R2 << "Access->getOne" << AttributeClassName_R2 << "(", str_g("id"), str_g(")"))
                 << ";"                                                                              "\r\n\t\t"
-                   "typename std::vector< boost::shared_ptr<" << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t\t"
+                   "typename std::list< boost::shared_ptr<" << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t\t"
                    "if (save != m_backup.end()) {"                                                  "\r\n\t\t\t"
                    "(*save)->set" << UAttribute_R2 << "(val);"                                      "\r\n\t\t"
                    "}"                                                                              "\r\n\t\t"
@@ -483,12 +492,12 @@ namespace dsg {
                 << EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", IDParamName_R2(Accessor_R2(str_g("o"))) )
 																			    [entitiesByRel(FILTER_SOURCE)]
                 << "\r\n\t"
-                    "typename std::vector< boost::shared_ptr< " << Relation1Class_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LRelation1_R2 << "IdEquality);\r\n\t"
+                    "typename std::list< boost::shared_ptr< " << Relation1Class_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LRelation1_R2 << "IdEquality);\r\n\t"
 				   "if (save != m_backup.end())"                                                    "\r\n\t"
 				   "{"                                                                              "\r\n\t\t"
                    "tab = " << LRelationNName_R2 << "Access->selectMany" << URelationN_R2
-				<< "s(" << LRelationN_R2 << "Filter, nowait);"                                      "\r\n\t\t"
-                   "(*save)->clear" << URelationNName_R2 << "s();"                                         "\r\n\t\t"
+                << "s(" << LRelationN_R2 << "Filter, nowait, true);"                                "\r\n\t\t"
+                   "(*save)->clear" << URelationNName_R2 << "s();"                                  "\r\n\t\t"
                    "(*save)->insert" << URelationNName_R2 << "((*save)->get" << URelationNName_R2 << "sEnd(), tab.begin(), tab.end());\r\n\t"
 				   "}"                                                                              "\r\n\t"
 				   "else"                                                                           "\r\n\t"
@@ -516,7 +525,7 @@ namespace dsg {
 				<< "\r\n\t"
 				<< EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", str_g("*o") )
 				<< "\r\n\t"
-                   "typename std::vector< boost::shared_ptr< " << EntityClass_R2 << " > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
+                   "typename std::list< boost::shared_ptr< " << EntityClass_R2 << " > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
 				   "if (save == m_backup.end()) {"                                                  "\r\n\t\t"
 				   "m_logger->errorStream() << \"You must select object before update.\";"          "\r\n\t\t"
 				   "throw UnSelectedObjectException(\"You must select object before update.\");"    "\r\n\t"
@@ -584,7 +593,7 @@ namespace dsg {
 				<< "\r\n\t"
 				<< EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", str_g("*o") )
 				<< "\r\n\t"
-                   "typename std::vector< boost::shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
+                   "typename std::list< boost::shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << LEntity_R2 << "IdEquality);\r\n\t"
 				   "if (save == m_backup.end()) {"                                                         "\r\n\t\t"
 				   "m_logger->errorStream() << \"You must select object before update.\";"                 "\r\n\t\t"
 				   "throw UnSelectedObjectException(\"You must select object before update.\");"           "\r\n\t"
@@ -831,7 +840,7 @@ namespace dsg {
 				<< "\r\n\t"
 				<< EntityEqualFunctor_R2(UEntity_R2 << "IdEquality", str_g("*o"))
 				<< "\r\n\t"
-                   "typename std::vector< boost::shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << UEntity_R2 << "IdEquality);\r\n\t"
+                   "typename std::list< boost::shared_ptr< " << EntityClass_R2 << " > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), " << UEntity_R2 << "IdEquality);\r\n\t"
 				   "if (save == m_backup.end()) {"                                                  "\r\n\t\t"
 				   "m_logger->errorStream() << \"You must select object before deletion.\";"        "\r\n\t\t"
 				   "throw UnSelectedObjectException(\"You must select object before deletion.\");"  "\r\n\t"
@@ -883,7 +892,7 @@ namespace dsg {
                 << LRelationNName_R2 << "Access->update" << URelationN_R2 << "(*" << $(0) << ");")
 															[!If_IsNotNULL_R2];
 			InsertNULLAttribute_R2 =
-				(str_g("values.addText( C(\"NULL\") );\r\n\t\t\t"
+				(str_g("values.addNull();\r\n\t\t\t"
                  "fields.push_back( C(\"") << rel_g(getRelationTargetRefHandler(KIND_NAME)) << "\") );\r\n\t\t")
 															[!If_IsNotNULL_R2]
                 << (str_g("m_logger->errorStream() << \"") << rel_g(getRelationTargetRefHandler(KIND_NAME)) << " : null reference is forbidden.\";\r\n\t\t\t"

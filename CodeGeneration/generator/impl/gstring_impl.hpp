@@ -168,8 +168,8 @@ namespace gen {
     upper_generator<S>::generate(TYPE_CONTEXT(DataT) & context) const
     {
         size_t l = context.length();                        
-        this->subject().generate<DataT>(context);            
-        upper_str(context.subtract(l, -1, true), m_start, m_length).generate<DataT>(context);
+        this->subject().template generate<DataT>(context);
+        upper_str(context.subtract(l, -1, true), m_start, m_length).template generate<DataT>(context);
     }
 
     // This should take care of generator
@@ -243,8 +243,8 @@ namespace gen {
     lower_generator<S>::generate(TYPE_CONTEXT(DataT) & context) const
     {
         size_t l = context.length();                        
-        this->subject().generate<DataT>(context);            
-        lower_str(context.subtract(l, -1, true), m_start, m_length).generate<DataT>(context);
+        this->subject().template generate<DataT>(context);
+        lower_str(context.subtract(l, -1, true), m_start, m_length).template generate<DataT>(context);
     }
 
     // This should take care of generator

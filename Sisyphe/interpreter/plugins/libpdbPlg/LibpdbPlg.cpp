@@ -12,6 +12,9 @@
 #include "IDiaEnumLineNumbersPtrInterpreter.hpp"
 #include "IDiaSourceFilePtrInterpreter.hpp"
 #include "IDiaEnumSourceFilesPtrInterpreter.hpp"
+#include "IDiaEnumSymbolsByAddrPtrInterpreter.hpp"
+#include "IDiaEnumTablesPtrInterpreter.hpp"
+#include "IDiaTablePtrInterpreter.hpp"
 #include "DataKindInterpreter.hpp"
 #include "BasicTypeInterpreter.hpp"
 
@@ -32,6 +35,9 @@ extern "C" LIBPDBPLG_API void PlugInit(va_list vl, void** res)
     IDiaEnumLineNumbersPtrInterpreter<ucs>::register_class();
     IDiaSourceFilePtrInterpreter<ucs>::register_class();
     IDiaEnumSourceFilesPtrInterpreter<ucs>::register_class();
+    IDiaTablePtrInterpreter<ucs>::register_class();
+    IDiaEnumTablesPtrInterpreter<ucs>::register_class();
+    IDiaEnumSymbolsByAddrPtrInterpreter<ucs>::register_class();
     DataKindInterpreter<ucs>::register_class();
     BasicTypeInterpreter<ucs>::register_class();
     *res = (void*) LOGNAME;
@@ -50,6 +56,9 @@ extern "C" LIBPDBPLG_API void PlugTerm(void** res)
     IDiaEnumLineNumbersPtrInterpreter<ucs>::unregister_class();
     IDiaSourceFilePtrInterpreter<ucs>::unregister_class();
     IDiaEnumSourceFilesPtrInterpreter<ucs>::unregister_class();
+    IDiaTablePtrInterpreter<ucs>::unregister_class();
+    IDiaEnumTablesPtrInterpreter<ucs>::unregister_class();
+    IDiaEnumSymbolsByAddrPtrInterpreter<ucs>::unregister_class();
     DataKindInterpreter<ucs>::unregister_class();
     BasicTypeInterpreter<ucs>::unregister_class();
 }

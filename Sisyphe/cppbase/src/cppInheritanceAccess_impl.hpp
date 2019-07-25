@@ -61,10 +61,10 @@ _CppInheritanceAccess<EncodingT>::getManyCppInheritances(typename EncodingT::str
 	columns.push_back(C("baseAccess"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppInheritance")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t baseClassName;
 		typename EncodingT::string_t baseAccess;
-		if (statement.getInt( 0, identifier ) &&
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, baseClassName ) &&
 			statement.getText( 2, baseAccess )) {
 			value.reset(new _CppInheritance<EncodingT>(
@@ -86,7 +86,7 @@ _CppInheritanceAccess<EncodingT>::getAllCppInheritances() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppInheritance<EncodingT> >
-_CppInheritanceAccess<EncodingT>::getOneCppInheritance(int identifier) const 
+_CppInheritanceAccess<EncodingT>::getOneCppInheritance(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -125,10 +125,10 @@ _CppInheritanceAccess<EncodingT>::selectManyCppInheritances(typename EncodingT::
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppInheritance")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t baseClassName;
 		typename EncodingT::string_t baseAccess;
-		if (statement.getInt( 0, identifier ) &&
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, baseClassName ) &&
 			statement.getText( 2, baseAccess )) {
 			tab.push_back(boost::shared_ptr< _CppInheritance<EncodingT> >(new _CppInheritance<EncodingT>(
@@ -137,13 +137,22 @@ _CppInheritanceAccess<EncodingT>::selectManyCppInheritances(typename EncodingT::
 				baseAccess)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppInheritance<EncodingT> >
-_CppInheritanceAccess<EncodingT>::selectOneCppInheritance(int identifier, bool nowait, bool addition)  
+_CppInheritanceAccess<EncodingT>::selectOneCppInheritance(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -215,12 +224,12 @@ _CppInheritanceAccess<EncodingT>::fillDerived(boost::shared_ptr< _CppInheritance
 		m_logger->errorStream() << "CppClassAccess class is not initialized.";
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
-	int id;
+	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDerived")), std::vector<typename EncodingT::string_t>(1,C("cppInheritance")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppInheritance<EncodingT>::CppInheritanceIDEquality cppInheritanceIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = derivedAccess->getOneCppClass(id);
-		typename std::vector< boost::shared_ptr<_CppInheritance<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppInheritanceIdEquality);
+		typename std::list< boost::shared_ptr<_CppInheritance<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppInheritanceIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setDerived(val);
 		}
@@ -245,7 +254,7 @@ _CppInheritanceAccess<EncodingT>::isModifiedCppInheritance(boost::shared_ptr< _C
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppInheritance<EncodingT>::CppInheritanceIDEquality cppInheritanceIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppInheritanceIdEquality);
+	typename std::list< boost::shared_ptr< _CppInheritance<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppInheritanceIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -280,7 +289,7 @@ _CppInheritanceAccess<EncodingT>::updateCppInheritance(boost::shared_ptr< _CppIn
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppInheritance<EncodingT>::CppInheritanceIDEquality cppInheritanceIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppInheritanceIdEquality);
+	typename std::list< boost::shared_ptr< _CppInheritance<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppInheritanceIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -299,7 +308,7 @@ _CppInheritanceAccess<EncodingT>::updateCppInheritance(boost::shared_ptr< _CppIn
 			throw InvalidQueryException("idDerived : Identifier is null.");
 		}
 		else if ( !o->isNullDerived() && !typename _CppClass<EncodingT>::CppClassIDEquality(*(o->getDerived()))((*save)->getDerived()) ) {
-			values.addInt( o->getDerived()->getIdentifier() );
+			values.addInt64( o->getDerived()->getIdentifier() );
 			fields.push_back( C("idDerived") );
 		}
 		else if ( o->isNullDerived() && !(*save)->isNullDerived() ) {
@@ -355,7 +364,7 @@ _CppInheritanceAccess<EncodingT>::insertCppInheritance(boost::shared_ptr< _CppIn
 			throw InvalidQueryException("idDerived : Identifier is null.");
 		}
 		else if ( !o->isNullDerived() ) {
-			values.addInt( o->getDerived()->getIdentifier() );
+			values.addInt64( o->getDerived()->getIdentifier() );
 			fields.push_back( C("idDerived") );
 		}
 		else {
@@ -410,7 +419,7 @@ _CppInheritanceAccess<EncodingT>::deleteCppInheritance(boost::shared_ptr< _CppIn
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppInheritance<EncodingT>::CppInheritanceIDEquality CppInheritanceIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppInheritanceIdEquality);
+	typename std::list< boost::shared_ptr< _CppInheritance<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppInheritanceIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

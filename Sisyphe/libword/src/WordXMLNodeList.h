@@ -79,8 +79,6 @@ NAMESPACE_BEGIN(libword)
 
         WordXMLNodeList(const std::vector<WordXMLNode>& list);
 
-        ~WordXMLNodeList();
-
         // Retourne le noeud à l'index i
         WordXMLNode item(size_t i) const;
 

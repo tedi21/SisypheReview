@@ -32,8 +32,8 @@ HEADERS += \
 
 INCLUDEPATH += \
     ../../../../../Libraries/log4cpp/include \
-    ../../../../../Libraries/xerces-c-3.1.1/src \
-    ../../../../../Libraries/boost_1_61_0 \
+    ../../../../../Libraries/xerces-c-3.2.1/src \
+    ../../../../../Libraries/boost_1_66_0 \
     ../../generator \
     ../../encoding \
     ../../xerces \
@@ -42,23 +42,23 @@ INCLUDEPATH += \
     ../../pack \
     ../../concrete/PackINTERPRETER
 
-LIBS += -L../../../../../Libraries/boost_1_61_0/stage/lib -lboost_filesystem-mgw61-mt-1_61 \
-        -L../../../../../Libraries/boost_1_61_0/stage/lib -lboost_system-mgw61-mt-1_61 \
-        -L../../../../../Libraries/xerces-c-3.1.1/lib -lxerces-c \
-        -L../../../../../Libraries/log4cpp/lib -llog4cpp
+CONFIG(MinGW-64): LIBS += -L../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_filesystem-mgw73-mt-x64-1_66 \
+                          -L../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_system-mgw73-mt-x64-1_66 \
+                          -L../../../../../Libraries/xerces-c-3.2.1/lib64 -lxerces-c \
+                          -L../../../../../Libraries/log4cpp/lib64 -llog4cpp
 
-#debug {
-#LIBS += ../../bin_qt/Pack/debug/Pack.dll \
-#        ../../bin_qt/Core/Debug/Core.dll \
-#        ../../bin_qt/Encoding/Debug/Encoding.dll
-#}
+CONFIG(MinGW-64): LIBS +=  ../../bin_qt/Pack64/release/Pack.dll \
+                           ../../bin_qt/Core64/release/Core.dll \
+                           ../../bin_qt/Encoding64/Release/Encoding.dll
 
-release {
-LIBS +=  ../../bin_qt/Pack/release/Pack.dll \
-         ../../bin_qt/Core/release/Core.dll \
-         ../../bin_qt/Encoding/Release/Encoding.dll
-}
+CONFIG(MinGW-32): LIBS += -L../../../../../Libraries/boost_1_66_0/stage/lib32 -lboost_filesystem-mgw73-mt-x32-1_66 \
+                          -L../../../../../Libraries/boost_1_66_0/stage/lib32 -lboost_system-mgw73-mt-x32-1_66 \
+                          -L../../../../../Libraries/xerces-c-3.2.1/lib32 -lxerces-c \
+                          -L../../../../../Libraries/log4cpp/lib32 -llog4cpp
 
+CONFIG(MinGW-32): LIBS +=  ../../bin_qt/Pack32/release/Pack.dll \
+                           ../../bin_qt/Core32/release/Core.dll \
+                           ../../bin_qt/Encoding32/Release/Encoding.dll
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

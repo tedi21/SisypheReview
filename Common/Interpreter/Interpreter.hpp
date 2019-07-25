@@ -35,7 +35,6 @@ private:
 
 public:
     Context();
-    ~Context();
     typedef typename std::map< typename EncodingT::string_t,boost::shared_ptr< Base<EncodingT> > >::const_iterator iterator_t;
     void add(typename EncodingT::string_t const& var, boost::shared_ptr< Base<EncodingT> > const& object);
     void remove(typename EncodingT::string_t const& var);

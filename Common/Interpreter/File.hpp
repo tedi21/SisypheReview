@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 #include "macros.hpp"
-#include "String.hpp"
+#include "Base.hpp"
 #include <boost/shared_ptr.hpp>
 #include <fstream>
 
@@ -17,7 +17,7 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class File
-    : public String<EncodingT>
+    : public Base<EncodingT>
     {
     private:
         typename EncodingT::string_t  m_name;

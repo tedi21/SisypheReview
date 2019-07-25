@@ -11,7 +11,7 @@ namespace gen {
         if (n >= pos)
         {
             generator_args<DataT>::level--;
-            generator_args<DataT>::args[level][n-pos].generate<DataT>(context);
+            generator_args<DataT>::args[level][n-pos].template generate<DataT>(context);
             generator_args<DataT>::level++;
         }
     }

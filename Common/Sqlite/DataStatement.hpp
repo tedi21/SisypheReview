@@ -28,7 +28,7 @@ class _DataConnection;
 
 // Class representing sqlite statement
 template <class EncodingT>
-class _DataStatement
+class DB_API _DataStatement
 { 
 private:
 	// Private members
@@ -70,14 +70,17 @@ public:
 	
 	// Set Values
 	bool 
-  setBlob		(int index, const bc::vector<unsigned char>& value);
+	setBlob		(int index, const bc::vector<unsigned char>& value);
 	
 	bool 
 	setDouble	(int index, double value);
 	
 	bool 
 	setInt		(int index, int value);
-  
+	
+	bool 
+	setNull		(int index);
+	
 	bool 
 	setInt64  (int index, long long value);
 	
@@ -89,22 +92,22 @@ public:
 	
 	// Get Value
 	bool 
-  getBlob		(int column, bc::vector<unsigned char>& value) const;
+	getBlob		(int column, bc::vector<unsigned char>& value) const;
 	
 	bool 
 	getDouble	(int column, double& value) const;
 	
 	bool 
 	getInt		(int column, int& value) const;
-  
+	
 	bool 
 	getInt64  (int column, long long& value) const;
 	
 	bool 
-  getText		(int column, typename ucs::string_t& value) const;
+	getText		(int column, typename ucs::string_t& value) const;
 	
 	bool 
-  getText		(int column, typename ansi::string_t& value) const;
+	getText		(int column, typename ansi::string_t& value) const;
 
 };
 
@@ -113,5 +116,8 @@ typedef _DataStatement<ansi>       DataStatement;
 
 NAMESPACE_END
 
+#if !defined(HAS_DB_DLL) || defined(BUILD_DB_DLL)
 #include "DataStatement_impl.hpp"
+#endif // !defined(HAS_DB_DLL) || defined(BUILD_DB_DLL)
+
 #endif

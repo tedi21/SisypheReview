@@ -35,9 +35,9 @@ namespace dsg {
             xml_relation->setAttribute( AX("SourceREF"), CX(m_sourceRef) );
             switch (m_multiplicity)
             {
-            case RELATION_ZERO_ONE : strMultiplicity = L"Zero-One";break;
-            case RELATION_ONE      : strMultiplicity = L"One";     break;
-            default                : strMultiplicity = L"Unknown"; break;
+            case RELATION_ZERO_ONE : strMultiplicity = u"Zero-One";break;
+            case RELATION_ONE      : strMultiplicity = u"One";     break;
+            default                : strMultiplicity = u"Unknown"; break;
             }
             xml_relation->setAttribute( AX("Multiplicity"), strMultiplicity.c_str() );
             if (hasComment()) 

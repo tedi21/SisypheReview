@@ -116,8 +116,29 @@ interface IDiaSessionPtr
   // Définit l'adresse de charge du fichier exécutable qui correspond aux symboles dans ce magasin de symboles.
   long put_loadAddress(in unsigned long long pNewVal);
   
+  // Extrait un énumérateur qui recherche des symboles dans l'ordre de leurs adresses.
+  long getSymbolsByAddr(out IDiaEnumSymbolsByAddrPtr* ppEnumbyAddr);
+
+  // Récupère un énumérateur pour tous les tables contenues dans le magasin de symboles.
+  long getEnumTables(out IDiaEnumTablesPtr* ppEnumTables);
+  
+  // Récupère un type spécifié de symboles qui contient, ou est le plus proche de, une adresse spécifiée.
+  long findSymbolByAddr(in unsigned long isect, in unsigned long offset, in SymTagEnumType symtag, out IDiaSymbolPtr* ppSymbol);
+  
+  // Récupère un type spécifié de symboles qui contient, ou est le plus proche de, une adresse virtuelle relative spécifiée (RVA).
+  long findSymbolByRVA(in unsigned long rva, in SymTagEnumType symtag, out IDiaSymbolPtr* ppSymbol);  
+  
+  // Récupère un symbole par son identificateur unique.
+  long symbolById(in unsigned long identifier, out IDiaSymbolPtr* ppSymbol);  
+  
+  // Vérifie si deux symboles sont équivalents.
+  long symsAreEquiv(in IDiaSymbolPtr symbolA, in IDiaSymbolPtr symbolB);  
+  
   // Récupère les lignes d'un module spécifié qui contient une adresse virtuelle relative spécifiée (RVA).
   long findLinesByRVA(in unsigned long rva, in unsigned long length, out IDiaEnumLineNumbersPtr* ppResult);
+  
+  // Retrieves the lines in a specified compiland that contain a specified address.
+  long findLinesByAddr(in unsigned long seg, in unsigned long offset, in unsigned long length, out IDiaEnumLineNumbersPtr* ppResult);
 
   // Détermine les numéros de ligne du module (compiland) que le numéro de ligne spécifié dans un fichier source se trouve dans ou approche.
   long findLinesByLinenum(in IDiaSymbolPtr compiland, in IDiaSourceFilePtr file, in unsigned long linenum, in unsigned long column, out IDiaEnumLineNumbersPtr* ppResult);
@@ -136,6 +157,48 @@ interface IDiaSessionPtr
   
   // Récupère tous les fichiers sources.
   long findFile(out IDiaEnumSourceFilesPtr* ppResult);
+  
+  // Récupère tous les enfants d'un identificateur parent spécifié qui correspondent au nom et le type de symbole.
+  long findChildren(in IDiaSymbolPtr parent, in SymTagEnumType symtag, in string name, in long compareFlags, out IDiaEnumSymbolsPtr* ppResult);
+  
+  // Récupère tous les enfants d'un identificateur parent spécifié qui correspondent au nom et le type de symbole.
+  long findChildren(in IDiaSymbolPtr parent, in SymTagEnumType symtag, out IDiaEnumSymbolsPtr* ppResult);
+}
+
+// Classe qui énumère les différents tables contenues dans la source de données.
+interface IDiaEnumTablesPtr
+{
+  // Récupère le nombre de tables.
+  long get_Count(out long* pRetVal);
+  
+  // Récupère une table à l'aide d'un index ou d'une étiquette.
+  long ItemByIndex(in long index, out IDiaTablePtr* table);
+  long ItemByName(in string label, out IDiaTablePtr* table);
+  
+  // Récupère un nombre spécifié de tables dans la séquence d'énumération.
+  long Next(in unsigned long celt, out IDiaTablePtr* rgelt, out unsigned long* pceltFetched);
+  
+  // Ignore un nombre spécifié de tables dans une séquence d'énumération.
+  long Skip(in unsigned long celt);
+
+  // Réinitialise une séquence d'énumération au début.
+  long Reset();
+}
+
+// Classe qui énumère par l'adresse que différents symboles auront contenue dans la source de données.
+interface IDiaEnumSymbolsByAddrPtr
+{
+  // Positionne l'énumérateur en effectuant une recherche par le nombre de sections et l'offset d'image.
+  long symbolByAddr(in unsigned long isect, in unsigned long offsect, out IDiaSymbolPtr* ppsymbol);
+  
+  // Positionne l'énumérateur en effectuant une recherche par l'adresse virtuelle associée (RVA).
+  long symbolByRVA(in unsigned long relativeVirtualAddress, out IDiaSymbolPtr* ppsymbol);
+  
+  // Récupère les symboles ci-dessous dans l'ordre par l'adresse.
+  long Next(in unsigned long celt, out IDiaSymbolPtr* rgelt, out unsigned long* pceltFetched);
+  
+  // Récupère les symboles précédents dans l'ordre par l'adresse.
+  long Prev(in unsigned long celt, out IDiaSymbolPtr* rgelt, out unsigned long* pceltFetched);
 }
 
 // Classe représentant un symbole.
@@ -150,11 +213,17 @@ interface IDiaSymbolPtr
   // Extrait le nom du symbole.
   long get_name(out string* pRetVal);
   
+  // Extrait le 'undecorated' nom 
+  long get_undecoratedName(out string* pRetVal);
+  
   // Extrait la partie de section d'un emplacement d'adresse.
   long get_addressSection(out unsigned long* pRetVal);
   
   // Extrait la partie d'offset à un emplacement d'adresse.
   long get_addressOffset(out unsigned long* pRetVal);
+  
+  // Retrieves the location type of a data symbol.
+  long get_locationType(out unsigned long* pRetVal);
   
   // Récupère l'adresse virtuelle relative (RVA) du symbole.
   long get_relativeVirtualAddress(out unsigned long* pRetVal);
@@ -190,7 +259,7 @@ interface IDiaSymbolPtr
   long get_symTag(out unsigned long*pRetVal);
   
   // Récupère le nombre de bits ou d'octets de mémoire utilisés par l'objet représenté par ce symbole.
-  long get_length (out unsigned long long* pRetVal);
+  long get_length(out unsigned long long* pRetVal);
   
   // extrait une balise qui spécifie si un type pointeur est une référence.
   long get_reference(out int* pRetVal);
@@ -218,6 +287,24 @@ interface IDiaSymbolPtr
   
   // Extrait le dossier fichiers divers un type défini par l' (UDT)utilisateur.
   long get_udtKind (out unsigned long* pRetVal);
+  
+  // Retrieves a flag that specifies whether the function has been marked as never returning with the noreturn attribute.
+  long get_noReturn(out int* pFlag);
+  
+  // Retrieves the offset of the symbol location. Use when the LocationType is LocIsRegRel or LocIsBitField.
+  long get_offset(out long* pRetVal);
+  
+  // Extrait une référence au parent lexicale du symbole.
+  long get_lexicalParent(out IDiaSymbolPtr* pRetVal); 
+  
+  // Extrait une référence au parent de classe du symbole.
+  long get_classParent(out IDiaSymbolPtr* pRetVal);
+  
+  // Extrait l'identificateur unique de symbole.
+  long get_symIndexId(out unsigned long* pRetVal);
+  
+  // Récupère le nombre d'éléments dans une liste ou un tableau.
+  long get_count(out unsigned long* pRetVal);
 }
 
 // Classe qui énumère les différents symboles contenus dans la source de données.
@@ -313,4 +400,14 @@ interface IDiaEnumSourceFilesPtr
 
   // Réinitialise une séquence d'énumération au début.
   long Reset();
+}
+
+// Énumère une table de source de données de diamètre.
+interface IDiaTablePtr
+{
+  // Extrait le nom de la table.
+  long get_name(out string* pRetVal);  
+
+  // Récupère le nombre de fichiers sources.
+  long get_Count(out long* pRetVal);
 }

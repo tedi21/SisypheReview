@@ -20,7 +20,7 @@ namespace gen {
         typename CollectionT::context_t c(copy.begin(), copy.end(), context);                                                         
         for (; c.current() != copy.end(); c.increment())                    
         {                                                            
-            this->left().generate<DataT>(c);                        
+            this->left().template generate<DataT>(c);
         }
     }
 

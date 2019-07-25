@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 #include "macros.hpp"
-#include "String.hpp"
+#include "Base.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 
@@ -18,7 +18,7 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class Date
-    : public String<EncodingT>
+    : public Base<EncodingT>
     {
     private:
         dates::date  m_date;
@@ -31,9 +31,6 @@ NAMESPACE_BEGIN(interp)
 
         FACTORY_PROTOTYPE3(Date, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >, In< boost::shared_ptr< Base<EncodingT> > >)
         Date(boost::shared_ptr< Base<EncodingT> > const& year, boost::shared_ptr< Base<EncodingT> > const& month, boost::shared_ptr< Base<EncodingT> > const& day);
-
-        // Destructor
-        ~Date();
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;

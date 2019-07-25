@@ -105,6 +105,19 @@ access.CancelSelection();
 var = access.IsSelectedDebugVariableInfo(debugVariableInfo);
 ```
 
+## Méthode FillDebugTypeInfo
+*Paramètres*
+* DebugVariableInfo : L'objet à remplir.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée debugTypeInfo dans la base de données.
+```
+access.FillDebugTypeInfo(debugVariableInfo);
+```
+
 ## Méthode FillDebugFunctionInfo
 *Paramètres*
 * DebugVariableInfo : L'objet à remplir.
@@ -116,6 +129,50 @@ var = access.IsSelectedDebugVariableInfo(debugVariableInfo);
 * Recupère la donnée debugFunctionInfo dans la base de données.
 ```
 access.FillDebugFunctionInfo(debugVariableInfo);
+```
+
+## Méthode FillAllDebugValueInfos
+*Paramètres*
+* DebugVariableInfo : L'objet à remplir.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugValueInfo dans la base de données.
+```
+access.FillAllDebugValueInfos(debugVariableInfo, false);
+```
+
+## Méthode FillOneDebugValueInfo
+*Paramètres*
+* DebugVariableInfo : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table debugValueInfo.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée DebugValueInfo dans la base de données.
+```
+access.FillOneDebugValueInfo(debugVariableInfo, identifier, false);
+```
+
+## Méthode FillManyDebugValueInfos
+*Paramètres*
+* DebugVariableInfo : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugValueInfo dans la base de données.
+```
+access.FillManyDebugValueInfos(debugVariableInfo, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedDebugVariableInfo

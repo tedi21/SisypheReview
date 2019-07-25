@@ -20,6 +20,7 @@
 #include "DebugBreakpointInterpreter.hpp"
 #include "DebugBreakpointFlagInterpreter.hpp"
 #include "IDebugBreakpointPtrInterpreter.hpp"
+#include "DEBUG_STACK_FRAMEInterpreter.hpp"
 
 DEFINE_GUID(IID_IUnknown, 0x00000000, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46);
 
@@ -46,6 +47,7 @@ extern "C" LIBDEBUGPLG_API void PlugInit(va_list vl, void** res)
     DebugBreakpointInterpreter<ucs>::register_class();
     DebugBreakpointFlagInterpreter<ucs>::register_class();
     IDebugBreakpointPtrInterpreter<ucs>::register_class();
+    DEBUG_STACK_FRAMEInterpreter<ucs>::register_class();
     *res = (void*) LOGNAME;
 }
 
@@ -68,4 +70,5 @@ extern "C" LIBDEBUGPLG_API void PlugTerm(void** res)
     DebugBreakpointInterpreter<ucs>::unregister_class();
     DebugBreakpointFlagInterpreter<ucs>::unregister_class();
     IDebugBreakpointPtrInterpreter<ucs>::unregister_class();
+    DEBUG_STACK_FRAMEInterpreter<ucs>::unregister_class();
 }

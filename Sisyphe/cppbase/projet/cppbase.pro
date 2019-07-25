@@ -83,32 +83,42 @@ HEADERS += \
     ../src/debugVariableInfoAccess.hpp \
     ../src/debugVariableInfoAccess_impl.hpp \
     ../src/debugVariableInfoPredicate.hpp \
-    ../src/textNotice.hpp \
-    ../src/textNoticeAccess.hpp \
-    ../src/textNoticeAccess_impl.hpp \
-    ../src/textNoticePredicate.hpp
+    ../src/cppNotice.hpp \
+    ../src/cppNoticeAccess.hpp \
+    ../src/cppNoticeAccess_impl.hpp \
+    ../src/cppNoticePredicate.hpp \
+    ../src/cppVariable.hpp \
+    ../src/cppVariableAccess.hpp \
+    ../src/cppVariableAccess_impl.hpp \
+    ../src/cppVariablePredicate.hpp \
+    ../src/debugErrorInfo.hpp \
+    ../src/debugErrorInfoAccess.hpp \
+    ../src/debugErrorInfoAccess_impl.hpp \
+    ../src/debugErrorInfoPredicate.hpp \
+    ../src/debugStubInfo.hpp \
+    ../src/debugStubInfoAccess.hpp \
+    ../src/debugStubInfoAccess_impl.hpp \
+    ../src/debugStubInfoPredicate.hpp
 
 INCLUDEPATH += \
-    ../../../../../../Libraries/boost_1_61_0 \
-    ../../../../../../Libraries/log4cpp/include \
-    ../../../../CodeGeneration/encoding \
-    ../../../../CodeGeneration/generator \
-    ../../../../CodeGeneration/factory \
+    ../../../../../Libraries/boost_1_66_0 \
+    ../../../../../Libraries/log4cpp/include \
+    ../../../CodeGeneration/encoding \
+    ../../../CodeGeneration/generator \
+    ../../../CodeGeneration/factory \
     ../../../Common/Sqlite \
     ../../../Common/Exception \
     ../../../Common/Pointer \
     ../src \
     ../src/config
 
-LIBS += -L../../../../../../Libraries/log4cpp/lib -llog4cpp
+CONFIG(MinGW-64): LIBS += -L../../../../../Libraries/log4cpp/lib64 -llog4cpp
 
-#debug {
-#LIBS += ../bin_qt/debug/Encoding.dll
-#}
+CONFIG(MinGW-64): LIBS += ../../../CodeGeneration/bin_qt/Encoding64/release/Encoding.dll
 
-release {
-LIBS += ../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll
-}
+CONFIG(MinGW-32): LIBS += -L../../../../../Libraries/log4cpp/lib32 -llog4cpp
+
+CONFIG(MinGW-32): LIBS += ../../../CodeGeneration/bin_qt/Encoding32/release/Encoding.dll
 
 unix:!symbian {
     maemo5 {

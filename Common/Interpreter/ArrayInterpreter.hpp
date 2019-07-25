@@ -18,11 +18,16 @@ NAMESPACE_BEGIN(interp)
     {
     private:
         boost::shared_ptr< Address<EncodingT> > m_name;
-        boost::shared_ptr< Term<EncodingT> > m_index;
+        boost::shared_ptr< Term<EncodingT> > m_index1;
+        boost::shared_ptr< Term<EncodingT> > m_index2;
+        bool m_listIndex;
 
     public:
-        ArrayOperator(boost::shared_ptr< Address<EncodingT> > const& name, boost::shared_ptr< Term<EncodingT> > const& index)
-        : m_name(name), m_index(index)
+        ArrayOperator(boost::shared_ptr< Address<EncodingT> > const& name, 
+                      boost::shared_ptr< Term<EncodingT> > const& index1,
+                      boost::shared_ptr< Term<EncodingT> > const& index2,
+                      bool listIndex)
+        : m_name(name), m_index1(index1), m_index2(index2), m_listIndex(listIndex)
         {}    
         boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);
         void allocate(boost::shared_ptr< Base<EncodingT> > const& value, Context<EncodingT> & c);

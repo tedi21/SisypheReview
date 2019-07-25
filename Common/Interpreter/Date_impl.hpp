@@ -16,18 +16,14 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     Date<EncodingT>::Date(boost::shared_ptr< Base<EncodingT> > const& year, boost::shared_ptr< Base<EncodingT> > const& month, boost::shared_ptr< Base<EncodingT> > const& day)
     {
-        double nativeYear, nativeMonth, nativeDay;
-        if (check_numeric(year, nativeYear)   &&
-            check_numeric(month, nativeMonth) &&
-            check_numeric(day, nativeDay))
+        unsigned short nativeYear, nativeMonth, nativeDay;
+        if (check_numeric_i(year, nativeYear)   &&
+            check_numeric_i(month, nativeMonth) &&
+            check_numeric_i(day, nativeDay))
         {
             m_date = dates::date(nativeYear, nativeMonth, nativeDay);
         }
     }
-
-    template <class EncodingT>
-    Date<EncodingT>::~Date()
-    {}
 
     template <class EncodingT>
     typename EncodingT::string_t Date<EncodingT>::toString() const
@@ -55,8 +51,8 @@ NAMESPACE_BEGIN(interp)
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
         {
-            if (tryInvoke(this, C("Date"), method, args, ret) ||
-                tryInvoke(this, C("String"), method, args, ret))
+            if (tryInvoke(this, C("Date"), method, args, ret)   ||
+                tryInvoke(this, C("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -82,19 +78,19 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getDay() const
     {
-        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.day()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(static_cast<unsigned short>(m_date.day())));
     }
 
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getMonth() const
     {
-        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.month()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(static_cast<unsigned short>(m_date.month())));
     }
 
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Date<EncodingT>::getYear() const
     {
-        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_date.year()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(static_cast<unsigned short>(m_date.year())));
     }
 
 NAMESPACE_END

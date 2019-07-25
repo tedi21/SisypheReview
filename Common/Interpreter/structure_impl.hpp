@@ -9,26 +9,22 @@ NAMESPACE_BEGIN(interp)
     {}
 
     template <class EncodingT>
-    Structure<EncodingT>::~Structure()
-    {}
-
-    template <class EncodingT>
     typename EncodingT::string_t Structure<EncodingT>::toString() const
     {
-        typename EncodingT::string_t str = C("[");
+        typename EncodingT::string_t str = C("{");
         if (!m_container.empty())
         {
             iterator_t last = --m_container.end();
             for (iterator_t i = m_container.begin(); i != m_container.end(); ++i)
             {
-                str += i->first + C(":") + i->second->toString();
+                str += C("\"") + i->first + C("\":") + i->second->toString();
                 if (i != last)
                 {
-                    str += C(";");
+                    str += C(",");
                 }
             }
         }
-        str += C("]");
+        str += C("}");
         return str;
     }
 
@@ -85,11 +81,10 @@ NAMESPACE_BEGIN(interp)
         }
         else if (method == C("Fields") && params.size() == 1)
         {
-            double value = 0;
-            if (check_numeric(params[0], value))
+            size_t index = 0;
+            if (check_numeric_i(params[0], index))
             {
-                size_t index = 0;
-                if (check_index(value, m_container.size(), index))
+                if (check_index(index, m_container.size()))
                 {
                     iterator_t i = this->getField(index);
                     boost::shared_ptr< Structure<EncodingT> > st(new Structure<EncodingT>());

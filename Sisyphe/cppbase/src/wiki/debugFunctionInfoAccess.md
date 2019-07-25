@@ -35,7 +35,7 @@ objects = access.GetAllDebugFunctionInfos();
 *Description*
 * Retourne les objets DebugFunctionInfo de la base de données correspondant à la requête SQL.
 ```
-objects = access.GetManyDebugFunctionInfos("lineNumber = " & value);
+objects = access.GetManyDebugFunctionInfos("name = " & value);
 ```
 
 ## Méthode GetOneDebugFunctionInfo
@@ -76,7 +76,7 @@ object = access.SelectOneDebugFunctionInfo(identifier, false);
 *Description*
 * Verrouille les objets DebugFunctionInfo de la base de données correspondant à la requête SQL.
 ```
-objects = access.SelectManyDebugFunctionInfos("lineNumber = " & value, false);
+objects = access.SelectManyDebugFunctionInfos("name = " & value, false);
 ```
 
 ## Méthode CancelSelection
@@ -105,7 +105,7 @@ access.CancelSelection();
 var = access.IsSelectedDebugFunctionInfo(debugFunctionInfo);
 ```
 
-## Méthode FillCppFunction
+## Méthode FillDebugTypeInfo
 *Paramètres*
 * DebugFunctionInfo : L'objet à remplir.
 
@@ -113,9 +113,22 @@ var = access.IsSelectedDebugFunctionInfo(debugFunctionInfo);
 * None.
 
 *Description*
-* Recupère la donnée cppFunction dans la base de données.
+* Recupère la donnée debugTypeInfo dans la base de données.
 ```
-access.FillCppFunction(debugFunctionInfo);
+access.FillDebugTypeInfo(debugFunctionInfo);
+```
+
+## Méthode FillDebugFileInfo
+*Paramètres*
+* DebugFunctionInfo : L'objet à remplir.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée debugFileInfo dans la base de données.
+```
+access.FillDebugFileInfo(debugFunctionInfo);
 ```
 
 ## Méthode FillAllDebugVariableInfos

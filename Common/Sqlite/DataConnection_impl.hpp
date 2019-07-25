@@ -6,19 +6,20 @@
 NAMESPACE_BEGIN(data_access)
 
 template <class EncodingT>
-sqlite3* 
-_DataConnection<EncodingT>::connection_handle = NULL;
+std::map<typename EncodingT::string_t,sqlite3*>
+_DataConnection<EncodingT>::connection_handles;
 
 template <class EncodingT>
-_DataConnection<EncodingT>* 
-_DataConnection<EncodingT>::m_instance = NULL;
+std::map<typename EncodingT::string_t,_DataConnection<EncodingT>*>
+_DataConnection<EncodingT>::m_instances;
 
 // constructor
 template <class EncodingT>
-_DataConnection<EncodingT>::_DataConnection()
+_DataConnection<EncodingT>::_DataConnection(sqlite3* handle)
 {
     m_logger = &Category::getInstance(LOGNAME);
     m_logger->debugStream() << "creation DataConnection";
+    connection_handle = handle;
     transaction_inProgress = false;
 }
 
@@ -30,33 +31,62 @@ _DataConnection<EncodingT>::openConnection(typename EncodingT::string_t const& h
                                            typename EncodingT::string_t const& user,
                                            typename EncodingT::string_t const& passwd)
 {
-    //open connection
-	//m_logger->debugStream() << "open db connection";
-	return sqlite3_open(A(db).c_str(), &connection_handle) == SQLITE_OK;
+    bool success = false;
+    typename std::map<typename EncodingT::string_t,sqlite3*>::const_iterator i = connection_handles.find(db);
+    if (i == connection_handles.end()) {
+        //open connection
+        //m_logger->debugStream() << "open db connection";
+        sqlite3* connection_handle = NULL;
+        success = (sqlite3_open(A(db).c_str(), &connection_handle) == SQLITE_OK);
+        connection_handles.insert(std::make_pair(db,connection_handle));
+    }
+    return success;
 }
 
 template <class EncodingT>
 void 
-_DataConnection<EncodingT>::closeConnection()
+_DataConnection<EncodingT>::closeConnection(typename EncodingT::string_t const& db)
 {
-    //close connection
-    sqlite3_close(connection_handle);
-	connection_handle = NULL;
-    //m_logger->debugStream() << "db connection closed";
+    bool clear = true;
+    typename std::map<typename EncodingT::string_t,sqlite3*>::const_iterator i = connection_handles.begin();
+    if (!db.empty()) {
+      i = connection_handles.find(db);
+    }
+    while ((i != connection_handles.end()) && clear) {
+        //close connection
+        sqlite3_close(i->second);
+        i = connection_handles.erase(i);
+        //m_logger->debugStream() << "db connection closed";
+        clear = db.empty();
+    }
 }
 
 template <class EncodingT>
 _DataConnection<EncodingT>* 
-_DataConnection<EncodingT>::getInstance()
+_DataConnection<EncodingT>::getInstance(typename EncodingT::string_t const& db)
 {
-    //check connection and create DataConnection
-    if (connection_handle) {
-        if (!m_instance) {
-            m_instance = new _DataConnection<EncodingT>();
-		}
-        return m_instance;
+    typename EncodingT::string_t dbName = db;
+    if (db.empty() && !connection_handles.empty()) {
+      dbName = connection_handles.begin()->first;
     }
-    else return NULL;
+    //check connection and create DataConnection
+    typename std::map<typename EncodingT::string_t,sqlite3*>::const_iterator i = connection_handles.find(dbName);
+    if (i != connection_handles.end()) {
+      sqlite3* handle = i->second;
+      if (handle) {
+          _DataConnection<EncodingT>* instance = NULL;
+          typename std::map<typename EncodingT::string_t,_DataConnection<EncodingT>*>::const_iterator j = m_instances.find(dbName);
+          if (j != m_instances.end()) {
+              instance = j->second;
+          }
+          else {
+              instance = new _DataConnection<EncodingT>(handle);
+              m_instances.insert(std::make_pair(dbName, instance));
+          }
+          return instance;
+      }
+    }
+    return NULL;
 }
 
 template <class EncodingT>
@@ -133,6 +163,11 @@ _DataConnection<EncodingT>::selectForUpdate(std::vector<typename EncodingT::stri
                                             std::vector<typename EncodingT::string_t> const& tables,
                                             typename EncodingT::string_t const& filter, bool nowait)
 {
+    // This method locks data until the end of the transaction.
+    // If NoWait is set, SelectForUpdate returns immediately with an error.
+    // Else SelectForUpdate waits the end of the other process.
+    // -- For Update not supported by sqlite
+    // -- Locks must be performed by Process Synchronization mechanism
     return prepareStatement(formatSelect(columns, tables, filter, false, nowait));
 }
 
@@ -250,6 +285,9 @@ _DataConnection<EncodingT>::selectMaxID(typename EncodingT::string_t const& id,
     int result = 0;
     sqlite3_stmt *statement;
     int res;
+    // This method returns the max Id and locks the table with SELECT FOR UPDATE. 
+    // -- For Update not supported by sqlite
+    // -- Locks must be performed by Process Synchronization mechanism
     string query = string("SELECT max(") + A(id) + ") FROM "+ A(table) + ";";
     m_logger->debugStream() << "query : " << query;
     if (sqlite3_prepare_v2(connection_handle,query.c_str(),-1,&statement,NULL) != SQLITE_OK){

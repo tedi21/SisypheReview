@@ -23,11 +23,11 @@ class _DataInt64Parameter
 : public _DataBaseParameter<EncodingT>
 { 
 private:
-	int m_value;
+	long long m_value;
 	Category* m_logger;
 	
 public:
-	_DataInt64Parameter(int value);
+	_DataInt64Parameter(long long value);
 	
 	// Complete Statement
 	virtual bool 

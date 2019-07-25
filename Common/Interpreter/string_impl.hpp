@@ -1,7 +1,10 @@
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/regex.hpp>
+#include <boost/algorithm/string/replace.hpp>
 #include "Array.hpp"
 #include "Match.hpp"
+#include "Regex.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -23,17 +26,17 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     String<EncodingT>::String(typename EncodingT::char_t const& value)
     {
-        m_value = typename EncodingT::string_t(value);
+        m_value = typename EncodingT::string_t(1, value);
     }
 
     template <class EncodingT>
     String<EncodingT>::String(boost::shared_ptr< Base<EncodingT> > const& value)
     {
         typename EncodingT::string_t str;
-        double size;
-        if (check_numeric(value, size))
+        size_t size;
+        if (check_numeric_i(value, size))
         {
-            m_value.reserve((size_t) size);
+            m_value.reserve(size);
         }
         else if (check_string<EncodingT>(value, str))
         {
@@ -42,19 +45,27 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    String<EncodingT>::~String()
-    {}
-
-    template <class EncodingT>
-    typename EncodingT::string_t const& String<EncodingT>::getValue() const
+    typename EncodingT::string_t const& String<EncodingT>::value() const
     {
         return m_value;
     }
 	
     template <class EncodingT>
-    void String<EncodingT>::setValue(typename EncodingT::string_t const& value)
+    void String<EncodingT>::value(typename EncodingT::string_t const& value)
     {
         m_value = value;
+    }
+    
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > String<EncodingT>::valueAt(size_t i) const
+    {
+        return boost::make_shared< String<EncodingT> >(m_value[i]);
+    }
+    
+    template <class EncodingT>
+    size_t String<EncodingT>::length() const
+    {
+        return m_value.size();
     }
 
     template <class EncodingT>
@@ -83,7 +94,8 @@ NAMESPACE_BEGIN(interp)
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
         {
-            if (tryInvoke(this, C("String"), method, args, ret))
+            if (tryInvoke(this, C("String"), method, args, ret) ||
+                tryInvoke(this, C("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -107,7 +119,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t str;     
         if (check_string<EncodingT>(val, str))
         {
-            res.reset(new String<EncodingT>(toString() + str));
+            res.reset(new String<EncodingT>(m_value + str));
         }
         return res;
     }
@@ -167,7 +179,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t str;     
         if (check_string<EncodingT>(val, str))
         {
-            res.reset(new Bool<EncodingT>(boost::equals(toString(), str)));
+            res.reset(new Bool<EncodingT>(boost::equals(m_value, str)));
         }
         return res;
     }
@@ -179,7 +191,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t str;
         if (check_string<EncodingT>(val, str))
         {
-            res.reset(new Bool<EncodingT>(boost::iequals(toString(), str)));
+            res.reset(new Bool<EncodingT>(boost::iequals(m_value, str)));
         }
         return res;
     }
@@ -187,7 +199,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > String<EncodingT>::size() const
     {
-        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(toString().size()));
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_value.size()));
     }
 
     template <class EncodingT>
@@ -197,7 +209,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t str;     
         if (check_string<EncodingT>(val, str))
         {
-            res.reset(new Bool<EncodingT>(!boost::equals(toString(), str)));
+            res.reset(new Bool<EncodingT>(!boost::equals(m_value, str)));
         }
         return res;
     }
@@ -209,22 +221,79 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t str;
         if (check_string<EncodingT>(val, str))
         {
-            res.reset(new Bool<EncodingT>(!boost::iequals(toString(), str)));
+            res.reset(new Bool<EncodingT>(!boost::iequals(m_value, str)));
         }
         return res;
+    }
+    
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > String<EncodingT>::getValue(boost::shared_ptr< Base<EncodingT> > const& i) const
+    {
+        return this->substring(i, boost::shared_ptr< Numeric<EncodingT> >(new Numeric<EncodingT>(1)));
+    }
+    
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > String<EncodingT>::getList(boost::shared_ptr< Base<EncodingT> > const& i1, boost::shared_ptr< Base<EncodingT> > const& i2) const
+    {
+        boost::shared_ptr< Base<EncodingT> > res(new String<EncodingT>());
+        boost::shared_ptr< Numeric<EncodingT> > ii2  = dynamic_pointer_cast< Numeric<EncodingT> >(i2);
+        if (ii2)
+        {
+            res = this->substring(i1, boost::shared_ptr< Numeric<EncodingT> >(new Numeric<EncodingT>(1))->plus(ii2->minus(i1)));
+        }
+        return res;
+    }
+    
+    
+    template <class EncodingT>
+    void String<EncodingT>::addValue(boost::shared_ptr< Base<EncodingT> > const& val)
+    {
+        this->append(val);
+    }
+
+    template <class EncodingT>
+    void String<EncodingT>::insertValue(boost::shared_ptr< Base<EncodingT> > const& i, boost::shared_ptr< Base<EncodingT> > const& val)
+    {
+        this->insert(i, val);
+    }
+    
+    template <class EncodingT>
+    void String<EncodingT>::insertList(boost::shared_ptr< Base<EncodingT> > const& i1, boost::shared_ptr< Base<EncodingT> > const& i2, boost::shared_ptr< Base<EncodingT> > const& val)
+    {
+        boost::shared_ptr< String<EncodingT> > value  = dynamic_pointer_cast< String<EncodingT> >(val);
+        boost::shared_ptr< Numeric<EncodingT> > ii2  = dynamic_pointer_cast< Numeric<EncodingT> >(i2);
+        if (value && ii2)
+        {
+            this->insert(i1, value->substring(boost::shared_ptr< Numeric<EncodingT> >(new Numeric<EncodingT>(0)), boost::shared_ptr< Numeric<EncodingT> >(new Numeric<EncodingT>(1))->plus(ii2->minus(i1))));
+        }
+    }
+
+    template <class EncodingT>
+    void String<EncodingT>::removeValue(boost::shared_ptr< Base<EncodingT> > const& i)
+    {
+        this->remove(i, boost::shared_ptr< Numeric<EncodingT> >(new Numeric<EncodingT>(1)));
+    }
+    
+    template <class EncodingT>
+    void String<EncodingT>::removeList(boost::shared_ptr< Base<EncodingT> > const& i1, boost::shared_ptr< Base<EncodingT> > const& i2)
+    {
+        boost::shared_ptr< Numeric<EncodingT> > ii2  = dynamic_pointer_cast< Numeric<EncodingT> >(i2);
+        if (ii2)
+        {
+            this->remove(i1, boost::shared_ptr< Numeric<EncodingT> >(new Numeric<EncodingT>(1))->plus(ii2->minus(i1)));
+        }
     }
 
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > String<EncodingT>::match(boost::shared_ptr< Base<EncodingT> > const& regex, boost::shared_ptr< Base<EncodingT> >& matches) const
     {
         boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>(false));
-        typename EncodingT::string_t nativeRegex;
-        if (check_string<EncodingT>(regex, nativeRegex))
+        typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
+        regex_t regexPattern;
+        if (check_regex<EncodingT>(regex, regexPattern))
         {
             try
             {
-                typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
-                regex_t regexPattern(nativeRegex);
                 typename Match<EncodingT>::match_t what;
                 const typename EncodingT::string_t& str = m_value;
                 bool match = boost::regex_match(str, what, regexPattern);
@@ -235,7 +304,7 @@ NAMESPACE_BEGIN(interp)
                     boost::shared_ptr< Match<EncodingT> > matchesObj = dynamic_pointer_cast< Match<EncodingT> >(matches);
                     if (matchesObj)
                     {
-                        matchesObj->setValue(what);
+                        matchesObj->value(what);
                     }
                     else
                     {
@@ -262,15 +331,15 @@ NAMESPACE_BEGIN(interp)
     boost::shared_ptr< Base<EncodingT> > String<EncodingT>::split(boost::shared_ptr< Base<EncodingT> > const& regex) const
     {
         boost::shared_ptr< Array<EncodingT> > res(new Array<EncodingT>());
-        typename EncodingT::string_t nativeRegex;
-        if (check_string<EncodingT>(regex, nativeRegex))
+        typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
+        regex_t regexPattern;
+        if (check_regex<EncodingT>(regex, regexPattern))
         {
             try
             {
-                typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
-                regex_t regexPattern(nativeRegex);
                 std::vector<std::wstring> substring;
-                boost::algorithm::split_regex(substring, toString(), regexPattern);
+                const typename EncodingT::string_t& str = m_value;
+                boost::algorithm::split_regex(substring, str, regexPattern);
 
                 if (!substring.empty())
                 {
@@ -301,16 +370,18 @@ NAMESPACE_BEGIN(interp)
     {
         boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>(false));
         next = end->clone();
-        typename EncodingT::string_t nativeRegex;
-        double nativeStart, nativeEnd;
-        if (check_string<EncodingT>(regex, nativeRegex)  &&
-            check_numeric(start, nativeStart) &&
-            check_numeric(end, nativeEnd))
+        typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
+        regex_t regexPattern;
+        size_t nativeStart, nativeEnd;
+        if (check_regex<EncodingT>(regex, regexPattern) &&
+            check_numeric_i(start, nativeStart) &&
+            check_numeric_i(end, nativeEnd) &&
+            nativeStart < m_value.size() &&
+            nativeStart < nativeEnd &&
+            nativeEnd <= m_value.size())
         {
             try
             {
-                typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
-                regex_t regexPattern(nativeRegex);
                 typename Match<EncodingT>::match_t what;
                 const typename EncodingT::string_t& str = m_value;
                 bool match = boost::regex_search(str.begin()+nativeStart, str.begin()+nativeEnd, what, regexPattern);
@@ -321,7 +392,7 @@ NAMESPACE_BEGIN(interp)
                     boost::shared_ptr< Match<EncodingT> > matchesObj = dynamic_pointer_cast< Match<EncodingT> >(matches);
                     if (matchesObj)
                     {
-                        matchesObj->setValue(what, nativeStart);
+                        matchesObj->value(what, nativeStart);
                     }
                     else
                     {
@@ -332,7 +403,7 @@ NAMESPACE_BEGIN(interp)
                     boost::shared_ptr< Numeric<EncodingT> > nextObj = dynamic_pointer_cast< Numeric<EncodingT> >(next);
                     if (nextObj)
                     {
-                        nextObj->setValue(what[0].second - str.begin());
+                        nextObj->LLvalue(what[0].second - str.begin());
                     }
                     else
                     {
@@ -354,6 +425,65 @@ NAMESPACE_BEGIN(interp)
         }
         return res;
     }
+    
+    template <class EncodingT>
+    void String<EncodingT>::replaceAll(boost::shared_ptr< Base<EncodingT> > const& search, boost::shared_ptr< Base<EncodingT> > const& replace)
+    {
+        typename EncodingT::string_t nativeSearch, nativeReplace;
+        if (check_string<EncodingT>(search, nativeSearch) &&
+            check_string<EncodingT>(replace, nativeReplace))
+        {
+            try
+            {
+                typename EncodingT::string_t& str = m_value;
+                boost::algorithm::replace_all(str, nativeSearch, nativeReplace);
+            }
+            catch (std::exception& ex)
+            {
+                Category * logger = &Category::getInstance(LOGNAME);
+                logger->errorStream() << ex.what();
+            }
+        }
+    }
+    
+    template <class EncodingT>
+    void String<EncodingT>::replaceRegex(boost::shared_ptr< Base<EncodingT> > const& start, boost::shared_ptr< Base<EncodingT> > const& end,
+                                         boost::shared_ptr< Base<EncodingT> > const& regex, boost::shared_ptr< Base<EncodingT> > const& replace)
+    {
+        typedef boost::basic_regex<typename EncodingT::char_t>   regex_t;
+        regex_t regexPattern;
+        size_t nativeStart, nativeEnd;
+        typename EncodingT::string_t nativeReplace;
+        if (check_regex<EncodingT>(regex, regexPattern) &&
+            check_numeric_i(start, nativeStart) &&
+            check_numeric_i(end, nativeEnd) &&
+            check_string<EncodingT>(replace, nativeReplace) &&
+            nativeStart < m_value.size() &&
+            nativeStart < nativeEnd &&
+            nativeEnd <= m_value.size())
+        {
+            try
+            {
+                const typename EncodingT::string_t& str = m_value;
+                std::basic_ostringstream<typename EncodingT::char_t> stream(std::ios::out | std::ios::binary);
+                stream << str.substr(0, nativeStart);
+                std::ostream_iterator<typename EncodingT::char_t, typename EncodingT::char_t> oi(stream);
+                boost::regex_replace(oi, str.begin()+nativeStart, str.begin()+nativeEnd, regexPattern, nativeReplace);
+                stream << str.substr(nativeEnd);
+                m_value = stream.str();
+            }
+            catch (boost::regex_error& re)
+            {
+                Category * logger = &Category::getInstance(LOGNAME);
+                logger->errorStream() << re.what();
+            }
+            catch (std::exception& ex)
+            {
+                Category * logger = &Category::getInstance(LOGNAME);
+                logger->errorStream() << ex.what();
+            }
+        }
+    }
 
     template <class EncodingT>
     void String<EncodingT>::append(boost::shared_ptr< Base<EncodingT> > const& val)
@@ -369,9 +499,10 @@ NAMESPACE_BEGIN(interp)
     void String<EncodingT>::insert(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& val)
     {
         typename EncodingT::string_t nativeStr;
-        double nativePos;
-        if (   check_numeric(pos, nativePos)
-            && check_string<EncodingT>(val, nativeStr))
+        size_t nativePos;
+        if (   check_numeric_i(pos, nativePos)
+            && check_string<EncodingT>(val, nativeStr)
+            && nativePos <= m_value.size())
         {
             m_value.insert(nativePos, nativeStr);
         }
@@ -380,27 +511,43 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     void String<EncodingT>::remove(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& len)
     {
-        double nativePos, nativeLen;
-        if (   check_numeric(pos, nativePos)
-            && check_numeric(len, nativeLen))
+        size_t nativePos, nativeLen;
+        if (   check_numeric_i(pos, nativePos)
+            && check_numeric_i(len, nativeLen)
+            && nativePos < m_value.size())
         {
             m_value.erase(nativePos, nativeLen);
         }
     }
-
+    
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > String<EncodingT>::substring(boost::shared_ptr< Base<EncodingT> > const& pos, boost::shared_ptr< Base<EncodingT> > const& len) const
     {
         boost::shared_ptr< Base<EncodingT> > res(new String<EncodingT>());
-        double nativePos, nativeLen;
-        if (   check_numeric(pos, nativePos)
-            && check_numeric(len, nativeLen))
+        size_t nativePos, nativeLen;
+        if (   check_numeric_i(pos, nativePos)
+            && check_numeric_i(len, nativeLen)
+            && nativePos < m_value.size())
         {
-            res.reset(new String<EncodingT>(toString().substr(nativePos, nativeLen)));
+            res.reset(new String<EncodingT>(m_value.substr(nativePos, nativeLen)));
         }
         return res;
     }
-
+    
+    template <class EncodingT>
+    boost::shared_ptr< Base<EncodingT> > String<EncodingT>::hash() const
+    {
+        std::hash<typename EncodingT::string_t> hash_fn;
+        size_t h = hash_fn(m_value);
+        return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(h));
+    }
+    
+    template <class EncodingT>
+    void String<EncodingT>::trim()
+    {
+        boost::trim(m_value);
+    }
+    
     template <class EncodingT2, class EncodingT>
     bool check_string(boost::shared_ptr< Base<EncodingT> > const& val, typename EncodingT2::string_t& n)
     {
@@ -411,7 +558,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT2, class EncodingT>
     bool check_char(boost::shared_ptr< Base<EncodingT> > const& val, typename EncodingT2::char_t& n)
     {
-        typename EncodingT::string_t tmp = val->toString();
+        const typename EncodingT::string_t& tmp = val->toString();
         if (tmp.size() > 0)
         {
             n = (typename EncodingT2::char_t) tmp[0];
@@ -425,7 +572,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< String<EncodingT> > value  = dynamic_pointer_cast< String<EncodingT> >(val);
         if (value)
         {
-            value->setValue(encode<EncodingT2,EncodingT>(n));
+            value->value(encode<EncodingT2,EncodingT>(n));
         }
         else
         {

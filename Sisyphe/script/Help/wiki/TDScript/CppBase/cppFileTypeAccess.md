@@ -108,7 +108,7 @@ access.FillAllCppFiles(cppFileType, false);
 ## Méthode FillOneCppFile
 *Paramètres*
 * CppFileType : L'objet à remplir.
-* TextFile : L'identifiant textFile de la table cppFile.
+* Numeric : L'identifiant identifier de la table cppFile.
 * Bool : non utilisé.
 
 *Retour*
@@ -117,7 +117,7 @@ access.FillAllCppFiles(cppFileType, false);
 *Description*
 * Recupère la donnée CppFile dans la base de données.
 ```
-access.FillOneCppFile(cppFileType, textFile, false);
+access.FillOneCppFile(cppFileType, identifier, false);
 ```
 
 ## Méthode FillManyCppFiles
@@ -132,7 +132,7 @@ access.FillOneCppFile(cppFileType, textFile, false);
 *Description*
 * Recupère les données CppFile dans la base de données.
 ```
-access.FillManyCppFiles(cppFileType, "textFile = " & value, false);
+access.FillManyCppFiles(cppFileType, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedCppFileType

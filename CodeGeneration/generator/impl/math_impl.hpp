@@ -27,8 +27,8 @@ namespace gen {
     inline typename operation<A,B,OperatorT>::type_t
     operation<A,B,OperatorT>::calculate(TYPE_CONTEXT(DataT) & context) const
     {
-        return m_op(this->left().calculate<DataT>(context), 
-                    this->right().calculate<DataT>(context));
+        return m_op(this->left().template calculate<DataT>(context),
+                    this->right().template calculate<DataT>(context));
     }
 
     template <typename T, typename A, typename B>

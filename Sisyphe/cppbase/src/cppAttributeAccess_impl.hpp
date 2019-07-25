@@ -62,32 +62,35 @@ _CppAttributeAccess<EncodingT>::getManyCppAttributes(typename EncodingT::string_
 	columns.push_back(C("accessSpecifier"));
 	columns.push_back(C("isStatic"));
 	columns.push_back(C("isConst"));
+	columns.push_back(C("isConstexpr"));
 	columns.push_back(C("constValue"));
 	columns.push_back(C("lineNumber"));
 	columns.push_back(C("startBlock"));
 	columns.push_back(C("lengthBlock"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppAttribute")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t attrType;
 		typename EncodingT::string_t name;
 		typename EncodingT::string_t accessSpecifier;
-		int isStatic;
-		int isConst;
+		long long isStatic;
+		long long isConst;
+		long long isConstexpr;
 		typename EncodingT::string_t constValue;
-		int lineNumber;
-		int startBlock;
-		int lengthBlock;
-		if (statement.getInt( 0, identifier ) &&
+		long long lineNumber;
+		long long startBlock;
+		long long lengthBlock;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, attrType ) &&
 			statement.getText( 2, name ) &&
 			statement.getText( 3, accessSpecifier ) &&
-			statement.getInt( 4, isStatic ) &&
-			statement.getInt( 5, isConst ) &&
-			statement.getText( 6, constValue ) &&
-			statement.getInt( 7, lineNumber ) &&
-			statement.getInt( 8, startBlock ) &&
-			statement.getInt( 9, lengthBlock )) {
+			statement.getInt64( 4, isStatic ) &&
+			statement.getInt64( 5, isConst ) &&
+			statement.getInt64( 6, isConstexpr ) &&
+			statement.getText( 7, constValue ) &&
+			statement.getInt64( 8, lineNumber ) &&
+			statement.getInt64( 9, startBlock ) &&
+			statement.getInt64( 10, lengthBlock )) {
 			value.reset(new _CppAttribute<EncodingT>(
 				identifier,
 				attrType,
@@ -95,6 +98,7 @@ _CppAttributeAccess<EncodingT>::getManyCppAttributes(typename EncodingT::string_
 				accessSpecifier,
 				isStatic,
 				isConst,
+				isConstexpr,
 				constValue,
 				lineNumber,
 				startBlock,
@@ -114,7 +118,7 @@ _CppAttributeAccess<EncodingT>::getAllCppAttributes() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppAttribute<EncodingT> >
-_CppAttributeAccess<EncodingT>::getOneCppAttribute(int identifier) const 
+_CppAttributeAccess<EncodingT>::getOneCppAttribute(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -146,6 +150,7 @@ _CppAttributeAccess<EncodingT>::selectManyCppAttributes(typename EncodingT::stri
 	columns.push_back(C("accessSpecifier"));
 	columns.push_back(C("isStatic"));
 	columns.push_back(C("isConst"));
+	columns.push_back(C("isConstexpr"));
 	columns.push_back(C("constValue"));
 	columns.push_back(C("lineNumber"));
 	columns.push_back(C("startBlock"));
@@ -160,26 +165,28 @@ _CppAttributeAccess<EncodingT>::selectManyCppAttributes(typename EncodingT::stri
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppAttribute")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t attrType;
 		typename EncodingT::string_t name;
 		typename EncodingT::string_t accessSpecifier;
-		int isStatic;
-		int isConst;
+		long long isStatic;
+		long long isConst;
+		long long isConstexpr;
 		typename EncodingT::string_t constValue;
-		int lineNumber;
-		int startBlock;
-		int lengthBlock;
-		if (statement.getInt( 0, identifier ) &&
+		long long lineNumber;
+		long long startBlock;
+		long long lengthBlock;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, attrType ) &&
 			statement.getText( 2, name ) &&
 			statement.getText( 3, accessSpecifier ) &&
-			statement.getInt( 4, isStatic ) &&
-			statement.getInt( 5, isConst ) &&
-			statement.getText( 6, constValue ) &&
-			statement.getInt( 7, lineNumber ) &&
-			statement.getInt( 8, startBlock ) &&
-			statement.getInt( 9, lengthBlock )) {
+			statement.getInt64( 4, isStatic ) &&
+			statement.getInt64( 5, isConst ) &&
+			statement.getInt64( 6, isConstexpr ) &&
+			statement.getText( 7, constValue ) &&
+			statement.getInt64( 8, lineNumber ) &&
+			statement.getInt64( 9, startBlock ) &&
+			statement.getInt64( 10, lengthBlock )) {
 			tab.push_back(boost::shared_ptr< _CppAttribute<EncodingT> >(new _CppAttribute<EncodingT>(
 				identifier,
 				attrType,
@@ -187,19 +194,29 @@ _CppAttributeAccess<EncodingT>::selectManyCppAttributes(typename EncodingT::stri
 				accessSpecifier,
 				isStatic,
 				isConst,
+				isConstexpr,
 				constValue,
 				lineNumber,
 				startBlock,
 				lengthBlock)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppAttribute<EncodingT> >
-_CppAttributeAccess<EncodingT>::selectOneCppAttribute(int identifier, bool nowait, bool addition)  
+_CppAttributeAccess<EncodingT>::selectOneCppAttribute(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -271,12 +288,12 @@ _CppAttributeAccess<EncodingT>::fillCppClass(boost::shared_ptr< _CppAttribute<En
 		m_logger->errorStream() << "CppClassAccess class is not initialized.";
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
-	int id;
+	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idClass")), std::vector<typename EncodingT::string_t>(1,C("cppAttribute")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppAttribute<EncodingT>::CppAttributeIDEquality cppAttributeIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
-		typename std::vector< boost::shared_ptr<_CppAttribute<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppAttributeIdEquality);
+		typename std::list< boost::shared_ptr<_CppAttribute<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppAttributeIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppClass(val);
 		}
@@ -301,7 +318,7 @@ _CppAttributeAccess<EncodingT>::isModifiedCppAttribute(boost::shared_ptr< _CppAt
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppAttribute<EncodingT>::CppAttributeIDEquality cppAttributeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppAttributeIdEquality);
+	typename std::list< boost::shared_ptr< _CppAttribute<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppAttributeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -312,6 +329,7 @@ _CppAttributeAccess<EncodingT>::isModifiedCppAttribute(boost::shared_ptr< _CppAt
 	bUpdate = bUpdate || ((*save)->getAccessSpecifier() != o->getAccessSpecifier());
 	bUpdate = bUpdate || ((*save)->getIsStatic() != o->getIsStatic());
 	bUpdate = bUpdate || ((*save)->getIsConst() != o->getIsConst());
+	bUpdate = bUpdate || ((*save)->getIsConstexpr() != o->getIsConstexpr());
 	bUpdate = bUpdate || ((*save)->getConstValue() != o->getConstValue());
 	bUpdate = bUpdate || ((*save)->getLineNumber() != o->getLineNumber());
 	bUpdate = bUpdate || ((*save)->getStartBlock() != o->getStartBlock());
@@ -343,7 +361,7 @@ _CppAttributeAccess<EncodingT>::updateCppAttribute(boost::shared_ptr< _CppAttrib
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppAttribute<EncodingT>::CppAttributeIDEquality cppAttributeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppAttributeIdEquality);
+	typename std::list< boost::shared_ptr< _CppAttribute<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppAttributeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -362,27 +380,31 @@ _CppAttributeAccess<EncodingT>::updateCppAttribute(boost::shared_ptr< _CppAttrib
 			fields.push_back( C("accessSpecifier") );
 		}
 		if ( (*save)->getIsStatic() != o->getIsStatic() ) {
-			values.addInt( o->getIsStatic() );
+			values.addInt64( o->getIsStatic() );
 			fields.push_back( C("isStatic") );
 		}
 		if ( (*save)->getIsConst() != o->getIsConst() ) {
-			values.addInt( o->getIsConst() );
+			values.addInt64( o->getIsConst() );
 			fields.push_back( C("isConst") );
+		}
+		if ( (*save)->getIsConstexpr() != o->getIsConstexpr() ) {
+			values.addInt64( o->getIsConstexpr() );
+			fields.push_back( C("isConstexpr") );
 		}
 		if ( (*save)->getConstValue() != o->getConstValue() ) {
 			values.addText( o->getConstValue() );
 			fields.push_back( C("constValue") );
 		}
 		if ( (*save)->getLineNumber() != o->getLineNumber() ) {
-			values.addInt( o->getLineNumber() );
+			values.addInt64( o->getLineNumber() );
 			fields.push_back( C("lineNumber") );
 		}
 		if ( (*save)->getStartBlock() != o->getStartBlock() ) {
-			values.addInt( o->getStartBlock() );
+			values.addInt64( o->getStartBlock() );
 			fields.push_back( C("startBlock") );
 		}
 		if ( (*save)->getLengthBlock() != o->getLengthBlock() ) {
-			values.addInt( o->getLengthBlock() );
+			values.addInt64( o->getLengthBlock() );
 			fields.push_back( C("lengthBlock") );
 		}
 		if ( !o->isNullCppClass() && typename _CppClass<EncodingT>::CppClassIDEquality(-1)(o->getCppClass()) ) {
@@ -390,7 +412,7 @@ _CppAttributeAccess<EncodingT>::updateCppAttribute(boost::shared_ptr< _CppAttrib
 			throw InvalidQueryException("idClass : Identifier is null.");
 		}
 		else if ( !o->isNullCppClass() && !typename _CppClass<EncodingT>::CppClassIDEquality(*(o->getCppClass()))((*save)->getCppClass()) ) {
-			values.addInt( o->getCppClass()->getIdentifier() );
+			values.addInt64( o->getCppClass()->getIdentifier() );
 			fields.push_back( C("idClass") );
 		}
 		else if ( o->isNullCppClass() && !(*save)->isNullCppClass() ) {
@@ -450,10 +472,12 @@ _CppAttributeAccess<EncodingT>::insertCppAttribute(boost::shared_ptr< _CppAttrib
 		fields.push_back( C("name") );
 		values.addText( o->getAccessSpecifier() );
 		fields.push_back( C("accessSpecifier") );
-		values.addInt( o->getIsStatic() );
+		values.addInt64( o->getIsStatic() );
 		fields.push_back( C("isStatic") );
-		values.addInt( o->getIsConst() );
+		values.addInt64( o->getIsConst() );
 		fields.push_back( C("isConst") );
+		values.addInt64( o->getIsConstexpr() );
+		fields.push_back( C("isConstexpr") );
 		values.addText( o->getConstValue() );
 		fields.push_back( C("constValue") );
 		if ( !o->isNullCppClass() && typename _CppClass<EncodingT>::CppClassIDEquality(-1)(o->getCppClass()) ) {
@@ -461,18 +485,18 @@ _CppAttributeAccess<EncodingT>::insertCppAttribute(boost::shared_ptr< _CppAttrib
 			throw InvalidQueryException("idClass : Identifier is null.");
 		}
 		else if ( !o->isNullCppClass() ) {
-			values.addInt( o->getCppClass()->getIdentifier() );
+			values.addInt64( o->getCppClass()->getIdentifier() );
 			fields.push_back( C("idClass") );
 		}
 		else {
 			m_logger->errorStream() << "idClass : null reference is forbidden.";
 			throw InvalidQueryException("idClass : null reference is forbidden.");
 		}
-		values.addInt( o->getLineNumber() );
+		values.addInt64( o->getLineNumber() );
 		fields.push_back( C("lineNumber") );
-		values.addInt( o->getStartBlock() );
+		values.addInt64( o->getStartBlock() );
 		fields.push_back( C("startBlock") );
-		values.addInt( o->getLengthBlock() );
+		values.addInt64( o->getLengthBlock() );
 		fields.push_back( C("lengthBlock") );
 		statement.swap( connection->insert(C("cppAttribute"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
@@ -515,7 +539,7 @@ _CppAttributeAccess<EncodingT>::deleteCppAttribute(boost::shared_ptr< _CppAttrib
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppAttribute<EncodingT>::CppAttributeIDEquality CppAttributeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppAttribute<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppAttributeIdEquality);
+	typename std::list< boost::shared_ptr< _CppAttribute<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppAttributeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

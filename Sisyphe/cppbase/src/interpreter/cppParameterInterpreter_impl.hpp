@@ -6,159 +6,187 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CppParameterInterpreter<EncodingT>::CppParameterInterpreter()
 {
-	setValue( boost::shared_ptr< _CppParameter<EncodingT> > (new _CppParameter<EncodingT>()) );
+	m_value = boost::make_shared< _CppParameter<EncodingT> >();
 }
 
 template <class EncodingT>
 CppParameterInterpreter<EncodingT>::CppParameterInterpreter(boost::shared_ptr< _CppParameter<EncodingT> > const& value)
 {
-	setValue(value);
+	m_value = value;
 }
 
 template <class EncodingT>
 CppParameterInterpreter<EncodingT>::CppParameterInterpreter(boost::shared_ptr< Base<EncodingT> > const& paramOrder,
 				boost::shared_ptr< Base<EncodingT> > const& paramType,
+				boost::shared_ptr< Base<EncodingT> > const& isConst,
 				boost::shared_ptr< Base<EncodingT> > const& defaultValue,
 				boost::shared_ptr< Base<EncodingT> > const& decName,
+				boost::shared_ptr< Base<EncodingT> > const& decLineNumber,
 				boost::shared_ptr< Base<EncodingT> > const& startDecBlock,
 				boost::shared_ptr< Base<EncodingT> > const& lengthDecBlock,
 				boost::shared_ptr< Base<EncodingT> > const& defName,
+				boost::shared_ptr< Base<EncodingT> > const& defLineNumber,
 				boost::shared_ptr< Base<EncodingT> > const& startDefBlock,
 				boost::shared_ptr< Base<EncodingT> > const& lengthDefBlock)
 {
-	int nativeParamOrder;
+	long long nativeParamOrder;
 	typename EncodingT::string_t nativeParamType;
+	long long nativeIsConst;
 	typename EncodingT::string_t nativeDefaultValue;
 	typename EncodingT::string_t nativeDecName;
-	int nativeStartDecBlock;
-	int nativeLengthDecBlock;
+	long long nativeDecLineNumber;
+	long long nativeStartDecBlock;
+	long long nativeLengthDecBlock;
 	typename EncodingT::string_t nativeDefName;
-	int nativeStartDefBlock;
-	int nativeLengthDefBlock;
-	if (check_numeric(paramOrder, nativeParamOrder) &&
+	long long nativeDefLineNumber;
+	long long nativeStartDefBlock;
+	long long nativeLengthDefBlock;
+	if (check_numeric_i(paramOrder, nativeParamOrder) &&
 		check_string<EncodingT>(paramType, nativeParamType) &&
+		check_numeric_i(isConst, nativeIsConst) &&
 		check_string<EncodingT>(defaultValue, nativeDefaultValue) &&
 		check_string<EncodingT>(decName, nativeDecName) &&
-		check_numeric(startDecBlock, nativeStartDecBlock) &&
-		check_numeric(lengthDecBlock, nativeLengthDecBlock) &&
+		check_numeric_i(decLineNumber, nativeDecLineNumber) &&
+		check_numeric_i(startDecBlock, nativeStartDecBlock) &&
+		check_numeric_i(lengthDecBlock, nativeLengthDecBlock) &&
 		check_string<EncodingT>(defName, nativeDefName) &&
-		check_numeric(startDefBlock, nativeStartDefBlock) &&
-		check_numeric(lengthDefBlock, nativeLengthDefBlock))
+		check_numeric_i(defLineNumber, nativeDefLineNumber) &&
+		check_numeric_i(startDefBlock, nativeStartDefBlock) &&
+		check_numeric_i(lengthDefBlock, nativeLengthDefBlock))
 	{
-		setValue(boost::shared_ptr< _CppParameter<EncodingT> >(new _CppParameter<EncodingT>(nativeParamOrder,
+		m_value = boost::make_shared< _CppParameter<EncodingT> >(nativeParamOrder,
 				nativeParamType,
+				nativeIsConst,
 				nativeDefaultValue,
 				nativeDecName,
+				nativeDecLineNumber,
 				nativeStartDecBlock,
 				nativeLengthDecBlock,
 				nativeDefName,
+				nativeDefLineNumber,
 				nativeStartDefBlock,
-				nativeLengthDefBlock)));
+				nativeLengthDefBlock);
 	}
 }
 
 template <class EncodingT>
-CppParameterInterpreter<EncodingT>::~CppParameterInterpreter()
-{}
-
-template <class EncodingT>
-boost::shared_ptr< _CppParameter<EncodingT> > CppParameterInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CppParameter<EncodingT> > CppParameterInterpreter<EncodingT>::value() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CppParameterInterpreter<EncodingT>::setValue(boost::shared_ptr< _CppParameter<EncodingT> > const& object)
+void CppParameterInterpreter<EncodingT>::value(boost::shared_ptr< _CppParameter<EncodingT> > const& object)
 {
 	m_value = object;
-	String<EncodingT>::setValue(toString());
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getIdentifier() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIdentifier()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getParamOrder() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getParamOrder()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getParamOrder()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getParamType() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getParamType()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getParamType()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getIsConst() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIsConst()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getDefaultValue() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getDefaultValue()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getDefaultValue()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getDecName() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getDecName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getDecName()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getDecLineNumber() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getDecLineNumber()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getStartDecBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartDecBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getStartDecBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getLengthDecBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthDecBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLengthDecBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getDefName() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getDefName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getDefName()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getDefLineNumber() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getDefLineNumber()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getStartDefBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getStartDefBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getStartDefBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getLengthDefBlock() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getLengthDefBlock()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLengthDefBlock()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::getCppFunction()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new CppFunctionInterpreter<EncodingT>(getValue()->getCppFunction()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFunctionInterpreter<EncodingT>(m_value->getCppFunction()) );
 }
 
 
 template <class EncodingT>
 void CppParameterInterpreter<EncodingT>::setParamOrder(boost::shared_ptr< Base<EncodingT> > const& paramOrder)
 {
-	int nativeParamOrder;
-	if (check_numeric(paramOrder, nativeParamOrder))
+	long long nativeParamOrder;
+	if (check_numeric_i(paramOrder, nativeParamOrder))
 	{
-		getValue()->setParamOrder(nativeParamOrder);
+		m_value->setParamOrder(nativeParamOrder);
 	}
 }
 
@@ -169,7 +197,18 @@ void CppParameterInterpreter<EncodingT>::setParamType(boost::shared_ptr< Base<En
 	typename EncodingT::string_t nativeParamType;
 	if (check_string<EncodingT>(paramType, nativeParamType))
 	{
-		getValue()->setParamType(nativeParamType);
+		m_value->setParamType(nativeParamType);
+	}
+}
+
+
+template <class EncodingT>
+void CppParameterInterpreter<EncodingT>::setIsConst(boost::shared_ptr< Base<EncodingT> > const& isConst)
+{
+	long long nativeIsConst;
+	if (check_numeric_i(isConst, nativeIsConst))
+	{
+		m_value->setIsConst(nativeIsConst);
 	}
 }
 
@@ -180,7 +219,7 @@ void CppParameterInterpreter<EncodingT>::setDefaultValue(boost::shared_ptr< Base
 	typename EncodingT::string_t nativeDefaultValue;
 	if (check_string<EncodingT>(defaultValue, nativeDefaultValue))
 	{
-		getValue()->setDefaultValue(nativeDefaultValue);
+		m_value->setDefaultValue(nativeDefaultValue);
 	}
 }
 
@@ -191,7 +230,7 @@ void CppParameterInterpreter<EncodingT>::setCppFunction(boost::shared_ptr< Base<
 	boost::shared_ptr< _CppFunction<EncodingT> > nativeCppFunction;
 	if (check_cppFunction(cppFunction, nativeCppFunction))
 	{
-		getValue()->setCppFunction(nativeCppFunction);
+		m_value->setCppFunction(nativeCppFunction);
 	}
 }
 
@@ -202,7 +241,18 @@ void CppParameterInterpreter<EncodingT>::setDecName(boost::shared_ptr< Base<Enco
 	typename EncodingT::string_t nativeDecName;
 	if (check_string<EncodingT>(decName, nativeDecName))
 	{
-		getValue()->setDecName(nativeDecName);
+		m_value->setDecName(nativeDecName);
+	}
+}
+
+
+template <class EncodingT>
+void CppParameterInterpreter<EncodingT>::setDecLineNumber(boost::shared_ptr< Base<EncodingT> > const& decLineNumber)
+{
+	long long nativeDecLineNumber;
+	if (check_numeric_i(decLineNumber, nativeDecLineNumber))
+	{
+		m_value->setDecLineNumber(nativeDecLineNumber);
 	}
 }
 
@@ -210,10 +260,10 @@ void CppParameterInterpreter<EncodingT>::setDecName(boost::shared_ptr< Base<Enco
 template <class EncodingT>
 void CppParameterInterpreter<EncodingT>::setStartDecBlock(boost::shared_ptr< Base<EncodingT> > const& startDecBlock)
 {
-	int nativeStartDecBlock;
-	if (check_numeric(startDecBlock, nativeStartDecBlock))
+	long long nativeStartDecBlock;
+	if (check_numeric_i(startDecBlock, nativeStartDecBlock))
 	{
-		getValue()->setStartDecBlock(nativeStartDecBlock);
+		m_value->setStartDecBlock(nativeStartDecBlock);
 	}
 }
 
@@ -221,10 +271,10 @@ void CppParameterInterpreter<EncodingT>::setStartDecBlock(boost::shared_ptr< Bas
 template <class EncodingT>
 void CppParameterInterpreter<EncodingT>::setLengthDecBlock(boost::shared_ptr< Base<EncodingT> > const& lengthDecBlock)
 {
-	int nativeLengthDecBlock;
-	if (check_numeric(lengthDecBlock, nativeLengthDecBlock))
+	long long nativeLengthDecBlock;
+	if (check_numeric_i(lengthDecBlock, nativeLengthDecBlock))
 	{
-		getValue()->setLengthDecBlock(nativeLengthDecBlock);
+		m_value->setLengthDecBlock(nativeLengthDecBlock);
 	}
 }
 
@@ -235,7 +285,18 @@ void CppParameterInterpreter<EncodingT>::setDefName(boost::shared_ptr< Base<Enco
 	typename EncodingT::string_t nativeDefName;
 	if (check_string<EncodingT>(defName, nativeDefName))
 	{
-		getValue()->setDefName(nativeDefName);
+		m_value->setDefName(nativeDefName);
+	}
+}
+
+
+template <class EncodingT>
+void CppParameterInterpreter<EncodingT>::setDefLineNumber(boost::shared_ptr< Base<EncodingT> > const& defLineNumber)
+{
+	long long nativeDefLineNumber;
+	if (check_numeric_i(defLineNumber, nativeDefLineNumber))
+	{
+		m_value->setDefLineNumber(nativeDefLineNumber);
 	}
 }
 
@@ -243,10 +304,10 @@ void CppParameterInterpreter<EncodingT>::setDefName(boost::shared_ptr< Base<Enco
 template <class EncodingT>
 void CppParameterInterpreter<EncodingT>::setStartDefBlock(boost::shared_ptr< Base<EncodingT> > const& startDefBlock)
 {
-	int nativeStartDefBlock;
-	if (check_numeric(startDefBlock, nativeStartDefBlock))
+	long long nativeStartDefBlock;
+	if (check_numeric_i(startDefBlock, nativeStartDefBlock))
 	{
-		getValue()->setStartDefBlock(nativeStartDefBlock);
+		m_value->setStartDefBlock(nativeStartDefBlock);
 	}
 }
 
@@ -254,10 +315,10 @@ void CppParameterInterpreter<EncodingT>::setStartDefBlock(boost::shared_ptr< Bas
 template <class EncodingT>
 void CppParameterInterpreter<EncodingT>::setLengthDefBlock(boost::shared_ptr< Base<EncodingT> > const& lengthDefBlock)
 {
-	int nativeLengthDefBlock;
-	if (check_numeric(lengthDefBlock, nativeLengthDefBlock))
+	long long nativeLengthDefBlock;
+	if (check_numeric_i(lengthDefBlock, nativeLengthDefBlock))
 	{
-		getValue()->setLengthDefBlock(nativeLengthDefBlock);
+		m_value->setLengthDefBlock(nativeLengthDefBlock);
 	}
 }
 
@@ -265,28 +326,28 @@ void CppParameterInterpreter<EncodingT>::setLengthDefBlock(boost::shared_ptr< Ba
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::hasCppFunction() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFunction()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!m_value->isNullCppFunction()) );
 }
 
 
 template <class EncodingT>
 void CppParameterInterpreter<EncodingT>::removeCppFunction()
 {
-	getValue()->eraseCppFunction();
+	m_value->eraseCppFunction();
 }
 
 template <class EncodingT>
 typename EncodingT::string_t CppParameterInterpreter<EncodingT>::toString() const
 {
 	std::stringstream stream;
-	stream << *(getValue());
+	stream << *m_value;
 	return C(stream.str());
 }
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::clone() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new CppParameterInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CppParameterInterpreter<EncodingT>(copy_ptr(m_value)));
 }
 
 template <class EncodingT>
@@ -304,7 +365,7 @@ boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::invoke(
 	if (check_parameters_array(params, args))
 	{
 		if (tryInvoke(this, C("CppParameter"), method, args, ret) ||
-			tryInvoke(this, C("String"), method, args, ret))
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -327,7 +388,7 @@ bool check_cppParameter(boost::shared_ptr< Base<EncodingT> > const& val, boost::
 	boost::shared_ptr< CppParameterInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppParameterInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		o = value->getValue();
+		o = value->value();
 	}
 	else
 	{
@@ -343,7 +404,7 @@ bool reset_cppParameter(boost::shared_ptr< Base<EncodingT> >& val, boost::shared
 	boost::shared_ptr< CppParameterInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppParameterInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		value->setValue(o);
+		value->value(o);
 	}
 	else
 	{

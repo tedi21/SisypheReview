@@ -6,61 +6,67 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter()
 {
-	setValue( boost::shared_ptr< _CppInclude<EncodingT> > (new _CppInclude<EncodingT>()) );
+	m_value = boost::make_shared< _CppInclude<EncodingT> >();
 }
 
 template <class EncodingT>
 CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(boost::shared_ptr< _CppInclude<EncodingT> > const& value)
 {
-	setValue(value);
+	m_value = value;
 }
 
 template <class EncodingT>
-CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(boost::shared_ptr< Base<EncodingT> > const& fileName)
+CppIncludeInterpreter<EncodingT>::CppIncludeInterpreter(boost::shared_ptr< Base<EncodingT> > const& fileName,
+				boost::shared_ptr< Base<EncodingT> > const& lineNumber)
 {
 	typename EncodingT::string_t nativeFileName;
-	if (check_string<EncodingT>(fileName, nativeFileName))
+	long long nativeLineNumber;
+	if (check_string<EncodingT>(fileName, nativeFileName) &&
+		check_numeric_i(lineNumber, nativeLineNumber))
 	{
-		setValue(boost::shared_ptr< _CppInclude<EncodingT> >(new _CppInclude<EncodingT>(nativeFileName)));
+		m_value = boost::make_shared< _CppInclude<EncodingT> >(nativeFileName,
+				nativeLineNumber);
 	}
 }
 
 template <class EncodingT>
-CppIncludeInterpreter<EncodingT>::~CppIncludeInterpreter()
-{}
-
-template <class EncodingT>
-boost::shared_ptr< _CppInclude<EncodingT> > CppIncludeInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _CppInclude<EncodingT> > CppIncludeInterpreter<EncodingT>::value() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void CppIncludeInterpreter<EncodingT>::setValue(boost::shared_ptr< _CppInclude<EncodingT> > const& object)
+void CppIncludeInterpreter<EncodingT>::value(boost::shared_ptr< _CppInclude<EncodingT> > const& object)
 {
 	m_value = object;
-	String<EncodingT>::setValue(toString());
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getIdentifier() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getIdentifier()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIdentifier()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getFileName() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getFileName()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getFileName()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getLineNumber() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLineNumber()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::getCppFile()
 {
-	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(getValue()->getCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new CppFileInterpreter<EncodingT>(m_value->getCppFile()) );
 }
 
 
@@ -70,7 +76,7 @@ void CppIncludeInterpreter<EncodingT>::setFileName(boost::shared_ptr< Base<Encod
 	typename EncodingT::string_t nativeFileName;
 	if (check_string<EncodingT>(fileName, nativeFileName))
 	{
-		getValue()->setFileName(nativeFileName);
+		m_value->setFileName(nativeFileName);
 	}
 }
 
@@ -81,7 +87,18 @@ void CppIncludeInterpreter<EncodingT>::setCppFile(boost::shared_ptr< Base<Encodi
 	boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
 	if (check_cppFile(cppFile, nativeCppFile))
 	{
-		getValue()->setCppFile(nativeCppFile);
+		m_value->setCppFile(nativeCppFile);
+	}
+}
+
+
+template <class EncodingT>
+void CppIncludeInterpreter<EncodingT>::setLineNumber(boost::shared_ptr< Base<EncodingT> > const& lineNumber)
+{
+	long long nativeLineNumber;
+	if (check_numeric_i(lineNumber, nativeLineNumber))
+	{
+		m_value->setLineNumber(nativeLineNumber);
 	}
 }
 
@@ -89,28 +106,28 @@ void CppIncludeInterpreter<EncodingT>::setCppFile(boost::shared_ptr< Base<Encodi
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::hasCppFile() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!getValue()->isNullCppFile()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Bool<EncodingT>(!m_value->isNullCppFile()) );
 }
 
 
 template <class EncodingT>
 void CppIncludeInterpreter<EncodingT>::removeCppFile()
 {
-	getValue()->eraseCppFile();
+	m_value->eraseCppFile();
 }
 
 template <class EncodingT>
 typename EncodingT::string_t CppIncludeInterpreter<EncodingT>::toString() const
 {
 	std::stringstream stream;
-	stream << *(getValue());
+	stream << *m_value;
 	return C(stream.str());
 }
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::clone() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new CppIncludeInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new CppIncludeInterpreter<EncodingT>(copy_ptr(m_value)));
 }
 
 template <class EncodingT>
@@ -128,7 +145,7 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::invoke(co
 	if (check_parameters_array(params, args))
 	{
 		if (tryInvoke(this, C("CppInclude"), method, args, ret) ||
-			tryInvoke(this, C("String"), method, args, ret))
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -151,7 +168,7 @@ bool check_cppInclude(boost::shared_ptr< Base<EncodingT> > const& val, boost::sh
 	boost::shared_ptr< CppIncludeInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppIncludeInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		o = value->getValue();
+		o = value->value();
 	}
 	else
 	{
@@ -167,7 +184,7 @@ bool reset_cppInclude(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_p
 	boost::shared_ptr< CppIncludeInterpreter<EncodingT> > value  = dynamic_pointer_cast< CppIncludeInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		value->setValue(o);
+		value->value(o);
 	}
 	else
 	{

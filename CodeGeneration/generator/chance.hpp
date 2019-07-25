@@ -50,5 +50,6 @@
 #include "var.hpp"
 #include "va_arg.hpp"
 #include "condition.hpp"
+#include "eps.hpp"
 
 #endif

@@ -11,7 +11,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > expr = m_instruction->interpret(c);
         boost::shared_ptr< String<EncodingT> > res(new String<EncodingT>(expr->toString()));
 
-        ::system(A(res->getValue()).c_str());
+        ::system(A(res->value()).c_str());
 
         return res;
     }

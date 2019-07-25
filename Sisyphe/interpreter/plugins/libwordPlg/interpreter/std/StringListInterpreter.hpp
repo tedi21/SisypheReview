@@ -42,9 +42,9 @@ NAMESPACE_BEGIN(interp)
 
 		StringListInterpreter(const StringList& object);
 
-		const StringList& getValue() const;
+		const StringList& value() const;
 
-		void setValue(StringList const& object);
+		void value(StringList const& object);
 
 		virtual typename EncodingT::string_t toString() const;
 

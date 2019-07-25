@@ -10,16 +10,27 @@ private:
     void copy(T* lp)
     {
       p = lp;
-      if (p != NULL)
+      if (p)
       {
-        p->AddRef();
+        try 
+        {
+          p->AddRef();
+        }
+        catch (...)
+        {}
       }
     }
     void tidy()
     {
       if (p)
       {
-        p->Release();
+        try 
+        {
+          p->Release();
+        }
+        catch (...)
+        {}
+        p = NULL;
       }
     }
     T* operator=(T* lp) throw();
@@ -29,7 +40,7 @@ public:
     {
       copy(NULL);
     }
-    CDebugPtr(T* lp) throw()
+    explicit CDebugPtr(T* lp) throw()
     {
       copy(lp);
     }

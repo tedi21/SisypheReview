@@ -11,9 +11,17 @@
     this.html = function (buffer) {
       var encoded;
       if (buffer !== undefined) {
-        encoded = buffer.replace(/&/g, '&amp;').replace(/<(?!(span)|(\/span))/g, '&lt;');
+        encoded = buffer.replace(/&(?!(lt|amp);)/g, '&amp;').replace(/<(?!(span)|(\/span))/g, '&lt;');
       }
-      return encoded;
+      return '<span>' + encoded + '</span>';
+    };
+    
+    this.purify = function (buffer) {
+      var raw;
+      if (buffer !== undefined) {
+        raw = buffer.replace(/&(?=(lt|amp);)/g, '&amp;').replace(/<(?=(span)|(\/span))/g, '&lt;');
+      }
+      return raw;
     };
     
     this.countLine = function (buffer, pos) {
@@ -26,21 +34,51 @@
       }
       return line;
     };
-
-    this.getIgnoredLen = function (buffer, index) {
+    
+    this.getHtmlLen = function (buffer, index) {
       var len = 0;
       var i = 0;
+      var a = buffer.indexOf('<', i);
+      var b = buffer.indexOf('&lt;', i);
+      var c = buffer.indexOf('&gt;', i);
+      var d = buffer.indexOf('&amp;', i);
       while ( i <= (index + len) && i >= 0 && i < buffer.length) {
-        var a = buffer.indexOf('<span', i);
-        var b = buffer.indexOf('</span>', i);
+        if ((a < i) && (a != -1)){
+          a = buffer.indexOf('<', i);
+        }
+        if ((b < i) && (b != -1)){
+          b = buffer.indexOf('&lt;', i);
+        }
+        if ((c < i) && (c != -1)){
+          c = buffer.indexOf('&gt;', i);
+        }
+        if ((d < i) && (d != -1)){
+          d = buffer.indexOf('&amp;', i);
+        }
         var l = 0;
-        if (a < b) {
+        if ((a != -1) && (a < b || b == -1) && (a < c || c == -1) && (a < d || d == -1)) {
           i = a;
-          l = buffer.indexOf('">', i) + 2 - i;
+          l = buffer.indexOf('>', i) + 1 - i;
+          if ((i + 5 < buffer.length) && (buffer.substring(i, i + 5) == '</li>')) {
+            i = i + 1;
+            l = l - 1; // (\n)
+          }
+        }
+        else if ((b != -1) && (b < c || c == -1) && (b < d || d == -1)) {
+          i = b + 1;
+          l = 3; // 4 (&lt;) - 1 (<)
+        }
+        else if ((c != -1) && (c < d || d == -1)) {
+          i = c + 1;
+          l = 3; // 4 (&gt;) - 1 (<)
+        }
+        else if (d != -1) {
+          i = d + 1;
+          l = 4; // 5 (&amp;) - 1 (&)
         }
         else {
-          i = b;
-          l = 7;
+          i = -1;
+          l = 0;
         }
         if ( i <= (index + len) && i >= 0 ) {
           len += l;
@@ -58,12 +96,12 @@
     
     this.expandRight = function(buffer, end) {
       var newEnd = end;
-      while (newEnd < (buffer.length-1) && buffer[newEnd+1] != '\n') newEnd++;
+      while (newEnd < buffer.length && buffer[newEnd] != '\r' && buffer[newEnd] != '\n') newEnd++;
       return newEnd;
     };
     
     this.setStyle = function (buffer, start, len, style, title, clickHandler, expandLine) {
-      var offset = this.getIgnoredLen(buffer, start);
+      var offset = this.getHtmlLen(buffer, start);
       var bal1 = '<span class="' + style + '"';
       if (title !== '') {
         bal1 += ' title="' + title + '"';
@@ -86,6 +124,43 @@
       buffer = buffer.splice(end, 0, bal2);
       //console.log(buffer);
       return buffer;
+    };
+    
+    this.setStyle2 = function (buffer, nline, style, title, clickHandler, expandLine) {
+      var str = '<span'
+      var bal = '<span class="' + style + '"';
+      if (title !== '') {
+        bal += ' title="' + title + '"';
+      }
+      if (clickHandler !== '') {
+        bal += ' ng-click="' + clickHandler + '"';
+      }
+      if (expandLine) {
+        str += ' id="L' + nline + '"';
+        bal += ' id="L' + nline + '"';
+      }
+      else {
+        str += ' id="T' + nline + '"';
+        bal += ' id="T' + nline + '"';
+      }
+      str += '>';
+      bal += '>';
+      return buffer.replace(str, bal);
+    };
+    
+    this.raw = function (html) {
+      var decoded;
+      if (html !== undefined) {
+        decoded = html.replace(/<span[^>]*>/g, '');
+        decoded = decoded.replace(/<\/span>/g, '');
+        decoded = decoded.replace(/<\/li><li[^>]*>/g, '\n');
+        decoded = decoded.replace(/<\/li><\/ol>/g, '');
+        decoded = decoded.replace(/<ol[^>]*><li[^>]*>/g, '');
+        decoded = decoded.replace(/&lt;/g, '<');
+        decoded = decoded.replace(/&gt;/g, '>');
+        decoded = decoded.replace(/&amp;/g, '&');
+      }
+      return decoded;
     };
   });
 

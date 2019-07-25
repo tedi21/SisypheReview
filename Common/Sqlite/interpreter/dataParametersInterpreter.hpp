@@ -33,8 +33,6 @@ NAMESPACE_BEGIN(interp)
     public:
         DataParametersInterpreter();
 
-        ~DataParametersInterpreter();
-
         virtual typename EncodingT::string_t toString() const;
 
         virtual boost::shared_ptr< Base<EncodingT> > clone() const;

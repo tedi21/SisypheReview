@@ -35,7 +35,7 @@ objects = access.GetAllDebugFileInfos();
 *Description*
 * Retourne les objets DebugFileInfo de la base de données correspondant à la requête SQL.
 ```
-objects = access.GetManyDebugFileInfos("compilandPath = " & value);
+objects = access.GetManyDebugFileInfos("name = " & value);
 ```
 
 ## Méthode GetOneDebugFileInfo
@@ -76,7 +76,7 @@ object = access.SelectOneDebugFileInfo(identifier, false);
 *Description*
 * Verrouille les objets DebugFileInfo de la base de données correspondant à la requête SQL.
 ```
-objects = access.SelectManyDebugFileInfos("compilandPath = " & value, false);
+objects = access.SelectManyDebugFileInfos("name = " & value, false);
 ```
 
 ## Méthode CancelSelection
@@ -105,7 +105,7 @@ access.CancelSelection();
 var = access.IsSelectedDebugFileInfo(debugFileInfo);
 ```
 
-## Méthode FillCppFile
+## Méthode FillTextFile
 *Paramètres*
 * DebugFileInfo : L'objet à remplir.
 
@@ -113,9 +113,97 @@ var = access.IsSelectedDebugFileInfo(debugFileInfo);
 * None.
 
 *Description*
-* Recupère la donnée cppFile dans la base de données.
+* Recupère la donnée textFile dans la base de données.
 ```
-access.FillCppFile(debugFileInfo);
+access.FillTextFile(debugFileInfo);
+```
+
+## Méthode FillAllDebugFunctionInfos
+*Paramètres*
+* DebugFileInfo : L'objet à remplir.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugFunctionInfo dans la base de données.
+```
+access.FillAllDebugFunctionInfos(debugFileInfo, false);
+```
+
+## Méthode FillAllDebugStubInfos
+*Paramètres*
+* DebugFileInfo : L'objet à remplir.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugStubInfo dans la base de données.
+```
+access.FillAllDebugStubInfos(debugFileInfo, false);
+```
+
+## Méthode FillOneDebugFunctionInfo
+*Paramètres*
+* DebugFileInfo : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table debugFunctionInfo.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée DebugFunctionInfo dans la base de données.
+```
+access.FillOneDebugFunctionInfo(debugFileInfo, identifier, false);
+```
+
+## Méthode FillOneDebugStubInfo
+*Paramètres*
+* DebugFileInfo : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table debugStubInfo.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée DebugStubInfo dans la base de données.
+```
+access.FillOneDebugStubInfo(debugFileInfo, identifier, false);
+```
+
+## Méthode FillManyDebugFunctionInfos
+*Paramètres*
+* DebugFileInfo : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugFunctionInfo dans la base de données.
+```
+access.FillManyDebugFunctionInfos(debugFileInfo, "identifier = " & value, false);
+```
+
+## Méthode FillManyDebugStubInfos
+*Paramètres*
+* DebugFileInfo : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données DebugStubInfo dans la base de données.
+```
+access.FillManyDebugStubInfos(debugFileInfo, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedDebugFileInfo

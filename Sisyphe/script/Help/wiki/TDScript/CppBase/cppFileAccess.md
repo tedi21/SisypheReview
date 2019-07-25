@@ -35,12 +35,12 @@ objects = access.GetAllCppFiles();
 *Description*
 * Retourne les objets CppFile de la base de données correspondant à la requête SQL.
 ```
-objects = access.GetManyCppFiles("textFile = " & value);
+objects = access.GetManyCppFiles("path = " & value);
 ```
 
 ## Méthode GetOneCppFile
 *Paramètres*
-* TextFile : L'identifiant textFile de la table cppFile.
+* Numeric : L'identifiant identifier de la table cppFile.
 
 *Retour*
 * CppFile : L'objet CppFile de la base de données correspondant à l'identifiant.
@@ -48,12 +48,12 @@ objects = access.GetManyCppFiles("textFile = " & value);
 *Description*
 * Retourne l'objet CppFile de la base de données correspondant à l'identifiant.
 ```
-object = access.GetOneCppFile(textFile);
+object = access.GetOneCppFile(identifier);
 ```
 
 ## Méthode SelectOneCppFile
 *Paramètres*
-* TextFile : L'identifiant textFile de la table cppFile.
+* Numeric : L'identifiant identifier de la table cppFile.
 * Bool : non utilisé.
 
 *Retour*
@@ -62,7 +62,7 @@ object = access.GetOneCppFile(textFile);
 *Description*
 * Verrouille l'objet CppFile de la base de données correspondant à l'identifiant.
 ```
-object = access.SelectOneCppFile(textFile, false);
+object = access.SelectOneCppFile(identifier, false);
 ```
 
 ## Méthode SelectManyCppFiles
@@ -76,7 +76,7 @@ object = access.SelectOneCppFile(textFile, false);
 *Description*
 * Verrouille les objets CppFile de la base de données correspondant à la requête SQL.
 ```
-objects = access.SelectManyCppFiles("textFile = " & value, false);
+objects = access.SelectManyCppFiles("path = " & value, false);
 ```
 
 ## Méthode CancelSelection
@@ -103,6 +103,19 @@ access.CancelSelection();
 * Retourne True, si l'objet est verrouillé, False sinon.
 ```
 var = access.IsSelectedCppFile(cppFile);
+```
+
+## Méthode FillTextFile
+*Paramètres*
+* CppFile : L'objet à remplir.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée textFile dans la base de données.
+```
+access.FillTextFile(cppFile);
 ```
 
 ## Méthode FillCppFileType
@@ -146,6 +159,20 @@ access.FillAllCppDeclarationFunctions(cppFile, false);
 access.FillAllCppDefinitionFunctions(cppFile, false);
 ```
 
+## Méthode FillAllCppClasss
+*Paramètres*
+* CppFile : L'objet à remplir.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données CppClass dans la base de données.
+```
+access.FillAllCppClasss(cppFile, false);
+```
+
 ## Méthode FillAllCppIncludes
 *Paramètres*
 * CppFile : L'objet à remplir.
@@ -160,7 +187,7 @@ access.FillAllCppDefinitionFunctions(cppFile, false);
 access.FillAllCppIncludes(cppFile, false);
 ```
 
-## Méthode FillAllCppClasss
+## Méthode FillAllCppVariables
 *Paramètres*
 * CppFile : L'objet à remplir.
 * Bool : non utilisé.
@@ -169,9 +196,9 @@ access.FillAllCppIncludes(cppFile, false);
 * None.
 
 *Description*
-* Recupère les données CppClass dans la base de données.
+* Recupère les données CppVariable dans la base de données.
 ```
-access.FillAllCppClasss(cppFile, false);
+access.FillAllCppVariables(cppFile, false);
 ```
 
 ## Méthode FillAllCppEnums
@@ -202,7 +229,7 @@ access.FillAllCppEnums(cppFile, false);
 access.FillAllCMacros(cppFile, false);
 ```
 
-## Méthode FillAllDebugFileInfos
+## Méthode FillAllCppNotices
 *Paramètres*
 * CppFile : L'objet à remplir.
 * Bool : non utilisé.
@@ -211,9 +238,9 @@ access.FillAllCMacros(cppFile, false);
 * None.
 
 *Description*
-* Recupère les données DebugFileInfo dans la base de données.
+* Recupère les données CppNotice dans la base de données.
 ```
-access.FillAllDebugFileInfos(cppFile, false);
+access.FillAllCppNotices(cppFile, false);
 ```
 
 ## Méthode FillOneCppDeclarationFunction
@@ -246,6 +273,21 @@ access.FillOneCppDeclarationFunction(cppFile, identifier, false);
 access.FillOneCppDefinitionFunction(cppFile, identifier, false);
 ```
 
+## Méthode FillOneCppClass
+*Paramètres*
+* CppFile : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table cppClass.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée CppClass dans la base de données.
+```
+access.FillOneCppClass(cppFile, identifier, false);
+```
+
 ## Méthode FillOneCppInclude
 *Paramètres*
 * CppFile : L'objet à remplir.
@@ -261,19 +303,19 @@ access.FillOneCppDefinitionFunction(cppFile, identifier, false);
 access.FillOneCppInclude(cppFile, identifier, false);
 ```
 
-## Méthode FillOneCppClass
+## Méthode FillOneCppVariable
 *Paramètres*
 * CppFile : L'objet à remplir.
-* Numeric : L'identifiant identifier de la table cppClass.
+* Numeric : L'identifiant identifier de la table cppVariable.
 * Bool : non utilisé.
 
 *Retour*
 * None.
 
 *Description*
-* Recupère la donnée CppClass dans la base de données.
+* Recupère la donnée CppVariable dans la base de données.
 ```
-access.FillOneCppClass(cppFile, identifier, false);
+access.FillOneCppVariable(cppFile, identifier, false);
 ```
 
 ## Méthode FillOneCppEnum
@@ -306,19 +348,19 @@ access.FillOneCppEnum(cppFile, identifier, false);
 access.FillOneCMacro(cppFile, identifier, false);
 ```
 
-## Méthode FillOneDebugFileInfo
+## Méthode FillOneCppNotice
 *Paramètres*
 * CppFile : L'objet à remplir.
-* Numeric : L'identifiant identifier de la table debugFileInfo.
+* Numeric : L'identifiant identifier de la table cppNotice.
 * Bool : non utilisé.
 
 *Retour*
 * None.
 
 *Description*
-* Recupère la donnée DebugFileInfo dans la base de données.
+* Recupère la donnée CppNotice dans la base de données.
 ```
-access.FillOneDebugFileInfo(cppFile, identifier, false);
+access.FillOneCppNotice(cppFile, identifier, false);
 ```
 
 ## Méthode FillManyCppDeclarationFunctions
@@ -351,6 +393,21 @@ access.FillManyCppDeclarationFunctions(cppFile, "identifier = " & value, false);
 access.FillManyCppDefinitionFunctions(cppFile, "identifier = " & value, false);
 ```
 
+## Méthode FillManyCppClasss
+*Paramètres*
+* CppFile : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données CppClass dans la base de données.
+```
+access.FillManyCppClasss(cppFile, "identifier = " & value, false);
+```
+
 ## Méthode FillManyCppIncludes
 *Paramètres*
 * CppFile : L'objet à remplir.
@@ -366,7 +423,7 @@ access.FillManyCppDefinitionFunctions(cppFile, "identifier = " & value, false);
 access.FillManyCppIncludes(cppFile, "identifier = " & value, false);
 ```
 
-## Méthode FillManyCppClasss
+## Méthode FillManyCppVariables
 *Paramètres*
 * CppFile : L'objet à remplir.
 * String : clause WHERE de la recherche SQL.
@@ -376,9 +433,9 @@ access.FillManyCppIncludes(cppFile, "identifier = " & value, false);
 * None.
 
 *Description*
-* Recupère les données CppClass dans la base de données.
+* Recupère les données CppVariable dans la base de données.
 ```
-access.FillManyCppClasss(cppFile, "identifier = " & value, false);
+access.FillManyCppVariables(cppFile, "identifier = " & value, false);
 ```
 
 ## Méthode FillManyCppEnums
@@ -411,7 +468,7 @@ access.FillManyCppEnums(cppFile, "identifier = " & value, false);
 access.FillManyCMacros(cppFile, "identifier = " & value, false);
 ```
 
-## Méthode FillManyDebugFileInfos
+## Méthode FillManyCppNotices
 *Paramètres*
 * CppFile : L'objet à remplir.
 * String : clause WHERE de la recherche SQL.
@@ -421,9 +478,9 @@ access.FillManyCMacros(cppFile, "identifier = " & value, false);
 * None.
 
 *Description*
-* Recupère les données DebugFileInfo dans la base de données.
+* Recupère les données CppNotice dans la base de données.
 ```
-access.FillManyDebugFileInfos(cppFile, "identifier = " & value, false);
+access.FillManyCppNotices(cppFile, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedCppFile

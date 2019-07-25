@@ -16,13 +16,14 @@ var = new CppEnumConstant();
 *Paramètres*
 * String : La valeur de la colonne name.
 * Numeric : La valeur de la colonne defaultValue.
+* Numeric : La valeur de la colonne lineNumber.
 * Numeric : La valeur de la colonne startBlock.
 * Numeric : La valeur de la colonne lengthBlock.
 
 *Description*
 * Crée une instance de la classe CppEnumConstant.
 ```
-var = new CppEnumConstant(name, defaultValue, startBlock, lengthBlock);
+var = new CppEnumConstant(name, defaultValue, lineNumber, startBlock, lengthBlock);
 ```
 
 ## Méthode Identifier
@@ -62,6 +63,19 @@ val = var.Name;
 * Retourne la colonne DefaultValue.
 ```
 val = var.DefaultValue;
+```
+
+## Méthode LineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne lineNumber.
+
+*Description*
+* Retourne la colonne LineNumber.
+```
+val = var.LineNumber;
 ```
 
 ## Méthode StartBlock
@@ -140,6 +154,19 @@ var.DefaultValue(defaultValue);
 * Définit la colonne cppEnum.
 ```
 var.CppEnum(cppEnum);
+```
+
+## Méthode LineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne lineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne lineNumber.
+```
+var.LineNumber(lineNumber);
 ```
 
 ## Méthode StartBlock

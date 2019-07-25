@@ -2,6 +2,7 @@
 #define _NUMERIC_INTERPRETER_HPP_
 
 #include "Interpreter.hpp"
+#include <variant>
 
 using namespace boost;
 using namespace log4cpp;
@@ -13,9 +14,9 @@ NAMESPACE_BEGIN(interp)
     : public Term<EncodingT>
     {
     private:
-        double m_data;
+        std::variant<long long,double> m_data;
     public:
-        NumericConstant(double data)
+        NumericConstant(const std::variant<long long,double>& data)
         : m_data(data)
         {}
         boost::shared_ptr< Base<EncodingT> > interpret(Context<EncodingT> & c);

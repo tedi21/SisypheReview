@@ -55,31 +55,34 @@ _CppFileAccess<EncodingT>::getManyCppFiles(typename EncodingT::string_t const&  
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
-	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("idText"));
+	columns.push_back(C("identifier"));
 	columns.push_back(C("path"));
 	columns.push_back(C("name"));
 	columns.push_back(C("linesCount"));
+	columns.push_back(C("hash"));
+	columns.push_back(C("analyzed"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppFile")), filter) );
 	while( statement.executeStep() ) {
-		int textFile;
+		long long identifier;
 		typename EncodingT::string_t path;
 		typename EncodingT::string_t name;
-		int linesCount;
-		if (statement.getInt( 0, textFile ) &&
+		long long linesCount;
+		long long hash;
+		long long analyzed;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, path ) &&
 			statement.getText( 2, name ) &&
-			statement.getInt( 3, linesCount )) {
+			statement.getInt64( 3, linesCount ) &&
+			statement.getInt64( 4, hash ) &&
+			statement.getInt64( 5, analyzed )) {
 			value.reset(new _CppFile<EncodingT>(
-				textFileAccess->getOneTextFile(textFile),
+				identifier,
 				path,
 				name,
-				linesCount));
+				linesCount,
+				hash,
+				analyzed));
 			tab.push_back(value);
 		}
 	}
@@ -95,13 +98,13 @@ _CppFileAccess<EncodingT>::getAllCppFiles() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppFile<EncodingT> >
-_CppFileAccess<EncodingT>::getOneCppFile(boost::shared_ptr< _TextFile<EncodingT> > textFile) const 
+_CppFileAccess<EncodingT>::getOneCppFile(long long identifier) const 
 {
-	if ( textFile == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(textFile) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( identifier==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = getManyCppFiles(C("idText = ") /*+ C("\'") */+ C(ToString::parse(textFile->getRowid()))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = getManyCppFiles(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -120,16 +123,13 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
-	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("idText"));
+	columns.push_back(C("identifier"));
 	columns.push_back(C("path"));
 	columns.push_back(C("name"));
 	columns.push_back(C("linesCount"));
+	columns.push_back(C("hash"));
+	columns.push_back(C("analyzed"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -140,34 +140,49 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppFile")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int textFile;
+		long long identifier;
 		typename EncodingT::string_t path;
 		typename EncodingT::string_t name;
-		int linesCount;
-		if (statement.getInt( 0, textFile ) &&
+		long long linesCount;
+		long long hash;
+		long long analyzed;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, path ) &&
 			statement.getText( 2, name ) &&
-			statement.getInt( 3, linesCount )) {
+			statement.getInt64( 3, linesCount ) &&
+			statement.getInt64( 4, hash ) &&
+			statement.getInt64( 5, analyzed )) {
 			tab.push_back(boost::shared_ptr< _CppFile<EncodingT> >(new _CppFile<EncodingT>(
-				textFileAccess->selectOneTextFile(textFile, false, true),
+				identifier,
 				path,
 				name,
-				linesCount)));
+				linesCount,
+				hash,
+				analyzed)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppFile<EncodingT> >
-_CppFileAccess<EncodingT>::selectOneCppFile(boost::shared_ptr< _TextFile<EncodingT> > textFile, bool nowait, bool addition)  
+_CppFileAccess<EncodingT>::selectOneCppFile(long long identifier, bool nowait, bool addition)  
 {
-	if ( textFile == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(textFile) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( identifier==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = selectManyCppFiles(C("idText = ") /*+ C("\'") */+ C(ToString::parse(textFile->getRowid()))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = selectManyCppFiles(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -183,9 +198,9 @@ _CppFileAccess<EncodingT>::isSelectedCppFile(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*o);
 	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality)!=m_backup.end()));
@@ -200,11 +215,6 @@ _CppFileAccess<EncodingT>::cancelSelection()
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
-	}
 	_CppFunctionAccess<EncodingT>* cppDeclarationFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDeclarationFunctionAccess) {
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
@@ -215,15 +225,20 @@ _CppFileAccess<EncodingT>::cancelSelection()
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
+	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
+	if (!cppClassAccess) {
+		m_logger->errorStream() << "CppClassAccess class is not initialized.";
+		throw NullPointerException("CppClassAccess class is not initialized.");
+	}
 	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
 	if (!cppIncludeAccess) {
 		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
 		throw NullPointerException("CppIncludeAccess class is not initialized.");
 	}
-	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
-	if (!cppClassAccess) {
-		m_logger->errorStream() << "CppClassAccess class is not initialized.";
-		throw NullPointerException("CppClassAccess class is not initialized.");
+	_CppVariableAccess<EncodingT>* cppVariableAccess = _CppVariableAccess<EncodingT>::getInstance();
+	if (!cppVariableAccess) {
+		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
+		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	_CppEnumAccess<EncodingT>* cppEnumAccess = _CppEnumAccess<EncodingT>::getInstance();
 	if (!cppEnumAccess) {
@@ -235,10 +250,10 @@ _CppFileAccess<EncodingT>::cancelSelection()
 		m_logger->errorStream() << "CMacroAccess class is not initialized.";
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
-	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
-	if (!debugFileInfoAccess) {
-		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
-		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	_CppNoticeAccess<EncodingT>* cppNoticeAccess = _CppNoticeAccess<EncodingT>::getInstance();
+	if (!cppNoticeAccess) {
+		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
+		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
 	if (!m_backup.empty()) {
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
@@ -249,12 +264,52 @@ _CppFileAccess<EncodingT>::cancelSelection()
 		m_backup.clear();
 		cppDeclarationFunctionAccess->cancelSelection();
 		cppDefinitionFunctionAccess->cancelSelection();
-		cppIncludeAccess->cancelSelection();
 		cppClassAccess->cancelSelection();
+		cppIncludeAccess->cancelSelection();
+		cppVariableAccess->cancelSelection();
 		cppEnumAccess->cancelSelection();
 		cMacroAccess->cancelSelection();
-		debugFileInfoAccess->cancelSelection();
-		textFileAccess->cancelSelection();
+		cppNoticeAccess->cancelSelection();
+	}
+}
+
+template<class EncodingT>
+void
+_CppFileAccess<EncodingT>::fillTextFile(boost::shared_ptr< _CppFile<EncodingT> > o)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
+	}
+	_DataStatement<EncodingT> statement;
+	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
+	if (!connection) {
+		m_logger->errorStream() << "DB connection is not initialized.";    
+		throw NullPointerException("DB connection is not initialized.");   
+	}
+	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
+	if (!textFileAccess) {
+		m_logger->errorStream() << "TextFileAccess class is not initialized.";
+		throw NullPointerException("TextFileAccess class is not initialized.");
+	}
+	long long id;
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idText")), std::vector<typename EncodingT::string_t>(1,C("cppFile")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
+		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+		boost::shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
+		typename std::list< boost::shared_ptr<_CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+		if (save != m_backup.end()) {
+			(*save)->setTextFile(val);
+		}
+		o->setTextFile(val);
+	}
+	else {
+		m_logger->errorStream() << "identifier not found.";
+		throw NoSqlRowException("identifier not found.");
 	}
 }
 
@@ -266,9 +321,9 @@ _CppFileAccess<EncodingT>::fillCppFileType(boost::shared_ptr< _CppFile<EncodingT
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_DataStatement<EncodingT> statement;
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
@@ -281,12 +336,12 @@ _CppFileAccess<EncodingT>::fillCppFileType(boost::shared_ptr< _CppFile<EncodingT
 		m_logger->errorStream() << "CppFileTypeAccess class is not initialized.";
 		throw NullPointerException("CppFileTypeAccess class is not initialized.");
 	}
-	int id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idType")), std::vector<typename EncodingT::string_t>(1,C("cppFile")), C("idText = ") /*+ C("\'") */+ C(ToString::parse(o->getTextFile()->getRowid()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
-		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
+	long long id;
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idType")), std::vector<typename EncodingT::string_t>(1,C("cppFile")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
+		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFileType<EncodingT> > val = cppFileTypeAccess->getOneCppFileType(id);
-		typename std::vector< boost::shared_ptr<_CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+		typename std::list< boost::shared_ptr<_CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFileType(val);
 		}
@@ -307,7 +362,7 @@ _CppFileAccess<EncodingT>::fillAllCppDeclarationFunctions(boost::shared_ptr< _Cp
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillOneCppDeclarationFunction(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
+_CppFileAccess<EncodingT>::fillOneCppDeclarationFunction(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
 	fillManyCppDeclarationFunctions(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
@@ -320,9 +375,9 @@ _CppFileAccess<EncodingT>::fillManyCppDeclarationFunctions(boost::shared_ptr< _C
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_CppFunctionAccess<EncodingT>* cppDeclarationFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDeclarationFunctionAccess) {
@@ -330,15 +385,15 @@ _CppFileAccess<EncodingT>::fillManyCppDeclarationFunctions(boost::shared_ptr< _C
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
-	typename EncodingT::string_t cppFunctionFilter = C("idDecFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
+	typename EncodingT::string_t cppFunctionFilter = C("idDecFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppFunctionFilter += C(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = cppDeclarationFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait);
+		tab = cppDeclarationFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait, true);
 		(*save)->clearCppDeclarationFunctions();
 		(*save)->insertCppDeclarationFunction((*save)->getCppDeclarationFunctionsEnd(), tab.begin(), tab.end());
 	}
@@ -359,7 +414,7 @@ _CppFileAccess<EncodingT>::fillAllCppDefinitionFunctions(boost::shared_ptr< _Cpp
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillOneCppDefinitionFunction(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
+_CppFileAccess<EncodingT>::fillOneCppDefinitionFunction(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
 	fillManyCppDefinitionFunctions(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
@@ -372,9 +427,9 @@ _CppFileAccess<EncodingT>::fillManyCppDefinitionFunctions(boost::shared_ptr< _Cp
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_CppFunctionAccess<EncodingT>* cppDefinitionFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDefinitionFunctionAccess) {
@@ -382,15 +437,15 @@ _CppFileAccess<EncodingT>::fillManyCppDefinitionFunctions(boost::shared_ptr< _Cp
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
-	typename EncodingT::string_t cppFunctionFilter = C("idDefFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
+	typename EncodingT::string_t cppFunctionFilter = C("idDefFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppFunctionFilter += C(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = cppDefinitionFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait);
+		tab = cppDefinitionFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait, true);
 		(*save)->clearCppDefinitionFunctions();
 		(*save)->insertCppDefinitionFunction((*save)->getCppDefinitionFunctionsEnd(), tab.begin(), tab.end());
 	}
@@ -404,58 +459,6 @@ _CppFileAccess<EncodingT>::fillManyCppDefinitionFunctions(boost::shared_ptr< _Cp
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillAllCppIncludes(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
-{
-	fillManyCppIncludes(o, EncodingT::EMPTY, nowait);
-}
-
-template<class EncodingT>
-void
-_CppFileAccess<EncodingT>::fillOneCppInclude(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
-{
-	fillManyCppIncludes(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
-}
-
-template<class EncodingT>
-void
-_CppFileAccess<EncodingT>::fillManyCppIncludes(boost::shared_ptr< _CppFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
-{
-	if (!o) {
-		m_logger->errorStream() << "Parameter is null.";
-		throw NullPointerException("Parameter is null.");
-	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
-	}
-	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
-	if (!cppIncludeAccess) {
-		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
-		throw NullPointerException("CppIncludeAccess class is not initialized.");
-	}
-	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > tab;
-	typename EncodingT::string_t cppIncludeFilter = C("idFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
-	if (!filter.empty()) {
-		cppIncludeFilter += C(" AND ") + filter;
-	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
-	if (save != m_backup.end())
-	{
-		tab = cppIncludeAccess->selectManyCppIncludes(cppIncludeFilter, nowait);
-		(*save)->clearCppIncludes();
-		(*save)->insertCppInclude((*save)->getCppIncludesEnd(), tab.begin(), tab.end());
-	}
-	else
-	{
-		tab = cppIncludeAccess->getManyCppIncludes(cppIncludeFilter);
-	}
-	o->clearCppIncludes();
-	o->insertCppInclude(o->getCppIncludesEnd(), tab.begin(), tab.end());
-}
-
-template<class EncodingT>
-void
 _CppFileAccess<EncodingT>::fillAllCppClasss(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
 {
 	fillManyCppClasss(o, EncodingT::EMPTY, nowait);
@@ -463,7 +466,7 @@ _CppFileAccess<EncodingT>::fillAllCppClasss(boost::shared_ptr< _CppFile<Encoding
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillOneCppClass(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
+_CppFileAccess<EncodingT>::fillOneCppClass(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
 	fillManyCppClasss(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
@@ -476,9 +479,9 @@ _CppFileAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
 	if (!cppClassAccess) {
@@ -486,15 +489,15 @@ _CppFileAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< _CppFile<Encodin
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppClass<EncodingT> > > tab;
-	typename EncodingT::string_t cppClassFilter = C("idFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
+	typename EncodingT::string_t cppClassFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppClassFilter += C(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = cppClassAccess->selectManyCppClasss(cppClassFilter, nowait);
+		tab = cppClassAccess->selectManyCppClasss(cppClassFilter, nowait, true);
 		(*save)->clearCppClasss();
 		(*save)->insertCppClass((*save)->getCppClasssEnd(), tab.begin(), tab.end());
 	}
@@ -508,6 +511,110 @@ _CppFileAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< _CppFile<Encodin
 
 template<class EncodingT>
 void
+_CppFileAccess<EncodingT>::fillAllCppIncludes(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
+{
+	fillManyCppIncludes(o, EncodingT::EMPTY, nowait);
+}
+
+template<class EncodingT>
+void
+_CppFileAccess<EncodingT>::fillOneCppInclude(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
+{
+	fillManyCppIncludes(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+}
+
+template<class EncodingT>
+void
+_CppFileAccess<EncodingT>::fillManyCppIncludes(boost::shared_ptr< _CppFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
+	}
+	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
+	if (!cppIncludeAccess) {
+		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
+		throw NullPointerException("CppIncludeAccess class is not initialized.");
+	}
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > tab;
+	typename EncodingT::string_t cppIncludeFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	if (!filter.empty()) {
+		cppIncludeFilter += C(" AND ") + filter;
+	}
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	if (save != m_backup.end())
+	{
+		tab = cppIncludeAccess->selectManyCppIncludes(cppIncludeFilter, nowait, true);
+		(*save)->clearCppIncludes();
+		(*save)->insertCppInclude((*save)->getCppIncludesEnd(), tab.begin(), tab.end());
+	}
+	else
+	{
+		tab = cppIncludeAccess->getManyCppIncludes(cppIncludeFilter);
+	}
+	o->clearCppIncludes();
+	o->insertCppInclude(o->getCppIncludesEnd(), tab.begin(), tab.end());
+}
+
+template<class EncodingT>
+void
+_CppFileAccess<EncodingT>::fillAllCppVariables(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
+{
+	fillManyCppVariables(o, EncodingT::EMPTY, nowait);
+}
+
+template<class EncodingT>
+void
+_CppFileAccess<EncodingT>::fillOneCppVariable(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
+{
+	fillManyCppVariables(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+}
+
+template<class EncodingT>
+void
+_CppFileAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< _CppFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
+	}
+	_CppVariableAccess<EncodingT>* cppVariableAccess = _CppVariableAccess<EncodingT>::getInstance();
+	if (!cppVariableAccess) {
+		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
+		throw NullPointerException("CppVariableAccess class is not initialized.");
+	}
+	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > tab;
+	typename EncodingT::string_t cppVariableFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	if (!filter.empty()) {
+		cppVariableFilter += C(" AND ") + filter;
+	}
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	if (save != m_backup.end())
+	{
+		tab = cppVariableAccess->selectManyCppVariables(cppVariableFilter, nowait, true);
+		(*save)->clearCppVariables();
+		(*save)->insertCppVariable((*save)->getCppVariablesEnd(), tab.begin(), tab.end());
+	}
+	else
+	{
+		tab = cppVariableAccess->getManyCppVariables(cppVariableFilter);
+	}
+	o->clearCppVariables();
+	o->insertCppVariable(o->getCppVariablesEnd(), tab.begin(), tab.end());
+}
+
+template<class EncodingT>
+void
 _CppFileAccess<EncodingT>::fillAllCppEnums(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
 {
 	fillManyCppEnums(o, EncodingT::EMPTY, nowait);
@@ -515,7 +622,7 @@ _CppFileAccess<EncodingT>::fillAllCppEnums(boost::shared_ptr< _CppFile<EncodingT
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillOneCppEnum(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
+_CppFileAccess<EncodingT>::fillOneCppEnum(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
 	fillManyCppEnums(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
@@ -528,9 +635,9 @@ _CppFileAccess<EncodingT>::fillManyCppEnums(boost::shared_ptr< _CppFile<Encoding
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_CppEnumAccess<EncodingT>* cppEnumAccess = _CppEnumAccess<EncodingT>::getInstance();
 	if (!cppEnumAccess) {
@@ -538,15 +645,15 @@ _CppFileAccess<EncodingT>::fillManyCppEnums(boost::shared_ptr< _CppFile<Encoding
 		throw NullPointerException("CppEnumAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > tab;
-	typename EncodingT::string_t cppEnumFilter = C("idFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
+	typename EncodingT::string_t cppEnumFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cppEnumFilter += C(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = cppEnumAccess->selectManyCppEnums(cppEnumFilter, nowait);
+		tab = cppEnumAccess->selectManyCppEnums(cppEnumFilter, nowait, true);
 		(*save)->clearCppEnums();
 		(*save)->insertCppEnum((*save)->getCppEnumsEnd(), tab.begin(), tab.end());
 	}
@@ -567,7 +674,7 @@ _CppFileAccess<EncodingT>::fillAllCMacros(boost::shared_ptr< _CppFile<EncodingT>
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillOneCMacro(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
+_CppFileAccess<EncodingT>::fillOneCMacro(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
 	fillManyCMacros(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
@@ -580,9 +687,9 @@ _CppFileAccess<EncodingT>::fillManyCMacros(boost::shared_ptr< _CppFile<EncodingT
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_CMacroAccess<EncodingT>* cMacroAccess = _CMacroAccess<EncodingT>::getInstance();
 	if (!cMacroAccess) {
@@ -590,15 +697,15 @@ _CppFileAccess<EncodingT>::fillManyCMacros(boost::shared_ptr< _CppFile<EncodingT
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CMacro<EncodingT> > > tab;
-	typename EncodingT::string_t cMacroFilter = C("idFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
+	typename EncodingT::string_t cMacroFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
 		cMacroFilter += C(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = cMacroAccess->selectManyCMacros(cMacroFilter, nowait);
+		tab = cMacroAccess->selectManyCMacros(cMacroFilter, nowait, true);
 		(*save)->clearCMacros();
 		(*save)->insertCMacro((*save)->getCMacrosEnd(), tab.begin(), tab.end());
 	}
@@ -612,54 +719,54 @@ _CppFileAccess<EncodingT>::fillManyCMacros(boost::shared_ptr< _CppFile<EncodingT
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillAllDebugFileInfos(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
+_CppFileAccess<EncodingT>::fillAllCppNotices(boost::shared_ptr< _CppFile<EncodingT> > o, bool nowait)  
 {
-	fillManyDebugFileInfos(o, EncodingT::EMPTY, nowait);
+	fillManyCppNotices(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillOneDebugFileInfo(boost::shared_ptr< _CppFile<EncodingT> > o, int identifier, bool nowait)  
+_CppFileAccess<EncodingT>::fillOneCppNotice(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyDebugFileInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppNotices(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_ptr< _CppFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_CppFileAccess<EncodingT>::fillManyCppNotices(boost::shared_ptr< _CppFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
-	if (!debugFileInfoAccess) {
-		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
-		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	_CppNoticeAccess<EncodingT>* cppNoticeAccess = _CppNoticeAccess<EncodingT>::getInstance();
+	if (!cppNoticeAccess) {
+		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
+		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
-	std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > tab;
-	typename EncodingT::string_t debugFileInfoFilter = C("idFile = ") + C(ToString::parse(o->getTextFile()->getRowid()));
+	std::vector< boost::shared_ptr< _CppNotice<EncodingT> > > tab;
+	typename EncodingT::string_t cppNoticeFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		debugFileInfoFilter += C(" AND ") + filter;
+		cppNoticeFilter += C(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getTextFile());
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = debugFileInfoAccess->selectManyDebugFileInfos(debugFileInfoFilter, nowait);
-		(*save)->clearDebugFileInfos();
-		(*save)->insertDebugFileInfo((*save)->getDebugFileInfosEnd(), tab.begin(), tab.end());
+		tab = cppNoticeAccess->selectManyCppNotices(cppNoticeFilter, nowait, true);
+		(*save)->clearCppNotices();
+		(*save)->insertCppNotice((*save)->getCppNoticesEnd(), tab.begin(), tab.end());
 	}
 	else
 	{
-		tab = debugFileInfoAccess->getManyDebugFileInfos(debugFileInfoFilter);
+		tab = cppNoticeAccess->getManyCppNotices(cppNoticeFilter);
 	}
-	o->clearDebugFileInfos();
-	o->insertDebugFileInfo(o->getDebugFileInfosEnd(), tab.begin(), tab.end());
+	o->clearCppNotices();
+	o->insertCppNotice(o->getCppNoticesEnd(), tab.begin(), tab.end());
 }
 
 template<class EncodingT>
@@ -670,14 +777,9 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
-	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_CppFunctionAccess<EncodingT>* cppDeclarationFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDeclarationFunctionAccess) {
@@ -689,15 +791,20 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
+	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
+	if (!cppClassAccess) {
+		m_logger->errorStream() << "CppClassAccess class is not initialized.";
+		throw NullPointerException("CppClassAccess class is not initialized.");
+	}
 	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
 	if (!cppIncludeAccess) {
 		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
 		throw NullPointerException("CppIncludeAccess class is not initialized.");
 	}
-	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
-	if (!cppClassAccess) {
-		m_logger->errorStream() << "CppClassAccess class is not initialized.";
-		throw NullPointerException("CppClassAccess class is not initialized.");
+	_CppVariableAccess<EncodingT>* cppVariableAccess = _CppVariableAccess<EncodingT>::getInstance();
+	if (!cppVariableAccess) {
+		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
+		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	_CppEnumAccess<EncodingT>* cppEnumAccess = _CppEnumAccess<EncodingT>::getInstance();
 	if (!cppEnumAccess) {
@@ -709,13 +816,13 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "CMacroAccess class is not initialized.";
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
-	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
-	if (!debugFileInfoAccess) {
-		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
-		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	_CppNoticeAccess<EncodingT>* cppNoticeAccess = _CppNoticeAccess<EncodingT>::getInstance();
+	if (!cppNoticeAccess) {
+		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
+		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -724,6 +831,11 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 	bUpdate = bUpdate || ((*save)->getPath() != o->getPath());
 	bUpdate = bUpdate || ((*save)->getName() != o->getName());
 	bUpdate = bUpdate || ((*save)->getLinesCount() != o->getLinesCount());
+	bUpdate = bUpdate || ((*save)->getHash() != o->getHash());
+	bUpdate = bUpdate || ((*save)->getAnalyzed() != o->getAnalyzed());
+	bUpdate = bUpdate || (!(*save)->isNullTextFile() && !o->isNullTextFile() && !typename _TextFile<EncodingT>::TextFileIDEquality(*(*save)->getTextFile())(o->getTextFile()))
+		|| ((*save)->isNullTextFile() && !o->isNullTextFile()) 
+		|| (!(*save)->isNullTextFile() && o->isNullTextFile());
 	bUpdate = bUpdate || (!(*save)->isNullCppFileType() && !o->isNullCppFileType() && !typename _CppFileType<EncodingT>::CppFileTypeIDEquality(*(*save)->getCppFileType())(o->getCppFileType()))
 		|| ((*save)->isNullCppFileType() && !o->isNullCppFileType()) 
 		|| (!(*save)->isNullCppFileType() && o->isNullCppFileType());
@@ -763,6 +875,24 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppDefinitionFunctionIdEquality(*(*cppDefinitionFunction));
 		bUpdate = bUpdate || (std::find_if(o->getCppDefinitionFunctionsBeginning(), o->getCppDefinitionFunctionsEnd(), cppDefinitionFunctionIdEquality) == o->getCppDefinitionFunctionsEnd());
 	}
+	typename _CppFile<EncodingT>::CppClassIterator cppClass;
+	for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
+		if (!(*cppClass)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
+		bUpdate = bUpdate || (std::find_if((*save)->getCppClasssBeginning(), (*save)->getCppClasssEnd(), cppClassIdEquality) == (*save)->getCppClasssEnd())
+			|| (cppClassAccess->isModifiedCppClass(*cppClass));
+	}
+	for ( cppClass=(*save)->getCppClasssBeginning(); cppClass<(*save)->getCppClasssEnd(); ++cppClass ) {
+		if (!(*cppClass)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
+		bUpdate = bUpdate || (std::find_if(o->getCppClasssBeginning(), o->getCppClasssEnd(), cppClassIdEquality) == o->getCppClasssEnd());
+	}
 	typename _CppFile<EncodingT>::CppIncludeIterator cppInclude;
 	for ( cppInclude=o->getCppIncludesBeginning(); cppInclude!=o->getCppIncludesEnd(); ++cppInclude ) {
 		if (!(*cppInclude)) {
@@ -781,23 +911,23 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(*(*cppInclude));
 		bUpdate = bUpdate || (std::find_if(o->getCppIncludesBeginning(), o->getCppIncludesEnd(), cppIncludeIdEquality) == o->getCppIncludesEnd());
 	}
-	typename _CppFile<EncodingT>::CppClassIterator cppClass;
-	for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
-		if (!(*cppClass)) {
+	typename _CppFile<EncodingT>::CppVariableIterator cppVariable;
+	for ( cppVariable=o->getCppVariablesBeginning(); cppVariable!=o->getCppVariablesEnd(); ++cppVariable ) {
+		if (!(*cppVariable)) {
 			m_logger->errorStream() << "Aggregate is null.";
 			throw NullPointerException("Aggregate is null.");
 		}
-		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
-		bUpdate = bUpdate || (std::find_if((*save)->getCppClasssBeginning(), (*save)->getCppClasssEnd(), cppClassIdEquality) == (*save)->getCppClasssEnd())
-			|| (cppClassAccess->isModifiedCppClass(*cppClass));
+		typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*(*cppVariable));
+		bUpdate = bUpdate || (std::find_if((*save)->getCppVariablesBeginning(), (*save)->getCppVariablesEnd(), cppVariableIdEquality) == (*save)->getCppVariablesEnd())
+			|| (cppVariableAccess->isModifiedCppVariable(*cppVariable));
 	}
-	for ( cppClass=(*save)->getCppClasssBeginning(); cppClass<(*save)->getCppClasssEnd(); ++cppClass ) {
-		if (!(*cppClass)) {
+	for ( cppVariable=(*save)->getCppVariablesBeginning(); cppVariable<(*save)->getCppVariablesEnd(); ++cppVariable ) {
+		if (!(*cppVariable)) {
 			m_logger->errorStream() << "Aggregate is null.";
 			throw NullPointerException("Aggregate is null.");
 		}
-		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
-		bUpdate = bUpdate || (std::find_if(o->getCppClasssBeginning(), o->getCppClasssEnd(), cppClassIdEquality) == o->getCppClasssEnd());
+		typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*(*cppVariable));
+		bUpdate = bUpdate || (std::find_if(o->getCppVariablesBeginning(), o->getCppVariablesEnd(), cppVariableIdEquality) == o->getCppVariablesEnd());
 	}
 	typename _CppFile<EncodingT>::CppEnumIterator cppEnum;
 	for ( cppEnum=o->getCppEnumsBeginning(); cppEnum!=o->getCppEnumsEnd(); ++cppEnum ) {
@@ -835,25 +965,24 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(*(*cMacro));
 		bUpdate = bUpdate || (std::find_if(o->getCMacrosBeginning(), o->getCMacrosEnd(), cMacroIdEquality) == o->getCMacrosEnd());
 	}
-	typename _CppFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
-	for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
-		if (!(*debugFileInfo)) {
+	typename _CppFile<EncodingT>::CppNoticeIterator cppNotice;
+	for ( cppNotice=o->getCppNoticesBeginning(); cppNotice!=o->getCppNoticesEnd(); ++cppNotice ) {
+		if (!(*cppNotice)) {
 			m_logger->errorStream() << "Aggregate is null.";
 			throw NullPointerException("Aggregate is null.");
 		}
-		typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
-		bUpdate = bUpdate || (std::find_if((*save)->getDebugFileInfosBeginning(), (*save)->getDebugFileInfosEnd(), debugFileInfoIdEquality) == (*save)->getDebugFileInfosEnd())
-			|| (debugFileInfoAccess->isModifiedDebugFileInfo(*debugFileInfo));
+		typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*(*cppNotice));
+		bUpdate = bUpdate || (std::find_if((*save)->getCppNoticesBeginning(), (*save)->getCppNoticesEnd(), cppNoticeIdEquality) == (*save)->getCppNoticesEnd())
+			|| (cppNoticeAccess->isModifiedCppNotice(*cppNotice));
 	}
-	for ( debugFileInfo=(*save)->getDebugFileInfosBeginning(); debugFileInfo<(*save)->getDebugFileInfosEnd(); ++debugFileInfo ) {
-		if (!(*debugFileInfo)) {
+	for ( cppNotice=(*save)->getCppNoticesBeginning(); cppNotice<(*save)->getCppNoticesEnd(); ++cppNotice ) {
+		if (!(*cppNotice)) {
 			m_logger->errorStream() << "Aggregate is null.";
 			throw NullPointerException("Aggregate is null.");
 		}
-		typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
-		bUpdate = bUpdate || (std::find_if(o->getDebugFileInfosBeginning(), o->getDebugFileInfosEnd(), debugFileInfoIdEquality) == o->getDebugFileInfosEnd());
+		typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*(*cppNotice));
+		bUpdate = bUpdate || (std::find_if(o->getCppNoticesBeginning(), o->getCppNoticesEnd(), cppNoticeIdEquality) == o->getCppNoticesEnd());
 	}
-	bUpdate = bUpdate || textFileAccess->isModifiedTextFile(o->getTextFile());
 	return bUpdate;
 }
 
@@ -868,19 +997,14 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 	_DataParameters<EncodingT> values;
 	_DataStatement<EncodingT> statement;
 	std::vector<typename EncodingT::string_t> fields;
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
-	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
 	}
 	_CppFunctionAccess<EncodingT>* cppDeclarationFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDeclarationFunctionAccess) {
@@ -892,15 +1016,20 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
+	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
+	if (!cppClassAccess) {
+		m_logger->errorStream() << "CppClassAccess class is not initialized.";
+		throw NullPointerException("CppClassAccess class is not initialized.");
+	}
 	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
 	if (!cppIncludeAccess) {
 		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
 		throw NullPointerException("CppIncludeAccess class is not initialized.");
 	}
-	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
-	if (!cppClassAccess) {
-		m_logger->errorStream() << "CppClassAccess class is not initialized.";
-		throw NullPointerException("CppClassAccess class is not initialized.");
+	_CppVariableAccess<EncodingT>* cppVariableAccess = _CppVariableAccess<EncodingT>::getInstance();
+	if (!cppVariableAccess) {
+		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
+		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	_CppEnumAccess<EncodingT>* cppEnumAccess = _CppEnumAccess<EncodingT>::getInstance();
 	if (!cppEnumAccess) {
@@ -912,13 +1041,13 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CMacroAccess class is not initialized.";
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
-	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
-	if (!debugFileInfoAccess) {
-		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
-		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	_CppNoticeAccess<EncodingT>* cppNoticeAccess = _CppNoticeAccess<EncodingT>::getInstance();
+	if (!cppNoticeAccess) {
+		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
+		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -933,15 +1062,35 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			fields.push_back( C("name") );
 		}
 		if ( (*save)->getLinesCount() != o->getLinesCount() ) {
-			values.addInt( o->getLinesCount() );
+			values.addInt64( o->getLinesCount() );
 			fields.push_back( C("linesCount") );
+		}
+		if ( (*save)->getHash() != o->getHash() ) {
+			values.addInt64( o->getHash() );
+			fields.push_back( C("hash") );
+		}
+		if ( (*save)->getAnalyzed() != o->getAnalyzed() ) {
+			values.addInt64( o->getAnalyzed() );
+			fields.push_back( C("analyzed") );
+		}
+		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
+			m_logger->errorStream() << "idText : Identifier is null.";
+			throw InvalidQueryException("idText : Identifier is null.");
+		}
+		else if ( !o->isNullTextFile() && !typename _TextFile<EncodingT>::TextFileIDEquality(*(o->getTextFile()))((*save)->getTextFile()) ) {
+			values.addInt64( o->getTextFile()->getRowid() );
+			fields.push_back( C("idText") );
+		}
+		else if ( o->isNullTextFile() && !(*save)->isNullTextFile() ) {
+			m_logger->errorStream() << "idText : null reference is forbidden.";
+			throw InvalidQueryException("idText : null reference is forbidden.");
 		}
 		if ( !o->isNullCppFileType() && typename _CppFileType<EncodingT>::CppFileTypeIDEquality(-1)(o->getCppFileType()) ) {
 			m_logger->errorStream() << "idType : Identifier is null.";
 			throw InvalidQueryException("idType : Identifier is null.");
 		}
 		else if ( !o->isNullCppFileType() && !typename _CppFileType<EncodingT>::CppFileTypeIDEquality(*(o->getCppFileType()))((*save)->getCppFileType()) ) {
-			values.addInt( o->getCppFileType()->getIdentifier() );
+			values.addInt64( o->getCppFileType()->getIdentifier() );
 			fields.push_back( C("idType") );
 		}
 		else if ( o->isNullCppFileType() && !(*save)->isNullCppFileType() ) {
@@ -1006,6 +1155,35 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 				listOfCppDefinitionFunctionToRemove.push_back(*cppDefinitionFunction);
 			}
 		}
+		std::vector< boost::shared_ptr< _CppClass<EncodingT> > > listOfCppClassToAdd;
+		std::vector< boost::shared_ptr< _CppClass<EncodingT> > > listOfCppClassToUpdate;
+		typename _CppFile<EncodingT>::CppClassIterator cppClass;
+		for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
+			if (!(*cppClass)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			(*cppClass)->setCppFile(o);
+			typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
+			if ( std::find_if((*save)->getCppClasssBeginning(), (*save)->getCppClasssEnd(), cppClassIdEquality) == (*save)->getCppClasssEnd()) {
+				listOfCppClassToAdd.push_back(*cppClass);
+			}
+			else {
+				if (cppClassAccess->isModifiedCppClass(*cppClass))
+					listOfCppClassToUpdate.push_back(*cppClass);
+			}
+		}
+		std::vector< boost::shared_ptr< _CppClass<EncodingT> > > listOfCppClassToRemove;
+		for ( cppClass=(*save)->getCppClasssBeginning(); cppClass<(*save)->getCppClasssEnd(); ++cppClass ) {
+			if (!(*cppClass)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
+			if ( std::find_if(o->getCppClasssBeginning(), o->getCppClasssEnd(), cppClassIdEquality) == o->getCppClasssEnd()) {
+				listOfCppClassToRemove.push_back(*cppClass);
+			}
+		}
 		std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > listOfCppIncludeToAdd;
 		std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > listOfCppIncludeToUpdate;
 		typename _CppFile<EncodingT>::CppIncludeIterator cppInclude;
@@ -1035,33 +1213,33 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 				listOfCppIncludeToRemove.push_back(*cppInclude);
 			}
 		}
-		std::vector< boost::shared_ptr< _CppClass<EncodingT> > > listOfCppClassToAdd;
-		std::vector< boost::shared_ptr< _CppClass<EncodingT> > > listOfCppClassToUpdate;
-		typename _CppFile<EncodingT>::CppClassIterator cppClass;
-		for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
-			if (!(*cppClass)) {
+		std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToAdd;
+		std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToUpdate;
+		typename _CppFile<EncodingT>::CppVariableIterator cppVariable;
+		for ( cppVariable=o->getCppVariablesBeginning(); cppVariable!=o->getCppVariablesEnd(); ++cppVariable ) {
+			if (!(*cppVariable)) {
 				m_logger->errorStream() << "Aggregate is null.";
 				throw NullPointerException("Aggregate is null.");
 			}
-			(*cppClass)->setCppFile(o);
-			typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
-			if ( std::find_if((*save)->getCppClasssBeginning(), (*save)->getCppClasssEnd(), cppClassIdEquality) == (*save)->getCppClasssEnd()) {
-				listOfCppClassToAdd.push_back(*cppClass);
+			(*cppVariable)->setCppFile(o);
+			typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*(*cppVariable));
+			if ( std::find_if((*save)->getCppVariablesBeginning(), (*save)->getCppVariablesEnd(), cppVariableIdEquality) == (*save)->getCppVariablesEnd()) {
+				listOfCppVariableToAdd.push_back(*cppVariable);
 			}
 			else {
-				if (cppClassAccess->isModifiedCppClass(*cppClass))
-					listOfCppClassToUpdate.push_back(*cppClass);
+				if (cppVariableAccess->isModifiedCppVariable(*cppVariable))
+					listOfCppVariableToUpdate.push_back(*cppVariable);
 			}
 		}
-		std::vector< boost::shared_ptr< _CppClass<EncodingT> > > listOfCppClassToRemove;
-		for ( cppClass=(*save)->getCppClasssBeginning(); cppClass<(*save)->getCppClasssEnd(); ++cppClass ) {
-			if (!(*cppClass)) {
+		std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > listOfCppVariableToRemove;
+		for ( cppVariable=(*save)->getCppVariablesBeginning(); cppVariable<(*save)->getCppVariablesEnd(); ++cppVariable ) {
+			if (!(*cppVariable)) {
 				m_logger->errorStream() << "Aggregate is null.";
 				throw NullPointerException("Aggregate is null.");
 			}
-			typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*(*cppClass));
-			if ( std::find_if(o->getCppClasssBeginning(), o->getCppClasssEnd(), cppClassIdEquality) == o->getCppClasssEnd()) {
-				listOfCppClassToRemove.push_back(*cppClass);
+			typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*(*cppVariable));
+			if ( std::find_if(o->getCppVariablesBeginning(), o->getCppVariablesEnd(), cppVariableIdEquality) == o->getCppVariablesEnd()) {
+				listOfCppVariableToRemove.push_back(*cppVariable);
 			}
 		}
 		std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > listOfCppEnumToAdd;
@@ -1122,37 +1300,37 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 				listOfCMacroToRemove.push_back(*cMacro);
 			}
 		}
-		std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > listOfDebugFileInfoToAdd;
-		std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > listOfDebugFileInfoToUpdate;
-		typename _CppFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
-		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
-			if (!(*debugFileInfo)) {
+		std::vector< boost::shared_ptr< _CppNotice<EncodingT> > > listOfCppNoticeToAdd;
+		std::vector< boost::shared_ptr< _CppNotice<EncodingT> > > listOfCppNoticeToUpdate;
+		typename _CppFile<EncodingT>::CppNoticeIterator cppNotice;
+		for ( cppNotice=o->getCppNoticesBeginning(); cppNotice!=o->getCppNoticesEnd(); ++cppNotice ) {
+			if (!(*cppNotice)) {
 				m_logger->errorStream() << "Aggregate is null.";
 				throw NullPointerException("Aggregate is null.");
 			}
-			(*debugFileInfo)->setCppFile(o);
-			typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
-			if ( std::find_if((*save)->getDebugFileInfosBeginning(), (*save)->getDebugFileInfosEnd(), debugFileInfoIdEquality) == (*save)->getDebugFileInfosEnd()) {
-				listOfDebugFileInfoToAdd.push_back(*debugFileInfo);
+			(*cppNotice)->setCppFile(o);
+			typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*(*cppNotice));
+			if ( std::find_if((*save)->getCppNoticesBeginning(), (*save)->getCppNoticesEnd(), cppNoticeIdEquality) == (*save)->getCppNoticesEnd()) {
+				listOfCppNoticeToAdd.push_back(*cppNotice);
 			}
 			else {
-				if (debugFileInfoAccess->isModifiedDebugFileInfo(*debugFileInfo))
-					listOfDebugFileInfoToUpdate.push_back(*debugFileInfo);
+				if (cppNoticeAccess->isModifiedCppNotice(*cppNotice))
+					listOfCppNoticeToUpdate.push_back(*cppNotice);
 			}
 		}
-		std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > listOfDebugFileInfoToRemove;
-		for ( debugFileInfo=(*save)->getDebugFileInfosBeginning(); debugFileInfo<(*save)->getDebugFileInfosEnd(); ++debugFileInfo ) {
-			if (!(*debugFileInfo)) {
+		std::vector< boost::shared_ptr< _CppNotice<EncodingT> > > listOfCppNoticeToRemove;
+		for ( cppNotice=(*save)->getCppNoticesBeginning(); cppNotice<(*save)->getCppNoticesEnd(); ++cppNotice ) {
+			if (!(*cppNotice)) {
 				m_logger->errorStream() << "Aggregate is null.";
 				throw NullPointerException("Aggregate is null.");
 			}
-			typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
-			if ( std::find_if(o->getDebugFileInfosBeginning(), o->getDebugFileInfosEnd(), debugFileInfoIdEquality) == o->getDebugFileInfosEnd()) {
-				listOfDebugFileInfoToRemove.push_back(*debugFileInfo);
+			typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*(*cppNotice));
+			if ( std::find_if(o->getCppNoticesBeginning(), o->getCppNoticesEnd(), cppNoticeIdEquality) == o->getCppNoticesEnd()) {
+				listOfCppNoticeToRemove.push_back(*cppNotice);
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("cppFile"), fields, C("idText = ") /*+ C("\'") */+ C(ToString::parse(o->getTextFile()->getRowid()))/* + C("\'")*/) );
+			statement.swap( connection->update(C("cppFile"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
@@ -1166,7 +1344,9 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			cppDeclarationFunctionAccess->updateCppFunction(*cppDeclarationFunction);
 		}
 		for ( cppDeclarationFunction=listOfCppDeclarationFunctionToRemove.begin(); cppDeclarationFunction!=listOfCppDeclarationFunctionToRemove.end() ; ++cppDeclarationFunction ) {
-			cppDeclarationFunctionAccess->deleteCppFunction(*cppDeclarationFunction);
+			cppDeclarationFunctionAccess->fillCppDeclarationFile(*cppDeclarationFunction);
+			(*cppDeclarationFunction)->eraseCppDeclarationFile();
+			cppDeclarationFunctionAccess->updateCppFunction(*cppDeclarationFunction);
 		}
 		for ( cppDefinitionFunction=listOfCppDefinitionFunctionToAdd.begin(); cppDefinitionFunction!=listOfCppDefinitionFunctionToAdd.end() ; ++cppDefinitionFunction ) {
 			cppDefinitionFunctionAccess->insertCppFunction(*cppDefinitionFunction);
@@ -1175,7 +1355,18 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			cppDefinitionFunctionAccess->updateCppFunction(*cppDefinitionFunction);
 		}
 		for ( cppDefinitionFunction=listOfCppDefinitionFunctionToRemove.begin(); cppDefinitionFunction!=listOfCppDefinitionFunctionToRemove.end() ; ++cppDefinitionFunction ) {
-			cppDefinitionFunctionAccess->deleteCppFunction(*cppDefinitionFunction);
+			cppDefinitionFunctionAccess->fillCppDefinitionFile(*cppDefinitionFunction);
+			(*cppDefinitionFunction)->eraseCppDefinitionFile();
+			cppDefinitionFunctionAccess->updateCppFunction(*cppDefinitionFunction);
+		}
+		for ( cppClass=listOfCppClassToAdd.begin(); cppClass!=listOfCppClassToAdd.end() ; ++cppClass ) {
+			cppClassAccess->insertCppClass(*cppClass);
+		}
+		for ( cppClass=listOfCppClassToUpdate.begin(); cppClass!=listOfCppClassToUpdate.end() ; ++cppClass ) {
+			cppClassAccess->updateCppClass(*cppClass);
+		}
+		for ( cppClass=listOfCppClassToRemove.begin(); cppClass!=listOfCppClassToRemove.end() ; ++cppClass ) {
+			cppClassAccess->deleteCppClass(*cppClass);
 		}
 		for ( cppInclude=listOfCppIncludeToAdd.begin(); cppInclude!=listOfCppIncludeToAdd.end() ; ++cppInclude ) {
 			cppIncludeAccess->insertCppInclude(*cppInclude);
@@ -1186,14 +1377,14 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		for ( cppInclude=listOfCppIncludeToRemove.begin(); cppInclude!=listOfCppIncludeToRemove.end() ; ++cppInclude ) {
 			cppIncludeAccess->deleteCppInclude(*cppInclude);
 		}
-		for ( cppClass=listOfCppClassToAdd.begin(); cppClass!=listOfCppClassToAdd.end() ; ++cppClass ) {
-			cppClassAccess->insertCppClass(*cppClass);
+		for ( cppVariable=listOfCppVariableToAdd.begin(); cppVariable!=listOfCppVariableToAdd.end() ; ++cppVariable ) {
+			cppVariableAccess->insertCppVariable(*cppVariable);
 		}
-		for ( cppClass=listOfCppClassToUpdate.begin(); cppClass!=listOfCppClassToUpdate.end() ; ++cppClass ) {
-			cppClassAccess->updateCppClass(*cppClass);
+		for ( cppVariable=listOfCppVariableToUpdate.begin(); cppVariable!=listOfCppVariableToUpdate.end() ; ++cppVariable ) {
+			cppVariableAccess->updateCppVariable(*cppVariable);
 		}
-		for ( cppClass=listOfCppClassToRemove.begin(); cppClass!=listOfCppClassToRemove.end() ; ++cppClass ) {
-			cppClassAccess->deleteCppClass(*cppClass);
+		for ( cppVariable=listOfCppVariableToRemove.begin(); cppVariable!=listOfCppVariableToRemove.end() ; ++cppVariable ) {
+			cppVariableAccess->deleteCppVariable(*cppVariable);
 		}
 		for ( cppEnum=listOfCppEnumToAdd.begin(); cppEnum!=listOfCppEnumToAdd.end() ; ++cppEnum ) {
 			cppEnumAccess->insertCppEnum(*cppEnum);
@@ -1213,17 +1404,14 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		for ( cMacro=listOfCMacroToRemove.begin(); cMacro!=listOfCMacroToRemove.end() ; ++cMacro ) {
 			cMacroAccess->deleteCMacro(*cMacro);
 		}
-		for ( debugFileInfo=listOfDebugFileInfoToAdd.begin(); debugFileInfo!=listOfDebugFileInfoToAdd.end() ; ++debugFileInfo ) {
-			debugFileInfoAccess->insertDebugFileInfo(*debugFileInfo);
+		for ( cppNotice=listOfCppNoticeToAdd.begin(); cppNotice!=listOfCppNoticeToAdd.end() ; ++cppNotice ) {
+			cppNoticeAccess->insertCppNotice(*cppNotice);
 		}
-		for ( debugFileInfo=listOfDebugFileInfoToUpdate.begin(); debugFileInfo!=listOfDebugFileInfoToUpdate.end() ; ++debugFileInfo ) {
-			debugFileInfoAccess->updateDebugFileInfo(*debugFileInfo);
+		for ( cppNotice=listOfCppNoticeToUpdate.begin(); cppNotice!=listOfCppNoticeToUpdate.end() ; ++cppNotice ) {
+			cppNoticeAccess->updateCppNotice(*cppNotice);
 		}
-		for ( debugFileInfo=listOfDebugFileInfoToRemove.begin(); debugFileInfo!=listOfDebugFileInfoToRemove.end() ; ++debugFileInfo ) {
-			debugFileInfoAccess->deleteDebugFileInfo(*debugFileInfo);
-		}
-		if (textFileAccess->isModifiedTextFile(o->getTextFile())) {
-			textFileAccess->updateTextFile(o->getTextFile());
+		for ( cppNotice=listOfCppNoticeToRemove.begin(); cppNotice!=listOfCppNoticeToRemove.end() ; ++cppNotice ) {
+			cppNoticeAccess->deleteCppNotice(*cppNotice);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -1255,11 +1443,6 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
-	}
 	_CppFunctionAccess<EncodingT>* cppDeclarationFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDeclarationFunctionAccess) {
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
@@ -1270,15 +1453,20 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
+	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
+	if (!cppClassAccess) {
+		m_logger->errorStream() << "CppClassAccess class is not initialized.";
+		throw NullPointerException("CppClassAccess class is not initialized.");
+	}
 	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
 	if (!cppIncludeAccess) {
 		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
 		throw NullPointerException("CppIncludeAccess class is not initialized.");
 	}
-	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
-	if (!cppClassAccess) {
-		m_logger->errorStream() << "CppClassAccess class is not initialized.";
-		throw NullPointerException("CppClassAccess class is not initialized.");
+	_CppVariableAccess<EncodingT>* cppVariableAccess = _CppVariableAccess<EncodingT>::getInstance();
+	if (!cppVariableAccess) {
+		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
+		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	_CppEnumAccess<EncodingT>* cppEnumAccess = _CppEnumAccess<EncodingT>::getInstance();
 	if (!cppEnumAccess) {
@@ -1290,10 +1478,10 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CMacroAccess class is not initialized.";
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
-	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
-	if (!debugFileInfoAccess) {
-		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
-		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	_CppNoticeAccess<EncodingT>* cppNoticeAccess = _CppNoticeAccess<EncodingT>::getInstance();
+	if (!cppNoticeAccess) {
+		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
+		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
 	try {
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -1301,11 +1489,15 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile())) {
-			textFileAccess->insertTextFile(o->getTextFile());
+		int id = connection->selectMaxID(C("identifier"), C("cppFile"))+1;
+		values.addInt( id );
+		fields.push_back( C("identifier") );
+		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
+			m_logger->errorStream() << "idText : Identifier is null.";
+			throw InvalidQueryException("idText : Identifier is null.");
 		}
-		if ( !o->isNullTextFile() ) {
-			values.addInt( o->getTextFile()->getRowid() );
+		else if ( !o->isNullTextFile() ) {
+			values.addInt64( o->getTextFile()->getRowid() );
 			fields.push_back( C("idText") );
 		}
 		else {
@@ -1321,20 +1513,25 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			throw InvalidQueryException("idType : Identifier is null.");
 		}
 		else if ( !o->isNullCppFileType() ) {
-			values.addInt( o->getCppFileType()->getIdentifier() );
+			values.addInt64( o->getCppFileType()->getIdentifier() );
 			fields.push_back( C("idType") );
 		}
 		else {
 			m_logger->errorStream() << "idType : null reference is forbidden.";
 			throw InvalidQueryException("idType : null reference is forbidden.");
 		}
-		values.addInt( o->getLinesCount() );
+		values.addInt64( o->getLinesCount() );
 		fields.push_back( C("linesCount") );
+		values.addInt64( o->getHash() );
+		fields.push_back( C("hash") );
+		values.addInt64( o->getAnalyzed() );
+		fields.push_back( C("analyzed") );
 		statement.swap( connection->insert(C("cppFile"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
+		o->setIdentifier(id);
 		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppFile"), o);
 		typename _CppFile<EncodingT>::CppDeclarationFunctionIterator cppDeclarationFunction;
 		for ( cppDeclarationFunction=o->getCppDeclarationFunctionsBeginning(); cppDeclarationFunction!=o->getCppDeclarationFunctionsEnd(); ++cppDeclarationFunction ) {
@@ -1346,15 +1543,20 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			(*cppDefinitionFunction)->setCppDefinitionFile(o);
 			cppDefinitionFunctionAccess->insertCppFunction(*cppDefinitionFunction);
 		}
+		typename _CppFile<EncodingT>::CppClassIterator cppClass;
+		for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
+			(*cppClass)->setCppFile(o);
+			cppClassAccess->insertCppClass(*cppClass);
+		}
 		typename _CppFile<EncodingT>::CppIncludeIterator cppInclude;
 		for ( cppInclude=o->getCppIncludesBeginning(); cppInclude!=o->getCppIncludesEnd(); ++cppInclude ) {
 			(*cppInclude)->setCppFile(o);
 			cppIncludeAccess->insertCppInclude(*cppInclude);
 		}
-		typename _CppFile<EncodingT>::CppClassIterator cppClass;
-		for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
-			(*cppClass)->setCppFile(o);
-			cppClassAccess->insertCppClass(*cppClass);
+		typename _CppFile<EncodingT>::CppVariableIterator cppVariable;
+		for ( cppVariable=o->getCppVariablesBeginning(); cppVariable!=o->getCppVariablesEnd(); ++cppVariable ) {
+			(*cppVariable)->setCppFile(o);
+			cppVariableAccess->insertCppVariable(*cppVariable);
 		}
 		typename _CppFile<EncodingT>::CppEnumIterator cppEnum;
 		for ( cppEnum=o->getCppEnumsBeginning(); cppEnum!=o->getCppEnumsEnd(); ++cppEnum ) {
@@ -1366,10 +1568,10 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			(*cMacro)->setCppFile(o);
 			cMacroAccess->insertCMacro(*cMacro);
 		}
-		typename _CppFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
-		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
-			(*debugFileInfo)->setCppFile(o);
-			debugFileInfoAccess->insertDebugFileInfo(*debugFileInfo);
+		typename _CppFile<EncodingT>::CppNoticeIterator cppNotice;
+		for ( cppNotice=o->getCppNoticesBeginning(); cppNotice!=o->getCppNoticesEnd(); ++cppNotice ) {
+			(*cppNotice)->setCppFile(o);
+			cppNoticeAccess->insertCppNotice(*cppNotice);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -1388,26 +1590,21 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 
 template<class EncodingT>
 void
-_CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> > o, bool deleteid)  
+_CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
 		throw NullPointerException("Parameter is null.");
 	}
 	_DataStatement<EncodingT> statement;
-	if ( o->getTextFile() == NULL || typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
-		m_logger->errorStream() << "TextFile : Identifier is null.";
-		throw UnIdentifiedObjectException("TextFile : Identifier is null.");
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
 	if (!connection) {
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
-	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
 	}
 	_CppFunctionAccess<EncodingT>* cppDeclarationFunctionAccess = _CppFunctionAccess<EncodingT>::getInstance();
 	if (!cppDeclarationFunctionAccess) {
@@ -1419,15 +1616,20 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
+	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
+	if (!cppClassAccess) {
+		m_logger->errorStream() << "CppClassAccess class is not initialized.";
+		throw NullPointerException("CppClassAccess class is not initialized.");
+	}
 	_CppIncludeAccess<EncodingT>* cppIncludeAccess = _CppIncludeAccess<EncodingT>::getInstance();
 	if (!cppIncludeAccess) {
 		m_logger->errorStream() << "CppIncludeAccess class is not initialized.";
 		throw NullPointerException("CppIncludeAccess class is not initialized.");
 	}
-	_CppClassAccess<EncodingT>* cppClassAccess = _CppClassAccess<EncodingT>::getInstance();
-	if (!cppClassAccess) {
-		m_logger->errorStream() << "CppClassAccess class is not initialized.";
-		throw NullPointerException("CppClassAccess class is not initialized.");
+	_CppVariableAccess<EncodingT>* cppVariableAccess = _CppVariableAccess<EncodingT>::getInstance();
+	if (!cppVariableAccess) {
+		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
+		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	_CppEnumAccess<EncodingT>* cppEnumAccess = _CppEnumAccess<EncodingT>::getInstance();
 	if (!cppEnumAccess) {
@@ -1439,13 +1641,13 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CMacroAccess class is not initialized.";
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
-	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
-	if (!debugFileInfoAccess) {
-		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
-		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	_CppNoticeAccess<EncodingT>* cppNoticeAccess = _CppNoticeAccess<EncodingT>::getInstance();
+	if (!cppNoticeAccess) {
+		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
+		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality CppFileIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileIdEquality);
+	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -1454,22 +1656,31 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		typename _CppFile<EncodingT>::CppDeclarationFunctionIterator cppDeclarationFunction;
 		fillAllCppDeclarationFunctions(o);
 		for ( cppDeclarationFunction=o->getCppDeclarationFunctionsBeginning(); cppDeclarationFunction!=o->getCppDeclarationFunctionsEnd(); ++cppDeclarationFunction ) {
-			cppDeclarationFunctionAccess->deleteCppFunction(*cppDeclarationFunction);
+			cppDeclarationFunctionAccess->fillCppDeclarationFile(*cppDeclarationFunction);
+			(*cppDeclarationFunction)->eraseCppDeclarationFile();
+			cppDeclarationFunctionAccess->updateCppFunction(*cppDeclarationFunction);
 		}
 		typename _CppFile<EncodingT>::CppDefinitionFunctionIterator cppDefinitionFunction;
 		fillAllCppDefinitionFunctions(o);
 		for ( cppDefinitionFunction=o->getCppDefinitionFunctionsBeginning(); cppDefinitionFunction!=o->getCppDefinitionFunctionsEnd(); ++cppDefinitionFunction ) {
-			cppDefinitionFunctionAccess->deleteCppFunction(*cppDefinitionFunction);
+			cppDefinitionFunctionAccess->fillCppDefinitionFile(*cppDefinitionFunction);
+			(*cppDefinitionFunction)->eraseCppDefinitionFile();
+			cppDefinitionFunctionAccess->updateCppFunction(*cppDefinitionFunction);
+		}
+		typename _CppFile<EncodingT>::CppClassIterator cppClass;
+		fillAllCppClasss(o);
+		for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
+			cppClassAccess->deleteCppClass(*cppClass);
 		}
 		typename _CppFile<EncodingT>::CppIncludeIterator cppInclude;
 		fillAllCppIncludes(o);
 		for ( cppInclude=o->getCppIncludesBeginning(); cppInclude!=o->getCppIncludesEnd(); ++cppInclude ) {
 			cppIncludeAccess->deleteCppInclude(*cppInclude);
 		}
-		typename _CppFile<EncodingT>::CppClassIterator cppClass;
-		fillAllCppClasss(o);
-		for ( cppClass=o->getCppClasssBeginning(); cppClass!=o->getCppClasssEnd(); ++cppClass ) {
-			cppClassAccess->deleteCppClass(*cppClass);
+		typename _CppFile<EncodingT>::CppVariableIterator cppVariable;
+		fillAllCppVariables(o);
+		for ( cppVariable=o->getCppVariablesBeginning(); cppVariable!=o->getCppVariablesEnd(); ++cppVariable ) {
+			cppVariableAccess->deleteCppVariable(*cppVariable);
 		}
 		typename _CppFile<EncodingT>::CppEnumIterator cppEnum;
 		fillAllCppEnums(o);
@@ -1481,26 +1692,24 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		for ( cMacro=o->getCMacrosBeginning(); cMacro!=o->getCMacrosEnd(); ++cMacro ) {
 			cMacroAccess->deleteCMacro(*cMacro);
 		}
-		typename _CppFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
-		fillAllDebugFileInfos(o);
-		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
-			debugFileInfoAccess->deleteDebugFileInfo(*debugFileInfo);
+		typename _CppFile<EncodingT>::CppNoticeIterator cppNotice;
+		fillAllCppNotices(o);
+		for ( cppNotice=o->getCppNoticesBeginning(); cppNotice!=o->getCppNoticesEnd(); ++cppNotice ) {
+			cppNoticeAccess->deleteCppNotice(*cppNotice);
 		}
-		statement.swap( connection->deleteFrom(C("cppFile"), C("idText = ") /*+ C("\'") */+ C(ToString::parse(o->getTextFile()->getRowid()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(C("cppFile"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppFile"), o);
-		if (deleteid) {
-			textFileAccess->deleteTextFile(o->getTextFile());
-		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
 		m_backup.erase(save);
+		o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

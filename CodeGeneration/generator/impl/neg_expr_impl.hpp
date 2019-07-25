@@ -6,7 +6,7 @@ namespace gen {
     bool
     neg_expr<CompositorT>::evaluate(TYPE_CONTEXT(DataT) & c) const
     {
-        return !expr.evaluate<DataT>(c);
+        return !expr.template evaluate<DataT>(c);
     }
 
 }

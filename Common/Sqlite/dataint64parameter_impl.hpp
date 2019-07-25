@@ -6,9 +6,9 @@ NAMESPACE_BEGIN(data_access)
 
 // Constructor
 template <class EncodingT>
-_DataInt64Parameter<EncodingT>::_DataInt64Parameter(int value)
+_DataInt64Parameter<EncodingT>::_DataInt64Parameter(long long value)
 {
-	m_value = value;
+    m_value = value;
     m_logger = &Category::getInstance(LOGNAME);
     m_logger->debugStream() << "creation DataInt64Parameter";
 }

@@ -3,6 +3,7 @@
 #include "dataintparameter.hpp"
 #include "dataint64parameter.hpp"
 #include "datatextparameter.hpp"
+#include "datanullparameter.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -66,6 +67,13 @@ void
 _DataParameters<EncodingT>::addText		(const typename EncodingT::string_t& value)
 {
 	m_parameters.push_back(new _DataTextParameter<EncodingT>(value));
+}
+
+template <class EncodingT>
+void 
+_DataParameters<EncodingT>::addNull		()
+{
+	m_parameters.push_back(new _DataNullParameter<EncodingT>());
 }
 
 NAMESPACE_END

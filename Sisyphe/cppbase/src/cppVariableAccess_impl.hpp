@@ -61,33 +61,37 @@ _CppVariableAccess<EncodingT>::getManyCppVariables(typename EncodingT::string_t 
 	columns.push_back(C("name"));
 	columns.push_back(C("isStatic"));
 	columns.push_back(C("isConst"));
+	columns.push_back(C("isConstexpr"));
 	columns.push_back(C("lineNumber"));
 	columns.push_back(C("startBlock"));
 	columns.push_back(C("lengthBlock"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppVariable")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t varType;
 		typename EncodingT::string_t name;
-		int isStatic;
-		int isConst;
-		int lineNumber;
-		int startBlock;
-		int lengthBlock;
-		if (statement.getInt( 0, identifier ) &&
+		long long isStatic;
+		long long isConst;
+		long long isConstexpr;
+		long long lineNumber;
+		long long startBlock;
+		long long lengthBlock;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, varType ) &&
 			statement.getText( 2, name ) &&
-			statement.getInt( 3, isStatic ) &&
-			statement.getInt( 4, isConst ) &&
-			statement.getInt( 5, lineNumber ) &&
-			statement.getInt( 6, startBlock ) &&
-			statement.getInt( 7, lengthBlock )) {
+			statement.getInt64( 3, isStatic ) &&
+			statement.getInt64( 4, isConst ) &&
+			statement.getInt64( 5, isConstexpr ) &&
+			statement.getInt64( 6, lineNumber ) &&
+			statement.getInt64( 7, startBlock ) &&
+			statement.getInt64( 8, lengthBlock )) {
 			value.reset(new _CppVariable<EncodingT>(
 				identifier,
 				varType,
 				name,
 				isStatic,
 				isConst,
+				isConstexpr,
 				lineNumber,
 				startBlock,
 				lengthBlock));
@@ -106,7 +110,7 @@ _CppVariableAccess<EncodingT>::getAllCppVariables() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppVariable<EncodingT> >
-_CppVariableAccess<EncodingT>::getOneCppVariable(int identifier) const 
+_CppVariableAccess<EncodingT>::getOneCppVariable(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -137,6 +141,7 @@ _CppVariableAccess<EncodingT>::selectManyCppVariables(typename EncodingT::string
 	columns.push_back(C("name"));
 	columns.push_back(C("isStatic"));
 	columns.push_back(C("isConst"));
+	columns.push_back(C("isConstexpr"));
 	columns.push_back(C("lineNumber"));
 	columns.push_back(C("startBlock"));
 	columns.push_back(C("lengthBlock"));
@@ -150,40 +155,52 @@ _CppVariableAccess<EncodingT>::selectManyCppVariables(typename EncodingT::string
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppVariable")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t varType;
 		typename EncodingT::string_t name;
-		int isStatic;
-		int isConst;
-		int lineNumber;
-		int startBlock;
-		int lengthBlock;
-		if (statement.getInt( 0, identifier ) &&
+		long long isStatic;
+		long long isConst;
+		long long isConstexpr;
+		long long lineNumber;
+		long long startBlock;
+		long long lengthBlock;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, varType ) &&
 			statement.getText( 2, name ) &&
-			statement.getInt( 3, isStatic ) &&
-			statement.getInt( 4, isConst ) &&
-			statement.getInt( 5, lineNumber ) &&
-			statement.getInt( 6, startBlock ) &&
-			statement.getInt( 7, lengthBlock )) {
+			statement.getInt64( 3, isStatic ) &&
+			statement.getInt64( 4, isConst ) &&
+			statement.getInt64( 5, isConstexpr ) &&
+			statement.getInt64( 6, lineNumber ) &&
+			statement.getInt64( 7, startBlock ) &&
+			statement.getInt64( 8, lengthBlock )) {
 			tab.push_back(boost::shared_ptr< _CppVariable<EncodingT> >(new _CppVariable<EncodingT>(
 				identifier,
 				varType,
 				name,
 				isStatic,
 				isConst,
+				isConstexpr,
 				lineNumber,
 				startBlock,
 				lengthBlock)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppVariable<EncodingT> >
-_CppVariableAccess<EncodingT>::selectOneCppVariable(int identifier, bool nowait, bool addition)  
+_CppVariableAccess<EncodingT>::selectOneCppVariable(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -255,16 +272,55 @@ _CppVariableAccess<EncodingT>::fillCppFunction(boost::shared_ptr< _CppVariable<E
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
-	int id;
+	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFunction")), std::vector<typename EncodingT::string_t>(1,C("cppVariable")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
-		typename std::vector< boost::shared_ptr<_CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+		typename std::list< boost::shared_ptr<_CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFunction(val);
 		}
 		o->setCppFunction(val);
+	}
+	else {
+		m_logger->debugStream() << "identifier not found.";
+	}
+}
+
+template<class EncodingT>
+void
+_CppVariableAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppVariable<EncodingT> > o)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
+	}
+	_DataStatement<EncodingT> statement;
+	_DataConnection<EncodingT>* connection = _DataConnection<EncodingT>::getInstance();
+	if (!connection) {
+		m_logger->errorStream() << "DB connection is not initialized.";    
+		throw NullPointerException("DB connection is not initialized.");   
+	}
+	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
+	if (!cppFileAccess) {
+		m_logger->errorStream() << "CppFileAccess class is not initialized.";
+		throw NullPointerException("CppFileAccess class is not initialized.");
+	}
+	long long id;
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppVariable")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
+		typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(o->getIdentifier());
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
+		typename std::list< boost::shared_ptr<_CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+		if (save != m_backup.end()) {
+			(*save)->setCppFile(val);
+		}
+		o->setCppFile(val);
 	}
 	else {
 		m_logger->errorStream() << "identifier not found.";
@@ -285,7 +341,7 @@ _CppVariableAccess<EncodingT>::isModifiedCppVariable(boost::shared_ptr< _CppVari
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+	typename std::list< boost::shared_ptr< _CppVariable<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -295,12 +351,16 @@ _CppVariableAccess<EncodingT>::isModifiedCppVariable(boost::shared_ptr< _CppVari
 	bUpdate = bUpdate || ((*save)->getName() != o->getName());
 	bUpdate = bUpdate || ((*save)->getIsStatic() != o->getIsStatic());
 	bUpdate = bUpdate || ((*save)->getIsConst() != o->getIsConst());
+	bUpdate = bUpdate || ((*save)->getIsConstexpr() != o->getIsConstexpr());
 	bUpdate = bUpdate || ((*save)->getLineNumber() != o->getLineNumber());
 	bUpdate = bUpdate || ((*save)->getStartBlock() != o->getStartBlock());
 	bUpdate = bUpdate || ((*save)->getLengthBlock() != o->getLengthBlock());
 	bUpdate = bUpdate || (!(*save)->isNullCppFunction() && !o->isNullCppFunction() && !typename _CppFunction<EncodingT>::CppFunctionIDEquality(*(*save)->getCppFunction())(o->getCppFunction()))
 		|| ((*save)->isNullCppFunction() && !o->isNullCppFunction()) 
 		|| (!(*save)->isNullCppFunction() && o->isNullCppFunction());
+	bUpdate = bUpdate || (!(*save)->isNullCppFile() && !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(*save)->getCppFile())(o->getCppFile()))
+		|| ((*save)->isNullCppFile() && !o->isNullCppFile()) 
+		|| (!(*save)->isNullCppFile() && o->isNullCppFile());
 	return bUpdate;
 }
 
@@ -325,7 +385,7 @@ _CppVariableAccess<EncodingT>::updateCppVariable(boost::shared_ptr< _CppVariable
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppVariable<EncodingT>::CppVariableIDEquality cppVariableIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
+	typename std::list< boost::shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppVariableIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -340,23 +400,27 @@ _CppVariableAccess<EncodingT>::updateCppVariable(boost::shared_ptr< _CppVariable
 			fields.push_back( C("name") );
 		}
 		if ( (*save)->getIsStatic() != o->getIsStatic() ) {
-			values.addInt( o->getIsStatic() );
+			values.addInt64( o->getIsStatic() );
 			fields.push_back( C("isStatic") );
 		}
 		if ( (*save)->getIsConst() != o->getIsConst() ) {
-			values.addInt( o->getIsConst() );
+			values.addInt64( o->getIsConst() );
 			fields.push_back( C("isConst") );
 		}
+		if ( (*save)->getIsConstexpr() != o->getIsConstexpr() ) {
+			values.addInt64( o->getIsConstexpr() );
+			fields.push_back( C("isConstexpr") );
+		}
 		if ( (*save)->getLineNumber() != o->getLineNumber() ) {
-			values.addInt( o->getLineNumber() );
+			values.addInt64( o->getLineNumber() );
 			fields.push_back( C("lineNumber") );
 		}
 		if ( (*save)->getStartBlock() != o->getStartBlock() ) {
-			values.addInt( o->getStartBlock() );
+			values.addInt64( o->getStartBlock() );
 			fields.push_back( C("startBlock") );
 		}
 		if ( (*save)->getLengthBlock() != o->getLengthBlock() ) {
-			values.addInt( o->getLengthBlock() );
+			values.addInt64( o->getLengthBlock() );
 			fields.push_back( C("lengthBlock") );
 		}
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
@@ -364,12 +428,24 @@ _CppVariableAccess<EncodingT>::updateCppVariable(boost::shared_ptr< _CppVariable
 			throw InvalidQueryException("idFunction : Identifier is null.");
 		}
 		else if ( !o->isNullCppFunction() && !typename _CppFunction<EncodingT>::CppFunctionIDEquality(*(o->getCppFunction()))((*save)->getCppFunction()) ) {
-			values.addInt( o->getCppFunction()->getIdentifier() );
+			values.addInt64( o->getCppFunction()->getIdentifier() );
 			fields.push_back( C("idFunction") );
 		}
 		else if ( o->isNullCppFunction() && !(*save)->isNullCppFunction() ) {
-			m_logger->errorStream() << "idFunction : null reference is forbidden.";
-			throw InvalidQueryException("idFunction : null reference is forbidden.");
+			values.addNull();
+			fields.push_back( C("idFunction") );
+		}
+		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
+			m_logger->errorStream() << "idFile : Identifier is null.";
+			throw InvalidQueryException("idFile : Identifier is null.");
+		}
+		else if ( !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
+			values.addInt64( o->getCppFile()->getIdentifier() );
+			fields.push_back( C("idFile") );
+		}
+		else if ( o->isNullCppFile() && !(*save)->isNullCppFile() ) {
+			m_logger->errorStream() << "idFile : null reference is forbidden.";
+			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
 		if (!fields.empty()) {
 			statement.swap( connection->update(C("cppVariable"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
@@ -422,28 +498,42 @@ _CppVariableAccess<EncodingT>::insertCppVariable(boost::shared_ptr< _CppVariable
 		fields.push_back( C("varType") );
 		values.addText( o->getName() );
 		fields.push_back( C("name") );
-		values.addInt( o->getIsStatic() );
+		values.addInt64( o->getIsStatic() );
 		fields.push_back( C("isStatic") );
-		values.addInt( o->getIsConst() );
+		values.addInt64( o->getIsConst() );
 		fields.push_back( C("isConst") );
+		values.addInt64( o->getIsConstexpr() );
+		fields.push_back( C("isConstexpr") );
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
 			m_logger->errorStream() << "idFunction : Identifier is null.";
 			throw InvalidQueryException("idFunction : Identifier is null.");
 		}
 		else if ( !o->isNullCppFunction() ) {
-			values.addInt( o->getCppFunction()->getIdentifier() );
+			values.addInt64( o->getCppFunction()->getIdentifier() );
 			fields.push_back( C("idFunction") );
 		}
 		else {
-			m_logger->errorStream() << "idFunction : null reference is forbidden.";
-			throw InvalidQueryException("idFunction : null reference is forbidden.");
+			values.addNull();
+			fields.push_back( C("idFunction") );
 		}
-		values.addInt( o->getLineNumber() );
+		values.addInt64( o->getLineNumber() );
 		fields.push_back( C("lineNumber") );
-		values.addInt( o->getStartBlock() );
+		values.addInt64( o->getStartBlock() );
 		fields.push_back( C("startBlock") );
-		values.addInt( o->getLengthBlock() );
+		values.addInt64( o->getLengthBlock() );
 		fields.push_back( C("lengthBlock") );
+		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
+			m_logger->errorStream() << "idFile : Identifier is null.";
+			throw InvalidQueryException("idFile : Identifier is null.");
+		}
+		else if ( !o->isNullCppFile() ) {
+			values.addInt64( o->getCppFile()->getIdentifier() );
+			fields.push_back( C("idFile") );
+		}
+		else {
+			m_logger->errorStream() << "idFile : null reference is forbidden.";
+			throw InvalidQueryException("idFile : null reference is forbidden.");
+		}
 		statement.swap( connection->insert(C("cppVariable"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
@@ -485,7 +575,7 @@ _CppVariableAccess<EncodingT>::deleteCppVariable(boost::shared_ptr< _CppVariable
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppVariable<EncodingT>::CppVariableIDEquality CppVariableIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppVariableIdEquality);
+	typename std::list< boost::shared_ptr< _CppVariable<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppVariableIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

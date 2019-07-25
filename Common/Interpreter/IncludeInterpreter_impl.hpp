@@ -26,7 +26,7 @@ NAMESPACE_BEGIN(interp)
             {
                 declaration->interpret(c);
                 block->interpret(c);
-                res->setValue(true);
+                res->value(true);
             }
             else
             {

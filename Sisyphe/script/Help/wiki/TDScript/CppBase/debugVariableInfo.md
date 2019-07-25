@@ -15,14 +15,12 @@ var = new DebugVariableInfo();
 ## Constructeur DebugVariableInfo
 *Paramètres*
 * String : La valeur de la colonne category.
-* String : La valeur de la colonne debugType.
 * String : La valeur de la colonne name.
-* String : La valeur de la colonne textValue.
 
 *Description*
 * Crée une instance de la classe DebugVariableInfo.
 ```
-var = new DebugVariableInfo(category, debugType, name, textValue);
+var = new DebugVariableInfo(category, name);
 ```
 
 ## Méthode Identifier
@@ -51,19 +49,6 @@ val = var.Identifier;
 val = var.Category;
 ```
 
-## Méthode DebugType
-*Paramètres*
-* None.
-
-*Retour*
-* String : La colonne debugType.
-
-*Description*
-* Retourne la colonne DebugType.
-```
-val = var.DebugType;
-```
-
 ## Méthode Name
 *Paramètres*
 * None.
@@ -77,17 +62,17 @@ val = var.DebugType;
 val = var.Name;
 ```
 
-## Méthode TextValue
+## Méthode DebugTypeInfo
 *Paramètres*
 * None.
 
 *Retour*
-* String : La colonne textValue.
+* DebugTypeInfo : La colonne debugTypeInfo.
 
 *Description*
-* Retourne la colonne TextValue.
+* Retourne la colonne DebugTypeInfo.
 ```
-val = var.TextValue;
+debugTypeInfo = var.DebugTypeInfo;
 ```
 
 ## Méthode DebugFunctionInfo
@@ -116,19 +101,6 @@ debugFunctionInfo = var.DebugFunctionInfo;
 var.Category(category);
 ```
 
-## Méthode DebugType
-*Paramètres*
-* String : La valeur de la colonne debugType.
-
-*Retour*
-* None.
-
-*Description*
-* Définit la colonne debugType.
-```
-var.DebugType(debugType);
-```
-
 ## Méthode Name
 *Paramètres*
 * String : La valeur de la colonne name.
@@ -142,17 +114,17 @@ var.DebugType(debugType);
 var.Name(name);
 ```
 
-## Méthode TextValue
+## Méthode DebugTypeInfo
 *Paramètres*
-* String : La valeur de la colonne textValue.
+* DebugTypeInfo : La valeur de la colonne debugTypeInfo.
 
 *Retour*
 * None.
 
 *Description*
-* Définit la colonne textValue.
+* Définit la colonne debugTypeInfo.
 ```
-var.TextValue(textValue);
+var.DebugTypeInfo(debugTypeInfo);
 ```
 
 ## Méthode DebugFunctionInfo
@@ -168,6 +140,19 @@ var.TextValue(textValue);
 var.DebugFunctionInfo(debugFunctionInfo);
 ```
 
+## Méthode HasDebugTypeInfo
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : Une valeur est définie pour la colonne debugTypeInfo.
+
+*Description*
+* Indique si la colonne DebugTypeInfo a une valeur définie.
+```
+val = var.HasDebugTypeInfo;
+```
+
 ## Méthode HasDebugFunctionInfo
 *Paramètres*
 * None.
@@ -181,6 +166,19 @@ var.DebugFunctionInfo(debugFunctionInfo);
 val = var.HasDebugFunctionInfo;
 ```
 
+## Méthode removeDebugTypeInfo
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime la valeur définie pour la colonne debugTypeInfo.
+```
+var.DebugTypeInfo = null;
+```
+
 ## Méthode removeDebugFunctionInfo
 *Paramètres*
 * None.
@@ -192,4 +190,83 @@ val = var.HasDebugFunctionInfo;
 * Supprime la valeur définie pour la colonne debugFunctionInfo.
 ```
 var.DebugFunctionInfo = null;
+```
+
+## Méthode removeDebugValueInfos
+*Paramètres*
+* Numeric : La position de l'élément à supprimer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime l'élément à la position *n* dans la liste de DebugValueInfos.
+```
+var.DebugValueInfos(0) = null;
+```
+
+## Méthode DebugValueInfos
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* DebugValueInfo : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de DebugValueInfos.
+```
+var.DebugValueInfos(0) = debugValueInfo;
+```
+
+## Méthode DebugValueInfos
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* DebugValueInfo : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de DebugValueInfos.
+```
+val = var.DebugValueInfos(0);
+```
+
+## Méthode ClearDebugValueInfos
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearDebugValueInfos();
+```
+
+## Méthode HasDebugValueInfos
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasDebugValueInfos();
+```
+
+## Méthode DebugValueInfosCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.DebugValueInfosCount();
 ```

@@ -105,6 +105,19 @@ access.CancelSelection();
 var = access.IsSelectedCppClass(cppClass);
 ```
 
+## Méthode FillEncapsulationClass
+*Paramètres*
+* CppClass : L'objet à remplir.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée encapsulationClass dans la base de données.
+```
+access.FillEncapsulationClass(cppClass);
+```
+
 ## Méthode FillCppFile
 *Paramètres*
 * CppClass : L'objet à remplir.
@@ -146,6 +159,20 @@ access.FillAllCppInheritances(cppClass, false);
 access.FillAllCppFunctions(cppClass, false);
 ```
 
+## Méthode FillAllInternClasses
+*Paramètres*
+* CppClass : L'objet à remplir.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données InternClasse dans la base de données.
+```
+access.FillAllInternClasses(cppClass, false);
+```
+
 ## Méthode FillAllCppAttributes
 *Paramètres*
 * CppClass : L'objet à remplir.
@@ -158,6 +185,20 @@ access.FillAllCppFunctions(cppClass, false);
 * Recupère les données CppAttribute dans la base de données.
 ```
 access.FillAllCppAttributes(cppClass, false);
+```
+
+## Méthode FillAllCppEnums
+*Paramètres*
+* CppClass : L'objet à remplir.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données CppEnum dans la base de données.
+```
+access.FillAllCppEnums(cppClass, false);
 ```
 
 ## Méthode FillOneCppInheritance
@@ -190,6 +231,21 @@ access.FillOneCppInheritance(cppClass, identifier, false);
 access.FillOneCppFunction(cppClass, identifier, false);
 ```
 
+## Méthode FillOneInternClasse
+*Paramètres*
+* CppClass : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table cppClass.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée InternClasse dans la base de données.
+```
+access.FillOneInternClasse(cppClass, identifier, false);
+```
+
 ## Méthode FillOneCppAttribute
 *Paramètres*
 * CppClass : L'objet à remplir.
@@ -203,6 +259,21 @@ access.FillOneCppFunction(cppClass, identifier, false);
 * Recupère la donnée CppAttribute dans la base de données.
 ```
 access.FillOneCppAttribute(cppClass, identifier, false);
+```
+
+## Méthode FillOneCppEnum
+*Paramètres*
+* CppClass : L'objet à remplir.
+* Numeric : L'identifiant identifier de la table cppEnum.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée CppEnum dans la base de données.
+```
+access.FillOneCppEnum(cppClass, identifier, false);
 ```
 
 ## Méthode FillManyCppInheritances
@@ -235,6 +306,21 @@ access.FillManyCppInheritances(cppClass, "identifier = " & value, false);
 access.FillManyCppFunctions(cppClass, "identifier = " & value, false);
 ```
 
+## Méthode FillManyInternClasses
+*Paramètres*
+* CppClass : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données InternClasse dans la base de données.
+```
+access.FillManyInternClasses(cppClass, "identifier = " & value, false);
+```
+
 ## Méthode FillManyCppAttributes
 *Paramètres*
 * CppClass : L'objet à remplir.
@@ -248,6 +334,21 @@ access.FillManyCppFunctions(cppClass, "identifier = " & value, false);
 * Recupère les données CppAttribute dans la base de données.
 ```
 access.FillManyCppAttributes(cppClass, "identifier = " & value, false);
+```
+
+## Méthode FillManyCppEnums
+*Paramètres*
+* CppClass : L'objet à remplir.
+* String : clause WHERE de la recherche SQL.
+* Bool : non utilisé.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère les données CppEnum dans la base de données.
+```
+access.FillManyCppEnums(cppClass, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedCppClass

@@ -11,10 +11,6 @@ DebugVariableInfoInterpreterAccess<EncodingT>::DebugVariableInfoInterpreterAcces
 }
 
 template <class EncodingT>
-DebugVariableInfoInterpreterAccess<EncodingT>::~DebugVariableInfoInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t DebugVariableInfoInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<Encoding
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("DebugVariableInfoAccess"), method, args, ret))
+		if (tryInvoke(this, C("DebugVariableInfoAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -111,8 +108,8 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<Encoding
 	clearError();
 	try
 	{
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
 			res.reset(new DebugVariableInfoInterpreter<EncodingT>(m_object->getOneDebugVariableInfo(nativeIdentifier)));
 		}
@@ -133,8 +130,8 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<Encoding
 	try
 	{
 		bool nativeNoWait;
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			res.reset(new DebugVariableInfoInterpreter<EncodingT>(m_object->selectOneDebugVariableInfo(nativeIdentifier,
@@ -205,6 +202,25 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<Encoding
 }
 
 template <class EncodingT>
+void DebugVariableInfoInterpreterAccess<EncodingT>::fillDebugTypeInfo(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
+{
+	clearError();
+	try
+	{
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
+		{
+			m_object->fillDebugTypeInfo(nativeDebugVariableInfo);
+			reset_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void DebugVariableInfoInterpreterAccess<EncodingT>::fillDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo)
 {
 	clearError();
@@ -214,6 +230,77 @@ void DebugVariableInfoInterpreterAccess<EncodingT>::fillDebugFunctionInfo(boost:
 		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo))
 		{
 			m_object->fillDebugFunctionInfo(nativeDebugVariableInfo);
+			reset_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void DebugVariableInfoInterpreterAccess<EncodingT>::fillAllDebugValueInfos(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo) && 
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillAllDebugValueInfos(nativeDebugVariableInfo, nativeNoWait);
+			reset_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void DebugVariableInfoInterpreterAccess<EncodingT>::fillOneDebugValueInfo(boost::shared_ptr< Base<EncodingT> >& refDebugVariableInfo,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeRefDebugVariableInfo;
+		long long nativeIdentifier;
+		if (check_debugVariableInfo(refDebugVariableInfo, nativeRefDebugVariableInfo) && 
+			check_numeric_i(identifier, nativeIdentifier) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillOneDebugValueInfo(nativeRefDebugVariableInfo,
+				nativeIdentifier,
+				nativeNoWait);
+			reset_debugVariableInfo(refDebugVariableInfo, nativeRefDebugVariableInfo);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void DebugVariableInfoInterpreterAccess<EncodingT>::fillManyDebugValueInfos(boost::shared_ptr< Base<EncodingT> >& debugVariableInfo, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		typename EncodingT::string_t nativeFilter;
+		boost::shared_ptr< _DebugVariableInfo<EncodingT> > nativeDebugVariableInfo;
+		if (check_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo) &&
+			check_string<EncodingT>(filter, nativeFilter) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillManyDebugValueInfos(nativeDebugVariableInfo, nativeFilter, nativeNoWait);
 			reset_debugVariableInfo(debugVariableInfo, nativeDebugVariableInfo);
 		}
 	}
@@ -320,7 +407,7 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreterAccess<Encoding
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

@@ -32,7 +32,7 @@ namespace dsg {
 			CreateInclude =
                    line_g(1) << str_g("#include \"config.hpp\"")
                 << line_g(1) << str_g("#include \"macros.hpp\"")
-                << line_g(1) << str_g("#include \"String.hpp\"")
+                << line_g(1) << str_g("#include \"Base.hpp\"")
                 << line_g(1) << str_g("#include \"Array.hpp\"")
                 << (line_g(1) << str_g("#include \"") << file_g(getFileNameHandler(KIND_NAME)) << ".h\"") [empty_g(contentByType(CONTENT_TYPE_GLOBALINCLUSION))]
                 << (line_g(1) << cnt_g(getContentDataHandler()))                                          [contentByType(CONTENT_TYPE_GLOBALINCLUSION)];
@@ -65,18 +65,18 @@ namespace dsg {
                  <<((line_g(1) << htab_g(2) << ClassName << " m_object;") [empty_g(contentByType(CONTENT_TYPE_DECLARATIONBODY))]
                  << (line_g(1) << cnt_g(getContentDataHandler()))         [contentByType(CONTENT_TYPE_DECLARATIONBODY)]
                  <<  line_g(2) << htab_g(2) << "void initValue(const " << ClassName << "& object);"
-                 <<  line_g(2) << htab_g(2) << ClassName << "& value();"
-                 <<  line_g(2) << htab_g(2) << "const " << ClassName << "& value() const;")
+                 <<  line_g(2) << htab_g(2) << ClassName << "& refValue();"
+                 <<  line_g(2) << htab_g(2) << "const " << ClassName << "& refValue() const;"
+                 << line_g(2) << htab_g(2) << "void tidyValue();")
                                                                           [Has_DynamicMethod || Has_Attribute]
-                 << line_g(2) << htab_g(2) << "void tidyValue();"
                  << line_g(2) << htab_g(1) << "public:"
                  << line_g(1) << htab_g(2) << ClassName << "Interpreter();"
-                 << line_g(2) << htab_g(2) << "~" << ClassName << "Interpreter();"
+                 << (line_g(2) << htab_g(2) << "~" << ClassName << "Interpreter();")[has_g(0, contentByType(CONTENT_TYPE_DESTRUCTIONBODY), gt_g())]
                  << (line_g(2) << htab_g(2) << ClassName << "Interpreter(const " << ClassName << "& object);"
-                 <<  line_g(2) << htab_g(2) << ClassName << "Interpreter(const " << ClassName << "Interpreter<EncodingT>& rhs);"
-                 <<  line_g(2) << htab_g(2) << ClassName << "Interpreter<EncodingT>& operator=(const " << ClassName << "Interpreter<EncodingT>& rhs);"
-                 <<  line_g(2) << htab_g(2) << "const " << ClassName << "& getValue() const;"
-                 <<  line_g(2) << htab_g(2) << "void setValue(" << ClassName << " const& object);") [Has_DynamicMethod || Has_Attribute]
+                 <<  (line_g(2) << htab_g(2) << ClassName << "Interpreter(const " << ClassName << "Interpreter<EncodingT>& rhs);"
+                 <<   line_g(2) << htab_g(2) << ClassName << "Interpreter<EncodingT>& operator=(const " << ClassName << "Interpreter<EncodingT>& rhs);")[has_g(0, contentByType(CONTENT_TYPE_COPYBODY), gt_g())]
+                 <<  line_g(2) << htab_g(2) << "const " << ClassName << "& value() const;"
+                 <<  line_g(2) << htab_g(2) << "void value(" << ClassName << " const& object);") [Has_DynamicMethod || Has_Attribute]
                  << line_g(2) << htab_g(2) << "virtual typename EncodingT::string_t toString() const;"
                  << line_g(2) << htab_g(2) << "virtual boost::shared_ptr< Base<EncodingT> > clone() const;"
                  << line_g(2) << htab_g(2) << "virtual typename EncodingT::string_t getClassName() const;"

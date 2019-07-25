@@ -19,6 +19,7 @@ var = new CppAttribute();
 * String : La valeur de la colonne accessSpecifier.
 * Numeric : La valeur de la colonne isStatic.
 * Numeric : La valeur de la colonne isConst.
+* Numeric : La valeur de la colonne isConstexpr.
 * String : La valeur de la colonne constValue.
 * Numeric : La valeur de la colonne lineNumber.
 * Numeric : La valeur de la colonne startBlock.
@@ -27,7 +28,7 @@ var = new CppAttribute();
 *Description*
 * Crée une instance de la classe CppAttribute.
 ```
-var = new CppAttribute(attrType, name, accessSpecifier, isStatic, isConst, constValue, lineNumber, startBlock, lengthBlock);
+var = new CppAttribute(attrType, name, accessSpecifier, isStatic, isConst, isConstexpr, constValue, lineNumber, startBlock, lengthBlock);
 ```
 
 ## Méthode Identifier
@@ -106,6 +107,19 @@ val = var.IsStatic;
 * Retourne la colonne IsConst.
 ```
 val = var.IsConst;
+```
+
+## Méthode IsConstexpr
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isConstexpr.
+
+*Description*
+* Retourne la colonne IsConstexpr.
+```
+val = var.IsConstexpr;
 ```
 
 ## Méthode ConstValue
@@ -236,6 +250,19 @@ var.IsStatic(isStatic);
 * Définit la colonne isConst.
 ```
 var.IsConst(isConst);
+```
+
+## Méthode IsConstexpr
+*Paramètres*
+* Numeric : La valeur de la colonne isConstexpr.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isConstexpr.
+```
+var.IsConstexpr(isConstexpr);
 ```
 
 ## Méthode ConstValue

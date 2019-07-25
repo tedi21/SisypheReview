@@ -11,10 +11,6 @@ CppClassInterpreterAccess<EncodingT>::CppClassInterpreterAccess()
 }
 
 template <class EncodingT>
-CppClassInterpreterAccess<EncodingT>::~CppClassInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t CppClassInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreterAccess<EncodingT>::invok
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppClassAccess"), method, args, ret))
+		if (tryInvoke(this, C("CppClassAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -111,8 +108,8 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreterAccess<EncodingT>::getOn
 	clearError();
 	try
 	{
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
 			res.reset(new CppClassInterpreter<EncodingT>(m_object->getOneCppClass(nativeIdentifier)));
 		}
@@ -133,8 +130,8 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreterAccess<EncodingT>::selec
 	try
 	{
 		bool nativeNoWait;
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			res.reset(new CppClassInterpreter<EncodingT>(m_object->selectOneCppClass(nativeIdentifier,
@@ -205,6 +202,25 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreterAccess<EncodingT>::isSel
 }
 
 template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillEncapsulationClass(boost::shared_ptr< Base<EncodingT> >& cppClass)
+{
+	clearError();
+	try
+	{
+		boost::shared_ptr< _CppClass<EncodingT> > nativeCppClass;
+		if (check_cppClass(cppClass, nativeCppClass))
+		{
+			m_object->fillEncapsulationClass(nativeCppClass);
+			reset_cppClass(cppClass, nativeCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppClassInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<EncodingT> >& cppClass)
 {
 	clearError();
@@ -266,6 +282,27 @@ void CppClassInterpreterAccess<EncodingT>::fillAllCppFunctions(boost::shared_ptr
 }
 
 template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillAllInternClasses(boost::shared_ptr< Base<EncodingT> >& cppClass, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppClass<EncodingT> > nativeCppClass;
+		if (check_cppClass(cppClass, nativeCppClass) && 
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillAllInternClasses(nativeCppClass, nativeNoWait);
+			reset_cppClass(cppClass, nativeCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppClassInterpreterAccess<EncodingT>::fillAllCppAttributes(boost::shared_ptr< Base<EncodingT> >& cppClass, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
@@ -287,6 +324,27 @@ void CppClassInterpreterAccess<EncodingT>::fillAllCppAttributes(boost::shared_pt
 }
 
 template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillAllCppEnums(boost::shared_ptr< Base<EncodingT> >& cppClass, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppClass<EncodingT> > nativeCppClass;
+		if (check_cppClass(cppClass, nativeCppClass) && 
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillAllCppEnums(nativeCppClass, nativeNoWait);
+			reset_cppClass(cppClass, nativeCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppClassInterpreterAccess<EncodingT>::fillOneCppInheritance(boost::shared_ptr< Base<EncodingT> >& refCppClass,
 				const boost::shared_ptr< Base<EncodingT> >& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
@@ -296,9 +354,9 @@ void CppClassInterpreterAccess<EncodingT>::fillOneCppInheritance(boost::shared_p
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppClass<EncodingT> > nativeRefCppClass;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppClass(refCppClass, nativeRefCppClass) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppInheritance(nativeRefCppClass,
@@ -323,12 +381,39 @@ void CppClassInterpreterAccess<EncodingT>::fillOneCppFunction(boost::shared_ptr<
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppClass<EncodingT> > nativeRefCppClass;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppClass(refCppClass, nativeRefCppClass) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppFunction(nativeRefCppClass,
+				nativeIdentifier,
+				nativeNoWait);
+			reset_cppClass(refCppClass, nativeRefCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillOneInternClasse(boost::shared_ptr< Base<EncodingT> >& refCppClass,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppClass<EncodingT> > nativeRefCppClass;
+		long long nativeIdentifier;
+		if (check_cppClass(refCppClass, nativeRefCppClass) && 
+			check_numeric_i(identifier, nativeIdentifier) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillOneInternClasse(nativeRefCppClass,
 				nativeIdentifier,
 				nativeNoWait);
 			reset_cppClass(refCppClass, nativeRefCppClass);
@@ -350,12 +435,39 @@ void CppClassInterpreterAccess<EncodingT>::fillOneCppAttribute(boost::shared_ptr
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppClass<EncodingT> > nativeRefCppClass;
-		int nativeIdentifier;
+		long long nativeIdentifier;
 		if (check_cppClass(refCppClass, nativeRefCppClass) && 
-			check_numeric(identifier, nativeIdentifier) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppAttribute(nativeRefCppClass,
+				nativeIdentifier,
+				nativeNoWait);
+			reset_cppClass(refCppClass, nativeRefCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillOneCppEnum(boost::shared_ptr< Base<EncodingT> >& refCppClass,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
+				const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		boost::shared_ptr< _CppClass<EncodingT> > nativeRefCppClass;
+		long long nativeIdentifier;
+		if (check_cppClass(refCppClass, nativeRefCppClass) && 
+			check_numeric_i(identifier, nativeIdentifier) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillOneCppEnum(nativeRefCppClass,
 				nativeIdentifier,
 				nativeNoWait);
 			reset_cppClass(refCppClass, nativeRefCppClass);
@@ -414,6 +526,29 @@ void CppClassInterpreterAccess<EncodingT>::fillManyCppFunctions(boost::shared_pt
 }
 
 template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillManyInternClasses(boost::shared_ptr< Base<EncodingT> >& cppClass, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		typename EncodingT::string_t nativeFilter;
+		boost::shared_ptr< _CppClass<EncodingT> > nativeCppClass;
+		if (check_cppClass(cppClass, nativeCppClass) &&
+			check_string<EncodingT>(filter, nativeFilter) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillManyInternClasses(nativeCppClass, nativeFilter, nativeNoWait);
+			reset_cppClass(cppClass, nativeCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
 void CppClassInterpreterAccess<EncodingT>::fillManyCppAttributes(boost::shared_ptr< Base<EncodingT> >& cppClass, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
@@ -427,6 +562,29 @@ void CppClassInterpreterAccess<EncodingT>::fillManyCppAttributes(boost::shared_p
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillManyCppAttributes(nativeCppClass, nativeFilter, nativeNoWait);
+			reset_cppClass(cppClass, nativeCppClass);
+		}
+	}
+	catch (std::exception& e)
+	{
+		setError(e);
+	}
+}
+
+template <class EncodingT>
+void CppClassInterpreterAccess<EncodingT>::fillManyCppEnums(boost::shared_ptr< Base<EncodingT> >& cppClass, const boost::shared_ptr< Base<EncodingT> >& filter, const boost::shared_ptr< Base<EncodingT> >& nowait)
+{
+	clearError();
+	try
+	{
+		bool nativeNoWait;
+		typename EncodingT::string_t nativeFilter;
+		boost::shared_ptr< _CppClass<EncodingT> > nativeCppClass;
+		if (check_cppClass(cppClass, nativeCppClass) &&
+			check_string<EncodingT>(filter, nativeFilter) &&
+			check_bool(nowait, nativeNoWait))
+		{
+			m_object->fillManyCppEnums(nativeCppClass, nativeFilter, nativeNoWait);
 			reset_cppClass(cppClass, nativeCppClass);
 		}
 	}
@@ -533,7 +691,7 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreterAccess<EncodingT>::getEr
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

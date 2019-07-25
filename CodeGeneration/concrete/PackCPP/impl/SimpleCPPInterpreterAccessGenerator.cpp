@@ -18,7 +18,6 @@ namespace dsg {
 
 			CreateInterpretAccess_R2 =
 				CreateInterpreterAccessConstructor_R2
-				<< CreateInterpreterAccessDestructor_R2
 				<< CreateInterpreterAccessToString_R2
 				<< CreateInterpreterAccessClone_R2
 				<< CreateInterpreterAccessGetClassName_R2
@@ -91,7 +90,8 @@ namespace dsg {
 				<< line_g(1) << htab_g(1) << "ParameterArray args, ret;"
 				<< line_g(1) << htab_g(1) << "if (check_parameters_array(params, args))"
 				<< line_g(1) << htab_g(1) << "{"
-				<< line_g(1) << htab_g(2) << "if (tryInvoke(this, C(\"" << UEntity_R2 << "Access\"), method, args, ret))"
+                << line_g(1) << htab_g(2) << "if (tryInvoke(this, C(\"" << UEntity_R2 << "Access\"), method, args, ret) ||"
+                << line_g(1) << htab_g(3) << "tryInvoke(this, C(\"Base\"), method, args, ret))"
 				<< line_g(1) << htab_g(2) << "{"
 				<< line_g(1) << htab_g(3) << "find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);"
 				<< line_g(1) << htab_g(3) << "for (size_t i = 0; i < params.size(); ++i)"
@@ -487,7 +487,7 @@ namespace dsg {
                    << line_g(1) << htab_g(1) << "boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);"
                    << line_g(1) << htab_g(1) << "if (str)"
                    << line_g(1) << htab_g(1) << "{"
-                   << line_g(1) << htab_g(2) << "str->setValue(C(m_errorText));"
+                   << line_g(1) << htab_g(2) << "str->value(C(m_errorText));"
                    << line_g(1) << htab_g(1) << "}"
                    << line_g(1) << htab_g(1) << "return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));"
                    << line_g(1) << "}"

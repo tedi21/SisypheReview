@@ -57,18 +57,22 @@ _DebugFileInfoAccess<EncodingT>::getManyDebugFileInfos(typename EncodingT::strin
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
 	columns.push_back(C("identifier"));
+	columns.push_back(C("name"));
 	columns.push_back(C("compilandPath"));
 	columns.push_back(C("checksum"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("debugFileInfo")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
+		typename EncodingT::string_t name;
 		typename EncodingT::string_t compilandPath;
 		boost::container::vector<unsigned char> checksum;
-		if (statement.getInt( 0, identifier ) &&
-			statement.getText( 1, compilandPath ) &&
-			statement.getBlob( 2, checksum )) {
+		if (statement.getInt64( 0, identifier ) &&
+			statement.getText( 1, name ) &&
+			statement.getText( 2, compilandPath ) &&
+			statement.getBlob( 3, checksum )) {
 			value.reset(new _DebugFileInfo<EncodingT>(
 				identifier,
+				name,
 				compilandPath,
 				checksum));
 			tab.push_back(value);
@@ -86,7 +90,7 @@ _DebugFileInfoAccess<EncodingT>::getAllDebugFileInfos() const
 
 template<class EncodingT>
 boost::shared_ptr< _DebugFileInfo<EncodingT> >
-_DebugFileInfoAccess<EncodingT>::getOneDebugFileInfo(int identifier) const 
+_DebugFileInfoAccess<EncodingT>::getOneDebugFileInfo(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -113,6 +117,7 @@ _DebugFileInfoAccess<EncodingT>::selectManyDebugFileInfos(typename EncodingT::st
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
 	columns.push_back(C("identifier"));
+	columns.push_back(C("name"));
 	columns.push_back(C("compilandPath"));
 	columns.push_back(C("checksum"));
 	if (!addition || !connection->isTransactionInProgress()) {
@@ -125,25 +130,37 @@ _DebugFileInfoAccess<EncodingT>::selectManyDebugFileInfos(typename EncodingT::st
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("debugFileInfo")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
+		typename EncodingT::string_t name;
 		typename EncodingT::string_t compilandPath;
 		boost::container::vector<unsigned char> checksum;
-		if (statement.getInt( 0, identifier ) &&
-			statement.getText( 1, compilandPath ) &&
-			statement.getBlob( 2, checksum )) {
+		if (statement.getInt64( 0, identifier ) &&
+			statement.getText( 1, name ) &&
+			statement.getText( 2, compilandPath ) &&
+			statement.getBlob( 3, checksum )) {
 			tab.push_back(boost::shared_ptr< _DebugFileInfo<EncodingT> >(new _DebugFileInfo<EncodingT>(
 				identifier,
+				name,
 				compilandPath,
 				checksum)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _DebugFileInfo<EncodingT> >
-_DebugFileInfoAccess<EncodingT>::selectOneDebugFileInfo(int identifier, bool nowait, bool addition)  
+_DebugFileInfoAccess<EncodingT>::selectOneDebugFileInfo(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -182,6 +199,16 @@ _DebugFileInfoAccess<EncodingT>::cancelSelection()
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
+	_DebugFunctionInfoAccess<EncodingT>* debugFunctionInfoAccess = _DebugFunctionInfoAccess<EncodingT>::getInstance();
+	if (!debugFunctionInfoAccess) {
+		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
+	}
+	_DebugStubInfoAccess<EncodingT>* debugStubInfoAccess = _DebugStubInfoAccess<EncodingT>::getInstance();
+	if (!debugStubInfoAccess) {
+		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
+		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
+	}
 	if (!m_backup.empty()) {
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->rollback();
@@ -189,12 +216,14 @@ _DebugFileInfoAccess<EncodingT>::cancelSelection()
 			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
 		}
 		m_backup.clear();
+		debugFunctionInfoAccess->cancelSelection();
+		debugStubInfoAccess->cancelSelection();
 	}
 }
 
 template<class EncodingT>
 void
-_DebugFileInfoAccess<EncodingT>::fillCppFile(boost::shared_ptr< _DebugFileInfo<EncodingT> > o)  
+_DebugFileInfoAccess<EncodingT>::fillTextFile(boost::shared_ptr< _DebugFileInfo<EncodingT> > o)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -210,31 +239,130 @@ _DebugFileInfoAccess<EncodingT>::fillCppFile(boost::shared_ptr< _DebugFileInfo<E
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
-	if (!cppFileAccess) {
-		m_logger->errorStream() << "CppFileAccess class is not initialized.";
-		throw NullPointerException("CppFileAccess class is not initialized.");
-	}
 	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
 	if (!textFileAccess) {
 		m_logger->errorStream() << "TextFileAccess class is not initialized.";
 		throw NullPointerException("TextFileAccess class is not initialized.");
 	}
-	int id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("debugFileInfo")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	long long id;
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idText")), std::vector<typename EncodingT::string_t>(1,C("debugFileInfo")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(o->getIdentifier());
-		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< boost::shared_ptr<_DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+		boost::shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
+		typename std::list< boost::shared_ptr<_DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
 		if (save != m_backup.end()) {
-			(*save)->setCppFile(val);
+			(*save)->setTextFile(val);
 		}
-		o->setCppFile(val);
+		o->setTextFile(val);
 	}
 	else {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
 	}
+}
+
+template<class EncodingT>
+void
+_DebugFileInfoAccess<EncodingT>::fillAllDebugFunctionInfos(boost::shared_ptr< _DebugFileInfo<EncodingT> > o, bool nowait)  
+{
+	fillManyDebugFunctionInfos(o, EncodingT::EMPTY, nowait);
+}
+
+template<class EncodingT>
+void
+_DebugFileInfoAccess<EncodingT>::fillOneDebugFunctionInfo(boost::shared_ptr< _DebugFileInfo<EncodingT> > o, long long identifier, bool nowait)  
+{
+	fillManyDebugFunctionInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+}
+
+template<class EncodingT>
+void
+_DebugFileInfoAccess<EncodingT>::fillManyDebugFunctionInfos(boost::shared_ptr< _DebugFileInfo<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
+	}
+	_DebugFunctionInfoAccess<EncodingT>* debugFunctionInfoAccess = _DebugFunctionInfoAccess<EncodingT>::getInstance();
+	if (!debugFunctionInfoAccess) {
+		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
+	}
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
+	typename EncodingT::string_t debugFunctionInfoFilter = C("idDebugFile = ") + C(ToString::parse(o->getIdentifier()));
+	if (!filter.empty()) {
+		debugFunctionInfoFilter += C(" AND ") + filter;
+	}
+	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	if (save != m_backup.end())
+	{
+		tab = debugFunctionInfoAccess->selectManyDebugFunctionInfos(debugFunctionInfoFilter, nowait, true);
+		(*save)->clearDebugFunctionInfos();
+		(*save)->insertDebugFunctionInfo((*save)->getDebugFunctionInfosEnd(), tab.begin(), tab.end());
+	}
+	else
+	{
+		tab = debugFunctionInfoAccess->getManyDebugFunctionInfos(debugFunctionInfoFilter);
+	}
+	o->clearDebugFunctionInfos();
+	o->insertDebugFunctionInfo(o->getDebugFunctionInfosEnd(), tab.begin(), tab.end());
+}
+
+template<class EncodingT>
+void
+_DebugFileInfoAccess<EncodingT>::fillAllDebugStubInfos(boost::shared_ptr< _DebugFileInfo<EncodingT> > o, bool nowait)  
+{
+	fillManyDebugStubInfos(o, EncodingT::EMPTY, nowait);
+}
+
+template<class EncodingT>
+void
+_DebugFileInfoAccess<EncodingT>::fillOneDebugStubInfo(boost::shared_ptr< _DebugFileInfo<EncodingT> > o, long long identifier, bool nowait)  
+{
+	fillManyDebugStubInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+}
+
+template<class EncodingT>
+void
+_DebugFileInfoAccess<EncodingT>::fillManyDebugStubInfos(boost::shared_ptr< _DebugFileInfo<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getIdentifier()==-1 ) {
+		m_logger->errorStream() << "Identifier : Identifier is null.";
+		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
+	}
+	_DebugStubInfoAccess<EncodingT>* debugStubInfoAccess = _DebugStubInfoAccess<EncodingT>::getInstance();
+	if (!debugStubInfoAccess) {
+		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
+		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
+	}
+	std::vector< boost::shared_ptr< _DebugStubInfo<EncodingT> > > tab;
+	typename EncodingT::string_t debugStubInfoFilter = C("idDebugFile = ") + C(ToString::parse(o->getIdentifier()));
+	if (!filter.empty()) {
+		debugStubInfoFilter += C(" AND ") + filter;
+	}
+	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(o->getIdentifier());
+	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	if (save != m_backup.end())
+	{
+		tab = debugStubInfoAccess->selectManyDebugStubInfos(debugStubInfoFilter, nowait, true);
+		(*save)->clearDebugStubInfos();
+		(*save)->insertDebugStubInfo((*save)->getDebugStubInfosEnd(), tab.begin(), tab.end());
+	}
+	else
+	{
+		tab = debugStubInfoAccess->getManyDebugStubInfos(debugStubInfoFilter);
+	}
+	o->clearDebugStubInfos();
+	o->insertDebugStubInfo(o->getDebugStubInfosEnd(), tab.begin(), tab.end());
 }
 
 template<class EncodingT>
@@ -249,18 +377,65 @@ _DebugFileInfoAccess<EncodingT>::isModifiedDebugFileInfo(boost::shared_ptr< _Deb
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
+	_DebugFunctionInfoAccess<EncodingT>* debugFunctionInfoAccess = _DebugFunctionInfoAccess<EncodingT>::getInstance();
+	if (!debugFunctionInfoAccess) {
+		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
+	}
+	_DebugStubInfoAccess<EncodingT>* debugStubInfoAccess = _DebugStubInfoAccess<EncodingT>::getInstance();
+	if (!debugStubInfoAccess) {
+		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
+		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
+	}
 	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
 	}
 	bool bUpdate = false;
+	bUpdate = bUpdate || ((*save)->getName() != o->getName());
 	bUpdate = bUpdate || ((*save)->getCompilandPath() != o->getCompilandPath());
 	bUpdate = bUpdate || ((*save)->getChecksum() != o->getChecksum());
-	bUpdate = bUpdate || (!(*save)->isNullCppFile() && !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(*save)->getCppFile())(o->getCppFile()))
-		|| ((*save)->isNullCppFile() && !o->isNullCppFile()) 
-		|| (!(*save)->isNullCppFile() && o->isNullCppFile());
+	bUpdate = bUpdate || (!(*save)->isNullTextFile() && !o->isNullTextFile() && !typename _TextFile<EncodingT>::TextFileIDEquality(*(*save)->getTextFile())(o->getTextFile()))
+		|| ((*save)->isNullTextFile() && !o->isNullTextFile()) 
+		|| (!(*save)->isNullTextFile() && o->isNullTextFile());
+	typename _DebugFileInfo<EncodingT>::DebugFunctionInfoIterator debugFunctionInfo;
+	for ( debugFunctionInfo=o->getDebugFunctionInfosBeginning(); debugFunctionInfo!=o->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
+		if (!(*debugFunctionInfo)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(*(*debugFunctionInfo));
+		bUpdate = bUpdate || (std::find_if((*save)->getDebugFunctionInfosBeginning(), (*save)->getDebugFunctionInfosEnd(), debugFunctionInfoIdEquality) == (*save)->getDebugFunctionInfosEnd())
+			|| (debugFunctionInfoAccess->isModifiedDebugFunctionInfo(*debugFunctionInfo));
+	}
+	for ( debugFunctionInfo=(*save)->getDebugFunctionInfosBeginning(); debugFunctionInfo<(*save)->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
+		if (!(*debugFunctionInfo)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(*(*debugFunctionInfo));
+		bUpdate = bUpdate || (std::find_if(o->getDebugFunctionInfosBeginning(), o->getDebugFunctionInfosEnd(), debugFunctionInfoIdEquality) == o->getDebugFunctionInfosEnd());
+	}
+	typename _DebugFileInfo<EncodingT>::DebugStubInfoIterator debugStubInfo;
+	for ( debugStubInfo=o->getDebugStubInfosBeginning(); debugStubInfo!=o->getDebugStubInfosEnd(); ++debugStubInfo ) {
+		if (!(*debugStubInfo)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _DebugStubInfo<EncodingT>::DebugStubInfoIDEquality debugStubInfoIdEquality(*(*debugStubInfo));
+		bUpdate = bUpdate || (std::find_if((*save)->getDebugStubInfosBeginning(), (*save)->getDebugStubInfosEnd(), debugStubInfoIdEquality) == (*save)->getDebugStubInfosEnd())
+			|| (debugStubInfoAccess->isModifiedDebugStubInfo(*debugStubInfo));
+	}
+	for ( debugStubInfo=(*save)->getDebugStubInfosBeginning(); debugStubInfo<(*save)->getDebugStubInfosEnd(); ++debugStubInfo ) {
+		if (!(*debugStubInfo)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _DebugStubInfo<EncodingT>::DebugStubInfoIDEquality debugStubInfoIdEquality(*(*debugStubInfo));
+		bUpdate = bUpdate || (std::find_if(o->getDebugStubInfosBeginning(), o->getDebugStubInfosEnd(), debugStubInfoIdEquality) == o->getDebugStubInfosEnd());
+	}
 	return bUpdate;
 }
 
@@ -284,13 +459,27 @@ _DebugFileInfoAccess<EncodingT>::updateDebugFileInfo(boost::shared_ptr< _DebugFi
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
+	_DebugFunctionInfoAccess<EncodingT>* debugFunctionInfoAccess = _DebugFunctionInfoAccess<EncodingT>::getInstance();
+	if (!debugFunctionInfoAccess) {
+		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
+	}
+	_DebugStubInfoAccess<EncodingT>* debugStubInfoAccess = _DebugStubInfoAccess<EncodingT>::getInstance();
+	if (!debugStubInfoAccess) {
+		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
+		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
+	}
 	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
 	}
 	try {
+		if ( (*save)->getName() != o->getName() ) {
+			values.addText( o->getName() );
+			fields.push_back( C("name") );
+		}
 		if ( (*save)->getCompilandPath() != o->getCompilandPath() ) {
 			values.addText( o->getCompilandPath() );
 			fields.push_back( C("compilandPath") );
@@ -299,17 +488,75 @@ _DebugFileInfoAccess<EncodingT>::updateDebugFileInfo(boost::shared_ptr< _DebugFi
 			values.addBlob( o->getChecksum() );
 			fields.push_back( C("checksum") );
 		}
-		if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getCppFile()->getTextFile()) ) {
-			m_logger->errorStream() << "idFile : Identifier is null.";
-			throw InvalidQueryException("idFile : Identifier is null.");
+		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
+			m_logger->errorStream() << "idText : Identifier is null.";
+			throw InvalidQueryException("idText : Identifier is null.");
 		}
-		else if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
-			values.addInt( o->getCppFile()->getTextFile()->getRowid() );
-			fields.push_back( C("idFile") );
+		else if ( !o->isNullTextFile() && !typename _TextFile<EncodingT>::TextFileIDEquality(*(o->getTextFile()))((*save)->getTextFile()) ) {
+			values.addInt64( o->getTextFile()->getRowid() );
+			fields.push_back( C("idText") );
 		}
-		else if ( o->isNullCppFile() && !(*save)->isNullCppFile() ) {
-			m_logger->errorStream() << "idFile : null reference is forbidden.";
-			throw InvalidQueryException("idFile : null reference is forbidden.");
+		else if ( o->isNullTextFile() && !(*save)->isNullTextFile() ) {
+			m_logger->errorStream() << "idText : null reference is forbidden.";
+			throw InvalidQueryException("idText : null reference is forbidden.");
+		}
+		std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToAdd;
+		std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToUpdate;
+		typename _DebugFileInfo<EncodingT>::DebugFunctionInfoIterator debugFunctionInfo;
+		for ( debugFunctionInfo=o->getDebugFunctionInfosBeginning(); debugFunctionInfo!=o->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
+			if (!(*debugFunctionInfo)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			(*debugFunctionInfo)->setDebugFileInfo(o);
+			typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(*(*debugFunctionInfo));
+			if ( std::find_if((*save)->getDebugFunctionInfosBeginning(), (*save)->getDebugFunctionInfosEnd(), debugFunctionInfoIdEquality) == (*save)->getDebugFunctionInfosEnd()) {
+				listOfDebugFunctionInfoToAdd.push_back(*debugFunctionInfo);
+			}
+			else {
+				if (debugFunctionInfoAccess->isModifiedDebugFunctionInfo(*debugFunctionInfo))
+					listOfDebugFunctionInfoToUpdate.push_back(*debugFunctionInfo);
+			}
+		}
+		std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > listOfDebugFunctionInfoToRemove;
+		for ( debugFunctionInfo=(*save)->getDebugFunctionInfosBeginning(); debugFunctionInfo<(*save)->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
+			if (!(*debugFunctionInfo)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(*(*debugFunctionInfo));
+			if ( std::find_if(o->getDebugFunctionInfosBeginning(), o->getDebugFunctionInfosEnd(), debugFunctionInfoIdEquality) == o->getDebugFunctionInfosEnd()) {
+				listOfDebugFunctionInfoToRemove.push_back(*debugFunctionInfo);
+			}
+		}
+		std::vector< boost::shared_ptr< _DebugStubInfo<EncodingT> > > listOfDebugStubInfoToAdd;
+		std::vector< boost::shared_ptr< _DebugStubInfo<EncodingT> > > listOfDebugStubInfoToUpdate;
+		typename _DebugFileInfo<EncodingT>::DebugStubInfoIterator debugStubInfo;
+		for ( debugStubInfo=o->getDebugStubInfosBeginning(); debugStubInfo!=o->getDebugStubInfosEnd(); ++debugStubInfo ) {
+			if (!(*debugStubInfo)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			(*debugStubInfo)->setDebugFileInfo(o);
+			typename _DebugStubInfo<EncodingT>::DebugStubInfoIDEquality debugStubInfoIdEquality(*(*debugStubInfo));
+			if ( std::find_if((*save)->getDebugStubInfosBeginning(), (*save)->getDebugStubInfosEnd(), debugStubInfoIdEquality) == (*save)->getDebugStubInfosEnd()) {
+				listOfDebugStubInfoToAdd.push_back(*debugStubInfo);
+			}
+			else {
+				if (debugStubInfoAccess->isModifiedDebugStubInfo(*debugStubInfo))
+					listOfDebugStubInfoToUpdate.push_back(*debugStubInfo);
+			}
+		}
+		std::vector< boost::shared_ptr< _DebugStubInfo<EncodingT> > > listOfDebugStubInfoToRemove;
+		for ( debugStubInfo=(*save)->getDebugStubInfosBeginning(); debugStubInfo<(*save)->getDebugStubInfosEnd(); ++debugStubInfo ) {
+			if (!(*debugStubInfo)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			typename _DebugStubInfo<EncodingT>::DebugStubInfoIDEquality debugStubInfoIdEquality(*(*debugStubInfo));
+			if ( std::find_if(o->getDebugStubInfosBeginning(), o->getDebugStubInfosEnd(), debugStubInfoIdEquality) == o->getDebugStubInfosEnd()) {
+				listOfDebugStubInfoToRemove.push_back(*debugStubInfo);
+			}
 		}
 		if (!fields.empty()) {
 			statement.swap( connection->update(C("debugFileInfo"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
@@ -318,6 +565,24 @@ _DebugFileInfoAccess<EncodingT>::updateDebugFileInfo(boost::shared_ptr< _DebugFi
 				throw InvalidQueryException("invalid query.");
 			}
 			m_updateSignal(OPERATION_ACCESS_UPDATE, C("debugFileInfo"), o);
+		}
+		for ( debugFunctionInfo=listOfDebugFunctionInfoToAdd.begin(); debugFunctionInfo!=listOfDebugFunctionInfoToAdd.end() ; ++debugFunctionInfo ) {
+			debugFunctionInfoAccess->insertDebugFunctionInfo(*debugFunctionInfo);
+		}
+		for ( debugFunctionInfo=listOfDebugFunctionInfoToUpdate.begin(); debugFunctionInfo!=listOfDebugFunctionInfoToUpdate.end() ; ++debugFunctionInfo ) {
+			debugFunctionInfoAccess->updateDebugFunctionInfo(*debugFunctionInfo);
+		}
+		for ( debugFunctionInfo=listOfDebugFunctionInfoToRemove.begin(); debugFunctionInfo!=listOfDebugFunctionInfoToRemove.end() ; ++debugFunctionInfo ) {
+			debugFunctionInfoAccess->deleteDebugFunctionInfo(*debugFunctionInfo);
+		}
+		for ( debugStubInfo=listOfDebugStubInfoToAdd.begin(); debugStubInfo!=listOfDebugStubInfoToAdd.end() ; ++debugStubInfo ) {
+			debugStubInfoAccess->insertDebugStubInfo(*debugStubInfo);
+		}
+		for ( debugStubInfo=listOfDebugStubInfoToUpdate.begin(); debugStubInfo!=listOfDebugStubInfoToUpdate.end() ; ++debugStubInfo ) {
+			debugStubInfoAccess->updateDebugStubInfo(*debugStubInfo);
+		}
+		for ( debugStubInfo=listOfDebugStubInfoToRemove.begin(); debugStubInfo!=listOfDebugStubInfoToRemove.end() ; ++debugStubInfo ) {
+			debugStubInfoAccess->deleteDebugStubInfo(*debugStubInfo);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -349,6 +614,16 @@ _DebugFileInfoAccess<EncodingT>::insertDebugFileInfo(boost::shared_ptr< _DebugFi
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
+	_DebugFunctionInfoAccess<EncodingT>* debugFunctionInfoAccess = _DebugFunctionInfoAccess<EncodingT>::getInstance();
+	if (!debugFunctionInfoAccess) {
+		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
+	}
+	_DebugStubInfoAccess<EncodingT>* debugStubInfoAccess = _DebugStubInfoAccess<EncodingT>::getInstance();
+	if (!debugStubInfoAccess) {
+		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
+		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
+	}
 	try {
 		m_transactionOwner = !connection->isTransactionInProgress();
 		if (m_transactionOwner) {
@@ -358,22 +633,24 @@ _DebugFileInfoAccess<EncodingT>::insertDebugFileInfo(boost::shared_ptr< _DebugFi
 		int id = connection->selectMaxID(C("identifier"), C("debugFileInfo"))+1;
 		values.addInt( id );
 		fields.push_back( C("identifier") );
+		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
+			m_logger->errorStream() << "idText : Identifier is null.";
+			throw InvalidQueryException("idText : Identifier is null.");
+		}
+		else if ( !o->isNullTextFile() ) {
+			values.addInt64( o->getTextFile()->getRowid() );
+			fields.push_back( C("idText") );
+		}
+		else {
+			m_logger->errorStream() << "idText : null reference is forbidden.";
+			throw InvalidQueryException("idText : null reference is forbidden.");
+		}
+		values.addText( o->getName() );
+		fields.push_back( C("name") );
 		values.addText( o->getCompilandPath() );
 		fields.push_back( C("compilandPath") );
 		values.addBlob( o->getChecksum() );
 		fields.push_back( C("checksum") );
-		if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getCppFile()->getTextFile()) ) {
-			m_logger->errorStream() << "idFile : Identifier is null.";
-			throw InvalidQueryException("idFile : Identifier is null.");
-		}
-		else if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() ) {
-			values.addInt( o->getCppFile()->getTextFile()->getRowid() );
-			fields.push_back( C("idFile") );
-		}
-		else {
-			m_logger->errorStream() << "idFile : null reference is forbidden.";
-			throw InvalidQueryException("idFile : null reference is forbidden.");
-		}
 		statement.swap( connection->insert(C("debugFileInfo"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
@@ -381,6 +658,16 @@ _DebugFileInfoAccess<EncodingT>::insertDebugFileInfo(boost::shared_ptr< _DebugFi
 		}
 		o->setIdentifier(id);
 		m_insertSignal(OPERATION_ACCESS_INSERT, C("debugFileInfo"), o);
+		typename _DebugFileInfo<EncodingT>::DebugFunctionInfoIterator debugFunctionInfo;
+		for ( debugFunctionInfo=o->getDebugFunctionInfosBeginning(); debugFunctionInfo!=o->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
+			(*debugFunctionInfo)->setDebugFileInfo(o);
+			debugFunctionInfoAccess->insertDebugFunctionInfo(*debugFunctionInfo);
+		}
+		typename _DebugFileInfo<EncodingT>::DebugStubInfoIterator debugStubInfo;
+		for ( debugStubInfo=o->getDebugStubInfosBeginning(); debugStubInfo!=o->getDebugStubInfosEnd(); ++debugStubInfo ) {
+			(*debugStubInfo)->setDebugFileInfo(o);
+			debugStubInfoAccess->insertDebugStubInfo(*debugStubInfo);
+		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
@@ -414,13 +701,33 @@ _DebugFileInfoAccess<EncodingT>::deleteDebugFileInfo(boost::shared_ptr< _DebugFi
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
+	_DebugFunctionInfoAccess<EncodingT>* debugFunctionInfoAccess = _DebugFunctionInfoAccess<EncodingT>::getInstance();
+	if (!debugFunctionInfoAccess) {
+		m_logger->errorStream() << "DebugFunctionInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
+	}
+	_DebugStubInfoAccess<EncodingT>* debugStubInfoAccess = _DebugStubInfoAccess<EncodingT>::getInstance();
+	if (!debugStubInfoAccess) {
+		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
+		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
+	}
 	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality DebugFileInfoIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), DebugFileInfoIdEquality);
+	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), DebugFileInfoIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
+		typename _DebugFileInfo<EncodingT>::DebugFunctionInfoIterator debugFunctionInfo;
+		fillAllDebugFunctionInfos(o);
+		for ( debugFunctionInfo=o->getDebugFunctionInfosBeginning(); debugFunctionInfo!=o->getDebugFunctionInfosEnd(); ++debugFunctionInfo ) {
+			debugFunctionInfoAccess->deleteDebugFunctionInfo(*debugFunctionInfo);
+		}
+		typename _DebugFileInfo<EncodingT>::DebugStubInfoIterator debugStubInfo;
+		fillAllDebugStubInfos(o);
+		for ( debugStubInfo=o->getDebugStubInfosBeginning(); debugStubInfo!=o->getDebugStubInfosEnd(); ++debugStubInfo ) {
+			debugStubInfoAccess->deleteDebugStubInfo(*debugStubInfo);
+		}
 		statement.swap( connection->deleteFrom(C("debugFileInfo"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";

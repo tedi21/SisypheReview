@@ -15,11 +15,12 @@ var = new CppInclude();
 ## Constructeur CppInclude
 *Paramètres*
 * String : La valeur de la colonne fileName.
+* Numeric : La valeur de la colonne lineNumber.
 
 *Description*
 * Crée une instance de la classe CppInclude.
 ```
-var = new CppInclude(fileName);
+var = new CppInclude(fileName, lineNumber);
 ```
 
 ## Méthode Identifier
@@ -46,6 +47,19 @@ val = var.Identifier;
 * Retourne la colonne FileName.
 ```
 val = var.FileName;
+```
+
+## Méthode LineNumber
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne lineNumber.
+
+*Description*
+* Retourne la colonne LineNumber.
+```
+val = var.LineNumber;
 ```
 
 ## Méthode CppFile
@@ -85,6 +99,19 @@ var.FileName(fileName);
 * Définit la colonne cppFile.
 ```
 var.CppFile(cppFile);
+```
+
+## Méthode LineNumber
+*Paramètres*
+* Numeric : La valeur de la colonne lineNumber.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne lineNumber.
+```
+var.LineNumber(lineNumber);
 ```
 
 ## Méthode HasCppFile

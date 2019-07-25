@@ -73,10 +73,6 @@ namespace dsg {
 													[has_g(0, set_g((attr0,attrN), If_IsID_R2 && If_IsREF_R2), eq_g())]    // il ne faut qu'un attribut soit � la fois une REF et un ID
 				<< ( CommentEntityConstructor3_R2
 				<<   CreateEntityConstructor3_R2 )  [has_g(0, set_g((attr0,attrN), If_IsID_R2 && If_IsREF_R2), gt_g())]
-                << CommentEntityCopyConstructor_R2
-                << CreateEntityCopyConstructor_R2
-                << CommentEntityAssignOperator_R2
-                << CreateEntityAssignOperator_R2
                 << CreateMethodsAttribute_R2
                 << CreateIteratorsRelation_R2
 				<< CreateMethodsRelation_R2

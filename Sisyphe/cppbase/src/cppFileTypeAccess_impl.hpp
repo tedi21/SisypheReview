@@ -60,9 +60,9 @@ _CppFileTypeAccess<EncodingT>::getManyCppFileTypes(typename EncodingT::string_t 
 	columns.push_back(C("string"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppFileType")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t string;
-		if (statement.getInt( 0, identifier ) &&
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, string )) {
 			value.reset(new _CppFileType<EncodingT>(
 				identifier,
@@ -82,7 +82,7 @@ _CppFileTypeAccess<EncodingT>::getAllCppFileTypes() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppFileType<EncodingT> >
-_CppFileTypeAccess<EncodingT>::getOneCppFileType(int identifier) const 
+_CppFileTypeAccess<EncodingT>::getOneCppFileType(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -120,22 +120,31 @@ _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppFileType")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t string;
-		if (statement.getInt( 0, identifier ) &&
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, string )) {
 			tab.push_back(boost::shared_ptr< _CppFileType<EncodingT> >(new _CppFileType<EncodingT>(
 				identifier,
 				string)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppFileType<EncodingT> >
-_CppFileTypeAccess<EncodingT>::selectOneCppFileType(int identifier, bool nowait, bool addition)  
+_CppFileTypeAccess<EncodingT>::selectOneCppFileType(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -199,9 +208,9 @@ _CppFileTypeAccess<EncodingT>::fillAllCppFiles(boost::shared_ptr< _CppFileType<E
 
 template<class EncodingT>
 void
-_CppFileTypeAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< _CppFileType<EncodingT> > o, boost::shared_ptr< _TextFile<EncodingT> > textFile, bool nowait)  
+_CppFileTypeAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< _CppFileType<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppFiles(o, C("idText = ") /*+ C("\'") */+ C(ToString::parse(textFile->getRowid()))/* + C("\'")*/, nowait);
+	fillManyCppFiles(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -227,10 +236,10 @@ _CppFileTypeAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _CppFileType<
 		cppFileFilter += C(" AND ") + filter;
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(o->getIdentifier());
-	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = cppFileAccess->selectManyCppFiles(cppFileFilter, nowait);
+		tab = cppFileAccess->selectManyCppFiles(cppFileFilter, nowait, true);
 		(*save)->clearCppFiles();
 		(*save)->insertCppFile((*save)->getCppFilesEnd(), tab.begin(), tab.end());
 	}
@@ -260,7 +269,7 @@ _CppFileTypeAccess<EncodingT>::isModifiedCppFileType(boost::shared_ptr< _CppFile
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -314,7 +323,7 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(boost::shared_ptr< _CppFileType
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -467,7 +476,7 @@ _CppFileTypeAccess<EncodingT>::deleteCppFileType(boost::shared_ptr< _CppFileType
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality CppFileTypeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileTypeIdEquality);
+	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileTypeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

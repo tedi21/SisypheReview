@@ -7,8 +7,8 @@ namespace gen {
     inline void
     sequence<A,B>::generate(TYPE_CONTEXT(DataT) & context) const
     {
-        this->left().generate<DataT>(context);
-        this->right().generate<DataT>(context);
+        this->left().template generate<DataT>(context);
+        this->right().template generate<DataT>(context);
     }
 
     ///////////////////////////////////////////////////////////////////////////

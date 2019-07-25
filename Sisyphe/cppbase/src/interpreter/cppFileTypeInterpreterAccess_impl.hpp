@@ -11,10 +11,6 @@ CppFileTypeInterpreterAccess<EncodingT>::CppFileTypeInterpreterAccess()
 }
 
 template <class EncodingT>
-CppFileTypeInterpreterAccess<EncodingT>::~CppFileTypeInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t CppFileTypeInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::in
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppFileTypeAccess"), method, args, ret))
+		if (tryInvoke(this, C("CppFileTypeAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -111,8 +108,8 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::ge
 	clearError();
 	try
 	{
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
 			res.reset(new CppFileTypeInterpreter<EncodingT>(m_object->getOneCppFileType(nativeIdentifier)));
 		}
@@ -133,8 +130,8 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::se
 	try
 	{
 		bool nativeNoWait;
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			res.reset(new CppFileTypeInterpreter<EncodingT>(m_object->selectOneCppFileType(nativeIdentifier,
@@ -205,7 +202,7 @@ void CppFileTypeInterpreterAccess<EncodingT>::fillAllCppFiles(boost::shared_ptr<
 
 template <class EncodingT>
 void CppFileTypeInterpreterAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< Base<EncodingT> >& refCppFileType,
-				const boost::shared_ptr< Base<EncodingT> >& textFile,
+				const boost::shared_ptr< Base<EncodingT> >& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
 	clearError();
@@ -213,13 +210,13 @@ void CppFileTypeInterpreterAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< 
 	{
 		bool nativeNoWait;
 		boost::shared_ptr< _CppFileType<EncodingT> > nativeRefCppFileType;
-		boost::shared_ptr< _TextFile<EncodingT> > nativeTextFile;
+		long long nativeIdentifier;
 		if (check_cppFileType(refCppFileType, nativeRefCppFileType) && 
-			check_textFile(textFile, nativeTextFile) &&
+			check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			m_object->fillOneCppFile(nativeRefCppFileType,
-				nativeTextFile,
+				nativeIdentifier,
 				nativeNoWait);
 			reset_cppFileType(refCppFileType, nativeRefCppFileType);
 		}
@@ -350,7 +347,7 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::ge
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

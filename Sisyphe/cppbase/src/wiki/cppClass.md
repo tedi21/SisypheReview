@@ -15,9 +15,12 @@ var = new CppClass();
 ## Constructeur CppClass
 *Paramètres*
 * String : La valeur de la colonne name.
+* String : La valeur de la colonne fullName.
+* String : La valeur de la colonne accessSpecifier.
 * Numeric : La valeur de la colonne isStruct.
 * Numeric : La valeur de la colonne isInterface.
 * Numeric : La valeur de la colonne isAbstract.
+* Numeric : La valeur de la colonne isTemplate.
 * Numeric : La valeur de la colonne linesCount.
 * Numeric : La valeur de la colonne lineNumber.
 * Numeric : La valeur de la colonne startBlock.
@@ -26,7 +29,7 @@ var = new CppClass();
 *Description*
 * Crée une instance de la classe CppClass.
 ```
-var = new CppClass(name, isStruct, isInterface, isAbstract, linesCount, lineNumber, startBlock, lengthBlock);
+var = new CppClass(name, fullName, accessSpecifier, isStruct, isInterface, isAbstract, isTemplate, linesCount, lineNumber, startBlock, lengthBlock);
 ```
 
 ## Méthode Identifier
@@ -53,6 +56,32 @@ val = var.Identifier;
 * Retourne la colonne Name.
 ```
 val = var.Name;
+```
+
+## Méthode FullName
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne fullName.
+
+*Description*
+* Retourne la colonne FullName.
+```
+val = var.FullName;
+```
+
+## Méthode AccessSpecifier
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne accessSpecifier.
+
+*Description*
+* Retourne la colonne AccessSpecifier.
+```
+val = var.AccessSpecifier;
 ```
 
 ## Méthode IsStruct
@@ -92,6 +121,19 @@ val = var.IsInterface;
 * Retourne la colonne IsAbstract.
 ```
 val = var.IsAbstract;
+```
+
+## Méthode IsTemplate
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isTemplate.
+
+*Description*
+* Retourne la colonne IsTemplate.
+```
+val = var.IsTemplate;
 ```
 
 ## Méthode LinesCount
@@ -146,6 +188,19 @@ val = var.StartBlock;
 val = var.LengthBlock;
 ```
 
+## Méthode EncapsulationClass
+*Paramètres*
+* None.
+
+*Retour*
+* CppClass : La colonne encapsulationClass.
+
+*Description*
+* Retourne la colonne EncapsulationClass.
+```
+encapsulationClass = var.EncapsulationClass;
+```
+
 ## Méthode CppFile
 *Paramètres*
 * None.
@@ -159,6 +214,19 @@ val = var.LengthBlock;
 cppFile = var.CppFile;
 ```
 
+## Méthode EncapsulationClass
+*Paramètres*
+* CppClass : La valeur de la colonne encapsulationClass.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne encapsulationClass.
+```
+var.EncapsulationClass(encapsulationClass);
+```
+
 ## Méthode Name
 *Paramètres*
 * String : La valeur de la colonne name.
@@ -170,6 +238,32 @@ cppFile = var.CppFile;
 * Définit la colonne name.
 ```
 var.Name(name);
+```
+
+## Méthode FullName
+*Paramètres*
+* String : La valeur de la colonne fullName.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne fullName.
+```
+var.FullName(fullName);
+```
+
+## Méthode AccessSpecifier
+*Paramètres*
+* String : La valeur de la colonne accessSpecifier.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne accessSpecifier.
+```
+var.AccessSpecifier(accessSpecifier);
 ```
 
 ## Méthode IsStruct
@@ -209,6 +303,19 @@ var.IsInterface(isInterface);
 * Définit la colonne isAbstract.
 ```
 var.IsAbstract(isAbstract);
+```
+
+## Méthode IsTemplate
+*Paramètres*
+* Numeric : La valeur de la colonne isTemplate.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isTemplate.
+```
+var.IsTemplate(isTemplate);
 ```
 
 ## Méthode LinesCount
@@ -276,6 +383,19 @@ var.StartBlock(startBlock);
 var.LengthBlock(lengthBlock);
 ```
 
+## Méthode HasEncapsulationClass
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : Une valeur est définie pour la colonne encapsulationClass.
+
+*Description*
+* Indique si la colonne EncapsulationClass a une valeur définie.
+```
+val = var.HasEncapsulationClass;
+```
+
 ## Méthode HasCppFile
 *Paramètres*
 * None.
@@ -287,6 +407,19 @@ var.LengthBlock(lengthBlock);
 * Indique si la colonne CppFile a une valeur définie.
 ```
 val = var.HasCppFile;
+```
+
+## Méthode removeEncapsulationClass
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime la valeur définie pour la colonne encapsulationClass.
+```
+var.EncapsulationClass = null;
 ```
 
 ## Méthode removeCppFile
@@ -328,6 +461,19 @@ var.CppInheritances(0) = null;
 var.CppFunctions(0) = null;
 ```
 
+## Méthode removeInternClasses
+*Paramètres*
+* Numeric : La position de l'élément à supprimer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime l'élément à la position *n* dans la liste de InternClasses.
+```
+var.InternClasses(0) = null;
+```
+
 ## Méthode removeCppAttributes
 *Paramètres*
 * Numeric : La position de l'élément à supprimer dans la liste.
@@ -339,6 +485,19 @@ var.CppFunctions(0) = null;
 * Supprime l'élément à la position *n* dans la liste de CppAttributes.
 ```
 var.CppAttributes(0) = null;
+```
+
+## Méthode removeCppEnums
+*Paramètres*
+* Numeric : La position de l'élément à supprimer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime l'élément à la position *n* dans la liste de CppEnums.
+```
+var.CppEnums(0) = null;
 ```
 
 ## Méthode CppInheritances
@@ -369,6 +528,20 @@ var.CppInheritances(0) = cppInheritance;
 var.CppFunctions(0) = cppFunction;
 ```
 
+## Méthode InternClasses
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* CppClass : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de InternClasses.
+```
+var.InternClasses(0) = internClasse;
+```
+
 ## Méthode CppAttributes
 *Paramètres*
 * Numeric : La position de l'élément à insérer dans la liste.
@@ -381,6 +554,20 @@ var.CppFunctions(0) = cppFunction;
 * Insère un élément à la position *n* dans la liste de CppAttributes.
 ```
 var.CppAttributes(0) = cppAttribute;
+```
+
+## Méthode CppEnums
+*Paramètres*
+* Numeric : La position de l'élément à insérer dans la liste.
+* CppEnum : L'élément à insérer dans la liste.
+
+*Retour*
+* None.
+
+*Description*
+* Insère un élément à la position *n* dans la liste de CppEnums.
+```
+var.CppEnums(0) = cppEnum;
 ```
 
 ## Méthode CppInheritances
@@ -409,6 +596,19 @@ val = var.CppInheritances(0);
 val = var.CppFunctions(0);
 ```
 
+## Méthode InternClasses
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* CppClass : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de InternClasses.
+```
+val = var.InternClasses(0);
+```
+
 ## Méthode CppAttributes
 *Paramètres*
 * Numeric : La position de l'élément dans la liste.
@@ -420,6 +620,19 @@ val = var.CppFunctions(0);
 * Retourne l'élément à la position *n* dans la liste de CppAttributes.
 ```
 val = var.CppAttributes(0);
+```
+
+## Méthode CppEnums
+*Paramètres*
+* Numeric : La position de l'élément dans la liste.
+
+*Retour*
+* CppEnum : L'élément dans la liste.
+
+*Description*
+* Retourne l'élément à la position *n* dans la liste de CppEnums.
+```
+val = var.CppEnums(0);
 ```
 
 ## Méthode ClearCppInheritances
@@ -448,6 +661,19 @@ var.ClearCppInheritances();
 var.ClearCppFunctions();
 ```
 
+## Méthode ClearInternClasses
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearInternClasses();
+```
+
 ## Méthode ClearCppAttributes
 *Paramètres*
 * None.
@@ -459,6 +685,19 @@ var.ClearCppFunctions();
 * Supprime tous les éléments de liste.
 ```
 var.ClearCppAttributes();
+```
+
+## Méthode ClearCppEnums
+*Paramètres*
+* None.
+
+*Retour*
+* None.
+
+*Description*
+* Supprime tous les éléments de liste.
+```
+var.ClearCppEnums();
 ```
 
 ## Méthode HasCppInheritances
@@ -487,6 +726,19 @@ val = var.HasCppInheritances();
 val = var.HasCppFunctions();
 ```
 
+## Méthode HasInternClasses
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasInternClasses();
+```
+
 ## Méthode HasCppAttributes
 *Paramètres*
 * None.
@@ -498,6 +750,19 @@ val = var.HasCppFunctions();
 * Indique si la liste n'est pas vide.
 ```
 val = var.HasCppAttributes();
+```
+
+## Méthode HasCppEnums
+*Paramètres*
+* None.
+
+*Retour*
+* Bool : True si la liste n'est pas vide, False sinon.
+
+*Description*
+* Indique si la liste n'est pas vide.
+```
+val = var.HasCppEnums();
 ```
 
 ## Méthode CppInheritancesCount
@@ -526,6 +791,19 @@ val = var.CppInheritancesCount();
 val = var.CppFunctionsCount();
 ```
 
+## Méthode InternClassesCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.InternClassesCount();
+```
+
 ## Méthode CppAttributesCount
 *Paramètres*
 * None.
@@ -537,4 +815,17 @@ val = var.CppFunctionsCount();
 * Retourne le nombre d'élément contenus dans la liste.
 ```
 val = var.CppAttributesCount();
+```
+
+## Méthode CppEnumsCount
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : Le nombre d'éléments contenus dans la liste.
+
+*Description*
+* Retourne le nombre d'élément contenus dans la liste.
+```
+val = var.CppEnumsCount();
 ```

@@ -28,7 +28,7 @@ namespace dsg {
 			CreateInclude_R2 =
                 str_g("#include \"config.hpp\"\r\n"
                       "#include \"macros.hpp\"\r\n"
-                      "#include \"String.hpp\"\r\n"
+                      "#include \"Base.hpp\"\r\n"
                       "#include \"Array.hpp\"\r\n\r\n")
                 << (str_g("#include \"") << call_g(getWorkspaceNameHandler()) << "Export.hpp\"\r\n")
                 << (str_g("#include \"") << call_g(getWorkspaceNameHandler()) << "Data.h\"\r\n");
@@ -56,7 +56,7 @@ namespace dsg {
 			CreateInterpreterEntity_R2 =
 				str_g("template <class EncodingT>")
 				<< line_g(1) << "class " << UEntity_R2 << "Interpreter"
-				<< line_g(1) << ": public String<EncodingT>"
+                << line_g(1) << ": public Base<EncodingT>"
 				<< line_g(1) << "{"
 				<< line_g(1) << "private:"
 				<< line_g(1) << htab_g(1) << "boost::shared_ptr< " << EntityClass_R2 << " > m_value;"
@@ -64,10 +64,9 @@ namespace dsg {
 				<< line_g(1) << htab_g(1) << UEntity_R2 << "Interpreter();"
 				<< line_g(2) << htab_g(1) << UEntity_R2 << "Interpreter(boost::shared_ptr< " << EntityClass_R2 << " > const& value);"
 				<< line_g(2) << htab_g(1) << CreateConstructorFactoryPrototype_R2
-				<< line_g(1) << htab_g(1) << UEntity_R2 << "Interpreter(" << CreateConstructorParam_R2 << ");"
-				<< line_g(2) << htab_g(1) << "~" << UEntity_R2 << "Interpreter();"
-				<< line_g(2) << htab_g(1) << "boost::shared_ptr< " << EntityClass_R2 << " > getValue() const;"
-				<< line_g(2) << htab_g(1) << "void setValue(boost::shared_ptr< " << EntityClass_R2 << " > const& value);"
+                << line_g(1) << htab_g(1) << UEntity_R2 << "Interpreter(" << CreateConstructorParam_R2 << ");"
+                << line_g(2) << htab_g(1) << "boost::shared_ptr< " << EntityClass_R2 << " > value() const;"
+                << line_g(2) << htab_g(1) << "void value(boost::shared_ptr< " << EntityClass_R2 << " > const& value);"
 				<< line_g(2) << htab_g(1) << "virtual typename EncodingT::string_t toString() const;"
 				<< line_g(2) << htab_g(1) << "virtual boost::shared_ptr< Base<EncodingT> > clone() const;"
 				<< line_g(2) << htab_g(1) << "virtual typename EncodingT::string_t getClassName() const;"

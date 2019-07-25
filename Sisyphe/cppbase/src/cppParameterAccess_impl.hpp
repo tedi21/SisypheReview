@@ -59,44 +59,56 @@ _CppParameterAccess<EncodingT>::getManyCppParameters(typename EncodingT::string_
 	columns.push_back(C("identifier"));
 	columns.push_back(C("paramOrder"));
 	columns.push_back(C("paramType"));
+	columns.push_back(C("isConst"));
 	columns.push_back(C("defaultValue"));
 	columns.push_back(C("decName"));
+	columns.push_back(C("decLineNumber"));
 	columns.push_back(C("startDecBlock"));
 	columns.push_back(C("lengthDecBlock"));
 	columns.push_back(C("defName"));
+	columns.push_back(C("defLineNumber"));
 	columns.push_back(C("startDefBlock"));
 	columns.push_back(C("lengthDefBlock"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppParameter")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
-		int paramOrder;
+		long long identifier;
+		long long paramOrder;
 		typename EncodingT::string_t paramType;
+		long long isConst;
 		typename EncodingT::string_t defaultValue;
 		typename EncodingT::string_t decName;
-		int startDecBlock;
-		int lengthDecBlock;
+		long long decLineNumber;
+		long long startDecBlock;
+		long long lengthDecBlock;
 		typename EncodingT::string_t defName;
-		int startDefBlock;
-		int lengthDefBlock;
-		if (statement.getInt( 0, identifier ) &&
-			statement.getInt( 1, paramOrder ) &&
+		long long defLineNumber;
+		long long startDefBlock;
+		long long lengthDefBlock;
+		if (statement.getInt64( 0, identifier ) &&
+			statement.getInt64( 1, paramOrder ) &&
 			statement.getText( 2, paramType ) &&
-			statement.getText( 3, defaultValue ) &&
-			statement.getText( 4, decName ) &&
-			statement.getInt( 5, startDecBlock ) &&
-			statement.getInt( 6, lengthDecBlock ) &&
-			statement.getText( 7, defName ) &&
-			statement.getInt( 8, startDefBlock ) &&
-			statement.getInt( 9, lengthDefBlock )) {
+			statement.getInt64( 3, isConst ) &&
+			statement.getText( 4, defaultValue ) &&
+			statement.getText( 5, decName ) &&
+			statement.getInt64( 6, decLineNumber ) &&
+			statement.getInt64( 7, startDecBlock ) &&
+			statement.getInt64( 8, lengthDecBlock ) &&
+			statement.getText( 9, defName ) &&
+			statement.getInt64( 10, defLineNumber ) &&
+			statement.getInt64( 11, startDefBlock ) &&
+			statement.getInt64( 12, lengthDefBlock )) {
 			value.reset(new _CppParameter<EncodingT>(
 				identifier,
 				paramOrder,
 				paramType,
+				isConst,
 				defaultValue,
 				decName,
+				decLineNumber,
 				startDecBlock,
 				lengthDecBlock,
 				defName,
+				defLineNumber,
 				startDefBlock,
 				lengthDefBlock));
 			tab.push_back(value);
@@ -114,7 +126,7 @@ _CppParameterAccess<EncodingT>::getAllCppParameters() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppParameter<EncodingT> >
-_CppParameterAccess<EncodingT>::getOneCppParameter(int identifier) const 
+_CppParameterAccess<EncodingT>::getOneCppParameter(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -143,11 +155,14 @@ _CppParameterAccess<EncodingT>::selectManyCppParameters(typename EncodingT::stri
 	columns.push_back(C("identifier"));
 	columns.push_back(C("paramOrder"));
 	columns.push_back(C("paramType"));
+	columns.push_back(C("isConst"));
 	columns.push_back(C("defaultValue"));
 	columns.push_back(C("decName"));
+	columns.push_back(C("decLineNumber"));
 	columns.push_back(C("startDecBlock"));
 	columns.push_back(C("lengthDecBlock"));
 	columns.push_back(C("defName"));
+	columns.push_back(C("defLineNumber"));
 	columns.push_back(C("startDefBlock"));
 	columns.push_back(C("lengthDefBlock"));
 	if (!addition || !connection->isTransactionInProgress()) {
@@ -160,46 +175,64 @@ _CppParameterAccess<EncodingT>::selectManyCppParameters(typename EncodingT::stri
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppParameter")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
-		int paramOrder;
+		long long identifier;
+		long long paramOrder;
 		typename EncodingT::string_t paramType;
+		long long isConst;
 		typename EncodingT::string_t defaultValue;
 		typename EncodingT::string_t decName;
-		int startDecBlock;
-		int lengthDecBlock;
+		long long decLineNumber;
+		long long startDecBlock;
+		long long lengthDecBlock;
 		typename EncodingT::string_t defName;
-		int startDefBlock;
-		int lengthDefBlock;
-		if (statement.getInt( 0, identifier ) &&
-			statement.getInt( 1, paramOrder ) &&
+		long long defLineNumber;
+		long long startDefBlock;
+		long long lengthDefBlock;
+		if (statement.getInt64( 0, identifier ) &&
+			statement.getInt64( 1, paramOrder ) &&
 			statement.getText( 2, paramType ) &&
-			statement.getText( 3, defaultValue ) &&
-			statement.getText( 4, decName ) &&
-			statement.getInt( 5, startDecBlock ) &&
-			statement.getInt( 6, lengthDecBlock ) &&
-			statement.getText( 7, defName ) &&
-			statement.getInt( 8, startDefBlock ) &&
-			statement.getInt( 9, lengthDefBlock )) {
+			statement.getInt64( 3, isConst ) &&
+			statement.getText( 4, defaultValue ) &&
+			statement.getText( 5, decName ) &&
+			statement.getInt64( 6, decLineNumber ) &&
+			statement.getInt64( 7, startDecBlock ) &&
+			statement.getInt64( 8, lengthDecBlock ) &&
+			statement.getText( 9, defName ) &&
+			statement.getInt64( 10, defLineNumber ) &&
+			statement.getInt64( 11, startDefBlock ) &&
+			statement.getInt64( 12, lengthDefBlock )) {
 			tab.push_back(boost::shared_ptr< _CppParameter<EncodingT> >(new _CppParameter<EncodingT>(
 				identifier,
 				paramOrder,
 				paramType,
+				isConst,
 				defaultValue,
 				decName,
+				decLineNumber,
 				startDecBlock,
 				lengthDecBlock,
 				defName,
+				defLineNumber,
 				startDefBlock,
 				lengthDefBlock)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppParameter<EncodingT> >
-_CppParameterAccess<EncodingT>::selectOneCppParameter(int identifier, bool nowait, bool addition)  
+_CppParameterAccess<EncodingT>::selectOneCppParameter(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -271,12 +304,12 @@ _CppParameterAccess<EncodingT>::fillCppFunction(boost::shared_ptr< _CppParameter
 		m_logger->errorStream() << "CppFunctionAccess class is not initialized.";
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
-	int id;
+	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFunction")), std::vector<typename EncodingT::string_t>(1,C("cppParameter")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
-		typename std::vector< boost::shared_ptr<_CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
+		typename std::list< boost::shared_ptr<_CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFunction(val);
 		}
@@ -301,7 +334,7 @@ _CppParameterAccess<EncodingT>::isModifiedCppParameter(boost::shared_ptr< _CppPa
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppParameter<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
+	typename std::list< boost::shared_ptr< _CppParameter<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -309,11 +342,14 @@ _CppParameterAccess<EncodingT>::isModifiedCppParameter(boost::shared_ptr< _CppPa
 	bool bUpdate = false;
 	bUpdate = bUpdate || ((*save)->getParamOrder() != o->getParamOrder());
 	bUpdate = bUpdate || ((*save)->getParamType() != o->getParamType());
+	bUpdate = bUpdate || ((*save)->getIsConst() != o->getIsConst());
 	bUpdate = bUpdate || ((*save)->getDefaultValue() != o->getDefaultValue());
 	bUpdate = bUpdate || ((*save)->getDecName() != o->getDecName());
+	bUpdate = bUpdate || ((*save)->getDecLineNumber() != o->getDecLineNumber());
 	bUpdate = bUpdate || ((*save)->getStartDecBlock() != o->getStartDecBlock());
 	bUpdate = bUpdate || ((*save)->getLengthDecBlock() != o->getLengthDecBlock());
 	bUpdate = bUpdate || ((*save)->getDefName() != o->getDefName());
+	bUpdate = bUpdate || ((*save)->getDefLineNumber() != o->getDefLineNumber());
 	bUpdate = bUpdate || ((*save)->getStartDefBlock() != o->getStartDefBlock());
 	bUpdate = bUpdate || ((*save)->getLengthDefBlock() != o->getLengthDefBlock());
 	bUpdate = bUpdate || (!(*save)->isNullCppFunction() && !o->isNullCppFunction() && !typename _CppFunction<EncodingT>::CppFunctionIDEquality(*(*save)->getCppFunction())(o->getCppFunction()))
@@ -343,19 +379,23 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
+	typename std::list< boost::shared_ptr< _CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
 	}
 	try {
 		if ( (*save)->getParamOrder() != o->getParamOrder() ) {
-			values.addInt( o->getParamOrder() );
+			values.addInt64( o->getParamOrder() );
 			fields.push_back( C("paramOrder") );
 		}
 		if ( (*save)->getParamType() != o->getParamType() ) {
 			values.addText( o->getParamType() );
 			fields.push_back( C("paramType") );
+		}
+		if ( (*save)->getIsConst() != o->getIsConst() ) {
+			values.addInt64( o->getIsConst() );
+			fields.push_back( C("isConst") );
 		}
 		if ( (*save)->getDefaultValue() != o->getDefaultValue() ) {
 			values.addText( o->getDefaultValue() );
@@ -365,24 +405,32 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 			values.addText( o->getDecName() );
 			fields.push_back( C("decName") );
 		}
+		if ( (*save)->getDecLineNumber() != o->getDecLineNumber() ) {
+			values.addInt64( o->getDecLineNumber() );
+			fields.push_back( C("decLineNumber") );
+		}
 		if ( (*save)->getStartDecBlock() != o->getStartDecBlock() ) {
-			values.addInt( o->getStartDecBlock() );
+			values.addInt64( o->getStartDecBlock() );
 			fields.push_back( C("startDecBlock") );
 		}
 		if ( (*save)->getLengthDecBlock() != o->getLengthDecBlock() ) {
-			values.addInt( o->getLengthDecBlock() );
+			values.addInt64( o->getLengthDecBlock() );
 			fields.push_back( C("lengthDecBlock") );
 		}
 		if ( (*save)->getDefName() != o->getDefName() ) {
 			values.addText( o->getDefName() );
 			fields.push_back( C("defName") );
 		}
+		if ( (*save)->getDefLineNumber() != o->getDefLineNumber() ) {
+			values.addInt64( o->getDefLineNumber() );
+			fields.push_back( C("defLineNumber") );
+		}
 		if ( (*save)->getStartDefBlock() != o->getStartDefBlock() ) {
-			values.addInt( o->getStartDefBlock() );
+			values.addInt64( o->getStartDefBlock() );
 			fields.push_back( C("startDefBlock") );
 		}
 		if ( (*save)->getLengthDefBlock() != o->getLengthDefBlock() ) {
-			values.addInt( o->getLengthDefBlock() );
+			values.addInt64( o->getLengthDefBlock() );
 			fields.push_back( C("lengthDefBlock") );
 		}
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
@@ -390,7 +438,7 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 			throw InvalidQueryException("idFunction : Identifier is null.");
 		}
 		else if ( !o->isNullCppFunction() && !typename _CppFunction<EncodingT>::CppFunctionIDEquality(*(o->getCppFunction()))((*save)->getCppFunction()) ) {
-			values.addInt( o->getCppFunction()->getIdentifier() );
+			values.addInt64( o->getCppFunction()->getIdentifier() );
 			fields.push_back( C("idFunction") );
 		}
 		else if ( o->isNullCppFunction() && !(*save)->isNullCppFunction() ) {
@@ -444,10 +492,12 @@ _CppParameterAccess<EncodingT>::insertCppParameter(boost::shared_ptr< _CppParame
 		int id = connection->selectMaxID(C("identifier"), C("cppParameter"))+1;
 		values.addInt( id );
 		fields.push_back( C("identifier") );
-		values.addInt( o->getParamOrder() );
+		values.addInt64( o->getParamOrder() );
 		fields.push_back( C("paramOrder") );
 		values.addText( o->getParamType() );
 		fields.push_back( C("paramType") );
+		values.addInt64( o->getIsConst() );
+		fields.push_back( C("isConst") );
 		values.addText( o->getDefaultValue() );
 		fields.push_back( C("defaultValue") );
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
@@ -455,7 +505,7 @@ _CppParameterAccess<EncodingT>::insertCppParameter(boost::shared_ptr< _CppParame
 			throw InvalidQueryException("idFunction : Identifier is null.");
 		}
 		else if ( !o->isNullCppFunction() ) {
-			values.addInt( o->getCppFunction()->getIdentifier() );
+			values.addInt64( o->getCppFunction()->getIdentifier() );
 			fields.push_back( C("idFunction") );
 		}
 		else {
@@ -464,15 +514,19 @@ _CppParameterAccess<EncodingT>::insertCppParameter(boost::shared_ptr< _CppParame
 		}
 		values.addText( o->getDecName() );
 		fields.push_back( C("decName") );
-		values.addInt( o->getStartDecBlock() );
+		values.addInt64( o->getDecLineNumber() );
+		fields.push_back( C("decLineNumber") );
+		values.addInt64( o->getStartDecBlock() );
 		fields.push_back( C("startDecBlock") );
-		values.addInt( o->getLengthDecBlock() );
+		values.addInt64( o->getLengthDecBlock() );
 		fields.push_back( C("lengthDecBlock") );
 		values.addText( o->getDefName() );
 		fields.push_back( C("defName") );
-		values.addInt( o->getStartDefBlock() );
+		values.addInt64( o->getDefLineNumber() );
+		fields.push_back( C("defLineNumber") );
+		values.addInt64( o->getStartDefBlock() );
 		fields.push_back( C("startDefBlock") );
-		values.addInt( o->getLengthDefBlock() );
+		values.addInt64( o->getLengthDefBlock() );
 		fields.push_back( C("lengthDefBlock") );
 		statement.swap( connection->insert(C("cppParameter"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
@@ -515,7 +569,7 @@ _CppParameterAccess<EncodingT>::deleteCppParameter(boost::shared_ptr< _CppParame
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppParameter<EncodingT>::CppParameterIDEquality CppParameterIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppParameterIdEquality);
+	typename std::list< boost::shared_ptr< _CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppParameterIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

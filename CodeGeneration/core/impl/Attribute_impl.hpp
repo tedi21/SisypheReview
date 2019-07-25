@@ -31,68 +31,68 @@ namespace dsg {
             }
             switch (m_type)
             {
-            case ATTR_BOOLEAN     : strType = L"Boolean";     break;
-            case ATTR_SBYTE       : strType = L"SByte";       break;
-            case ATTR_BYTE        : strType = L"Byte";        break;
-            case ATTR_ANSICHAR    : strType = L"AnsiChar";        break;
-            case ATTR_WIDECHAR    : strType = L"WideChar";        break;
-            case ATTR_CHAR        : strType = L"Char";        break;
-            case ATTR_INT16       : strType = L"Int16";       break;
-            case ATTR_UINT16      : strType = L"UInt16";      break;
-            case ATTR_INT32       : strType = L"Int32";       break;
-            case ATTR_UINT32      : strType = L"UInt32";      break;
-            case ATTR_INT64       : strType = L"Int64";       break;
-            case ATTR_UINT64      : strType = L"UInt64";      break;
-            case ATTR_INT         : strType = L"Int";         break;
-            case ATTR_UINT        : strType = L"UInt";        break;
-            case ATTR_SINGLE      : strType = L"Single";      break;
-            case ATTR_DOUBLE      : strType = L"Double";      break;
-            case ATTR_ANSISTRING  : strType = L"AnsiString";  break;
-            case ATTR_WIDESTRING  : strType = L"WideString";  break;
-            case ATTR_STRING      : strType = L"String";      break;
-            case ATTR_TEXT        : strType = L"Text";        break;
-            case ATTR_TIME        : strType = L"Time";        break;
-            case ATTR_DATE        : strType = L"Date";        break;
-            case ATTR_ANY         : strType = L"Any";         break;
-            case ATTR_BINARY      : strType = L"Binary";      break;
-            default               : strType = L"Unknown";     break;
+            case ATTR_BOOLEAN     : strType = u"Boolean";     break;
+            case ATTR_SBYTE       : strType = u"SByte";       break;
+            case ATTR_BYTE        : strType = u"Byte";        break;
+            case ATTR_ANSICHAR    : strType = u"AnsiChar";        break;
+            case ATTR_WIDECHAR    : strType = u"WideChar";        break;
+            case ATTR_CHAR        : strType = u"Char";        break;
+            case ATTR_INT16       : strType = u"Int16";       break;
+            case ATTR_UINT16      : strType = u"UInt16";      break;
+            case ATTR_INT32       : strType = u"Int32";       break;
+            case ATTR_UINT32      : strType = u"UInt32";      break;
+            case ATTR_INT64       : strType = u"Int64";       break;
+            case ATTR_UINT64      : strType = u"UInt64";      break;
+            case ATTR_INT         : strType = u"Int";         break;
+            case ATTR_UINT        : strType = u"UInt";        break;
+            case ATTR_SINGLE      : strType = u"Single";      break;
+            case ATTR_DOUBLE      : strType = u"Double";      break;
+            case ATTR_ANSISTRING  : strType = u"AnsiString";  break;
+            case ATTR_WIDESTRING  : strType = u"WideString";  break;
+            case ATTR_STRING      : strType = u"String";      break;
+            case ATTR_TEXT        : strType = u"Text";        break;
+            case ATTR_TIME        : strType = u"Time";        break;
+            case ATTR_DATE        : strType = u"Date";        break;
+            case ATTR_ANY         : strType = u"Any";         break;
+            case ATTR_BINARY      : strType = u"Binary";      break;
+            default               : strType = u"Unknown";     break;
             }
             xml_attribute->setAttribute(AX("Type"), strType.c_str());
             if (isId()) 
             {
-                strModifier += L"Id ";
+                strModifier += u"Id ";
             }
             if (isRef()) 
             {
-                strModifier += L"Ref ";
+                strModifier += u"Ref ";
             }
             if (isAuto()) 
             {
-                strModifier += L"Auto ";
+                strModifier += u"Auto ";
             }
             if (isConst()) 
             {
-                strModifier += L"Const ";
+                strModifier += u"Const ";
             }
             if (isContextual()) 
             {
-                strModifier += L"Contextual ";
+                strModifier += u"Contextual ";
             }
             if (isBase()) 
             {
-                strModifier += L"Base ";
+                strModifier += u"Base ";
             }
             if (isVirtual()) 
             {
-                strModifier += L"Virtual ";
+                strModifier += u"Virtual ";
             }
             if (isStatic()) 
             {
-                strModifier += L"Static ";
+                strModifier += u"Static ";
             }
             if (isArray())
             {
-                strModifier += L"Array ";
+                strModifier += u"Array ";
             }
             if (!strModifier.empty())
             {

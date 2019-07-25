@@ -4,8 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include "config.hpp"
 #include "macros.hpp"
-#include "base.hpp"
 #include "interpreter.hpp"
+#include "Base.hpp"
 
 #define C(str) encode<ansi,EncodingT>(str)
 
@@ -21,16 +21,13 @@ NAMESPACE_BEGIN(interp)
     class Predicate
     : public Base<EncodingT>
     {
-	private:
+    private:
         Context<EncodingT> m_context;
         boost::shared_ptr< Function<EncodingT> > m_function;
 		
     public:
         // Constructor
         Predicate(Context<EncodingT> const& c, typename EncodingT::string_t const& functionName);
-
-        // Destructor
-        virtual ~Predicate();
 
         // Functors
         bool operator()(boost::shared_ptr< Base<EncodingT> > const& value);

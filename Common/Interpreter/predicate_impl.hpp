@@ -16,10 +16,6 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    Predicate<EncodingT>::~Predicate()
-    {}
-
-    template <class EncodingT>
     bool Predicate<EncodingT>::operator()(boost::shared_ptr< Base<EncodingT> > const& value)
     {
         std::vector< boost::shared_ptr< Base<EncodingT> > > params;
@@ -79,7 +75,8 @@ NAMESPACE_BEGIN(interp)
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
         {
-            if (tryInvoke(this, C("Predicate"), method, args, ret))
+            if (tryInvoke(this, C("Predicate"), method, args, ret) ||
+                tryInvoke(this, C("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -103,21 +100,15 @@ NAMESPACE_BEGIN(interp)
         if (m_function)
         {
             std::vector<typename EncodingT::string_t> paramsName = m_function->getParams();
-
-            double n;
             boost::shared_ptr< Array<EncodingT> > arr  = dynamic_pointer_cast< Array<EncodingT> >(params);
             if (arr)
             {
-                if (check_numeric(arr->size(), n))
+                size_t lg = arr->length();
+                for (size_t i = 0; i<lg && i<paramsName.size(); ++i)
                 {
-                    size_t lg = (size_t)n;
-                    for (size_t i = 0; i<lg && i<paramsName.size(); ++i)
-                    {
-                        m_context.add(paramsName[i],
-                                      arr->getValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(i))));
-                    }
-                    val = m_function->interpret(m_context);
+                    m_context.add(paramsName[i], arr->valueAt(i));
                 }
+                val = m_function->interpret(m_context);
             }
             else
             {
@@ -197,11 +188,10 @@ NAMESPACE_BEGIN(interp)
     boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::getVariable(boost::shared_ptr< Base<EncodingT> > const& i) const
     {
         boost::shared_ptr< Base<EncodingT> > res(new Base<EncodingT>());
-        double value = 0;
-        if (check_numeric(i, value))
+        size_t index = 0;
+        if (check_numeric_i(i, index))
         {
-            size_t index = 0;
-            if (check_index(value, m_context.size(), index))
+            if (check_index(index, m_context.size()))
             {
                 typename Context<EncodingT>::iterator_t i = m_context.begin();
                 std::advance(i, index);

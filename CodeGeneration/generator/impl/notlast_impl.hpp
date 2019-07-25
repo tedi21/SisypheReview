@@ -8,7 +8,7 @@ namespace gen {
     {
         if (!context.isLastPosition()) 
         {
-            this->subject().generate<DataT>(context);
+            this->subject().template generate<DataT>(context);
         }
     }
     

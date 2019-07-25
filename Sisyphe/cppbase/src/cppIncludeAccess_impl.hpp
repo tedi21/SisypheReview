@@ -58,15 +58,19 @@ _CppIncludeAccess<EncodingT>::getManyCppIncludes(typename EncodingT::string_t co
 	std::vector<typename EncodingT::string_t> columns;                   
 	columns.push_back(C("identifier"));
 	columns.push_back(C("fileName"));
+	columns.push_back(C("lineNumber"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppInclude")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t fileName;
-		if (statement.getInt( 0, identifier ) &&
-			statement.getText( 1, fileName )) {
+		long long lineNumber;
+		if (statement.getInt64( 0, identifier ) &&
+			statement.getText( 1, fileName ) &&
+			statement.getInt64( 2, lineNumber )) {
 			value.reset(new _CppInclude<EncodingT>(
 				identifier,
-				fileName));
+				fileName,
+				lineNumber));
 			tab.push_back(value);
 		}
 	}
@@ -82,7 +86,7 @@ _CppIncludeAccess<EncodingT>::getAllCppIncludes() const
 
 template<class EncodingT>
 boost::shared_ptr< _CppInclude<EncodingT> >
-_CppIncludeAccess<EncodingT>::getOneCppInclude(int identifier) const 
+_CppIncludeAccess<EncodingT>::getOneCppInclude(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -110,6 +114,7 @@ _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t
 	std::vector<typename EncodingT::string_t> columns;                   
 	columns.push_back(C("identifier"));
 	columns.push_back(C("fileName"));
+	columns.push_back(C("lineNumber"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -120,22 +125,34 @@ _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppInclude")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t fileName;
-		if (statement.getInt( 0, identifier ) &&
-			statement.getText( 1, fileName )) {
+		long long lineNumber;
+		if (statement.getInt64( 0, identifier ) &&
+			statement.getText( 1, fileName ) &&
+			statement.getInt64( 2, lineNumber )) {
 			tab.push_back(boost::shared_ptr< _CppInclude<EncodingT> >(new _CppInclude<EncodingT>(
 				identifier,
-				fileName)));
+				fileName,
+				lineNumber)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CppInclude<EncodingT> >
-_CppIncludeAccess<EncodingT>::selectOneCppInclude(int identifier, bool nowait, bool addition)  
+_CppIncludeAccess<EncodingT>::selectOneCppInclude(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -207,17 +224,12 @@ _CppIncludeAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppInclude<Encodin
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
-	}
-	int id;
+	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppInclude")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(o->getIdentifier());
-		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< boost::shared_ptr<_CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
+		typename std::list< boost::shared_ptr<_CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -242,13 +254,14 @@ _CppIncludeAccess<EncodingT>::isModifiedCppInclude(boost::shared_ptr< _CppInclud
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
+	typename std::list< boost::shared_ptr< _CppInclude<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
 	}
 	bool bUpdate = false;
 	bUpdate = bUpdate || ((*save)->getFileName() != o->getFileName());
+	bUpdate = bUpdate || ((*save)->getLineNumber() != o->getLineNumber());
 	bUpdate = bUpdate || (!(*save)->isNullCppFile() && !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(*save)->getCppFile())(o->getCppFile()))
 		|| ((*save)->isNullCppFile() && !o->isNullCppFile()) 
 		|| (!(*save)->isNullCppFile() && o->isNullCppFile());
@@ -276,7 +289,7 @@ _CppIncludeAccess<EncodingT>::updateCppInclude(boost::shared_ptr< _CppInclude<En
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
+	typename std::list< boost::shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppIncludeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -286,12 +299,16 @@ _CppIncludeAccess<EncodingT>::updateCppInclude(boost::shared_ptr< _CppInclude<En
 			values.addText( o->getFileName() );
 			fields.push_back( C("fileName") );
 		}
-		if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getCppFile()->getTextFile()) ) {
+		if ( (*save)->getLineNumber() != o->getLineNumber() ) {
+			values.addInt64( o->getLineNumber() );
+			fields.push_back( C("lineNumber") );
+		}
+		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
 		}
-		else if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
-			values.addInt( o->getCppFile()->getTextFile()->getRowid() );
+		else if ( !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
+			values.addInt64( o->getCppFile()->getIdentifier() );
 			fields.push_back( C("idFile") );
 		}
 		else if ( o->isNullCppFile() && !(*save)->isNullCppFile() ) {
@@ -347,18 +364,20 @@ _CppIncludeAccess<EncodingT>::insertCppInclude(boost::shared_ptr< _CppInclude<En
 		fields.push_back( C("identifier") );
 		values.addText( o->getFileName() );
 		fields.push_back( C("fileName") );
-		if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getCppFile()->getTextFile()) ) {
+		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
 		}
-		else if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() ) {
-			values.addInt( o->getCppFile()->getTextFile()->getRowid() );
+		else if ( !o->isNullCppFile() ) {
+			values.addInt64( o->getCppFile()->getIdentifier() );
 			fields.push_back( C("idFile") );
 		}
 		else {
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
 			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
+		values.addInt64( o->getLineNumber() );
+		fields.push_back( C("lineNumber") );
 		statement.swap( connection->insert(C("cppInclude"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
@@ -400,7 +419,7 @@ _CppIncludeAccess<EncodingT>::deleteCppInclude(boost::shared_ptr< _CppInclude<En
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CppInclude<EncodingT>::CppIncludeIDEquality CppIncludeIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppIncludeIdEquality);
+	typename std::list< boost::shared_ptr< _CppInclude<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppIncludeIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

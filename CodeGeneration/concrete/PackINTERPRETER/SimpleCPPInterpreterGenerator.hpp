@@ -28,7 +28,8 @@ namespace dsg {
                                     CommentInterpreterAttribute,
                                     CreateInterpreterAttribute,
                                     CreateInterpreterCheck,
-                                    CreateInterpreterReset;
+                                    CreateInterpreterReset,
+                                    htabIsPointer;
 
             SimpleCPPInterpreterGenerator();
 

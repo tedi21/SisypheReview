@@ -46,30 +46,30 @@ namespace dsg {
                 << line_g(1) << "{"
                 << (line_g(1) << cnt_g(getContentDataHandler()))     [contentByType(CONTENT_TYPE_INITIALIZATIONBODY)]
                 << line_g(1) << "}"
-                << line_g(2) << "template <class EncodingT>"
-                << line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::tidyValue()"
-                << line_g(1) << "{"
-                << (line_g(1) << cnt_g(getContentDataHandler()))     [contentByType(CONTENT_TYPE_DESTRUCTIONBODY)]
-                << line_g(1) << "}"
-                << line_g(2) << "template <class EncodingT>"
-                << line_g(1) << ClassName << "Interpreter<EncodingT>::~" << ClassName << "Interpreter()"
-                << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "tidyValue();"
-                << line_g(1) << "}"
                 << (line_g(2) << "template <class EncodingT>"
+                <<  line_g(1) << ClassName << "Interpreter<EncodingT>::~" << ClassName << "Interpreter()"
+                <<  line_g(1) << "{"
+                <<  line_g(1) << htab_g(1) << "tidyValue();"
+                <<  line_g(1) << "}")                               [has_g(0, contentByType(CONTENT_TYPE_DESTRUCTIONBODY), gt_g())]
+                << (line_g(2) << "template <class EncodingT>"
+                <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::tidyValue()"
+                <<  line_g(1) << "{"
+                <<  (line_g(1) << cnt_g(getContentDataHandler()))    [contentByType(CONTENT_TYPE_DESTRUCTIONBODY)]
+                <<  line_g(1) << "}"
+                <<  line_g(2) << "template <class EncodingT>"
                 <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::initValue(const " << ClassName << "& object)"
                 <<  line_g(1) << "{"
                 <<  (line_g(1) << htab_g(1) << "m_object = object;") [empty_g(contentByType(CONTENT_TYPE_COPYBODY))]
                 <<  (line_g(1) << cnt_g(getContentDataHandler()))    [contentByType(CONTENT_TYPE_COPYBODY)]
                 <<  line_g(1) << "}"
                 <<  line_g(2) << "template <class EncodingT>"
-                <<  line_g(1) << ClassName << "& " << ClassName << "Interpreter<EncodingT>::value()"
+                <<  line_g(1) << ClassName << "& " << ClassName << "Interpreter<EncodingT>::refValue()"
                 <<  line_g(1) << "{"
                 <<  line_g(1) << (htab_g(1) << "return m_object;")   [empty_g(contentByType(CONTENT_TYPE_VALUEBODY))]
                               << cnt_g(getContentDataHandler())      [contentByType(CONTENT_TYPE_VALUEBODY)]
                 <<  line_g(1) << "}"
                 <<  line_g(2) << "template <class EncodingT>"
-                <<  line_g(1) << "const " << ClassName << "& " << ClassName << "Interpreter<EncodingT>::value() const"
+                <<  line_g(1) << "const " << ClassName << "& " << ClassName << "Interpreter<EncodingT>::refValue() const"
                 <<  line_g(1) << "{"
                 <<  line_g(1) << (htab_g(1) << "return m_object;")   [empty_g(contentByType(CONTENT_TYPE_VALUEBODY))]
                               << cnt_g(getContentDataHandler())      [contentByType(CONTENT_TYPE_VALUEBODY)]
@@ -79,27 +79,29 @@ namespace dsg {
                 <<  line_g(1) << "{"
                 <<  line_g(1) << htab_g(1) << "initValue(object);"
                 <<  line_g(1) << "}"
+                <<  (line_g(2) << "template <class EncodingT>"
+                <<   line_g(1) << ClassName << "Interpreter<EncodingT>::" << ClassName << "Interpreter(const " << ClassName << "Interpreter<EncodingT>& rhs)"
+                <<   line_g(1) << "{"
+                <<   line_g(1) << htab_g(1) << "initValue(rhs.refValue());"
+                <<   line_g(1) << "}"
+                <<   line_g(2) << "template <class EncodingT>"
+                <<   line_g(1) << ClassName << "Interpreter<EncodingT>& " << ClassName << "Interpreter<EncodingT>::operator=(const " << ClassName << "Interpreter<EncodingT>& rhs)"
+                <<   line_g(1) << "{"
+                <<   line_g(1) << htab_g(1) << "value(rhs.refValue());"
+                <<   line_g(1) << htab_g(1) << "return *this;"
+                <<   line_g(1) << "}")                               [has_g(0, contentByType(CONTENT_TYPE_COPYBODY), gt_g())]
                 <<  line_g(2) << "template <class EncodingT>"
-                <<  line_g(1) << ClassName << "Interpreter<EncodingT>::" << ClassName << "Interpreter(const " << ClassName << "Interpreter<EncodingT>& rhs)"
+                <<  line_g(1) << "const " << ClassName << "& " << ClassName << "Interpreter<EncodingT>::value() const"
                 <<  line_g(1) << "{"
-                <<  line_g(1) << htab_g(1) << "initValue(rhs.value());"
+                <<  line_g(1) << htab_g(1) << "return refValue();"
                 <<  line_g(1) << "}"
                 <<  line_g(2) << "template <class EncodingT>"
-                <<  line_g(1) << ClassName << "Interpreter<EncodingT>& " << ClassName << "Interpreter<EncodingT>::operator=(const " << ClassName << "Interpreter<EncodingT>& rhs)"
+                <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::value(" << ClassName << " const& object)"
                 <<  line_g(1) << "{"
-                <<  line_g(1) << htab_g(1) << "setValue(rhs.value());"
-                <<  line_g(1) << htab_g(1) << "return *this;"
-                <<  line_g(1) << "}"
-                <<  line_g(2) << "template <class EncodingT>"
-                <<  line_g(1) << "const " << ClassName << "& " << ClassName << "Interpreter<EncodingT>::getValue() const"
-                <<  line_g(1) << "{"
-                <<  line_g(1) << htab_g(1) << "return value();"
-                <<  line_g(1) << "}"
-                <<  line_g(2) << "template <class EncodingT>"
-                <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::setValue(" << ClassName << " const& object)"
-                <<  line_g(1) << "{"
-                <<  line_g(1) << htab_g(1) << "tidyValue();"
-                <<  line_g(1) << htab_g(1) << "initValue(object);"
+                <<  line_g(1) << htab_g(1) << "if (&object != &refValue()) {"
+                <<  line_g(1) << htab_g(2) << "tidyValue();"
+                <<  line_g(1) << htab_g(2) << "initValue(object);"
+                <<  line_g(1) << htab_g(1) << "}"
                 <<  line_g(1) << "}") [Has_DynamicMethod || Has_Attribute]
                 << line_g(2) << "template <class EncodingT>"
                 << line_g(1) << "typename EncodingT::string_t " << ClassName << "Interpreter<EncodingT>::toString() const"
@@ -123,7 +125,8 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "ParameterArray args, ret;"
                 << line_g(1) << htab_g(1) << "if (check_parameters_array(params, args))"
                 << line_g(1) << htab_g(1) << "{"
-                << line_g(1) << htab_g(2) << "if (tryInvoke(this, C(\"" << ClassName << "\"), method, args, ret))"
+                << line_g(1) << htab_g(2) << "if (tryInvoke(this, C(\"" << ClassName << "\"), method, args, ret) ||"
+                << line_g(1) << htab_g(3) << "tryInvoke(this, C(\"Base\"), method, args, ret))"
                 << line_g(1) << htab_g(2) << "{"
                 << line_g(1) << htab_g(3) << "find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);"
                 << line_g(1) << htab_g(3) << "for (size_t i = 0; i < params.size(); ++i)"
@@ -168,32 +171,45 @@ namespace dsg {
                    (line_g(1) << "//" << ent_g(getEntityCommentHandler()))
                    [ent_g(getHasEntityCommentHandler())];
 
+            htabIsPointer =
+                    WithClassMethod(htab_g(1)[If_IsPointerEntity]);
+
             CreateInterpreterMethod =
                    line_g(1) << "template <class EncodingT>"
                 << line_g(1)
                 << str_g("boost::shared_ptr< Base<EncodingT> > ")[Has_Return]
-                << str_g("void ")                         [else_g()]
+                << str_g("void ")                                [else_g()]
                 << MethodClassName << "Interpreter<EncodingT>::" << lower_g(InternalMethodName, 0, 1) << "(" << CreateInterpreterParameters << ")"
                 << str_g(" const")[If_IsConstMethod]
                 << line_g(1) << "{"
                 << ((line_g(1) << htab_g(1) << "boost::shared_ptr< Base<EncodingT> > res(new " << GotoReturn(InterpreterType) << "());")[Has_Return]
+                << WithClassMethod(
+                    (
+                        line_g(1) << htab_g(1) << ClassName << " valuePtr = refValue();"
+                     << line_g(1) << htab_g(1) << "if (valuePtr != NULL)"
+                     << line_g(1) << htab_g(1) << "{"
+                    )
+                    [If_IsPointerEntity])
                 << (
                        ListParameter
                        (
-                           line_g(1) << htab_g(1) << AttributeType << " native" << upper_g(attr_g(getAttributeNameHandler(KIND_ALIAS)), 0, 1) << ";"
+                           line_g(1) << htab_g(1) << htabIsPointer
+                        << AttributeType << " native" << upper_g(attr_g(getAttributeNameHandler(KIND_ALIAS)), 0, 1) << ";"
                        )
-                    << line_g(1) << htab_g(1) << "if ("
+                    << line_g(1) << htab_g(1) << htabIsPointer
+                    << "if ("
                     << ListParameter
                        (
-                           ~+(line_g(1) << htab_g(2))
+                           ~+(line_g(1) << htab_g(2) << htabIsPointer)
                         << InterpreterCheck << "(" << ParameterName << ", native" << upper_g(attr_g(getAttributeNameHandler(KIND_ALIAS)), 0, 1) << (str_g(", ") << InterpreterCheckFunction)[If_IsARRAY] << ")"
                         << ~-str_g(" && ")
                        )
                     << ")"
-                    << line_g(1) << htab_g(1) << "{"
+                    << line_g(1) << htab_g(1) << htabIsPointer << "{"
                    )[Has_Parameter]
                 << line_g(1) << htab_g(1)
-                << htab_g(1)[Has_Parameter]
+                << htabIsPointer
+                << htab_g(1) [Has_Parameter]
                 << ("res.reset(new " << GotoReturn(InterpreterType) << "(")[Has_Return]
                 << (
                         (+attr_g(getAttributeNameHandler(KIND_NAME)))
@@ -202,9 +218,8 @@ namespace dsg {
                      << "::"
                    )                    [If_IsStaticMethod]
                 << WithClassMethod(
-                     "value()"
-                     << str_g("->")     [If_IsPointerEntity]
-                     << str_g(".")      [else_g()]
+                        str_g("valuePtr->")    [If_IsPointerEntity]
+                     << str_g("refValue().")   [else_g()]
                    )                    [else_g()]
                 << ent_g(getEntityFunctionNameHandler(KIND_NAME)) << "("
                 << ListParameter
@@ -216,9 +231,10 @@ namespace dsg {
                 << str_g(";")
                 << ListOutputParameter
                    (
-                       line_g(1) << htab_g(2) << InterpreterReset << "(" << ParameterName << ", native" << upper_g(attr_g(getAttributeNameHandler(KIND_ALIAS)), 0, 1) << (str_g(", ") << InterpreterResetFunction)[If_IsARRAY] << ");"
+                       line_g(1) << htab_g(2) << htabIsPointer << InterpreterReset << "(" << ParameterName << ", native" << upper_g(attr_g(getAttributeNameHandler(KIND_ALIAS)), 0, 1) << (str_g(", ") << InterpreterResetFunction)[If_IsARRAY] << ");"
                    )
-                << (line_g(1) << htab_g(1) << "}")[Has_Parameter]
+                << ( line_g(1) << htab_g(1) << htabIsPointer << "}")[Has_Parameter]
+                << WithClassMethod((line_g(1) << htab_g(1) << "}")[If_IsPointerEntity])
                 << (line_g(1) << htab_g(1) << "return res;")[Has_Return])
                                                                  [empty_g(contentByEnt(CONTENT_TYPE_IMPLEMENTATIONBODY))]
                 << (line_g(1) << cnt_g(getContentDataHandler())) [contentByEnt(CONTENT_TYPE_IMPLEMENTATIONBODY)]
@@ -254,13 +270,19 @@ namespace dsg {
                 << "boost::shared_ptr< Base<EncodingT> > "
                 << ClassName << "Interpreter<EncodingT>::get" << lower_g(InternalAttributeName, 0, 1) << "() const"
                 << line_g(1) << "{"
-                << (line_g(1) << htab_g(1)
+                << ((
+                        line_g(1) << htab_g(1) << ClassName << " valuePtr = refValue();"
+                     << line_g(1) << htab_g(1) << "if (valuePtr != NULL)"
+                     << line_g(1) << htab_g(1) << "{"
+                     << line_g(1) << htab_g(2)
+                   )                        [If_IsPointerEntity]
+                << (line_g(1) << htab_g(1)) [else_g]
                 << "boost::shared_ptr< Base<EncodingT> > res(new " << InterpreterType << "("
-                << "value()"
-                << str_g("->")     [If_IsPointerEntity]
-                << str_g(".")      [else_g()]
+                << str_g("valuePtr->")    [If_IsPointerEntity]
+                << str_g("refValue().")   [else_g()]
                 << attr_g(getAttributeNameHandler(KIND_NAME))
                 << "));"
+                << (line_g(1) << htab_g(1) << "}")               [If_IsPointerEntity]
                 << line_g(1) << htab_g(1) << "return res;")
                                                                  [empty_g(contentByAttr(CONTENT_TYPE_IMPLEMENTATIONBODY))]
                 << (line_g(1) << cnt_g(getContentDataHandler())) [contentByAttr(CONTENT_TYPE_IMPLEMENTATIONBODY)]
@@ -273,7 +295,7 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "boost::shared_ptr< " << ClassName << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << ClassName << "Interpreter<EncodingT> >(val);"
                 << line_g(1) << htab_g(1) << "if (value)"
                 << line_g(1) << htab_g(1) << "{"
-                << line_g(1) << htab_g(2) << "a = value->getValue();"
+                << line_g(1) << htab_g(2) << "a = value->value();"
                 << line_g(1) << htab_g(1) << "}"
                 << line_g(1) << htab_g(1) << "else"
                 << line_g(1) << htab_g(1) << "{"
@@ -290,7 +312,7 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "boost::shared_ptr< " << ClassName << "Interpreter<EncodingT> > value  = dynamic_pointer_cast< " << ClassName << "Interpreter<EncodingT> >(val);"
                 << line_g(1) << htab_g(1) << "if (value)"
                 << line_g(1) << htab_g(1) << "{"
-                << line_g(1) << htab_g(2) << "value->setValue(a);"
+                << line_g(1) << htab_g(2) << "value->value(a);"
                 << line_g(1) << htab_g(1) << "}"
                 << line_g(1) << htab_g(1) << "else"
                 << line_g(1) << htab_g(1) << "{"

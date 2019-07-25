@@ -9,10 +9,6 @@ NAMESPACE_BEGIN(interp)
     {}
 
     template <class EncodingT>
-    Null<EncodingT>::~Null()
-    {}
-
-    template <class EncodingT>
     typename EncodingT::string_t Null<EncodingT>::toString() const
     {
         return C("null");

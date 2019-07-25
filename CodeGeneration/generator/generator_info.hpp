@@ -41,22 +41,22 @@ namespace gen {
     struct generator_string
     {
         typedef CharT                        character_t;
-        typedef basic_string< character_t >  str_t;
+        typedef std::basic_string< character_t > str_t;
         typedef const character_t *          c_str_t;
     };
 
     template <typename CharT>
     inline size_t
-    get_length( const basic_string<CharT>& str )
+    get_length( const std::basic_string<CharT>& str )
     {
         return str.length();
     }
 
     template <typename CharT>
-    inline basic_string<CharT>
-    get_substring( basic_string<CharT>& str, size_t pos = 0, size_t n = -1, bool erase = false )
+    inline std::basic_string<CharT>
+    get_substring( std::basic_string<CharT>& str, size_t pos = 0, size_t n = -1, bool erase = false )
     {
-        basic_string<CharT> s = str.substr(pos, n);
+        std::basic_string<CharT> s = str.substr(pos, n);
         if (erase)
         {
             str.erase(pos, n);
@@ -293,9 +293,9 @@ namespace gen {
             return m_domain.firstPositive() != m_domain.endPositive() && 
                     m_current == m_domain.endPositive()-1; 
         }
-        vector<size_t> positions() const 
+        std::vector<size_t> positions() const
         { 
-            vector<size_t> v = parent_t::positions();
+            std::vector<size_t> v = parent_t::positions();
             size_t p = self_t::position();
             v.push_back(p);
             return v;
@@ -338,8 +338,8 @@ namespace gen {
         virtual ~empty_context(){}
         virtual void increment(){}
         virtual void decrement(){}
-        virtual void defineDomain(size_t first, size_t end, size_t size){}
-        virtual void position(size_t index){}
+        virtual void defineDomain(size_t, size_t, size_t){}
+        virtual void position(size_t){}
         virtual size_t position() const { return 0; }
         virtual size_t endPosition() const {return 0; }
         virtual size_t firstPosition() const { return 0; }
@@ -348,7 +348,7 @@ namespace gen {
         virtual bool isFirstPosition() const { return false; }
         virtual bool isLastPosition() const { return false; }
         virtual bool isValidPosition() const { return false; }
-        virtual vector<size_t> positions() const { return vector<size_t>(); }
+        virtual std::vector<size_t> positions() const { return std::vector<size_t>(); }
     };
 
     ///////////////////////////////////////////////////////////////////////////

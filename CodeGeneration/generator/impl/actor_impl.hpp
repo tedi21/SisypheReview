@@ -8,7 +8,7 @@ namespace gen {
     {
         FunctorT funct = m_funct;
         str_g(actor_base_policy<FunctorT,DataT,ContextT>::apply(funct, context))    
-            .generate<DataT>(context);
+            .template generate<DataT>(context);
     }
 
     template <typename FunctorT>

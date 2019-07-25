@@ -129,7 +129,16 @@ _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t con
 				content)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
@@ -174,10 +183,15 @@ _TextFileAccess<EncodingT>::cancelSelection()
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextNoticeAccess<EncodingT>* textNoticeAccess = _TextNoticeAccess<EncodingT>::getInstance();
-	if (!textNoticeAccess) {
-		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
-		throw NullPointerException("TextNoticeAccess class is not initialized.");
+	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
+	if (!cppFileAccess) {
+		m_logger->errorStream() << "CppFileAccess class is not initialized.";
+		throw NullPointerException("CppFileAccess class is not initialized.");
+	}
+	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
+	if (!debugFileInfoAccess) {
+		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
 	if (!m_backup.empty()) {
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
@@ -186,27 +200,28 @@ _TextFileAccess<EncodingT>::cancelSelection()
 			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
 		}
 		m_backup.clear();
-		textNoticeAccess->cancelSelection();
+		cppFileAccess->cancelSelection();
+		debugFileInfoAccess->cancelSelection();
 	}
 }
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::fillAllTextNotices(boost::shared_ptr< _TextFile<EncodingT> > o, bool nowait)  
+_TextFileAccess<EncodingT>::fillAllCppFiles(boost::shared_ptr< _TextFile<EncodingT> > o, bool nowait)  
 {
-	fillManyTextNotices(o, EncodingT::EMPTY, nowait);
+	fillManyCppFiles(o, EncodingT::EMPTY, nowait);
 }
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::fillOneTextNotice(boost::shared_ptr< _TextFile<EncodingT> > o, long long rowid, bool nowait)  
+_TextFileAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< _TextFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyTextNotices(o, C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait);
+	fillManyCppFiles(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
 void
-_TextFileAccess<EncodingT>::fillManyTextNotices(boost::shared_ptr< _TextFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+_TextFileAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _TextFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
 {
 	if (!o) {
 		m_logger->errorStream() << "Parameter is null.";
@@ -216,30 +231,82 @@ _TextFileAccess<EncodingT>::fillManyTextNotices(boost::shared_ptr< _TextFile<Enc
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	_TextNoticeAccess<EncodingT>* textNoticeAccess = _TextNoticeAccess<EncodingT>::getInstance();
-	if (!textNoticeAccess) {
-		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
-		throw NullPointerException("TextNoticeAccess class is not initialized.");
+	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
+	if (!cppFileAccess) {
+		m_logger->errorStream() << "CppFileAccess class is not initialized.";
+		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > tab;
-	typename EncodingT::string_t textNoticeFilter = C("idText = ") + C(ToString::parse(o->getRowid()));
+	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > tab;
+	typename EncodingT::string_t cppFileFilter = C("idText = ") + C(ToString::parse(o->getRowid()));
 	if (!filter.empty()) {
-		textNoticeFilter += C(" AND ") + filter;
+		cppFileFilter += C(" AND ") + filter;
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
-	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
 	if (save != m_backup.end())
 	{
-		tab = textNoticeAccess->selectManyTextNotices(textNoticeFilter, nowait);
-		(*save)->clearTextNotices();
-		(*save)->insertTextNotice((*save)->getTextNoticesEnd(), tab.begin(), tab.end());
+		tab = cppFileAccess->selectManyCppFiles(cppFileFilter, nowait, true);
+		(*save)->clearCppFiles();
+		(*save)->insertCppFile((*save)->getCppFilesEnd(), tab.begin(), tab.end());
 	}
 	else
 	{
-		tab = textNoticeAccess->getManyTextNotices(textNoticeFilter);
+		tab = cppFileAccess->getManyCppFiles(cppFileFilter);
 	}
-	o->clearTextNotices();
-	o->insertTextNotice(o->getTextNoticesEnd(), tab.begin(), tab.end());
+	o->clearCppFiles();
+	o->insertCppFile(o->getCppFilesEnd(), tab.begin(), tab.end());
+}
+
+template<class EncodingT>
+void
+_TextFileAccess<EncodingT>::fillAllDebugFileInfos(boost::shared_ptr< _TextFile<EncodingT> > o, bool nowait)  
+{
+	fillManyDebugFileInfos(o, EncodingT::EMPTY, nowait);
+}
+
+template<class EncodingT>
+void
+_TextFileAccess<EncodingT>::fillOneDebugFileInfo(boost::shared_ptr< _TextFile<EncodingT> > o, long long identifier, bool nowait)  
+{
+	fillManyDebugFileInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+}
+
+template<class EncodingT>
+void
+_TextFileAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_ptr< _TextFile<EncodingT> > o, typename EncodingT::string_t const& filter, bool nowait)  
+{
+	if (!o) {
+		m_logger->errorStream() << "Parameter is null.";
+		throw NullPointerException("Parameter is null.");
+	}
+	if ( o->getRowid()==-1 ) {
+		m_logger->errorStream() << "Rowid : Identifier is null.";
+		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
+	}
+	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
+	if (!debugFileInfoAccess) {
+		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	}
+	std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > tab;
+	typename EncodingT::string_t debugFileInfoFilter = C("idText = ") + C(ToString::parse(o->getRowid()));
+	if (!filter.empty()) {
+		debugFileInfoFilter += C(" AND ") + filter;
+	}
+	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
+	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	if (save != m_backup.end())
+	{
+		tab = debugFileInfoAccess->selectManyDebugFileInfos(debugFileInfoFilter, nowait, true);
+		(*save)->clearDebugFileInfos();
+		(*save)->insertDebugFileInfo((*save)->getDebugFileInfosEnd(), tab.begin(), tab.end());
+	}
+	else
+	{
+		tab = debugFileInfoAccess->getManyDebugFileInfos(debugFileInfoFilter);
+	}
+	o->clearDebugFileInfos();
+	o->insertDebugFileInfo(o->getDebugFileInfosEnd(), tab.begin(), tab.end());
 }
 
 template<class EncodingT>
@@ -254,36 +321,59 @@ _TextFileAccess<EncodingT>::isModifiedTextFile(boost::shared_ptr< _TextFile<Enco
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	_TextNoticeAccess<EncodingT>* textNoticeAccess = _TextNoticeAccess<EncodingT>::getInstance();
-	if (!textNoticeAccess) {
-		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
-		throw NullPointerException("TextNoticeAccess class is not initialized.");
+	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
+	if (!cppFileAccess) {
+		m_logger->errorStream() << "CppFileAccess class is not initialized.";
+		throw NullPointerException("CppFileAccess class is not initialized.");
+	}
+	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
+	if (!debugFileInfoAccess) {
+		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
 	}
 	bool bUpdate = false;
 	bUpdate = bUpdate || ((*save)->getContent() != o->getContent());
-	typename _TextFile<EncodingT>::TextNoticeIterator textNotice;
-	for ( textNotice=o->getTextNoticesBeginning(); textNotice!=o->getTextNoticesEnd(); ++textNotice ) {
-		if (!(*textNotice)) {
+	typename _TextFile<EncodingT>::CppFileIterator cppFile;
+	for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
+		if (!(*cppFile)) {
 			m_logger->errorStream() << "Aggregate is null.";
 			throw NullPointerException("Aggregate is null.");
 		}
-		typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(*(*textNotice));
-		bUpdate = bUpdate || (std::find_if((*save)->getTextNoticesBeginning(), (*save)->getTextNoticesEnd(), textNoticeIdEquality) == (*save)->getTextNoticesEnd())
-			|| (textNoticeAccess->isModifiedTextNotice(*textNotice));
+		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*(*cppFile));
+		bUpdate = bUpdate || (std::find_if((*save)->getCppFilesBeginning(), (*save)->getCppFilesEnd(), cppFileIdEquality) == (*save)->getCppFilesEnd())
+			|| (cppFileAccess->isModifiedCppFile(*cppFile));
 	}
-	for ( textNotice=(*save)->getTextNoticesBeginning(); textNotice<(*save)->getTextNoticesEnd(); ++textNotice ) {
-		if (!(*textNotice)) {
+	for ( cppFile=(*save)->getCppFilesBeginning(); cppFile<(*save)->getCppFilesEnd(); ++cppFile ) {
+		if (!(*cppFile)) {
 			m_logger->errorStream() << "Aggregate is null.";
 			throw NullPointerException("Aggregate is null.");
 		}
-		typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(*(*textNotice));
-		bUpdate = bUpdate || (std::find_if(o->getTextNoticesBeginning(), o->getTextNoticesEnd(), textNoticeIdEquality) == o->getTextNoticesEnd());
+		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*(*cppFile));
+		bUpdate = bUpdate || (std::find_if(o->getCppFilesBeginning(), o->getCppFilesEnd(), cppFileIdEquality) == o->getCppFilesEnd());
+	}
+	typename _TextFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
+	for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
+		if (!(*debugFileInfo)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
+		bUpdate = bUpdate || (std::find_if((*save)->getDebugFileInfosBeginning(), (*save)->getDebugFileInfosEnd(), debugFileInfoIdEquality) == (*save)->getDebugFileInfosEnd())
+			|| (debugFileInfoAccess->isModifiedDebugFileInfo(*debugFileInfo));
+	}
+	for ( debugFileInfo=(*save)->getDebugFileInfosBeginning(); debugFileInfo<(*save)->getDebugFileInfosEnd(); ++debugFileInfo ) {
+		if (!(*debugFileInfo)) {
+			m_logger->errorStream() << "Aggregate is null.";
+			throw NullPointerException("Aggregate is null.");
+		}
+		typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
+		bUpdate = bUpdate || (std::find_if(o->getDebugFileInfosBeginning(), o->getDebugFileInfosEnd(), debugFileInfoIdEquality) == o->getDebugFileInfosEnd());
 	}
 	return bUpdate;
 }
@@ -308,13 +398,18 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextNoticeAccess<EncodingT>* textNoticeAccess = _TextNoticeAccess<EncodingT>::getInstance();
-	if (!textNoticeAccess) {
-		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
-		throw NullPointerException("TextNoticeAccess class is not initialized.");
+	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
+	if (!cppFileAccess) {
+		m_logger->errorStream() << "CppFileAccess class is not initialized.";
+		throw NullPointerException("CppFileAccess class is not initialized.");
+	}
+	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
+	if (!debugFileInfoAccess) {
+		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -324,33 +419,62 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 			values.addText( o->getContent() );
 			fields.push_back( C("content") );
 		}
-		std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToAdd;
-		std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToUpdate;
-		typename _TextFile<EncodingT>::TextNoticeIterator textNotice;
-		for ( textNotice=o->getTextNoticesBeginning(); textNotice!=o->getTextNoticesEnd(); ++textNotice ) {
-			if (!(*textNotice)) {
+		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToAdd;
+		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToUpdate;
+		typename _TextFile<EncodingT>::CppFileIterator cppFile;
+		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
+			if (!(*cppFile)) {
 				m_logger->errorStream() << "Aggregate is null.";
 				throw NullPointerException("Aggregate is null.");
 			}
-			(*textNotice)->setTextFile(o);
-			typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(*(*textNotice));
-			if ( std::find_if((*save)->getTextNoticesBeginning(), (*save)->getTextNoticesEnd(), textNoticeIdEquality) == (*save)->getTextNoticesEnd()) {
-				listOfTextNoticeToAdd.push_back(*textNotice);
+			(*cppFile)->setTextFile(o);
+			typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*(*cppFile));
+			if ( std::find_if((*save)->getCppFilesBeginning(), (*save)->getCppFilesEnd(), cppFileIdEquality) == (*save)->getCppFilesEnd()) {
+				listOfCppFileToAdd.push_back(*cppFile);
 			}
 			else {
-				if (textNoticeAccess->isModifiedTextNotice(*textNotice))
-					listOfTextNoticeToUpdate.push_back(*textNotice);
+				if (cppFileAccess->isModifiedCppFile(*cppFile))
+					listOfCppFileToUpdate.push_back(*cppFile);
 			}
 		}
-		std::vector< boost::shared_ptr< _TextNotice<EncodingT> > > listOfTextNoticeToRemove;
-		for ( textNotice=(*save)->getTextNoticesBeginning(); textNotice<(*save)->getTextNoticesEnd(); ++textNotice ) {
-			if (!(*textNotice)) {
+		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToRemove;
+		for ( cppFile=(*save)->getCppFilesBeginning(); cppFile<(*save)->getCppFilesEnd(); ++cppFile ) {
+			if (!(*cppFile)) {
 				m_logger->errorStream() << "Aggregate is null.";
 				throw NullPointerException("Aggregate is null.");
 			}
-			typename _TextNotice<EncodingT>::TextNoticeIDEquality textNoticeIdEquality(*(*textNotice));
-			if ( std::find_if(o->getTextNoticesBeginning(), o->getTextNoticesEnd(), textNoticeIdEquality) == o->getTextNoticesEnd()) {
-				listOfTextNoticeToRemove.push_back(*textNotice);
+			typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*(*cppFile));
+			if ( std::find_if(o->getCppFilesBeginning(), o->getCppFilesEnd(), cppFileIdEquality) == o->getCppFilesEnd()) {
+				listOfCppFileToRemove.push_back(*cppFile);
+			}
+		}
+		std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > listOfDebugFileInfoToAdd;
+		std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > listOfDebugFileInfoToUpdate;
+		typename _TextFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
+		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
+			if (!(*debugFileInfo)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			(*debugFileInfo)->setTextFile(o);
+			typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
+			if ( std::find_if((*save)->getDebugFileInfosBeginning(), (*save)->getDebugFileInfosEnd(), debugFileInfoIdEquality) == (*save)->getDebugFileInfosEnd()) {
+				listOfDebugFileInfoToAdd.push_back(*debugFileInfo);
+			}
+			else {
+				if (debugFileInfoAccess->isModifiedDebugFileInfo(*debugFileInfo))
+					listOfDebugFileInfoToUpdate.push_back(*debugFileInfo);
+			}
+		}
+		std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > listOfDebugFileInfoToRemove;
+		for ( debugFileInfo=(*save)->getDebugFileInfosBeginning(); debugFileInfo<(*save)->getDebugFileInfosEnd(); ++debugFileInfo ) {
+			if (!(*debugFileInfo)) {
+				m_logger->errorStream() << "Aggregate is null.";
+				throw NullPointerException("Aggregate is null.");
+			}
+			typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*(*debugFileInfo));
+			if ( std::find_if(o->getDebugFileInfosBeginning(), o->getDebugFileInfosEnd(), debugFileInfoIdEquality) == o->getDebugFileInfosEnd()) {
+				listOfDebugFileInfoToRemove.push_back(*debugFileInfo);
 			}
 		}
 		if (!fields.empty()) {
@@ -361,14 +485,23 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 			}
 			m_updateSignal(OPERATION_ACCESS_UPDATE, C("textFile"), o);
 		}
-		for ( textNotice=listOfTextNoticeToAdd.begin(); textNotice!=listOfTextNoticeToAdd.end() ; ++textNotice ) {
-			textNoticeAccess->insertTextNotice(*textNotice);
+		for ( cppFile=listOfCppFileToAdd.begin(); cppFile!=listOfCppFileToAdd.end() ; ++cppFile ) {
+			cppFileAccess->insertCppFile(*cppFile);
 		}
-		for ( textNotice=listOfTextNoticeToUpdate.begin(); textNotice!=listOfTextNoticeToUpdate.end() ; ++textNotice ) {
-			textNoticeAccess->updateTextNotice(*textNotice);
+		for ( cppFile=listOfCppFileToUpdate.begin(); cppFile!=listOfCppFileToUpdate.end() ; ++cppFile ) {
+			cppFileAccess->updateCppFile(*cppFile);
 		}
-		for ( textNotice=listOfTextNoticeToRemove.begin(); textNotice!=listOfTextNoticeToRemove.end() ; ++textNotice ) {
-			textNoticeAccess->deleteTextNotice(*textNotice);
+		for ( cppFile=listOfCppFileToRemove.begin(); cppFile!=listOfCppFileToRemove.end() ; ++cppFile ) {
+			cppFileAccess->deleteCppFile(*cppFile);
+		}
+		for ( debugFileInfo=listOfDebugFileInfoToAdd.begin(); debugFileInfo!=listOfDebugFileInfoToAdd.end() ; ++debugFileInfo ) {
+			debugFileInfoAccess->insertDebugFileInfo(*debugFileInfo);
+		}
+		for ( debugFileInfo=listOfDebugFileInfoToUpdate.begin(); debugFileInfo!=listOfDebugFileInfoToUpdate.end() ; ++debugFileInfo ) {
+			debugFileInfoAccess->updateDebugFileInfo(*debugFileInfo);
+		}
+		for ( debugFileInfo=listOfDebugFileInfoToRemove.begin(); debugFileInfo!=listOfDebugFileInfoToRemove.end() ; ++debugFileInfo ) {
+			debugFileInfoAccess->deleteDebugFileInfo(*debugFileInfo);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -400,10 +533,15 @@ _TextFileAccess<EncodingT>::insertTextFile(boost::shared_ptr< _TextFile<Encoding
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextNoticeAccess<EncodingT>* textNoticeAccess = _TextNoticeAccess<EncodingT>::getInstance();
-	if (!textNoticeAccess) {
-		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
-		throw NullPointerException("TextNoticeAccess class is not initialized.");
+	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
+	if (!cppFileAccess) {
+		m_logger->errorStream() << "CppFileAccess class is not initialized.";
+		throw NullPointerException("CppFileAccess class is not initialized.");
+	}
+	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
+	if (!debugFileInfoAccess) {
+		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
 	try {
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -421,10 +559,15 @@ _TextFileAccess<EncodingT>::insertTextFile(boost::shared_ptr< _TextFile<Encoding
 		int id = connection->getLastInsertID();
 		o->setRowid(id);
 		m_insertSignal(OPERATION_ACCESS_INSERT, C("textFile"), o);
-		typename _TextFile<EncodingT>::TextNoticeIterator textNotice;
-		for ( textNotice=o->getTextNoticesBeginning(); textNotice!=o->getTextNoticesEnd(); ++textNotice ) {
-			(*textNotice)->setTextFile(o);
-			textNoticeAccess->insertTextNotice(*textNotice);
+		typename _TextFile<EncodingT>::CppFileIterator cppFile;
+		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
+			(*cppFile)->setTextFile(o);
+			cppFileAccess->insertCppFile(*cppFile);
+		}
+		typename _TextFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
+		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
+			(*debugFileInfo)->setTextFile(o);
+			debugFileInfoAccess->insertDebugFileInfo(*debugFileInfo);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -459,27 +602,32 @@ _TextFileAccess<EncodingT>::deleteTextFile(boost::shared_ptr< _TextFile<Encoding
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	_TextNoticeAccess<EncodingT>* textNoticeAccess = _TextNoticeAccess<EncodingT>::getInstance();
-	if (!textNoticeAccess) {
-		m_logger->errorStream() << "TextNoticeAccess class is not initialized.";
-		throw NullPointerException("TextNoticeAccess class is not initialized.");
-	}
 	_CppFileAccess<EncodingT>* cppFileAccess = _CppFileAccess<EncodingT>::getInstance();
 	if (!cppFileAccess) {
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
+	_DebugFileInfoAccess<EncodingT>* debugFileInfoAccess = _DebugFileInfoAccess<EncodingT>::getInstance();
+	if (!debugFileInfoAccess) {
+		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
+		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
+	}
 	typename _TextFile<EncodingT>::TextFileIDEquality TextFileIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextFileIdEquality);
+	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextFileIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
-		typename _TextFile<EncodingT>::TextNoticeIterator textNotice;
-		fillAllTextNotices(o);
-		for ( textNotice=o->getTextNoticesBeginning(); textNotice!=o->getTextNoticesEnd(); ++textNotice ) {
-			textNoticeAccess->deleteTextNotice(*textNotice);
+		typename _TextFile<EncodingT>::CppFileIterator cppFile;
+		fillAllCppFiles(o);
+		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
+			cppFileAccess->deleteCppFile(*cppFile);
+		}
+		typename _TextFile<EncodingT>::DebugFileInfoIterator debugFileInfo;
+		fillAllDebugFileInfos(o);
+		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
+			debugFileInfoAccess->deleteDebugFileInfo(*debugFileInfo);
 		}
 		statement.swap( connection->deleteFrom(C("textFile"), C("rowid = ") /*+ C("\'") */+ C(ToString::parse(o->getRowid()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
@@ -488,7 +636,6 @@ _TextFileAccess<EncodingT>::deleteTextFile(boost::shared_ptr< _TextFile<Encoding
 		}
 		m_deleteSignal(OPERATION_ACCESS_DELETE, C("textFile"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
-			cppFileAccess->deleteCppFile(cppFileAccess->selectOneCppFile(o), false);
 			connection->commit();
 			m_transactionOwner = false;
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);

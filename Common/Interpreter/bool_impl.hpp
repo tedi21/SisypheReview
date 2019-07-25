@@ -28,17 +28,13 @@ NAMESPACE_BEGIN(interp)
     }
 
     template <class EncodingT>
-    Bool<EncodingT>::~Bool()
-    {}
-
-    template <class EncodingT>
-    bool Bool<EncodingT>::getValue() const
+    bool Bool<EncodingT>::value() const
     {
         return m_value;
     }
 	
     template <class EncodingT>
-    void Bool<EncodingT>::setValue(bool value)
+    void Bool<EncodingT>::value(bool value)
     {
         m_value = value;
     }
@@ -69,8 +65,8 @@ NAMESPACE_BEGIN(interp)
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
         {
-            if (tryInvoke(this, C("Bool"), method, args, ret) ||
-                tryInvoke(this, C("String"), method, args, ret))
+            if (tryInvoke(this, C("Bool"), method, args, ret)   ||
+                tryInvoke(this, C("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -123,7 +119,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Bool<EncodingT> > value  = dynamic_pointer_cast< Bool<EncodingT> >(val);
         if (value)
         {
-            n = value->getValue();
+            n = value->value();
         }
         else
         {
@@ -139,7 +135,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Bool<EncodingT> > value  = dynamic_pointer_cast< Bool<EncodingT> >(val);
         if (value)
         {
-            value->setValue(n);
+            value->value(n);
         }
         else
         {

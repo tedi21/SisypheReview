@@ -7,6 +7,7 @@
 #include "IDebugSystemObjectsPtrInterpreter.hpp"
 #include "IDebugSymbolsPtrInterpreter.hpp"
 #include "IDebugBreakpointPtrInterpreter.hpp"
+#include "DEBUG_STACK_FRAMEInterpreter.hpp"
 
 using namespace enc;
 using namespace fctr;

@@ -331,7 +331,7 @@ NAMESPACE_BEGIN(interp)
             boost::shared_ptr< Bool<EncodingT> > boolexpr = dynamic_pointer_cast< Bool<EncodingT> >(baseexpr);
             if (boolexpr)
             {
-                bool_value = boolexpr->getValue();
+                bool_value = boolexpr->value();
                 if (bool_value)
                 {
                     m_instructions->interpret(c);
@@ -423,7 +423,7 @@ NAMESPACE_BEGIN(interp)
         if (boolexpr)
         {
             res = boolexpr;
-            if (boolexpr->getValue())
+            if (boolexpr->value())
             {
                 m_if_instructions->interpret(c);
             }
@@ -822,6 +822,7 @@ NAMESPACE_BEGIN(interp)
                SystemInstruction<EncodingT>::parse(buf, instruction)        ||
                Copy<EncodingT>::parse(buf, instruction)               		  ||
                Assignment<EncodingT>::parse(buf, instruction)               ||
+               ConcatOperator<EncodingT>::parse(buf, instruction)           ||
                SaveOperator<EncodingT>::parse(buf, instruction)             ||
                LoadOperator<EncodingT>::parse(buf, instruction)             ||
                OrOperator<EncodingT>::parse(buf, instruction)               ||
@@ -838,7 +839,6 @@ NAMESPACE_BEGIN(interp)
                MinusOperator<EncodingT>::parse(buf, instruction)            ||
                MultiplyOperator<EncodingT>::parse(buf, instruction)         ||
                DivideOperator<EncodingT>::parse(buf, instruction)           ||
-               ConcatOperator<EncodingT>::parse(buf, instruction)           ||
                UnaryMinusOperator<EncodingT>::parse(buf, instruction)       ||
                NotOperator<EncodingT>::parse(buf, instruction)              ||
                SizeOperator<EncodingT>::parse(buf, instruction)             ||

@@ -3,8 +3,10 @@
 
 #include "config.hpp"
 #include "macros.hpp"
-#include "String.hpp"
+#include "Base.hpp"
 #include <boost/shared_ptr.hpp>
+#include <variant>
+#include <type_traits>
 
 #define C(str) encode<ansi,EncodingT>(str)
 
@@ -15,27 +17,33 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class Numeric
-    : public String<EncodingT>
+    : public Base<EncodingT>
     {
-	private:
-		double m_value;
-		
+    private:
+        typedef std::variant<long long,double> numeric_variant_t;
+        numeric_variant_t m_value;
+
     public:
         // Constructor
         Numeric();
 
-        Numeric(double value);
-
+        Numeric(const numeric_variant_t& value);
+        template <class T, class = typename std::enable_if<std::is_integral<T>::value||std::is_enum<T>::value,T>::type>
+        Numeric(T value);
+        template <class T, class = void, class = typename std::enable_if<std::is_floating_point<T>::value,T>::type>
+        Numeric(T value);
+        
         FACTORY_PROTOTYPE1(Numeric, In< boost::shared_ptr< Base<EncodingT> > >)
         Numeric(boost::shared_ptr< Base<EncodingT> > const& value);
 
-        // Destructor
-        ~Numeric();
-
         // Accessors
-		double getValue() const;
-        void setValue(double value);
-
+        double Dvalue() const;
+        void Dvalue(double value);
+        long long LLvalue() const;
+        void LLvalue(long long value);
+        const numeric_variant_t& value() const;
+        void value(const numeric_variant_t& value);
+        
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
         virtual boost::shared_ptr< Base<EncodingT> > clone() const;
@@ -79,6 +87,8 @@ NAMESPACE_BEGIN(interp)
 
         void decrement();
 
+        boost::shared_ptr< Base<EncodingT> > round() const;
+
         FACTORY_PROTOTYPE1(parse, In< boost::shared_ptr< Base<EncodingT> > >)
         void parse(boost::shared_ptr< Base<EncodingT> > const& str);
         
@@ -107,6 +117,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_REGISTER1  (Numeric, boost::shared_ptr< Base<EncodingT> >, notEquals, const_t)
             METHOD_KEY_REGISTER  (Numeric, void, increment, no_const_t, C("Numeric::Increment"))
             METHOD_KEY_REGISTER  (Numeric, void, decrement, no_const_t, C("Numeric::Decrement"))
+            METHOD_KEY_REGISTER  (Numeric, boost::shared_ptr< Base<EncodingT> >, round, const_t, C("Numeric::Round"))
             METHOD_KEY_REGISTER1 (Numeric, void, parse, no_const_t, C("Numeric::Parse"))
             METHOD_KEY_REGISTER1 (Numeric, void, parseHex, no_const_t, C("Numeric::ParseHex"))
             METHOD_KEY_REGISTER3 (Numeric, void, parseBase64, no_const_t, C("Numeric::ParseBase64"))
@@ -130,6 +141,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_UNREGISTER1(Numeric, notEquals)
             METHOD_KEY_UNREGISTER (C("Numeric::Increment"))
             METHOD_KEY_UNREGISTER (C("Numeric::Decrement"))
+            METHOD_KEY_UNREGISTER (C("Numeric::Round"))
             METHOD_KEY_UNREGISTER1(C("Numeric::Parse"))
             METHOD_KEY_UNREGISTER1(C("Numeric::ParseHex"))
             METHOD_KEY_UNREGISTER3(C("Numeric::ParseBase64"))
@@ -137,12 +149,25 @@ NAMESPACE_BEGIN(interp)
         FACTORY_END_UNREGISTER
     };
 
-    template <class EncodingT, class T>
-    bool check_numeric(boost::shared_ptr< Base<EncodingT> > const& val, T& n);
+    template <class EncodingT>
+    bool check_numeric(boost::shared_ptr< Base<EncodingT> > const& val, std::variant<long long,double>& n);
 
-    template <class EncodingT, class T>
-    bool reset_numeric(boost::shared_ptr< Base<EncodingT> >& val, T const& n);
+    template <class EncodingT>
+    bool reset_numeric(boost::shared_ptr< Base<EncodingT> >& val, std::variant<long long,double> const& n);
 
+    template <class EncodingT, class T, class = typename std::enable_if<std::is_integral<T>::value||std::is_enum<T>::value>::type>
+    bool check_numeric_i(boost::shared_ptr< Base<EncodingT> > const& val, T& n);
+
+    template <class EncodingT, class T, class = typename std::enable_if<std::is_integral<T>::value||std::is_enum<T>::value>::type>
+    bool reset_numeric_i(boost::shared_ptr< Base<EncodingT> >& val, T n);
+
+    template <class EncodingT, class T, class = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    bool check_numeric_d(boost::shared_ptr< Base<EncodingT> > const& val, T& n);
+
+    template <class EncodingT, class T, class = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    bool reset_numeric_d(boost::shared_ptr< Base<EncodingT> >& val, T n);
+
+    
 NAMESPACE_END
 
 #undef C

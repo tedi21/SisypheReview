@@ -4,7 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include "config.hpp"
 #include "macros.hpp"
-#include "String.hpp"
+#include "Base.hpp"
 
 using namespace boost;
 using namespace log4cpp;
@@ -13,7 +13,7 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class Bool
-    : public String<EncodingT>
+    : public Base<EncodingT>
     {
 	private:
 		bool m_value;
@@ -27,12 +27,9 @@ NAMESPACE_BEGIN(interp)
         FACTORY_PROTOTYPE1(Bool, In< boost::shared_ptr< Base<EncodingT> > >)
         Bool(boost::shared_ptr< Base<EncodingT> > const& value);
 
-        // Destructor
-        ~Bool();
-
         // Accessors
-		bool getValue() const;
-        void setValue(bool value);
+        bool value() const;
+        void value(bool value);
 
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;

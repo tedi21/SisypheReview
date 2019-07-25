@@ -28,6 +28,90 @@ Get_globalScope();
 Put_loadAddress();
 ```
 
+## Méthode GetSymbolsByAddr
+*Paramètres*
+* IDiaEnumSymbolsByAddrPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Extrait un énumérateur qui recherche des symboles dans l'ordre de leurs adresses.
+```
+GetSymbolsByAddr();
+```
+
+## Méthode GetEnumTables
+*Paramètres*
+* IDiaEnumTablesPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère un énumérateur pour tous les tables contenues dans le magasin de symboles.
+```
+GetEnumTables();
+```
+
+## Méthode FindSymbolByAddr
+*Paramètres*
+* Numeric : 
+* Numeric : 
+* SymTagEnumType : 
+* IDiaSymbolPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère un type spécifié de symboles qui contient, ou est le plus proche de, une adresse spécifiée.
+```
+FindSymbolByAddr();
+```
+
+## Méthode FindSymbolByRVA
+*Paramètres*
+* Numeric : 
+* SymTagEnumType : 
+* IDiaSymbolPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère un type spécifié de symboles qui contient, ou est le plus proche de, une adresse virtuelle relative spécifiée (RVA).
+```
+FindSymbolByRVA();
+```
+
+## Méthode SymbolById
+*Paramètres*
+* IDiaSymbolPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère un symbole par son identificateur unique.
+```
+SymbolById();
+```
+
+## Méthode SymsAreEquiv
+*Paramètres*
+* IDiaSymbolPtr : 
+* IDiaSymbolPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Vérifie si deux symboles sont équivalents.
+```
+SymsAreEquiv();
+```
+
 ## Méthode FindLinesByRVA
 *Paramètres*
 * Numeric : 
@@ -41,6 +125,22 @@ Put_loadAddress();
 *  Récupère les lignes d'un module spécifié qui contient une adresse virtuelle relative spécifiée (RVA).
 ```
 FindLinesByRVA();
+```
+
+## Méthode FindLinesByAddr
+*Paramètres*
+* Numeric : 
+* Numeric : 
+* Numeric : 
+* IDiaEnumLineNumbersPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Retrieves the lines in a specified compiland that contain a specified address.
+```
+FindLinesByAddr();
 ```
 
 ## Méthode FindLinesByLinenum
@@ -131,4 +231,36 @@ FindFile();
 *  Récupère tous les fichiers sources.
 ```
 FindFile();
+```
+
+## Méthode FindChildren
+*Paramètres*
+* IDiaSymbolPtr : 
+* SymTagEnumType : 
+* String : 
+* Numeric : 
+* IDiaEnumSymbolsPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère tous les enfants d'un identificateur parent spécifié qui correspondent au nom et le type de symbole.
+```
+FindChildren();
+```
+
+## Méthode FindChildren
+*Paramètres*
+* IDiaSymbolPtr : 
+* SymTagEnumType : 
+* IDiaEnumSymbolsPtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère tous les enfants d'un identificateur parent spécifié qui correspondent au nom et le type de symbole.
+```
+FindChildren();
 ```

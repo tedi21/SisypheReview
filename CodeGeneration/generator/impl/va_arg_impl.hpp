@@ -19,7 +19,7 @@ namespace gen {
             generator_args<DataT>::args.push_back(std::vector< stored_format<DataT,true> >());\
             generator_args<DataT>::level = (int)generator_args<DataT>::args.size()-1;\
             BOOST_PP_REPEAT(BOOST_PP_SUB(n,1), PUSH, BOOST_PP_SUB(n,1))              \
-            subj0.generate<DataT>(context);                                          \
+            subj0.template generate<DataT>(context);                                 \
             generator_args<DataT>::args.pop_back();                                  \
             generator_args<DataT>::level = save_level;                               \
         }                                                                            \

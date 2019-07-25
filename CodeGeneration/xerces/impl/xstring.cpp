@@ -2,7 +2,7 @@
 
 namespace enc {
 
-    const XMLCh* xml::EMPTY = L"";
+    const XMLCh* xml::EMPTY = u"";
 
     // conversion ucs <-> xml
     XENCODING_API xml::string_t 

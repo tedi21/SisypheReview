@@ -6,13 +6,13 @@ NAMESPACE_BEGIN(interp)
 template <class EncodingT>
 TextFileInterpreter<EncodingT>::TextFileInterpreter()
 {
-	setValue( boost::shared_ptr< _TextFile<EncodingT> > (new _TextFile<EncodingT>()) );
+	m_value = boost::make_shared< _TextFile<EncodingT> >();
 }
 
 template <class EncodingT>
 TextFileInterpreter<EncodingT>::TextFileInterpreter(boost::shared_ptr< _TextFile<EncodingT> > const& value)
 {
-	setValue(value);
+	m_value = value;
 }
 
 template <class EncodingT>
@@ -21,39 +21,34 @@ TextFileInterpreter<EncodingT>::TextFileInterpreter(boost::shared_ptr< Base<Enco
 	typename EncodingT::string_t nativeContent;
 	if (check_string<EncodingT>(content, nativeContent))
 	{
-		setValue(boost::shared_ptr< _TextFile<EncodingT> >(new _TextFile<EncodingT>(nativeContent)));
+		m_value = boost::make_shared< _TextFile<EncodingT> >(nativeContent);
 	}
 }
 
 template <class EncodingT>
-TextFileInterpreter<EncodingT>::~TextFileInterpreter()
-{}
-
-template <class EncodingT>
-boost::shared_ptr< _TextFile<EncodingT> > TextFileInterpreter<EncodingT>::getValue() const
+boost::shared_ptr< _TextFile<EncodingT> > TextFileInterpreter<EncodingT>::value() const
 {
 	return m_value;
 }
 
 template <class EncodingT>
-void TextFileInterpreter<EncodingT>::setValue(boost::shared_ptr< _TextFile<EncodingT> > const& object)
+void TextFileInterpreter<EncodingT>::value(boost::shared_ptr< _TextFile<EncodingT> > const& object)
 {
 	m_value = object;
-	String<EncodingT>::setValue(toString());
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getRowid() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(getValue()->getRowid()) );
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getRowid()) );
 }
 
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getContent() const
 {
-	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(getValue()->getContent()) );
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getContent()) );
 }
 
 
@@ -63,80 +58,138 @@ void TextFileInterpreter<EncodingT>::setContent(boost::shared_ptr< Base<Encoding
 	typename EncodingT::string_t nativeContent;
 	if (check_string<EncodingT>(content, nativeContent))
 	{
-		getValue()->setContent(nativeContent);
+		m_value->setContent(nativeContent);
 	}
 }
 
 
 template <class EncodingT>
-void TextFileInterpreter<EncodingT>::removeTextNotice(boost::shared_ptr< Base<EncodingT> > const& n)
+void TextFileInterpreter<EncodingT>::removeCppFile(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	int nativePosition;
-	if (check_numeric(n, nativePosition))
+	size_t nativePosition;
+	if (check_numeric_i(n, nativePosition))
 	{
-		getValue()->eraseTextNotice(getValue()->getTextNoticesBeginning()+nativePosition);
+		m_value->eraseCppFile(m_value->getCppFilesBeginning()+nativePosition);
 	}
 }
 
 
 template <class EncodingT>
-void TextFileInterpreter<EncodingT>::insertTextNotice(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& textNotice)
+void TextFileInterpreter<EncodingT>::removeDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	int nativePosition;
-	boost::shared_ptr< _TextNotice<EncodingT> > nativeTextNotice;
-	if (check_numeric(n, nativePosition) &&
-		check_textNotice(textNotice, nativeTextNotice))
+	size_t nativePosition;
+	if (check_numeric_i(n, nativePosition))
 	{
-		getValue()->insertTextNotice(getValue()->getTextNoticesBeginning()+nativePosition, nativeTextNotice);
+		m_value->eraseDebugFileInfo(m_value->getDebugFileInfosBeginning()+nativePosition);
 	}
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getTextNotice(boost::shared_ptr< Base<EncodingT> > const& n)
+void TextFileInterpreter<EncodingT>::insertCppFile(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& cppFile)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new TextNoticeInterpreter<EncodingT>());
-	int nativePosition;
-	if (check_numeric(n, nativePosition))
+	size_t nativePosition;
+	boost::shared_ptr< _CppFile<EncodingT> > nativeCppFile;
+	if (check_numeric_i(n, nativePosition) &&
+		check_cppFile(cppFile, nativeCppFile))
 	{
-		res.reset(new TextNoticeInterpreter<EncodingT>(getValue()->getTextNoticeAt(nativePosition)));
+		m_value->insertCppFile(m_value->getCppFilesBeginning()+nativePosition, nativeCppFile);
+	}
+}
+
+
+template <class EncodingT>
+void TextFileInterpreter<EncodingT>::insertDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& n, boost::shared_ptr< Base<EncodingT> > const& debugFileInfo)
+{
+	size_t nativePosition;
+	boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
+	if (check_numeric_i(n, nativePosition) &&
+		check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
+	{
+		m_value->insertDebugFileInfo(m_value->getDebugFileInfosBeginning()+nativePosition, nativeDebugFileInfo);
+	}
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getCppFile(boost::shared_ptr< Base<EncodingT> > const& n)
+{
+	boost::shared_ptr< Base<EncodingT> > res(new CppFileInterpreter<EncodingT>());
+	size_t nativePosition;
+	if (check_numeric_i(n, nativePosition))
+	{
+		res.reset(new CppFileInterpreter<EncodingT>(m_value->getCppFileAt(nativePosition)));
 	}
 	return res;
 }
 
 
 template <class EncodingT>
-void TextFileInterpreter<EncodingT>::clearTextNotices()
+boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	getValue()->clearTextNotices();
+	boost::shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
+	size_t nativePosition;
+	if (check_numeric_i(n, nativePosition))
+	{
+		res.reset(new DebugFileInfoInterpreter<EncodingT>(m_value->getDebugFileInfoAt(nativePosition)));
+	}
+	return res;
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::hasTextNotices() const
+void TextFileInterpreter<EncodingT>::clearCppFiles()
 {
-	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!getValue()->isTextNoticesEmpty()));
+	m_value->clearCppFiles();
 }
 
 
 template <class EncodingT>
-boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::textNoticesCount() const
+void TextFileInterpreter<EncodingT>::clearDebugFileInfos()
 {
-	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(getValue()->getTextNoticesSize()));
+	m_value->clearDebugFileInfos();
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::hasCppFiles() const
+{
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!m_value->isCppFilesEmpty()));
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::hasDebugFileInfos() const
+{
+	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(!m_value->isDebugFileInfosEmpty()));
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::cppFilesCount() const
+{
+	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_value->getCppFilesSize()));
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::debugFileInfosCount() const
+{
+	return boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(m_value->getDebugFileInfosSize()));
 }
 
 template <class EncodingT>
 typename EncodingT::string_t TextFileInterpreter<EncodingT>::toString() const
 {
 	std::stringstream stream;
-	stream << *(getValue());
+	stream << *m_value;
 	return C(stream.str());
 }
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::clone() const
 {
-	return boost::shared_ptr< Base<EncodingT> >(new TextFileInterpreter<EncodingT>(copy_ptr(getValue())));
+	return boost::shared_ptr< Base<EncodingT> >(new TextFileInterpreter<EncodingT>(copy_ptr(m_value)));
 }
 
 template <class EncodingT>
@@ -154,7 +207,7 @@ boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::invoke(cons
 	if (check_parameters_array(params, args))
 	{
 		if (tryInvoke(this, C("TextFile"), method, args, ret) ||
-			tryInvoke(this, C("String"), method, args, ret))
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -177,7 +230,7 @@ bool check_textFile(boost::shared_ptr< Base<EncodingT> > const& val, boost::shar
 	boost::shared_ptr< TextFileInterpreter<EncodingT> > value  = dynamic_pointer_cast< TextFileInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		o = value->getValue();
+		o = value->value();
 	}
 	else
 	{
@@ -193,7 +246,7 @@ bool reset_textFile(boost::shared_ptr< Base<EncodingT> >& val, boost::shared_ptr
 	boost::shared_ptr< TextFileInterpreter<EncodingT> > value  = dynamic_pointer_cast< TextFileInterpreter<EncodingT> >(val);
 	if (value)
 	{
-		value->setValue(o);
+		value->value(o);
 	}
 	else
 	{

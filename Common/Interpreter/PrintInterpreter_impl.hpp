@@ -11,7 +11,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > expr = m_instruction->interpret(c);
         boost::shared_ptr< String<EncodingT> > res(new String<EncodingT>(expr->toString()));
 
-        cout << A(res->getValue()) << endl;
+        cout << A(res->value()) << endl;
 
         return res;
     }

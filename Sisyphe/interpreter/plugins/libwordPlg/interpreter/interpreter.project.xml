@@ -38,6 +38,7 @@
     </Content>
     
     <Content Type="Value-body">
+    assert(m_object);
     return *m_object;
     </Content>
   

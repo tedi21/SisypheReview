@@ -11,10 +11,6 @@ CppInheritanceInterpreterAccess<EncodingT>::CppInheritanceInterpreterAccess()
 }
 
 template <class EncodingT>
-CppInheritanceInterpreterAccess<EncodingT>::~CppInheritanceInterpreterAccess()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t CppInheritanceInterpreterAccess<EncodingT>::toString() const
 {
 	return EncodingT::EMPTY;
@@ -40,7 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>:
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppInheritanceAccess"), method, args, ret))
+		if (tryInvoke(this, C("CppInheritanceAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -111,8 +108,8 @@ boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>:
 	clearError();
 	try
 	{
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier))
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier))
 		{
 			res.reset(new CppInheritanceInterpreter<EncodingT>(m_object->getOneCppInheritance(nativeIdentifier)));
 		}
@@ -133,8 +130,8 @@ boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>:
 	try
 	{
 		bool nativeNoWait;
-		int nativeIdentifier;
-		if (check_numeric(identifier, nativeIdentifier) &&
+		long long nativeIdentifier;
+		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
 			res.reset(new CppInheritanceInterpreter<EncodingT>(m_object->selectOneCppInheritance(nativeIdentifier,
@@ -320,7 +317,7 @@ boost::shared_ptr< Base<EncodingT> > CppInheritanceInterpreterAccess<EncodingT>:
 	boost::shared_ptr< String<EncodingT> > str  = dynamic_pointer_cast< String<EncodingT> >(text);
 	if (str)
 	{
-		str->setValue(C(m_errorText));
+		str->value(C(m_errorText));
 	}
 	return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_error));
 }

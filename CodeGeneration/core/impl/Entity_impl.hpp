@@ -33,11 +33,11 @@ namespace dsg {
             }
             switch (m_class)
             {
-            case ENTITY_DATA        : strClass = L"Data";       break;
-            case ENTITY_FUNCTION    : strClass = L"Function";   break;
-            case ENTITY_ENUMERATION : strClass = L"Enumeration";break;
-            case ENTITY_PACKAGE     : strClass = L"Package";    break;
-            default                 : strClass = L"Unknown";    break;
+            case ENTITY_DATA        : strClass = u"Data";       break;
+            case ENTITY_FUNCTION    : strClass = u"Function";   break;
+            case ENTITY_ENUMERATION : strClass = u"Enumeration";break;
+            case ENTITY_PACKAGE     : strClass = u"Package";    break;
+            default                 : strClass = u"Unknown";    break;
             }
             xml_entity->setAttribute( AX("Class"), strClass.c_str() );
             if (hasComment()) 

@@ -8,7 +8,8 @@
     
     codeSelection.select = function (buffer, item) {
       codeSelection.before = buffer;
-      return cppBuffer.setStyle(buffer, item.start, item.length, 'code-selection', '', '', true);
+      var nline = item.lineNumber - 1;
+      return cppBuffer.setStyle2(buffer, nline, 'code-selection', '', '', true);
     };
     
     codeSelection.deSelect = function () {
@@ -30,8 +31,9 @@
     codeError.select = function (buffer, listErrors) {
       codeError.before = buffer;
       var content = buffer;
-      for (var i = listErrors.length-1; i >= 0; i--) {
-        content = cppBuffer.setStyle(content, listErrors[i].start, listErrors[i].length, 'code-error', listErrors[i].description, 'errorClicked(' + i + ')', false);
+      for (var i = 0; i < listErrors.length; i++) {
+        var nline = listErrors[i].lineNumber - 1;
+        content = cppBuffer.setStyle2(content, nline, 'code-error', listErrors[i].description, 'errorClick({index:' + i + ',event:$event})', false);
       }
       return content;
     };

@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 #include "macros.hpp"
-#include "String.hpp"
+#include "Base.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -19,7 +19,7 @@ NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
     class Folder
-    : public String<EncodingT>
+    : public Base<EncodingT>
     {
     private:
         files::path  m_path;
@@ -33,9 +33,6 @@ NAMESPACE_BEGIN(interp)
         FACTORY_PROTOTYPE1(Folder, In< boost::shared_ptr< Base<EncodingT> > >)
         Folder(boost::shared_ptr< Base<EncodingT> > const& path);
 
-        // Destructor
-        ~Folder();
-
         // Virtual methods
         virtual typename EncodingT::string_t toString() const;
         virtual boost::shared_ptr< Base<EncodingT> > clone() const;
@@ -46,10 +43,16 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getPath() const;
 
         boost::shared_ptr< Base<EncodingT> > getAbsolutePath() const;
+        
+        boost::shared_ptr< Base<EncodingT> > getParentPath() const;
+        
+        boost::shared_ptr< Base<EncodingT> > getFilename() const;
 
         boost::shared_ptr< Base<EncodingT> > getFiles() const;
 
         boost::shared_ptr< Base<EncodingT> > getFolders() const;
+
+        boost::shared_ptr< Base<EncodingT> > exists() const;
 
         FACTORY_PROTOTYPE1(createFolder, In< boost::shared_ptr< Base<EncodingT> > >)
         boost::shared_ptr< Base<EncodingT> > createFolder(boost::shared_ptr< Base<EncodingT> > const& newName);
@@ -71,8 +74,11 @@ NAMESPACE_BEGIN(interp)
             CLASS_REGISTER1     (Folder)
             METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getPath, const_t, C("Folder::Path") )
             METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getAbsolutePath, const_t, C("Folder::AbsolutePath") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getParentPath, const_t, C("Folder::ParentPath") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFilename, const_t, C("Folder::Filename") )
             METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFiles, const_t, C("Folder::Files") )
             METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFolders, const_t, C("Folder::Folders") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, exists, const_t, C("Folder::Exists") )
             METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, createFolder, no_const_t, C("Folder::CreateFolder") )
             METHOD_KEY_REGISTER2(Folder, void, copyTo, no_const_t, C("Folder::CopyTo") )
             METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, remove, no_const_t, C("Folder::Remove") )
@@ -86,8 +92,11 @@ NAMESPACE_BEGIN(interp)
             CLASS_UNREGISTER1     (Folder)
             METHOD_KEY_UNREGISTER (C("Folder::Path"))
             METHOD_KEY_UNREGISTER (C("Folder::AbsolutePath"))
+            METHOD_KEY_UNREGISTER (C("Folder::ParentPath"))
+            METHOD_KEY_UNREGISTER (C("Folder::Filename"))
             METHOD_KEY_UNREGISTER (C("Folder::Files"))
             METHOD_KEY_UNREGISTER (C("Folder::Folders"))
+            METHOD_KEY_UNREGISTER (C("Folder::Exists"))
             METHOD_KEY_UNREGISTER1(C("Folder::CreateFolder"))
             METHOD_KEY_UNREGISTER2(C("Folder::CopyTo"))
             METHOD_KEY_UNREGISTER1(C("Folder::Remove"))

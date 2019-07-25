@@ -14,7 +14,6 @@ NAMESPACE_BEGIN(interp)
     {
     public:
         Null();
-        ~Null();
         typename EncodingT::string_t toString() const;
         boost::shared_ptr< Base<EncodingT> > clone() const;
         typename EncodingT::string_t getClassName() const;

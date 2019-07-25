@@ -11,10 +11,6 @@ DataParametersInterpreter<EncodingT>::DataParametersInterpreter()
 {}
 
 template <class EncodingT>
-DataParametersInterpreter<EncodingT>::~DataParametersInterpreter()
-{}
-
-template <class EncodingT>
 typename EncodingT::string_t DataParametersInterpreter<EncodingT>::toString() const
 {
     return EncodingT::EMPTY;
@@ -42,7 +38,8 @@ boost::shared_ptr< Base<EncodingT> > DataParametersInterpreter<EncodingT>::invok
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
     {
-        if (tryInvoke(this, C("DataParameters"), method, args, ret))
+        if (tryInvoke(this, C("DataParameters"), method, args, ret) ||
+            tryInvoke(this, C("Base"), method, args, ret))
         {
             find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
             for (size_t i = 0; i < params.size(); ++i)
@@ -78,7 +75,7 @@ void
 DataParametersInterpreter<EncodingT>::addBlob(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     boost::container::vector<unsigned char> nativeValue;
-    if (check_numeric_array(value, nativeValue))
+    if (check_numeric_i_array(value, nativeValue))
     {
         m_object.addBlob(nativeValue);
     }
@@ -89,7 +86,7 @@ void
 DataParametersInterpreter<EncodingT>::addDouble(const boost::shared_ptr< Base<EncodingT> >& value)
 {
     double nativeValue;
-    if (check_numeric(value, nativeValue))
+    if (check_numeric_d(value, nativeValue))
     {
         m_object.addDouble(nativeValue);
     }
@@ -99,8 +96,8 @@ template <class EncodingT>
 void
 DataParametersInterpreter<EncodingT>::addInt(const boost::shared_ptr< Base<EncodingT> >& value)
 {
-    double nativeValue;
-    if (check_numeric(value, nativeValue))
+    int nativeValue;
+    if (check_numeric_i(value, nativeValue))
     {
         m_object.addInt(nativeValue);
     }
@@ -110,8 +107,8 @@ template <class EncodingT>
 void
 DataParametersInterpreter<EncodingT>::addInt64(const boost::shared_ptr< Base<EncodingT> >& value)
 {
-    double nativeValue;
-    if (check_numeric(value, nativeValue))
+    long long nativeValue;
+    if (check_numeric_i(value, nativeValue))
     {
         m_object.addInt64(nativeValue);
     }

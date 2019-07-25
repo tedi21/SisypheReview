@@ -119,6 +119,9 @@ interface IDebugClientPtr
   // La méthode CreateProcess crée un processus à partir de la ligne de commande en paramètre.
   long CreateProcess(in astring commandLine, in unsigned long createFlags);
   
+  // La méthode CreateProcess crée un processus à partir de la ligne de commande en paramètre et d'un répertoire courant spécifique.
+  long CreateProcess(in astring commandLine, in unsigned long createFlags, in astring InitialDirectory);
+  
   // The GetRunningProcessSystemIds method returns the process ID.
   long GetRunningProcessSystemIds(out unsigned long* processId);
 
@@ -173,6 +176,20 @@ interface IDebugControlPtr
 
   // The SetExpressionSyntax method sets the syntax that the engine will use to evaluate expressions.
   long SetExpressionSyntax(in unsigned long flags);
+  
+  // The IsPointer64Bit method determines if the effective processor uses 64-bit pointers.
+  long IsPointer64Bit();
+  
+  // The GetStackTrace method returns the frames at the top of the specified call stack.
+  long GetStackTrace(in unsigned long long frameOffset, 
+                     in unsigned long long stackOffset, 
+                     in unsigned long long instructionOffset,
+                     out DEBUG_STACK_FRAME frames[],
+                     in unsigned long frameSize,
+                     out unsigned long* framesFilled);
+
+  // The GetNearInstruction method returns the location of a processor instruction relative to a given location.
+  long GetNearInstruction(in unsigned long long offset, in unsigned long delta, out unsigned long long* nearOffset);
 }
 
 // Classe permettant d'accéder aux informations du processus en cours de débogage.
@@ -191,9 +208,56 @@ interface IDebugSystemObjectsPtr
 // Classe permettant d'accéder aux informations de symboles de débogage.
 interface IDebugSymbolsPtr
 {
+  // Turns on some of the engine's global symbol options. 
+  long AddSymbolOptions(in unsigned long options);
+
+  // Appends directories to the executable image path.
+  long AppendImagePath(in astring addition);
+
+  // Appends directories to the source path.
+  long AppendSourcePath(in astring addition);
+
+  // Appends directories to the symbol path.
   long AppendSymbolPath(in astring addition);
   
+  // Returns the base address of module which contains the specified symbol.
   long GetSymbolModule(in astring symbol, out unsigned long long* base);
+  
+  // Returns the engine's global symbol options.
+  long GetSymbolOptions(out unsigned long* options);
+  
+  // Returns the symbol path.
+  long GetSymbolPath(out astring buffer); 
+  
+  // Returns the source filename and the line number within the source file of an instruction in the target.
+  long GetLineByOffset(in unsigned long long offset, 
+                       out unsigned long* line, 
+                       out astring fileBuffer,
+                       out unsigned long long* displacement);
+  
+  // Searches through the target's modules for one whose memory allocation includes the specified location.
+  long GetModuleByOffset(in unsigned long long offset,
+                         in unsigned long startIndex,
+                         out unsigned long* index,
+                         out unsigned long long* base);
+  
+  // Returns the name of the symbol at the specified location in the target's virtual address space.
+  long GetNameByOffset(in unsigned long long offset, 
+                       out astring nameBuffer,
+                       out unsigned long long* displacement);
+  
+  // Returns the name of a symbol that is located near the specified location. 
+  long GetNearNameByOffset(in unsigned long long offset, 
+                           in long delta,
+                           out astring nameBuffer,
+                           out unsigned long long* displacement);
+                           
+  // The GetOffsetByLine method returns the location of the instruction that corresponds to a specified line in the source code.
+  long GetOffsetByLine(in unsigned long line, in astring file, out unsigned long long* offset);
+  
+  // The GetSourceFileLineOffsets method maps each line in a source file to a location in the target's memory.
+  long GetSourceFileLineOffsets(in astring file, out unsigned long long addresses[]);
+
 }
 
 // Classe permettant d'accéder aux informations d'un breakpoint.
@@ -201,6 +265,9 @@ interface IDebugBreakpointPtr
 {
   // Sets the location that triggers a breakpoint.
   long SetOffset(in unsigned long long offset);
+  
+  // The SetOffsetExpression methods set an expression string that evaluates to the location that triggers a breakpoint.
+  long SetOffsetExpression(in astring expression);
 
   // Sets the flags for a breakpoint.
   long SetFlags(in unsigned long flags);
@@ -216,6 +283,10 @@ interface IDebugBreakpointPtr
   
   // The GetId method returns a breakpoint ID, which is the engine's unique identifier for a breakpoint.
   long GetId(out unsigned long* bpId);
+  
+  // The GetOffset method returns the location that triggers a breakpoint.
+  long GetOffset(out unsigned long long* offset);
+
 }
 
 // The DEBUG_VALUE structure holds register and expression values.
@@ -231,6 +302,21 @@ interface DEBUG_VALUE
   attribute unsigned long long UI64;
   attribute float F32;
   attribute double F64;
+  attribute achar C8;
+  attribute wchar C16;
   attribute unsigned long Type;
   attribute unsigned long TailOfRawBytes;
 }
+
+// The DEBUG_STACK_FRAME structure describes a stack frame and the address of the current instruction for the stack frame.
+interface DEBUG_STACK_FRAME
+{
+  attribute unsigned long long InstructionOffset;
+  attribute unsigned long long ReturnOffset;
+  attribute unsigned long long FrameOffset;
+  attribute unsigned long long StackOffset;
+  attribute unsigned long long FuncTableEntry;
+  attribute boolean Virtual;
+  attribute unsigned long FrameNumber;
+}
+

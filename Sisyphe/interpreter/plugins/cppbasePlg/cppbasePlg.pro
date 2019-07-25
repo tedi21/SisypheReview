@@ -2,6 +2,7 @@ QT       -= core gui
 
 TARGET = cppBasePlg
 TEMPLATE = lib
+CONFIG += c++1z
 
 DEFINES += HAS_CPPBASEPLG_DLL \
            BUILD_CPPBASEPLG_DLL \
@@ -10,7 +11,6 @@ DEFINES += HAS_CPPBASEPLG_DLL \
            LOG4CPP_HAS_DLL
 
 SOURCES += \
-    ../../../../Common/Sqlite/sqlite3.c \
     cppBasePlg.cpp
 
 HEADERS += \
@@ -18,11 +18,11 @@ HEADERS += \
     cppBasePlg.h
 
 INCLUDEPATH += \
-    ../../../../../../../Libraries/boost_1_61_0 \
-    ../../../../../../../Libraries/log4cpp/include \
-    ../../../../../CodeGeneration/encoding \
-    ../../../../../CodeGeneration/generator \
-    ../../../../../CodeGeneration/factory \
+    ../../../../../../Libraries/boost_1_66_0 \
+    ../../../../../../Libraries/log4cpp/include \
+    ../../../../CodeGeneration/encoding \
+    ../../../../CodeGeneration/generator \
+    ../../../../CodeGeneration/factory \
     ../../../../Common/Interpreter \
     ../../../../Common/Sqlite \
     ../../../../Common/Sqlite/Interpreter \
@@ -32,19 +32,17 @@ INCLUDEPATH += \
     ../../../cppBase/src/Interpreter
 
 
-LIBS += -L../../../../../../../Libraries/log4cpp/lib -llog4cpp
+CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp
 
-#debug {
-#LIBS += ../../../../../bin_qt/debug/Encoding.dll \
-#        ../../../cppBase/bin/debug/cppBase.dll \
-#        ../../../Script/bin/Plugin/debug/Plugin.dll
-#}
+CONFIG(MinGW-64): LIBS += ../../../../CodeGeneration/bin_qt/Encoding64/release/Encoding.dll \
+                          ../../../cppBase/bin64/release/cppBase.dll \
+                          ../../../Interpreter/bin/Plugin64/release/Plugin.dll
 
-release {
-LIBS += ../../../../../CodeGeneration/bin_qt/Encoding/release/Encoding.dll \
-        ../../../cppBase/bin/release/cppBase.dll \
-        ../../../Interpreter/bin/Plugin/release/Plugin.dll
-}
+CONFIG(MinGW-32): LIBS += -L../../../../../../Libraries/log4cpp/lib32 -llog4cpp
+
+CONFIG(MinGW-32): LIBS += ../../../../CodeGeneration/bin_qt/Encoding32/release/Encoding.dll \
+                          ../../../cppBase/bin32/release/cppBase.dll \
+                          ../../../Interpreter/bin/Plugin32/release/Plugin.dll
 
 unix:!symbian {
     maemo5 {
@@ -54,4 +52,3 @@ unix:!symbian {
     }
     INSTALLS += target
 }
-

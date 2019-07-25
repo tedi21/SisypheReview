@@ -22,77 +22,95 @@
       </Entity>
       <Relation Multiplicity="Zero-One" Name="R_PdbParser:initialize@Boolean_PdbParser" Source="PdbParser" SourceREF="Id" Target="PdbParser:initialize@Boolean" TargetREF="PdbParser"/>
       <Relation Multiplicity="Zero-One" Name="R_PdbParser:terminate@Boolean_PdbParser" Source="PdbParser" SourceREF="Id" Target="PdbParser:terminate@Boolean" TargetREF="PdbParser"/>
-      <Content Type="Global-inclusion">
-#include "Bool.hpp"
-// Debug Interface Access (DIA) specific
-#include &lt;dia2.h&gt;
-#include "IDiaDataSourcePtrInterpreter.hpp"
+      <Content Type="Global-inclusion">&#xD;
+#include "Bool.hpp"&#xD;
+// Debug Interface Access (DIA) specific&#xD;
+#include &lt;dia2.h&gt;&#xD;
+#include "IDiaDataSourcePtrInterpreter.hpp"&#xD;
 </Content>
-      <Content Type="Global-body">
-template &lt;class EncodingT&gt;
-IDiaDataSource* interp::PdbParserInterpreter&lt;EncodingT&gt;::m_diaDataSource = NULL;
+      <Content Type="Global-body">&#xD;
+template &lt;class EncodingT&gt;&#xD;
+IDiaDataSource* interp::PdbParserInterpreter&lt;EncodingT&gt;::m_diaDataSource = NULL;&#xD;
 </Content>
-      <Content Type="Declaration">
-private:
-  static IDiaDataSource *m_diaDataSource;
-  
-public:
-  // Retourne l'objet DiaDataSource
-  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; getDataSource() const;
+      <Content Type="Declaration">&#xD;
+private:&#xD;
+  static IDiaDataSource *m_diaDataSource;&#xD;
+  &#xD;
+public:&#xD;
+  // Retourne l'objet DiaDataSource&#xD;
+  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; getDataSource() const;&#xD;
 </Content>
-      <Content Type="Implementation">
-// Retourne l'objet DiaDataSource
-template &lt;class EncodingT&gt;
-boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; PdbParserInterpreter&lt;EncodingT&gt;::getDataSource() const
-{
-  return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new IDiaDataSourcePtrInterpreter&lt;EncodingT&gt;(m_diaDataSource));
-}
+      <Content Type="Implementation">&#xD;
+// Retourne l'objet DiaDataSource&#xD;
+template &lt;class EncodingT&gt;&#xD;
+boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; PdbParserInterpreter&lt;EncodingT&gt;::getDataSource() const&#xD;
+{&#xD;
+  return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new IDiaDataSourcePtrInterpreter&lt;EncodingT&gt;(IDiaDataSourcePtr(m_diaDataSource)));&#xD;
+}&#xD;
 </Content>
-      <Content Type="Register">
-METHOD_KEY_REGISTER ( PdbParserInterpreter, boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt;, getDataSource, const_t, C("PdbParser::DataSource") );
+      <Content Type="Register">&#xD;
+METHOD_KEY_REGISTER ( PdbParserInterpreter, boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt;, getDataSource, const_t, C("PdbParser::DataSource") );&#xD;
 </Content>
-      <Content Type="Unregister">
-METHOD_KEY_UNREGISTER ( C("PdbParser::DataSource") );
+      <Content Type="Unregister">&#xD;
+METHOD_KEY_UNREGISTER ( C("PdbParser::DataSource") );&#xD;
 </Content>
-      <Content Target="PdbParser:initialize@Boolean" Type="Implementation-body">
-static GUID IID_IDiaDataSource = {0x79F1BB5F,0xB66E,0x48e5,{0xB6,0xA9,0x15,0x45,0xC3,0x23,0xCA,0x3D}};
-static GUID IID_DiaSource = {0xE6756135,0x1E65,0x4D17,{0x85,0x76,0x61,0x07,0x61,0x39,0x8C,0x3C}};
-if (m_diaDataSource == NULL)
-{
-  IDiaDataSource  *ppSource;
-  HRESULT hr = CoInitialize(NULL);
-  hr = CoCreateInstance(IID_DiaSource,
-                  NULL,
-                  CLSCTX_INPROC_SERVER,
-                  IID_IDiaDataSource,
-                  (void **) &amp;ppSource);
-  if(SUCCEEDED(hr)) m_diaDataSource = ppSource;
-}
-return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource != NULL));
+      <Content Target="PdbParser:initialize@Boolean" Type="Implementation-body">&#xD;
+  static GUID IID_IDiaDataSource = {0x79F1BB5F,0xB66E,0x48e5,{0xB6,0xA9,0x15,0x45,0xC3,0x23,0xCA,0x3D}};&#xD;
+  static GUID IID_DiaSource71 = {0xe60afbee,0x502d,0x46ae,{0x85,0x8f,0x82,0x72,0xa0,0x9b,0xd7,0x07}};&#xD;
+  static GUID IID_DiaSource80 = {0xbce36434,0x2c24,0x499e,{0xbf,0x49,0x8b,0xd9,0x9b,0x0e,0xeb,0x68}};&#xD;
+  static GUID IID_DiaSource90 = {0x4C41678E,0x887B,0x4365,{0xA0,0x9E,0x92,0x5D,0x28,0xDB,0x33,0xC2}};&#xD;
+  static GUID IID_DiaSource100 = {0xB86AE24D,0xBF2F,0x4ac9,{0xB5,0xA2,0x34,0xB1,0x4E,0x4C,0xE1,0x1D}};&#xD;
+  static GUID IID_DiaSource110 = {0x761D3BCD,0x1304,0x41D5,{0x94,0xE8,0xEA,0xC5,0x4E,0x4A,0xC1,0x72}};&#xD;
+  static GUID IID_DiaSource120 = {0x3bfcea48,0x620f,0x4b6b,{0x81,0xf7,0xb9,0xaf,0x75,0x45,0x4c,0x7d}};&#xD;
+  static GUID IID_DiaSource140 = {0xe6756135,0x1e65,0x4d17,{0x85,0x76,0x61,0x07,0x61,0x39,0x8c,0x3c}};&#xD;
+&#xD;
+  if (m_diaDataSource == NULL)&#xD;
+  {&#xD;
+    HMODULE hmodule = LoadLibrary(L"MSDIA140");&#xD;
+    if (hmodule)&#xD;
+    {&#xD;
+      BOOL (WINAPI*DllGetClassObject)(REFCLSID,REFIID,LPVOID) =&#xD;
+          (BOOL(WINAPI*)(REFCLSID,REFIID,LPVOID))GetProcAddress(hmodule, "DllGetClassObject");&#xD;
+&#xD;
+      if (DllGetClassObject) &#xD;
+      {&#xD;
+        IClassFactory *pClassFactory = NULL;&#xD;
+        HRESULT hr = DllGetClassObject(IID_DiaSource140, IID_IClassFactory, &amp;pClassFactory);&#xD;
+        if(SUCCEEDED(hr))&#xD;
+        {&#xD;
+          IDiaDataSource  *ppSource;&#xD;
+          hr = pClassFactory-&gt;CreateInstance(NULL, IID_IDiaDataSource, (void**)&amp;ppSource);&#xD;
+          if(SUCCEEDED(hr)) m_diaDataSource = ppSource;&#xD;
+          pClassFactory-&gt;Release();&#xD;
+        }&#xD;
+      }&#xD;
+    }&#xD;
+  }&#xD;
+  return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource != NULL));&#xD;
 </Content>
-      <Content Target="PdbParser:terminate@Boolean" Type="Implementation-body">
-if(m_diaDataSource != NULL)
-{
-  m_diaDataSource-&gt;Release();
-  m_diaDataSource = NULL;
-  CoUninitialize();
-}
-return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource == NULL));
+      <Content Target="PdbParser:terminate@Boolean" Type="Implementation-body">&#xD;
+if(m_diaDataSource != NULL)&#xD;
+{&#xD;
+  m_diaDataSource-&gt;Release();&#xD;
+  m_diaDataSource = NULL;&#xD;
+  CoUninitialize();&#xD;
+}&#xD;
+return boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; (new Bool&lt;EncodingT&gt;(m_diaDataSource == NULL));&#xD;
 </Content>
-      <Content Target="PdbParser:initialize@Boolean" TargetREF="initialize" Type="ReturnDescription">
-True si l'initialisation est effectuée.
+      <Content Target="PdbParser:initialize@Boolean" TargetREF="initialize" Type="ReturnDescription">&#xD;
+True si l'initialisation est effectuée.&#xD;
 </Content>
-      <Content Target="PdbParser:initialize@Boolean" Type="Example">
-pdbParser = new PdbParser();
-pdbParser.Initialize();
-pdbDataSource = pdbParser.DataSource;
+      <Content Target="PdbParser:initialize@Boolean" Type="Example">&#xD;
+pdbParser = new PdbParser();&#xD;
+pdbParser.Initialize();&#xD;
+pdbDataSource = pdbParser.DataSource;&#xD;
 </Content>
-      <Content Target="PdbParser:terminate@Boolean" TargetREF="terminate" Type="ReturnDescription">
-True si la destruction est effectuée.
+      <Content Target="PdbParser:terminate@Boolean" TargetREF="terminate" Type="ReturnDescription">&#xD;
+True si la destruction est effectuée.&#xD;
 </Content>
-      <Content Target="PdbParser:terminate@Boolean" Type="Example">
-pdbParser.Terminate();
-pdbParser = null;
+      <Content Target="PdbParser:terminate@Boolean" Type="Example">&#xD;
+pdbParser.Terminate();&#xD;
+pdbParser = null;&#xD;
 </Content>
     </File>
     <File Name="IDiaDataSourcePtr">
@@ -117,22 +135,22 @@ pdbParser = null;
       <Relation Multiplicity="Zero-One" Name="R_IDiaDataSourcePtr:loadDataFromPdb@String@Int32_IDiaDataSourcePtr" Source="IDiaDataSourcePtr" SourceREF="Id" Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" TargetREF="IDiaDataSourcePtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaDataSourcePtr:openSession@IDiaSessionPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaDataSourcePtr:openSession@IDiaSessionPtr*@Int32" TargetREF="ppSession"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaDataSourcePtr:openSession@IDiaSessionPtr*@Int32_IDiaDataSourcePtr" Source="IDiaDataSourcePtr" SourceREF="Id" Target="IDiaDataSourcePtr:openSession@IDiaSessionPtr*@Int32" TargetREF="IDiaDataSourcePtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaDataSource&gt; IDiaDataSourcePtr;
-#include "IDiaSessionPtrInterpreter.hpp"
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaDataSource&gt; IDiaDataSourcePtr;&#xD;
+#include "IDiaSessionPtrInterpreter.hpp"&#xD;
 </Content>
-      <Content Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" TargetREF="loadDataFromPdb" Type="ReturnDescription">
-0 si la lecture du fichier PDB est effectuée.
+      <Content Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" TargetREF="loadDataFromPdb" Type="ReturnDescription">&#xD;
+0 si la lecture du fichier PDB est effectuée.&#xD;
 </Content>
-      <Content Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" TargetREF="pdbPath" Type="ParameterDescription">
-Le chemin du fichier PDB à ouvrir.
+      <Content Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" TargetREF="pdbPath" Type="ParameterDescription">&#xD;
+Le chemin du fichier PDB à ouvrir.&#xD;
 </Content>
-      <Content Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" Type="Example">
-pdbParser = new PdbParser();
-pdbParser.Initialize();
-pdbDataSource = pdbParser.DataSource;
-pdbDataSource.LoadDataFromPdb("projet.pdb");
+      <Content Target="IDiaDataSourcePtr:loadDataFromPdb@String@Int32" Type="Example">&#xD;
+pdbParser = new PdbParser();&#xD;
+pdbParser.Initialize();&#xD;
+pdbDataSource = pdbParser.DataSource;&#xD;
+pdbDataSource.LoadDataFromPdb("projet.pdb");&#xD;
 </Content>
     </File>
     <File Name="IDiaSessionPtr">
@@ -154,12 +172,71 @@ pdbDataSource.LoadDataFromPdb("projet.pdb");
         <Attribute Modifier="Auto " Name="put_loadAddress" Type="Int32"/>
         <Attribute Modifier="Const " Name="pNewVal" Type="UInt64"/>
       </Entity>
+      <Entity Class="Function" FunctionName="getSymbolsByAddr" Name="IDiaSessionPtr:getSymbolsByAddr@IDiaEnumSymbolsByAddrPtr*@Int32">
+        <Comments> Extrait un énumérateur qui recherche des symboles dans l'ordre de leurs adresses.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="getSymbolsByAddr" Type="Int32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppEnumbyAddr" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="getEnumTables" Name="IDiaSessionPtr:getEnumTables@IDiaEnumTablesPtr*@Int32">
+        <Comments> Récupère un énumérateur pour tous les tables contenues dans le magasin de symboles.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="getEnumTables" Type="Int32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppEnumTables" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="findSymbolByAddr" Name="IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32">
+        <Comments> Récupère un type spécifié de symboles qui contient, ou est le plus proche de, une adresse spécifiée.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="findSymbolByAddr" Type="Int32"/>
+        <Attribute Modifier="Const " Name="isect" Type="UInt32"/>
+        <Attribute Modifier="Const " Name="offset" Type="UInt32"/>
+        <Attribute Modifier="Ref Const " Name="symtag" Type="UInt64"/>
+        <Attribute Modifier="Ref Virtual " Name="ppSymbol" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="findSymbolByRVA" Name="IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32">
+        <Comments> Récupère un type spécifié de symboles qui contient, ou est le plus proche de, une adresse virtuelle relative spécifiée (RVA).</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="findSymbolByRVA" Type="Int32"/>
+        <Attribute Modifier="Const " Name="rva" Type="UInt32"/>
+        <Attribute Modifier="Ref Const " Name="symtag" Type="UInt64"/>
+        <Attribute Modifier="Ref Virtual " Name="ppSymbol" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="symbolById" Name="IDiaSessionPtr:symbolById@UInt32@IDiaSymbolPtr*@Int32">
+        <Comments> Récupère un symbole par son identificateur unique.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="symbolById" Type="Int32"/>
+        <Attribute Modifier="Const " Name="identifier" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppSymbol" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="symsAreEquiv" Name="IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32">
+        <Comments> Vérifie si deux symboles sont équivalents.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="symsAreEquiv" Type="Int32"/>
+        <Attribute Modifier="Ref Const " Name="symbolA" Type="UInt64"/>
+        <Attribute Modifier="Ref Const " Name="symbolB" Type="UInt64"/>
+      </Entity>
       <Entity Class="Function" FunctionName="findLinesByRVA" Name="IDiaSessionPtr:findLinesByRVA@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32">
         <Comments> Récupère les lignes d'un module spécifié qui contient une adresse virtuelle relative spécifiée (RVA).</Comments>
         <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
         <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
         <Attribute Modifier="Auto " Name="findLinesByRVA" Type="Int32"/>
         <Attribute Modifier="Const " Name="rva" Type="UInt32"/>
+        <Attribute Modifier="Const " Name="length" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppResult" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="findLinesByAddr" Name="IDiaSessionPtr:findLinesByAddr@UInt32@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32">
+        <Comments> Retrieves the lines in a specified compiland that contain a specified address.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="findLinesByAddr" Type="Int32"/>
+        <Attribute Modifier="Const " Name="seg" Type="UInt32"/>
+        <Attribute Modifier="Const " Name="offset" Type="UInt32"/>
         <Attribute Modifier="Const " Name="length" Type="UInt32"/>
         <Attribute Modifier="Ref Virtual " Name="ppResult" Type="UInt64"/>
       </Entity>
@@ -217,11 +294,48 @@ pdbDataSource.LoadDataFromPdb("projet.pdb");
         <Attribute Modifier="Auto " Name="findFile" Type="Int32"/>
         <Attribute Modifier="Ref Virtual " Name="ppResult" Type="UInt64"/>
       </Entity>
+      <Entity Class="Function" FunctionName="findChildren" Name="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32">
+        <Comments> Récupère tous les enfants d'un identificateur parent spécifié qui correspondent au nom et le type de symbole.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="findChildren" Type="Int32"/>
+        <Attribute Modifier="Ref Const " Name="parent" Type="UInt64"/>
+        <Attribute Modifier="Ref Const " Name="symtag" Type="UInt64"/>
+        <Attribute Modifier="Const " Name="name" Type="String"/>
+        <Attribute Modifier="Const " Name="compareFlags" Type="Int32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppResult" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="findChildren" Name="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32">
+        <Comments> Récupère tous les enfants d'un identificateur parent spécifié qui correspondent au nom et le type de symbole.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSessionPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="findChildren" Type="Int32"/>
+        <Attribute Modifier="Ref Const " Name="parent" Type="UInt64"/>
+        <Attribute Modifier="Ref Const " Name="symtag" Type="UInt64"/>
+        <Attribute Modifier="Ref Virtual " Name="ppResult" Type="UInt64"/>
+      </Entity>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:get_globalScope@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:get_globalScope@IDiaSymbolPtr*@Int32" TargetREF="pRetVal"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:get_globalScope@IDiaSymbolPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:get_globalScope@IDiaSymbolPtr*@Int32" TargetREF="IDiaSessionPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:put_loadAddress@UInt64@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:put_loadAddress@UInt64@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:getSymbolsByAddr@IDiaEnumSymbolsByAddrPtr*@Int32_IDiaEnumSymbolsByAddrPtr" Source="IDiaEnumSymbolsByAddrPtr" SourceREF="Id" Target="IDiaSessionPtr:getSymbolsByAddr@IDiaEnumSymbolsByAddrPtr*@Int32" TargetREF="ppEnumbyAddr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:getSymbolsByAddr@IDiaEnumSymbolsByAddrPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:getSymbolsByAddr@IDiaEnumSymbolsByAddrPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:getEnumTables@IDiaEnumTablesPtr*@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaSessionPtr:getEnumTables@IDiaEnumTablesPtr*@Int32" TargetREF="ppEnumTables"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:getEnumTables@IDiaEnumTablesPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:getEnumTables@IDiaEnumTablesPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32_SymTagEnumType" Source="SymTagEnumType" SourceREF="Id" Target="IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32" TargetREF="symtag"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32" TargetREF="ppSymbol"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findSymbolByAddr@UInt32@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32_SymTagEnumType" Source="SymTagEnumType" SourceREF="Id" Target="IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32" TargetREF="symtag"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32" TargetREF="ppSymbol"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findSymbolByRVA@UInt32@SymTagEnumType@IDiaSymbolPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:symbolById@UInt32@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:symbolById@UInt32@IDiaSymbolPtr*@Int32" TargetREF="ppSymbol"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:symbolById@UInt32@IDiaSymbolPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:symbolById@UInt32@IDiaSymbolPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32" TargetREF="symbolA"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32" TargetREF="symbolB"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:symsAreEquiv@IDiaSymbolPtr@IDiaSymbolPtr@Int32" TargetREF="IDiaSessionPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByRVA@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaEnumLineNumbersPtr" Source="IDiaEnumLineNumbersPtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByRVA@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="ppResult"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByRVA@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByRVA@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByAddr@UInt32@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaEnumLineNumbersPtr" Source="IDiaEnumLineNumbersPtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByAddr@UInt32@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="ppResult"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByAddr@UInt32@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByAddr@UInt32@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="IDiaSessionPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByLinenum@IDiaSymbolPtr@IDiaSourceFilePtr@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByLinenum@IDiaSymbolPtr@IDiaSourceFilePtr@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="compiland"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByLinenum@IDiaSymbolPtr@IDiaSourceFilePtr@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaSourceFilePtr" Source="IDiaSourceFilePtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByLinenum@IDiaSymbolPtr@IDiaSourceFilePtr@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="file"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findLinesByLinenum@IDiaSymbolPtr@IDiaSourceFilePtr@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32_IDiaEnumLineNumbersPtr" Source="IDiaEnumLineNumbersPtr" SourceREF="Id" Target="IDiaSessionPtr:findLinesByLinenum@IDiaSymbolPtr@IDiaSourceFilePtr@UInt32@UInt32@IDiaEnumLineNumbersPtr*@Int32" TargetREF="ppResult"/>
@@ -240,48 +354,245 @@ pdbDataSource.LoadDataFromPdb("projet.pdb");
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findFile@String@UInt32@IDiaEnumSourceFilesPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findFile@String@UInt32@IDiaEnumSourceFilesPtr*@Int32" TargetREF="IDiaSessionPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32_IDiaEnumSourceFilesPtr" Source="IDiaEnumSourceFilesPtr" SourceREF="Id" Target="IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32" TargetREF="ppResult"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32" TargetREF="IDiaSessionPtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
-#include "IDiaSymbolPtrInterpreter.hpp"
-#include "IDiaEnumLineNumbersPtrInterpreter.hpp"
-#include "IDiaEnumSourceFilesPtrInterpreter.hpp"
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="parent"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_SymTagEnumType" Source="SymTagEnumType" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="symtag"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="ppResult"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" TargetREF="parent"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32_SymTagEnumType" Source="SymTagEnumType" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" TargetREF="symtag"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" TargetREF="ppResult"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32_IDiaSessionPtr" Source="IDiaSessionPtr" SourceREF="Id" Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" TargetREF="IDiaSessionPtr"/>
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;&#xD;
+#include "IDiaSymbolPtrInterpreter.hpp"&#xD;
+#include "IDiaEnumLineNumbersPtrInterpreter.hpp"&#xD;
+#include "IDiaEnumSourceFilesPtrInterpreter.hpp"&#xD;
+#include "IDiaEnumSymbolsByAddrPtrInterpreter.hpp"&#xD;
+#include "IDiaEnumTablesPtrInterpreter.hpp"&#xD;
 </Content>
-      <Content Target="IDiaSessionPtr:findFile@String@Uint32@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">
-	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-	typename EncodingT::string_t nativeName;
-	unsigned long nativeOption;
-	IDiaEnumSourceFilesPtr nativePpResult;
-	if (check_string&lt;EncodingT&gt;(name, nativeName) &amp;&amp; 
-		check_numeric(option, nativeOption) &amp;&amp; 
-		check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))
-	{
-		res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;findFile(NULL, nativeName.c_str(), nativeOption, &amp;nativePpResult)));
-		reset_IDiaEnumSourceFilesPtr(ppResult, nativePpResult);
-	}
-	return res;
+      <Content Target="IDiaSessionPtr:findFile@String@Uint32@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">&#xD;
+  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+  IDiaSessionPtr valuePtr = value();&#xD;
+  if (valuePtr != NULL)&#xD;
+	{&#xD;
+    typename EncodingT::string_t nativeName;&#xD;
+    unsigned long nativeOption;&#xD;
+    IDiaEnumSourceFilesPtr nativePpResult;&#xD;
+    if (check_string&lt;EncodingT&gt;(name, nativeName) &amp;&amp; &#xD;
+      check_numeric_i(option, nativeOption) &amp;&amp; &#xD;
+      check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))&#xD;
+    {&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;findFile(NULL, nativeName.c_str(), nativeOption, &amp;nativePpResult)));&#xD;
+      reset_IDiaEnumSourceFilesPtr(ppResult, nativePpResult);&#xD;
+    }&#xD;
+  }&#xD;
+	return res;&#xD;
 </Content>
-      <Content Target="IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">
-	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-	IDiaEnumSourceFilesPtr nativePpResult;
-	if (check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))
-	{
-		res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;findFile(NULL, NULL, nsNone, &amp;nativePpResult)));
-		reset_IDiaEnumSourceFilesPtr(ppResult, nativePpResult);
-	}
-	return res;
+      <Content Target="IDiaSessionPtr:findFile@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">&#xD;
+  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+  IDiaSessionPtr valuePtr = value();&#xD;
+  if (valuePtr != NULL)&#xD;
+	{&#xD;
+    IDiaEnumSourceFilesPtr nativePpResult;&#xD;
+    if (check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))&#xD;
+    {&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;findFile(NULL, NULL, nsNone, &amp;nativePpResult)));&#xD;
+      reset_IDiaEnumSourceFilesPtr(ppResult, nativePpResult);&#xD;
+    }&#xD;
+  }&#xD;
+	return res;&#xD;
 </Content>
-      <Content Target="IDiaSessionPtr:findFile@IDiaSymbolPtr@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">
-	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-  IDiaSymbolPtr nativePCompiland;
-	IDiaEnumSourceFilesPtr nativePpResult;
-	if (check_IDiaSymbolPtr(pCompiland, nativePCompiland) &amp;&amp;
-      check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))
-	{
-		res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;findFile(nativePCompiland, NULL, nsNone, &amp;nativePpResult)));
-		reset_IDiaEnumSourceFilesPtr(ppResult, nativePpResult);
-	}
-	return res;
+      <Content Target="IDiaSessionPtr:findFile@IDiaSymbolPtr@IDiaEnumSourceFilesPtr*@Int32" Type="Implementation-body">&#xD;
+  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+  IDiaSessionPtr valuePtr = value();&#xD;
+	if (valuePtr != NULL)&#xD;
+	{&#xD;
+    IDiaSymbolPtr nativePCompiland;&#xD;
+    IDiaEnumSourceFilesPtr nativePpResult;&#xD;
+    if (check_IDiaSymbolPtr(pCompiland, nativePCompiland) &amp;&amp;&#xD;
+        check_IDiaEnumSourceFilesPtr(ppResult, nativePpResult))&#xD;
+    {&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;findFile(nativePCompiland, NULL, nsNone, &amp;nativePpResult)));&#xD;
+      reset_IDiaEnumSourceFilesPtr(ppResult, nativePpResult);&#xD;
+    }&#xD;
+  }&#xD;
+	return res;&#xD;
+</Content>
+      <Content Target="IDiaSessionPtr:findChildren@IDiaSymbolPtr@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" Type="Implementation-body">&#xD;
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+  IDiaSessionPtr valuePtr = value();&#xD;
+  if (valuePtr != NULL)&#xD;
+  {&#xD;
+    IDiaSymbolPtr nativeParent;&#xD;
+    SymTagEnumType nativeSymtag;&#xD;
+    IDiaEnumSymbolsPtr nativePpResult;&#xD;
+    if (check_IDiaSymbolPtr(parent, nativeParent) &amp;&amp;&#xD;
+        check_SymTagEnumType(symtag, nativeSymtag) &amp;&amp; &#xD;
+        check_IDiaEnumSymbolsPtr(ppResult, nativePpResult))&#xD;
+    {&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;findChildren(nativeParent, nativeSymtag, NULL, nsNone, &amp;nativePpResult)));&#xD;
+      reset_IDiaEnumSymbolsPtr(ppResult, nativePpResult);&#xD;
+    }&#xD;
+  }&#xD;
+	return res;&#xD;
+</Content>
+    </File>
+    <File Name="IDiaEnumTablesPtr">
+      <Entity Class="Data" Name="IDiaEnumTablesPtr">
+        <Comments> Classe qui énumère les différents tables contenues dans la source de données.</Comments>
+        <Attribute Modifier="Id Const Virtual " Name="Id" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_Count" Name="IDiaEnumTablesPtr:get_Count@Int32*@Int32">
+        <Comments> Récupère le nombre de tables.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumTablesPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_Count" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="Int32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="ItemByIndex" Name="IDiaEnumTablesPtr:ItemByIndex@Int32@IDiaTablePtr*@Int32">
+        <Comments> Récupère une table à l'aide d'un index ou d'une étiquette.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumTablesPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="ItemByIndex" Type="Int32"/>
+        <Attribute Modifier="Const " Name="index" Type="Int32"/>
+        <Attribute Modifier="Ref Virtual " Name="table" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="ItemByName" Name="IDiaEnumTablesPtr:ItemByName@String@IDiaTablePtr*@Int32">
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumTablesPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="ItemByName" Type="Int32"/>
+        <Attribute Modifier="Const " Name="label" Type="String"/>
+        <Attribute Modifier="Ref Virtual " Name="table" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="Next" Name="IDiaEnumTablesPtr:Next@UInt32@IDiaTablePtr*@UInt32*@Int32">
+        <Comments> Récupère un nombre spécifié de tables dans la séquence d'énumération.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumTablesPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="Next" Type="Int32"/>
+        <Attribute Modifier="Const " Name="celt" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="rgelt" Type="UInt64"/>
+        <Attribute Modifier="Virtual " Name="pceltFetched" Type="UInt32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="Skip" Name="IDiaEnumTablesPtr:Skip@UInt32@Int32">
+        <Comments> Ignore un nombre spécifié de tables dans une séquence d'énumération.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumTablesPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="Skip" Type="Int32"/>
+        <Attribute Modifier="Const " Name="celt" Type="UInt32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="Reset" Name="IDiaEnumTablesPtr:Reset@Int32">
+        <Comments> Réinitialise une séquence d'énumération au début.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumTablesPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="Reset" Type="Int32"/>
+      </Entity>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:get_Count@Int32*@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaEnumTablesPtr:get_Count@Int32*@Int32" TargetREF="IDiaEnumTablesPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:ItemByIndex@Int32@IDiaTablePtr*@Int32_IDiaTablePtr" Source="IDiaTablePtr" SourceREF="Id" Target="IDiaEnumTablesPtr:ItemByIndex@Int32@IDiaTablePtr*@Int32" TargetREF="table"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:ItemByIndex@Int32@IDiaTablePtr*@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaEnumTablesPtr:ItemByIndex@Int32@IDiaTablePtr*@Int32" TargetREF="IDiaEnumTablesPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:ItemByName@String@IDiaTablePtr*@Int32_IDiaTablePtr" Source="IDiaTablePtr" SourceREF="Id" Target="IDiaEnumTablesPtr:ItemByName@String@IDiaTablePtr*@Int32" TargetREF="table"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:ItemByName@String@IDiaTablePtr*@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaEnumTablesPtr:ItemByName@String@IDiaTablePtr*@Int32" TargetREF="IDiaEnumTablesPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:Next@UInt32@IDiaTablePtr*@UInt32*@Int32_IDiaTablePtr" Source="IDiaTablePtr" SourceREF="Id" Target="IDiaEnumTablesPtr:Next@UInt32@IDiaTablePtr*@UInt32*@Int32" TargetREF="rgelt"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:Next@UInt32@IDiaTablePtr*@UInt32*@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaEnumTablesPtr:Next@UInt32@IDiaTablePtr*@UInt32*@Int32" TargetREF="IDiaEnumTablesPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:Skip@UInt32@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaEnumTablesPtr:Skip@UInt32@Int32" TargetREF="IDiaEnumTablesPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumTablesPtr:Reset@Int32_IDiaEnumTablesPtr" Source="IDiaEnumTablesPtr" SourceREF="Id" Target="IDiaEnumTablesPtr:Reset@Int32" TargetREF="IDiaEnumTablesPtr"/>
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaEnumTables&gt; IDiaEnumTablesPtr;&#xD;
+#include "IDiaTablePtrInterpreter.hpp"&#xD;
+</Content>
+      <Content Target="IDiaEnumTablesPtr:ItemByName@string@IDiaTablePtr*@Int32" Type="Implementation-body">&#xD;
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+	IDiaEnumTablesPtr valuePtr = value();&#xD;
+	if (valuePtr != NULL)&#xD;
+	{&#xD;
+		IDiaTablePtr nativeTable;&#xD;
+		typename EncodingT::string_t nativeLabel;&#xD;
+		if (check_string&lt;EncodingT&gt;(label, nativeLabel) &amp;&amp;&#xD;
+        check_IDiaTablePtr(table, nativeTable))&#xD;
+		{&#xD;
+      VARIANT var;  &#xD;
+      var.vt = VT_BSTR;  &#xD;
+      var.bstrVal = SysAllocString(nativeLabel.c_str());  &#xD;
+			res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;Item(var, &amp;nativeTable)));&#xD;
+			reset_IDiaTablePtr(table, nativeTable);&#xD;
+      VariantClear(&amp;var);&#xD;
+		}&#xD;
+	}&#xD;
+	return res;&#xD;
+</Content>
+      <Content Target="IDiaEnumTablesPtr:ItemByIndex@Int32@IDiaTablePtr*@Int32" Type="Implementation-body">&#xD;
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+	IDiaEnumTablesPtr valuePtr = value();&#xD;
+	if (valuePtr != NULL)&#xD;
+	{ &#xD;
+		IDiaTablePtr nativeTable;&#xD;
+		long nativeIndex;&#xD;
+		if (check_numeric_i(index, nativeIndex) &amp;&amp;&#xD;
+        check_IDiaTablePtr(table, nativeTable))&#xD;
+		{&#xD;
+      VARIANT var;  &#xD;
+      var.vt = VT_I4;  &#xD;
+      var.lVal = nativeIndex; &#xD;
+			res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;Item(var, &amp;nativeTable)));&#xD;
+			reset_IDiaTablePtr(table, nativeTable);&#xD;
+      VariantClear(&amp;var);&#xD;
+		}&#xD;
+	}&#xD;
+	return res;&#xD;
+</Content>
+    </File>
+    <File Name="IDiaEnumSymbolsByAddrPtr">
+      <Entity Class="Data" Name="IDiaEnumSymbolsByAddrPtr">
+        <Comments> Classe qui énumère par l'adresse que différents symboles auront contenue dans la source de données.</Comments>
+        <Attribute Modifier="Id Const Virtual " Name="Id" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="symbolByAddr" Name="IDiaEnumSymbolsByAddrPtr:symbolByAddr@UInt32@UInt32@IDiaSymbolPtr*@Int32">
+        <Comments> Positionne l'énumérateur en effectuant une recherche par le nombre de sections et l'offset d'image.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumSymbolsByAddrPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="symbolByAddr" Type="Int32"/>
+        <Attribute Modifier="Const " Name="isect" Type="UInt32"/>
+        <Attribute Modifier="Const " Name="offsect" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppsymbol" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="symbolByRVA" Name="IDiaEnumSymbolsByAddrPtr:symbolByRVA@UInt32@IDiaSymbolPtr*@Int32">
+        <Comments> Positionne l'énumérateur en effectuant une recherche par l'adresse virtuelle associée (RVA).</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumSymbolsByAddrPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="symbolByRVA" Type="Int32"/>
+        <Attribute Modifier="Const " Name="relativeVirtualAddress" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="ppsymbol" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="Next" Name="IDiaEnumSymbolsByAddrPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32">
+        <Comments> Récupère les symboles ci-dessous dans l'ordre par l'adresse.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumSymbolsByAddrPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="Next" Type="Int32"/>
+        <Attribute Modifier="Const " Name="celt" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="rgelt" Type="UInt64"/>
+        <Attribute Modifier="Virtual " Name="pceltFetched" Type="UInt32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="Prev" Name="IDiaEnumSymbolsByAddrPtr:Prev@UInt32@IDiaSymbolPtr*@UInt32*@Int32">
+        <Comments> Récupère les symboles précédents dans l'ordre par l'adresse.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaEnumSymbolsByAddrPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="Prev" Type="Int32"/>
+        <Attribute Modifier="Const " Name="celt" Type="UInt32"/>
+        <Attribute Modifier="Ref Virtual " Name="rgelt" Type="UInt64"/>
+        <Attribute Modifier="Virtual " Name="pceltFetched" Type="UInt32"/>
+      </Entity>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:symbolByAddr@UInt32@UInt32@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:symbolByAddr@UInt32@UInt32@IDiaSymbolPtr*@Int32" TargetREF="ppsymbol"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:symbolByAddr@UInt32@UInt32@IDiaSymbolPtr*@Int32_IDiaEnumSymbolsByAddrPtr" Source="IDiaEnumSymbolsByAddrPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:symbolByAddr@UInt32@UInt32@IDiaSymbolPtr*@Int32" TargetREF="IDiaEnumSymbolsByAddrPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:symbolByRVA@UInt32@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:symbolByRVA@UInt32@IDiaSymbolPtr*@Int32" TargetREF="ppsymbol"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:symbolByRVA@UInt32@IDiaSymbolPtr*@Int32_IDiaEnumSymbolsByAddrPtr" Source="IDiaEnumSymbolsByAddrPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:symbolByRVA@UInt32@IDiaSymbolPtr*@Int32" TargetREF="IDiaEnumSymbolsByAddrPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32" TargetREF="rgelt"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32_IDiaEnumSymbolsByAddrPtr" Source="IDiaEnumSymbolsByAddrPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32" TargetREF="IDiaEnumSymbolsByAddrPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:Prev@UInt32@IDiaSymbolPtr*@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:Prev@UInt32@IDiaSymbolPtr*@UInt32*@Int32" TargetREF="rgelt"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsByAddrPtr:Prev@UInt32@IDiaSymbolPtr*@UInt32*@Int32_IDiaEnumSymbolsByAddrPtr" Source="IDiaEnumSymbolsByAddrPtr" SourceREF="Id" Target="IDiaEnumSymbolsByAddrPtr:Prev@UInt32@IDiaSymbolPtr*@UInt32*@Int32" TargetREF="IDiaEnumSymbolsByAddrPtr"/>
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaEnumSymbolsByAddr&gt; IDiaEnumSymbolsByAddrPtr;&#xD;
 </Content>
     </File>
     <File Name="IDiaSymbolPtr">
@@ -314,6 +625,13 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
         <Attribute Modifier="Auto " Name="get_name" Type="Int32"/>
         <Attribute Modifier="Virtual " Name="pRetVal" Type="String"/>
       </Entity>
+      <Entity Class="Function" FunctionName="get_undecoratedName" Name="IDiaSymbolPtr:get_undecoratedName@String*@Int32">
+        <Comments> Extrait le 'undecorated' nom </Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_undecoratedName" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="String"/>
+      </Entity>
       <Entity Class="Function" FunctionName="get_addressSection" Name="IDiaSymbolPtr:get_addressSection@UInt32*@Int32">
         <Comments> Extrait la partie de section d'un emplacement d'adresse.</Comments>
         <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
@@ -326,6 +644,13 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
         <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
         <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
         <Attribute Modifier="Auto " Name="get_addressOffset" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="UInt32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_locationType" Name="IDiaSymbolPtr:get_locationType@UInt32*@Int32">
+        <Comments> Retrieves the location type of a data symbol.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_locationType" Type="Int32"/>
         <Attribute Modifier="Virtual " Name="pRetVal" Type="UInt32"/>
       </Entity>
       <Entity Class="Function" FunctionName="get_relativeVirtualAddress" Name="IDiaSymbolPtr:get_relativeVirtualAddress@UInt32*@Int32">
@@ -477,6 +802,48 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
         <Attribute Modifier="Auto " Name="get_udtKind" Type="Int32"/>
         <Attribute Modifier="Virtual " Name="pRetVal" Type="UInt32"/>
       </Entity>
+      <Entity Class="Function" FunctionName="get_noReturn" Name="IDiaSymbolPtr:get_noReturn@Int*@Int32">
+        <Comments> Retrieves a flag that specifies whether the function has been marked as never returning with the noreturn attribute.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_noReturn" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pFlag" Type="Int"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_offset" Name="IDiaSymbolPtr:get_offset@Int32*@Int32">
+        <Comments> Retrieves the offset of the symbol location. Use when the LocationType is LocIsRegRel or LocIsBitField.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_offset" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="Int32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_lexicalParent" Name="IDiaSymbolPtr:get_lexicalParent@IDiaSymbolPtr*@Int32">
+        <Comments> Extrait une référence au parent lexicale du symbole.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_lexicalParent" Type="Int32"/>
+        <Attribute Modifier="Ref Virtual " Name="pRetVal" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_classParent" Name="IDiaSymbolPtr:get_classParent@IDiaSymbolPtr*@Int32">
+        <Comments> Extrait une référence au parent de classe du symbole.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_classParent" Type="Int32"/>
+        <Attribute Modifier="Ref Virtual " Name="pRetVal" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_symIndexId" Name="IDiaSymbolPtr:get_symIndexId@UInt32*@Int32">
+        <Comments> Extrait l'identificateur unique de symbole.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_symIndexId" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="UInt32"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_count" Name="IDiaSymbolPtr:get_count@UInt32*@Int32">
+        <Comments> Récupère le nombre d'éléments dans une liste ou un tableau.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaSymbolPtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_count" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="UInt32"/>
+      </Entity>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:findChildren@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_SymTagEnumType" Source="SymTagEnumType" SourceREF="Id" Target="IDiaSymbolPtr:findChildren@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="symtag"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:findChildren@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaSymbolPtr:findChildren@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="ppResult"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:findChildren@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:findChildren@SymTagEnumType@String@Int32@IDiaEnumSymbolsPtr*@Int32" TargetREF="IDiaSymbolPtr"/>
@@ -484,8 +851,10 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" TargetREF="ppResult"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_name@String*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_name@String*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_undecoratedName@String*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_undecoratedName@String*@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_addressSection@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_addressSection@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_addressOffset@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_addressOffset@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_locationType@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_locationType@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_relativeVirtualAddress@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_relativeVirtualAddress@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_type@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_type@IDiaSymbolPtr*@Int32" TargetREF="pRetVal"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_type@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_type@IDiaSymbolPtr*@Int32" TargetREF="IDiaSymbolPtr"/>
@@ -511,52 +880,83 @@ typedef CDiaPtr&lt;IDiaSession&gt; IDiaSessionPtr;
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_types@IDiaSymbolPtr@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_types@IDiaSymbolPtr@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_dataBytes@UInt32@UInt32*@Byte@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_dataBytes@UInt32@UInt32*@Byte@Int32" TargetREF="IDiaSymbolPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_udtKind@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_udtKind@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaSymbol&gt; IDiaSymbolPtr;
-#include "IDiaEnumSymbolsPtrInterpreter.hpp"
-#include "SymTagEnumTypeInterpreter.hpp"
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_noReturn@Int*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_noReturn@Int*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_offset@Int32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_offset@Int32*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_lexicalParent@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_lexicalParent@IDiaSymbolPtr*@Int32" TargetREF="pRetVal"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_lexicalParent@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_lexicalParent@IDiaSymbolPtr*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_classParent@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_classParent@IDiaSymbolPtr*@Int32" TargetREF="pRetVal"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_classParent@IDiaSymbolPtr*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_classParent@IDiaSymbolPtr*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_symIndexId@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_symIndexId@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaSymbolPtr:get_count@UInt32*@Int32_IDiaSymbolPtr" Source="IDiaSymbolPtr" SourceREF="Id" Target="IDiaSymbolPtr:get_count@UInt32*@Int32" TargetREF="IDiaSymbolPtr"/>
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaSymbol&gt; IDiaSymbolPtr;&#xD;
+#include "IDiaEnumSymbolsPtrInterpreter.hpp"&#xD;
+#include "SymTagEnumTypeInterpreter.hpp"&#xD;
 </Content>
-      <Content Target="IDiaSymbolPtr:get_name@String*@Int32" Type="Implementation-body">
-	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-    BSTR nativePRetVal;
-    res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;get_name(&amp;nativePRetVal)));
-    reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);
-	  return res;
+      <Content Target="IDiaSymbolPtr:get_name@String*@Int32" Type="Implementation-body">&#xD;
+	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+    IDiaSymbolPtr valuePtr = value();&#xD;
+    if (valuePtr != NULL)&#xD;
+    {&#xD;
+      BSTR nativePRetVal;&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;get_name(&amp;nativePRetVal)));&#xD;
+      reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);&#xD;
+    }&#xD;
+	  return res;&#xD;
 </Content>
-      <Content Target="IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" Type="Implementation-body">
-	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-	SymTagEnumType nativeSymtag;
-	IDiaEnumSymbolsPtr nativePpResult;
-	if (check_SymTagEnumType(symtag, nativeSymtag) &amp;&amp; 
-		  check_IDiaEnumSymbolsPtr(ppResult, nativePpResult))
-	{
-		res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;findChildren(nativeSymtag, NULL, nsNone, &amp;nativePpResult)));
-		reset_IDiaEnumSymbolsPtr(ppResult, nativePpResult);
-	}
-	return res;
+      <Content Target="IDiaSymbolPtr:get_undecoratedName@String*@Int32" Type="Implementation-body">&#xD;
+	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+    IDiaSymbolPtr valuePtr = value();&#xD;
+    if (valuePtr != NULL)&#xD;
+    {&#xD;
+      BSTR nativePRetVal;&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;get_undecoratedName(&amp;nativePRetVal)));&#xD;
+      reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);&#xD;
+    }&#xD;
+	  return res;&#xD;
 </Content>
-      <Content Target="IDiaSymbolPtr:get_types@IDiaSymbolPtr@Int32" Type="Implementation-body">
-	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-	std::vector&lt; IDiaSymbolPtr &gt; nativeTypes;
-  DWORD count;
-  HRESULT hres = value()-&gt;get_types(0, &amp;count, NULL);
-  if (hres == S_OK) 
-  {
-    IDiaSymbol** rgpDiaSymbols = (IDiaSymbol**) _alloca(sizeof(IDiaSymbol *) * count);
-    hres = value()-&gt;get_types(count, &amp;count, rgpDiaSymbols);
-    if (hres == S_OK) 
-    {
-      for (ULONG i = 0; i &lt; count; i++) 
-      {
-        nativeTypes.push_back(IDiaSymbolPtr(rgpDiaSymbols[i]));
-        rgpDiaSymbols[i]-&gt;Release();
-      }
-    }
-  }
-  res.reset(new Numeric&lt;EncodingT&gt;(hres));
-  reset_array(types, nativeTypes, reset_IDiaSymbolPtr&lt;EncodingT&gt;);
-	return res;
+      <Content Target="IDiaSymbolPtr:findChildren@SymTagEnumType@IDiaEnumSymbolsPtr*@Int32" Type="Implementation-body">&#xD;
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+  IDiaSymbolPtr valuePtr = value();&#xD;
+  if (valuePtr != NULL)&#xD;
+  {&#xD;
+    SymTagEnumType nativeSymtag;&#xD;
+    IDiaEnumSymbolsPtr nativePpResult;&#xD;
+    if (check_SymTagEnumType(symtag, nativeSymtag) &amp;&amp; &#xD;
+        check_IDiaEnumSymbolsPtr(ppResult, nativePpResult))&#xD;
+    {&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;findChildren(nativeSymtag, NULL, nsNone, &amp;nativePpResult)));&#xD;
+      reset_IDiaEnumSymbolsPtr(ppResult, nativePpResult);&#xD;
+    }&#xD;
+  }&#xD;
+	return res;&#xD;
+</Content>
+      <Content Target="IDiaSymbolPtr:get_types@IDiaSymbolPtr@Int32" Type="Implementation-body">&#xD;
+	boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+  IDiaSymbolPtr valuePtr = value();&#xD;
+  if (valuePtr != NULL)&#xD;
+  {&#xD;
+    std::vector&lt; IDiaSymbolPtr &gt; nativeTypes;&#xD;
+    DWORD count;&#xD;
+    HRESULT hres = valuePtr-&gt;get_types(0, &amp;count, NULL);&#xD;
+    if (hres == S_OK) &#xD;
+    {&#xD;
+      IDiaSymbol** rgpDiaSymbols = (IDiaSymbol**) _alloca(sizeof(IDiaSymbol *) * count);&#xD;
+      hres = valuePtr-&gt;get_types(count, &amp;count, rgpDiaSymbols);&#xD;
+      if (hres == S_OK) &#xD;
+      {&#xD;
+        for (ULONG i = 0; i &lt; count; i++) &#xD;
+        {&#xD;
+          nativeTypes.push_back(IDiaSymbolPtr(rgpDiaSymbols[i]));&#xD;
+          rgpDiaSymbols[i]-&gt;Release();&#xD;
+        }&#xD;
+      }&#xD;
+    }&#xD;
+    res.reset(new Numeric&lt;EncodingT&gt;(hres));&#xD;
+    reset_array(types, nativeTypes, reset_IDiaSymbolPtr&lt;EncodingT&gt;);&#xD;
+  }&#xD;
+	return res;&#xD;
 </Content>
     </File>
     <File Name="IDiaEnumSymbolsPtr">
@@ -608,10 +1008,10 @@ typedef CDiaPtr&lt;IDiaSymbol&gt; IDiaSymbolPtr;
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaEnumSymbolsPtr:Next@UInt32@IDiaSymbolPtr*@UInt32*@Int32" TargetREF="IDiaEnumSymbolsPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsPtr:Skip@UInt32@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaEnumSymbolsPtr:Skip@UInt32@Int32" TargetREF="IDiaEnumSymbolsPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSymbolsPtr:Reset@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaEnumSymbolsPtr:Reset@Int32" TargetREF="IDiaEnumSymbolsPtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaEnumSymbols&gt; IDiaEnumSymbolsPtr;
-#include "IDiaSymbolPtrInterpreter.hpp"
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaEnumSymbols&gt; IDiaEnumSymbolsPtr;&#xD;
+#include "IDiaSymbolPtrInterpreter.hpp"&#xD;
 </Content>
     </File>
     <File Name="SymTagEnumType">
@@ -656,36 +1056,36 @@ typedef CDiaPtr&lt;IDiaEnumSymbols&gt; IDiaEnumSymbolsPtr;
         <Attribute Modifier="Const Static " Name="SymTagMatrixType" Type="UInt64"/>
         <Attribute Modifier="Const Static " Name="SymTagHLSLType" Type="UInt64"/>
       </Entity>
-      <Content Type="Global-inclusion">
-typedef enum SymTagEnum SymTagEnumType;
-
-NAMESPACE_BEGIN(interp)
-
-template &lt;class EncodingT&gt;
-bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s);
-
-NAMESPACE_END
+      <Content Type="Global-inclusion">&#xD;
+typedef enum SymTagEnum SymTagEnumType;&#xD;
+&#xD;
+NAMESPACE_BEGIN(interp)&#xD;
+&#xD;
+template &lt;class EncodingT&gt;&#xD;
+bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s);&#xD;
+&#xD;
+NAMESPACE_END&#xD;
 </Content>
-      <Content Type="Global-body">
-NAMESPACE_BEGIN(interp)
-
-template &lt;class EncodingT&gt;
-bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s)
-{
-	boost::shared_ptr&lt; Numeric&lt;EncodingT&gt; &gt; value  = dynamic_pointer_cast&lt; Numeric&lt;EncodingT&gt; &gt;(val);
-	if (value)
-	{
-		s = (SymTagEnumType) value-&gt;getValue();
-	}
-	else
-	{
-		Category * logger = &amp;Category::getInstance(LOGNAME);
-		logger-&gt;errorStream() &lt;&lt; "Numeric expected, got " &lt;&lt; A(val-&gt;getClassName());
-	}
-	return (value != NULL);
-}
-
-NAMESPACE_END
+      <Content Type="Global-body">&#xD;
+NAMESPACE_BEGIN(interp)&#xD;
+&#xD;
+template &lt;class EncodingT&gt;&#xD;
+bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const&amp; val, SymTagEnumType&amp; s)&#xD;
+{&#xD;
+	boost::shared_ptr&lt; Numeric&lt;EncodingT&gt; &gt; value  = dynamic_pointer_cast&lt; Numeric&lt;EncodingT&gt; &gt;(val);&#xD;
+	if (value)&#xD;
+	{&#xD;
+		s = (SymTagEnumType) value-&gt;getLLValue();&#xD;
+	}&#xD;
+	else&#xD;
+	{&#xD;
+		Category * logger = &amp;Category::getInstance(LOGNAME);&#xD;
+		logger-&gt;errorStream() &lt;&lt; "Numeric expected, got " &lt;&lt; A(val-&gt;getClassName());&#xD;
+	}&#xD;
+	return (value != NULL);&#xD;
+}&#xD;
+&#xD;
+NAMESPACE_END&#xD;
 </Content>
     </File>
     <File Name="NameSearchOptions">
@@ -699,7 +1099,7 @@ NAMESPACE_END
         <Attribute Default="0x8" Modifier="Const Static " Name="nsfRegularExpression" Type="UInt64"/>
         <Attribute Default="0x10" Modifier="Const Static " Name="nsfUndecoratedName" Type="UInt64"/>
       </Entity>
-      <Content Type="Global-inclusion">
+      <Content Type="Global-inclusion">&#xD;
 </Content>    </File>
     <File Name="IDiaLineNumberPtr">
       <Entity Class="Data" Name="IDiaLineNumberPtr">
@@ -763,10 +1163,10 @@ NAMESPACE_END
       <Relation Multiplicity="Zero-One" Name="R_IDiaLineNumberPtr:get_statement@Int*@Int32_IDiaLineNumberPtr" Source="IDiaLineNumberPtr" SourceREF="Id" Target="IDiaLineNumberPtr:get_statement@Int*@Int32" TargetREF="IDiaLineNumberPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaLineNumberPtr:get_sourceFile@IDiaSourceFilePtr*@Int32_IDiaSourceFilePtr" Source="IDiaSourceFilePtr" SourceREF="Id" Target="IDiaLineNumberPtr:get_sourceFile@IDiaSourceFilePtr*@Int32" TargetREF="pRetVal"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaLineNumberPtr:get_sourceFile@IDiaSourceFilePtr*@Int32_IDiaLineNumberPtr" Source="IDiaLineNumberPtr" SourceREF="Id" Target="IDiaLineNumberPtr:get_sourceFile@IDiaSourceFilePtr*@Int32" TargetREF="IDiaLineNumberPtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaLineNumber&gt; IDiaLineNumberPtr;
-#include "IDiaSourceFilePtrInterpreter.hpp"
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaLineNumber&gt; IDiaLineNumberPtr;&#xD;
+#include "IDiaSourceFilePtrInterpreter.hpp"&#xD;
 </Content>
     </File>
     <File Name="IDiaEnumLineNumbersPtr">
@@ -818,10 +1218,10 @@ typedef CDiaPtr&lt;IDiaLineNumber&gt; IDiaLineNumberPtr;
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumLineNumbersPtr:Next@UInt32@IDiaLineNumberPtr*@UInt32*@Int32_IDiaEnumLineNumbersPtr" Source="IDiaEnumLineNumbersPtr" SourceREF="Id" Target="IDiaEnumLineNumbersPtr:Next@UInt32@IDiaLineNumberPtr*@UInt32*@Int32" TargetREF="IDiaEnumLineNumbersPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumLineNumbersPtr:Skip@UInt32@Int32_IDiaEnumLineNumbersPtr" Source="IDiaEnumLineNumbersPtr" SourceREF="Id" Target="IDiaEnumLineNumbersPtr:Skip@UInt32@Int32" TargetREF="IDiaEnumLineNumbersPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumLineNumbersPtr:Reset@Int32_IDiaEnumLineNumbersPtr" Source="IDiaEnumLineNumbersPtr" SourceREF="Id" Target="IDiaEnumLineNumbersPtr:Reset@Int32" TargetREF="IDiaEnumLineNumbersPtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaEnumLineNumbers&gt; IDiaEnumLineNumbersPtr;
-#include "IDiaLineNumberPtrInterpreter.hpp"
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaEnumLineNumbers&gt; IDiaEnumLineNumbersPtr;&#xD;
+#include "IDiaLineNumberPtrInterpreter.hpp"&#xD;
 </Content>
     </File>
     <File Name="IDiaSourceFilePtr">
@@ -856,16 +1256,20 @@ typedef CDiaPtr&lt;IDiaEnumLineNumbers&gt; IDiaEnumLineNumbersPtr;
       <Relation Multiplicity="Zero-One" Name="R_IDiaSourceFilePtr:get_fileName@String*@Int32_IDiaSourceFilePtr" Source="IDiaSourceFilePtr" SourceREF="Id" Target="IDiaSourceFilePtr:get_fileName@String*@Int32" TargetREF="IDiaSourceFilePtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSourceFilePtr:get_compilands@IDiaEnumSymbolsPtr*@Int32_IDiaEnumSymbolsPtr" Source="IDiaEnumSymbolsPtr" SourceREF="Id" Target="IDiaSourceFilePtr:get_compilands@IDiaEnumSymbolsPtr*@Int32" TargetREF="ppRetVal"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaSourceFilePtr:get_compilands@IDiaEnumSymbolsPtr*@Int32_IDiaSourceFilePtr" Source="IDiaSourceFilePtr" SourceREF="Id" Target="IDiaSourceFilePtr:get_compilands@IDiaEnumSymbolsPtr*@Int32" TargetREF="IDiaSourceFilePtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaSourceFile&gt; IDiaSourceFilePtr;
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaSourceFile&gt; IDiaSourceFilePtr;&#xD;
 </Content>
-      <Content Target="IDiaSourceFilePtr:get_fileName@String*@Int32" Type="Implementation-body">
-	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());
-    BSTR nativePRetVal;
-    res.reset(new Numeric&lt;EncodingT&gt;(value()-&gt;get_fileName(&amp;nativePRetVal)));
-    reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);
-    return res;
+      <Content Target="IDiaSourceFilePtr:get_fileName@String*@Int32" Type="Implementation-body">&#xD;
+	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+    IDiaSourceFilePtr valuePtr = value();&#xD;
+    if (valuePtr != NULL)&#xD;
+    {&#xD;
+      BSTR nativePRetVal;&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;get_fileName(&amp;nativePRetVal)));&#xD;
+      reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);&#xD;
+    }&#xD;
+    return res;&#xD;
 </Content>
     </File>
     <File Name="IDiaEnumSourceFilesPtr">
@@ -917,10 +1321,47 @@ typedef CDiaPtr&lt;IDiaSourceFile&gt; IDiaSourceFilePtr;
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSourceFilesPtr:Next@UInt32@IDiaSourceFilePtr*@UInt32*@Int32_IDiaEnumSourceFilesPtr" Source="IDiaEnumSourceFilesPtr" SourceREF="Id" Target="IDiaEnumSourceFilesPtr:Next@UInt32@IDiaSourceFilePtr*@UInt32*@Int32" TargetREF="IDiaEnumSourceFilesPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSourceFilesPtr:Skip@UInt32@Int32_IDiaEnumSourceFilesPtr" Source="IDiaEnumSourceFilesPtr" SourceREF="Id" Target="IDiaEnumSourceFilesPtr:Skip@UInt32@Int32" TargetREF="IDiaEnumSourceFilesPtr"/>
       <Relation Multiplicity="Zero-One" Name="R_IDiaEnumSourceFilesPtr:Reset@Int32_IDiaEnumSourceFilesPtr" Source="IDiaEnumSourceFilesPtr" SourceREF="Id" Target="IDiaEnumSourceFilesPtr:Reset@Int32" TargetREF="IDiaEnumSourceFilesPtr"/>
-      <Content Type="Global-inclusion">
-#include "DiaPtr.h"
-typedef CDiaPtr&lt;IDiaEnumSourceFiles&gt; IDiaEnumSourceFilesPtr;
-#include "IDiaSourceFilePtrInterpreter.hpp"
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaEnumSourceFiles&gt; IDiaEnumSourceFilesPtr;&#xD;
+#include "IDiaSourceFilePtrInterpreter.hpp"&#xD;
+</Content>
+    </File>
+    <File Name="IDiaTablePtr">
+      <Entity Class="Data" Name="IDiaTablePtr">
+        <Comments> Énumère une table de source de données de diamètre.</Comments>
+        <Attribute Modifier="Id Const Virtual " Name="Id" Type="UInt64"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_name" Name="IDiaTablePtr:get_name@String*@Int32">
+        <Comments> Extrait le nom de la table.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaTablePtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_name" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="String"/>
+      </Entity>
+      <Entity Class="Function" FunctionName="get_Count" Name="IDiaTablePtr:get_Count@Int32*@Int32">
+        <Comments> Récupère le nombre de fichiers sources.</Comments>
+        <Attribute Modifier="Id Const " Name="Id" Type="UInt64"/>
+        <Attribute Modifier="Ref Contextual " Name="IDiaTablePtr" Type="UInt64"/>
+        <Attribute Modifier="Auto " Name="get_Count" Type="Int32"/>
+        <Attribute Modifier="Virtual " Name="pRetVal" Type="Int32"/>
+      </Entity>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaTablePtr:get_name@String*@Int32_IDiaTablePtr" Source="IDiaTablePtr" SourceREF="Id" Target="IDiaTablePtr:get_name@String*@Int32" TargetREF="IDiaTablePtr"/>
+      <Relation Multiplicity="Zero-One" Name="R_IDiaTablePtr:get_Count@Int32*@Int32_IDiaTablePtr" Source="IDiaTablePtr" SourceREF="Id" Target="IDiaTablePtr:get_Count@Int32*@Int32" TargetREF="IDiaTablePtr"/>
+      <Content Type="Global-inclusion">&#xD;
+#include "DiaPtr.h"&#xD;
+typedef CDiaPtr&lt;IDiaTable&gt; IDiaTablePtr;&#xD;
+</Content>
+      <Content Target="IDiaTablePtr:get_name@String*@Int32" Type="Implementation-body">&#xD;
+	  boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; res(new Numeric&lt;EncodingT&gt;());&#xD;
+    IDiaTablePtr valuePtr = value();&#xD;
+    if (valuePtr != NULL)&#xD;
+    {&#xD;
+      BSTR nativePRetVal;&#xD;
+      res.reset(new Numeric&lt;EncodingT&gt;(valuePtr-&gt;get_name(&amp;nativePRetVal)));&#xD;
+      reset_string&lt;EncodingT&gt;(pRetVal, nativePRetVal);&#xD;
+    }&#xD;
+	  return res;&#xD;
 </Content>
     </File>
     <File Name="DataKind">
@@ -938,7 +1379,7 @@ typedef CDiaPtr&lt;IDiaEnumSourceFiles&gt; IDiaEnumSourceFilesPtr;
         <Attribute Default="8" Modifier="Const Static " Name="DataIsStaticMember" Type="UInt64"/>
         <Attribute Default="9" Modifier="Const Static " Name="DataIsConstant" Type="UInt64"/>
       </Entity>
-      <Content Type="Global-inclusion">
+      <Content Type="Global-inclusion">&#xD;
 </Content>    </File>
     <File Name="BasicType">
       <Entity Class="Enumeration" Name="BasicType">
@@ -963,7 +1404,7 @@ typedef CDiaPtr&lt;IDiaEnumSourceFiles&gt; IDiaEnumSourceFilesPtr;
         <Attribute Default="30" Modifier="Const Static " Name="btBSTR" Type="UInt64"/>
         <Attribute Default="31" Modifier="Const Static " Name="btHresult" Type="UInt64"/>
       </Entity>
-      <Content Type="Global-inclusion">
+      <Content Type="Global-inclusion">&#xD;
 </Content>    </File>
   </Workspace>
 

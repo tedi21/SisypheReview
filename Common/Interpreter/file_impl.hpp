@@ -69,7 +69,6 @@ NAMESPACE_BEGIN(interp)
         }
 
         m_stream.open(A(m_name).c_str(), ios::binary|ios::in|ios::out|mde);
-        String<EncodingT>::setValue(m_name);
     }
 
     template <class EncodingT>
@@ -127,8 +126,8 @@ NAMESPACE_BEGIN(interp)
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
         {
-            if (tryInvoke(this, C("File"), method, args, ret) ||
-                tryInvoke(this, C("String"), method, args, ret))
+            if (tryInvoke(this, C("File"), method, args, ret)   ||
+                tryInvoke(this, C("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -162,6 +161,7 @@ NAMESPACE_BEGIN(interp)
             scoped_array<wchar_t> buffer;
             int start = 0, length = 0;
             // get length of file:
+            m_stream.clear();
             m_stream.seekg (0, ios::end);
             length = m_stream.tellg();
             m_stream.seekg (0, ios::beg);
@@ -169,34 +169,41 @@ NAMESPACE_BEGIN(interp)
             // allocate memory: exact(latin-1) or larger than necessary(Unicode)
             buffer.reset( new wchar_t[length+1] );
             memset(buffer.get(), 0, (length+1)*sizeof(wchar_t));
-
+            
             // read data as a block:
             m_stream.read(buffer.get(), length);
 		
-			if (m_format == C("BASE64"))
-			{
-				typedef 
+            if (m_format == C("BASE64"))
+            {
+                typedef 
                     base64_from_binary<
                        transform_width<
                             wchar_t *,
-							6,
-							8
-						>
-					> 
-					base64_text;
-				// Convert to Base64
-				text.assign(base64_text(buffer.get()), base64_text(buffer.get() + length));
-			}
-			else
-			{
-				if (m_format == C("UTF16-LE") ||
-					m_format == C("UTF16-BE"))
-				{
-					start = 1;
-				}
-			
-				text = buffer.get() + start;
-			}
+                            6,
+                            8
+                        >
+                    > 
+                    base64_text;
+                // Convert to Base64
+                text.assign(base64_text(buffer.get()), base64_text(buffer.get() + length));
+            }
+            else
+            {
+                if (length >= 1)
+                {
+                    if (m_format == C("UTF16-LE") ||
+                        m_format == C("UTF16-BE"))
+                    {
+                        start = 1;
+                    }
+                    else if (m_format == C("UTF8") && 
+                             buffer.get()[0] == static_cast<wchar_t>(0xFEFF))
+                    {
+                        start = 1;
+                    }
+                    text = buffer.get() + start;
+                }
+            }
             val.reset(new String<EncodingT>(text));
             res.reset(new Bool<EncodingT>(true));
         }
@@ -212,30 +219,36 @@ NAMESPACE_BEGIN(interp)
         {
             if (m_stream.is_open())
             {
-				vector<wchar_t> buffer;
-				if (m_format == C("BASE64"))
-				{
-					typedef
+                vector<wchar_t> buffer;
+                if (m_format == C("BASE64"))
+                {
+                    typedef
                         transform_width<
                             binary_from_base64<
                                 typename EncodingT::string_t::const_iterator
-								>, 
-							8, 
-							6
-						> 
-						binary_text;
-					buffer.assign(binary_text(text.begin()), binary_text(text.end()));
-				}
-				else
-				{
-					if (m_stream.tellg() == 0 &&
-						(m_format == C("UTF16-LE") ||
-						 m_format == C("UTF16-BE")))
-					{
-						m_stream << utf16_codecvt_facet<>::BOM;
-					}
-					buffer.assign(text.begin(), text.end());
-				}
+                                >, 
+                            8, 
+                           6
+                        > 
+                        binary_text;
+                    buffer.assign(binary_text(text.begin()), binary_text(text.end()));
+                }
+                else
+                {
+                    if (m_stream.tellg() == 0)
+                    {
+                        if (m_format == C("UTF16-LE") ||
+                             m_format == C("UTF16-BE"))
+                        {
+                            m_stream << utf16_codecvt_facet<>::BOM;
+                        }
+                        else if (m_format == C("UTF8"))
+                        {
+                            m_stream << static_cast<wchar_t>(0xFEFF);
+                        }
+                    }
+                    buffer.assign(text.begin(), text.end());
+                }
                 m_stream.write(buffer.data(), (streamsize) buffer.size());
                 res.reset(new Bool<EncodingT>(true));
             }

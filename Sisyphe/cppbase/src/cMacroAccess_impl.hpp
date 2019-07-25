@@ -65,20 +65,20 @@ _CMacroAccess<EncodingT>::getManyCMacros(typename EncodingT::string_t const&  fi
 	columns.push_back(C("lengthBlock"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cMacro")), filter) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t name;
-		int isConst;
+		long long isConst;
 		typename EncodingT::string_t constValue;
-		int lineNumber;
-		int startBlock;
-		int lengthBlock;
-		if (statement.getInt( 0, identifier ) &&
+		long long lineNumber;
+		long long startBlock;
+		long long lengthBlock;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, name ) &&
-			statement.getInt( 2, isConst ) &&
+			statement.getInt64( 2, isConst ) &&
 			statement.getText( 3, constValue ) &&
-			statement.getInt( 4, lineNumber ) &&
-			statement.getInt( 5, startBlock ) &&
-			statement.getInt( 6, lengthBlock )) {
+			statement.getInt64( 4, lineNumber ) &&
+			statement.getInt64( 5, startBlock ) &&
+			statement.getInt64( 6, lengthBlock )) {
 			value.reset(new _CMacro<EncodingT>(
 				identifier,
 				name,
@@ -102,7 +102,7 @@ _CMacroAccess<EncodingT>::getAllCMacros() const
 
 template<class EncodingT>
 boost::shared_ptr< _CMacro<EncodingT> >
-_CMacroAccess<EncodingT>::getOneCMacro(int identifier) const 
+_CMacroAccess<EncodingT>::getOneCMacro(long long identifier) const 
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -145,20 +145,20 @@ _CMacroAccess<EncodingT>::selectManyCMacros(typename EncodingT::string_t const& 
 	}
 	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cMacro")), filter, nowait) );
 	while( statement.executeStep() ) {
-		int identifier;
+		long long identifier;
 		typename EncodingT::string_t name;
-		int isConst;
+		long long isConst;
 		typename EncodingT::string_t constValue;
-		int lineNumber;
-		int startBlock;
-		int lengthBlock;
-		if (statement.getInt( 0, identifier ) &&
+		long long lineNumber;
+		long long startBlock;
+		long long lengthBlock;
+		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, name ) &&
-			statement.getInt( 2, isConst ) &&
+			statement.getInt64( 2, isConst ) &&
 			statement.getText( 3, constValue ) &&
-			statement.getInt( 4, lineNumber ) &&
-			statement.getInt( 5, startBlock ) &&
-			statement.getInt( 6, lengthBlock )) {
+			statement.getInt64( 4, lineNumber ) &&
+			statement.getInt64( 5, startBlock ) &&
+			statement.getInt64( 6, lengthBlock )) {
 			tab.push_back(boost::shared_ptr< _CMacro<EncodingT> >(new _CMacro<EncodingT>(
 				identifier,
 				name,
@@ -169,13 +169,22 @@ _CMacroAccess<EncodingT>::selectManyCMacros(typename EncodingT::string_t const& 
 				lengthBlock)));
 		}
 	}
-	m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	if (tab.empty()) {
+		if (connection->isTransactionInProgress() && m_transactionOwner) {
+			connection->rollback();
+			m_transactionOwner = false;
+			m_transactionSignal(OPERATION_ACCESS_ROLLBACK);
+		}
+	}
+	else {
+		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+	}
 	return copy_ptr(tab);
 }
 
 template<class EncodingT>
 boost::shared_ptr< _CMacro<EncodingT> >
-_CMacroAccess<EncodingT>::selectOneCMacro(int identifier, bool nowait, bool addition)  
+_CMacroAccess<EncodingT>::selectOneCMacro(long long identifier, bool nowait, bool addition)  
 {
 	if ( identifier==-1 ) {
 		m_logger->errorStream() << "Identifier : Identifier is null.";
@@ -247,17 +256,12 @@ _CMacroAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CMacro<EncodingT> > o)
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	_TextFileAccess<EncodingT>* textFileAccess = _TextFileAccess<EncodingT>::getInstance();
-	if (!textFileAccess) {
-		m_logger->errorStream() << "TextFileAccess class is not initialized.";
-		throw NullPointerException("TextFileAccess class is not initialized.");
-	}
-	int id;
+	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cMacro")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
-	if( statement.executeStep() && statement.getInt( 0, id ) && id != 0 ) {
+	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(o->getIdentifier());
-		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(textFileAccess->getOneTextFile(id));
-		typename std::vector< boost::shared_ptr<_CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
+		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
+		typename std::list< boost::shared_ptr<_CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -282,7 +286,7 @@ _CMacroAccess<EncodingT>::isModifiedCMacro(boost::shared_ptr< _CMacro<EncodingT>
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
 	typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CMacro<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
+	typename std::list< boost::shared_ptr< _CMacro<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -321,7 +325,7 @@ _CMacroAccess<EncodingT>::updateCMacro(boost::shared_ptr< _CMacro<EncodingT> > o
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CMacro<EncodingT>::CMacroIDEquality cMacroIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
+	typename std::list< boost::shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cMacroIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -332,7 +336,7 @@ _CMacroAccess<EncodingT>::updateCMacro(boost::shared_ptr< _CMacro<EncodingT> > o
 			fields.push_back( C("name") );
 		}
 		if ( (*save)->getIsConst() != o->getIsConst() ) {
-			values.addInt( o->getIsConst() );
+			values.addInt64( o->getIsConst() );
 			fields.push_back( C("isConst") );
 		}
 		if ( (*save)->getConstValue() != o->getConstValue() ) {
@@ -340,23 +344,23 @@ _CMacroAccess<EncodingT>::updateCMacro(boost::shared_ptr< _CMacro<EncodingT> > o
 			fields.push_back( C("constValue") );
 		}
 		if ( (*save)->getLineNumber() != o->getLineNumber() ) {
-			values.addInt( o->getLineNumber() );
+			values.addInt64( o->getLineNumber() );
 			fields.push_back( C("lineNumber") );
 		}
 		if ( (*save)->getStartBlock() != o->getStartBlock() ) {
-			values.addInt( o->getStartBlock() );
+			values.addInt64( o->getStartBlock() );
 			fields.push_back( C("startBlock") );
 		}
 		if ( (*save)->getLengthBlock() != o->getLengthBlock() ) {
-			values.addInt( o->getLengthBlock() );
+			values.addInt64( o->getLengthBlock() );
 			fields.push_back( C("lengthBlock") );
 		}
-		if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getCppFile()->getTextFile()) ) {
+		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
 		}
-		else if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
-			values.addInt( o->getCppFile()->getTextFile()->getRowid() );
+		else if ( !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
+			values.addInt64( o->getCppFile()->getIdentifier() );
 			fields.push_back( C("idFile") );
 		}
 		else if ( o->isNullCppFile() && !(*save)->isNullCppFile() ) {
@@ -412,27 +416,27 @@ _CMacroAccess<EncodingT>::insertCMacro(boost::shared_ptr< _CMacro<EncodingT> > o
 		fields.push_back( C("identifier") );
 		values.addText( o->getName() );
 		fields.push_back( C("name") );
-		values.addInt( o->getIsConst() );
+		values.addInt64( o->getIsConst() );
 		fields.push_back( C("isConst") );
 		values.addText( o->getConstValue() );
 		fields.push_back( C("constValue") );
-		if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getCppFile()->getTextFile()) ) {
+		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
 		}
-		else if ( !o->isNullCppFile() && !o->getCppFile()->isNullTextFile() ) {
-			values.addInt( o->getCppFile()->getTextFile()->getRowid() );
+		else if ( !o->isNullCppFile() ) {
+			values.addInt64( o->getCppFile()->getIdentifier() );
 			fields.push_back( C("idFile") );
 		}
 		else {
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
 			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
-		values.addInt( o->getLineNumber() );
+		values.addInt64( o->getLineNumber() );
 		fields.push_back( C("lineNumber") );
-		values.addInt( o->getStartBlock() );
+		values.addInt64( o->getStartBlock() );
 		fields.push_back( C("startBlock") );
-		values.addInt( o->getLengthBlock() );
+		values.addInt64( o->getLengthBlock() );
 		fields.push_back( C("lengthBlock") );
 		statement.swap( connection->insert(C("cMacro"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
@@ -475,7 +479,7 @@ _CMacroAccess<EncodingT>::deleteCMacro(boost::shared_ptr< _CMacro<EncodingT> > o
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	typename _CMacro<EncodingT>::CMacroIDEquality CMacroIdEquality(*o);
-	typename std::vector< boost::shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CMacroIdEquality);
+	typename std::list< boost::shared_ptr< _CMacro<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CMacroIdEquality);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");

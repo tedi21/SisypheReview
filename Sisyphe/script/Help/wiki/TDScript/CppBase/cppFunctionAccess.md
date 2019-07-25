@@ -172,20 +172,6 @@ access.FillAllCppParameters(cppFunction, false);
 access.FillAllCppVariables(cppFunction, false);
 ```
 
-## Méthode FillAllDebugFunctionInfos
-*Paramètres*
-* CppFunction : L'objet à remplir.
-* Bool : non utilisé.
-
-*Retour*
-* None.
-
-*Description*
-* Recupère les données DebugFunctionInfo dans la base de données.
-```
-access.FillAllDebugFunctionInfos(cppFunction, false);
-```
-
 ## Méthode FillOneCppParameter
 *Paramètres*
 * CppFunction : L'objet à remplir.
@@ -216,21 +202,6 @@ access.FillOneCppParameter(cppFunction, identifier, false);
 access.FillOneCppVariable(cppFunction, identifier, false);
 ```
 
-## Méthode FillOneDebugFunctionInfo
-*Paramètres*
-* CppFunction : L'objet à remplir.
-* Numeric : L'identifiant identifier de la table debugFunctionInfo.
-* Bool : non utilisé.
-
-*Retour*
-* None.
-
-*Description*
-* Recupère la donnée DebugFunctionInfo dans la base de données.
-```
-access.FillOneDebugFunctionInfo(cppFunction, identifier, false);
-```
-
 ## Méthode FillManyCppParameters
 *Paramètres*
 * CppFunction : L'objet à remplir.
@@ -259,21 +230,6 @@ access.FillManyCppParameters(cppFunction, "identifier = " & value, false);
 * Recupère les données CppVariable dans la base de données.
 ```
 access.FillManyCppVariables(cppFunction, "identifier = " & value, false);
-```
-
-## Méthode FillManyDebugFunctionInfos
-*Paramètres*
-* CppFunction : L'objet à remplir.
-* String : clause WHERE de la recherche SQL.
-* Bool : non utilisé.
-
-*Retour*
-* None.
-
-*Description*
-* Recupère les données DebugFunctionInfo dans la base de données.
-```
-access.FillManyDebugFunctionInfos(cppFunction, "identifier = " & value, false);
 ```
 
 ## Méthode IsModifiedCppFunction

@@ -23,5 +23,19 @@
       <Relation Name="FK_FUNCTION_DEC_FILE" Alias="cppDeclarationFunction"/>
       <Relation Name="FK_FUNCTION_DEF_FILE" Alias="cppDefinitionFunction"/>
     </File>
+    
+    <File Name="cppClass">
+      <Entity Name="cppClass">
+         <Attribute Name="idEncapsulationClass" Alias="encapsulationClass"/>
+      </Entity>
+      <Relation Name="FK_CLASS_CLASS" Alias="internClasse"/>
+    </File>
+    
+    <File Name="debugTypeInfo">
+      <Entity Name="debugTypeInfo">
+         <Attribute Name="idPrimitiveType" Alias="primitiveType"/>
+      </Entity>
+      <Relation Name="FK_DEBUGTYPE_DEBUGTYPE" Alias="richType"/>
+    </File>
   </Workspace>
 </document_schema>

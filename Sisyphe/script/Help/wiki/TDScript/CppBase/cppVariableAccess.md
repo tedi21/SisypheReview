@@ -118,6 +118,19 @@ var = access.IsSelectedCppVariable(cppVariable);
 access.FillCppFunction(cppVariable);
 ```
 
+## Méthode FillCppFile
+*Paramètres*
+* CppVariable : L'objet à remplir.
+
+*Retour*
+* None.
+
+*Description*
+* Recupère la donnée cppFile dans la base de données.
+```
+access.FillCppFile(cppVariable);
+```
+
 ## Méthode IsModifiedCppVariable
 *Paramètres*
 * CppVariable : L'objet à tester.
