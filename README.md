@@ -15,7 +15,7 @@ Run .\Review\Html\client\sisyphe.html to visualize the results.
 ![Sisyphe screenshot](/screen.png "Sisyphe screenshot")
 
 ## Adding Coding Rules
-Edit the file Review\CodingRules\CppCustom\rules.td
+Edit the file Review\CodingRules\CppCustom\rules.td.
 Create a new function checking the new rule. The function must have two parameters :
  * fileData Data related to the source file
  * errorList List of errors, append an error to the list if the new rule is violated.
