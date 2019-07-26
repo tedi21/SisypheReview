@@ -1,5 +1,5 @@
 # Fonctions préprogrammées
-Le langage propose deux fonctions préprogrammées : include et print.
+Le langage propose trois fonctions préprogrammées : include, print et system.
 
 # Référence
 ## Méthode include
