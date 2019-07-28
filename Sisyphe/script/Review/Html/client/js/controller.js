@@ -152,17 +152,12 @@
         $scope.btnViewDetailsIcon = 'unfolded';
         // view selection
         $timeout(function () {
-          var index = 0;
-          var found = false;
-          while (index < $scope.currentFilter.list.length && !found) {
-            if ($scope.currentFilter.list[index].clicked === true) {
-              found = true;
-            }
-            else {
-              index++;
-            }
+          var found = $scope.currentFilter.list.find(function(item) {
+            return item.clicked === true;
+          });
+          if (found) {
+            ScrollTo.idOrName('row-list-' + found.start, -1);
           }
-          ScrollTo.idOrName('row-list-' + index, -1);
         }, 0);
       }
       else {
@@ -171,35 +166,31 @@
       }
     };
     
-    var updateCurrentCode = function (index) {
-      if (index < $scope.currentFilter.list.length) {
-        var item = $scope.currentFilter.list[index];
-        if (false === item.clicked || undefined === item.clicked) {
-          // set clicked attribute
-          for (var i = 0; i < $scope.currentFilter.list.length; i++) {
-            $scope.currentFilter.list[i].clicked = false;
-          }
-          item.clicked = true;
-          // set selection
-          var content = $scope.currentFile.content;
-          if (codeSelection.hasSelection()) {
-            content = codeSelection.deSelect();
-          }
-          $scope.currentFile.content = codeSelection.select(content, item);
+    var updateCurrentCode = function (item) {
+      if (false === item.clicked || undefined === item.clicked) {
+        // set clicked attribute
+        for (var i = 0; i < $scope.currentFilter.list.length; i++) {
+          $scope.currentFilter.list[i].clicked = false;
         }
-        else {
-          // deselect
-          item.clicked = false;
-          $scope.currentFile.content = codeSelection.deSelect();
+        item.clicked = true;
+        // set selection
+        var content = $scope.currentFile.content;
+        if (codeSelection.hasSelection()) {
+          content = codeSelection.deSelect();
         }
+        $scope.currentFile.content = codeSelection.select(content, item);
+      }
+      else {
+        // deselect
+        item.clicked = false;
+        $scope.currentFile.content = codeSelection.deSelect();
       }
     };
     
     // set list click handler
-    $scope.listClicked = function (index) {
-      updateCurrentCode(index);
+    $scope.listClicked = function (item) {
+      updateCurrentCode(item);
       // get line number
-      var item = $scope.currentFilter.list[index];
       if (item.clicked === true) {
         var lineNumber = item.lineNumber;
         // set scrollbar position (- 5 lines to see previous content)
@@ -212,10 +203,10 @@
     // set error click handler
     $scope.errorClicked = function (index, ev) {
       ev.stopPropagation();
-      updateCurrentCode(index);
       var item = $scope.currentFilter.list[index];
+      updateCurrentCode(item);
       if (item.clicked === true) {
-        ScrollTo.idOrName('row-list-' + index, -1);
+        ScrollTo.idOrName('row-list-' + item.start, -1);
       }
     };
     
@@ -234,12 +225,20 @@
       }
     };
     
-    $scope.logoClicked = function (index) {
+    $scope.logoClicked = function () {
       sisypheFactory.aboutHtml.then(function(html){
         var modalInstance = $uibModal.open({
           animation: true,
           template: html.data,
-          controller: 'logoCtrl',
+        });
+      });
+    };
+    
+    $scope.filterIconClicked = function () {
+      sisypheFactory.helpHtml.then(function(html){
+        var modalInstance = $uibModal.open({
+          animation: true,
+          template: html.data,
         });
       });
     };

@@ -119,44 +119,50 @@
       <div id="bottom-panel">
         <div class="collapse-group">
           <div class="collapse" uib-collapse="isCollapsed" id="viewdetails">
-          <div class="dropdown" uib-dropdown>
-            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" uib-dropdown-toggle>
-            <span class="glyphicon glyphicon-th-list"></span>
-            List: {{currentFilter.name}}
-            <span class="caret"></span></button>
-            <ul class="dropdown-menu uib-dropdown-menu">
-              <li class="list-cursor" ng-repeat="filterName in filters"><a ng-click="setFilter(filterName)">{{filterName}}</a></li>
-            </ul>
-          </div>
-          <div id="list-panel">
-            <table class="table table-hover">
-              <tbody>
-              <!-- -->
-                <tr class="list-cursor" ng-repeat="item in currentFilter.list" ng-class="{'info':item.clicked}" data-ng-click="listClicked($index)" id="row-list-{{$index}}">
-                  <td class="columnIcon">
-                    <div ng-switch on="currentFilter.name">
-                      <div ng-switch-when="Errors">
-                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+            <div id="bottom-bar">
+              <div class="dropdown" uib-dropdown>
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" uib-dropdown-toggle>
+                <span class="glyphicon glyphicon-th-list"></span>
+                List: {{currentFilter.name}}
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu uib-dropdown-menu">
+                  <li class="list-cursor" ng-repeat="filterName in filters"><a ng-click="setFilter(filterName)">{{filterName}}</a></li>
+                </ul>
+              </div>
+              <div class="filter-input stretch" ng-show="currentFilter.name!='Search'">
+                <input type="text" class="form-control" placeholder="Filter rules" ng-model="filterInput"/>
+                <span class="glyphicon glyphicon-question-sign filter-icon" ng-click="filterIconClicked()"></span>
+              </div>
+            </div>
+            <div id="list-panel">
+              <table class="table table-hover">
+                <tbody>
+                <!-- -->
+                  <tr class="list-cursor" ng-repeat="item in currentFilter.list | ruleFilter:filterInput" ng-class="{'info':item.clicked}" data-ng-click="listClicked(item)" id="row-list-{{item.start}}">
+                    <td class="columnIcon">
+                      <div ng-switch on="currentFilter.name">
+                        <div ng-switch-when="Errors">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </div>
+                        <div ng-switch-when="Diff">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </div>
+                        <div ng-switch-default>
+                           <span class="glyphicon glyphicon-info-sign"></span>
+                        </div>
                       </div>
-                      <div ng-switch-when="Diff">
-                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    </td>
+                    <td class="columnLine">l.{{item.lineNumber}}</td>
+                    <td class="columnDescription">
+                      <div ng-switch on="item.description">
+                        <div ng-switch-when="">{{item.category}}</div>
+                        <div ng-switch-default>{{item.category}}: {{item.description}}</div>
                       </div>
-                      <div ng-switch-default>
-                         <span class="glyphicon glyphicon-info-sign"></span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="columnLine">l.{{item.lineNumber}}</td>
-                  <td class="columnDescription">
-                    <div ng-switch on="item.description">
-                      <div ng-switch-when="">{{item.category}}</div>
-                      <div ng-switch-default>{{item.category}}: {{item.description}}</div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div class="center">
             <script type='text/ng-template' id='unfolded'>

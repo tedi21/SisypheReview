@@ -13,6 +13,13 @@
           {method: 'get', url: 'partials/about.html'}
         ),
         
+        // Return help page
+        // No parameter
+        // Return help html page
+        helpHtml: $http(
+          {method: 'get', url: 'partials/help.html'}
+        ),
+        
         // Return the list of analyzed files
         // No parameter
         // Return List [] of files {id, name}

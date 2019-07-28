@@ -93,6 +93,11 @@
   padding:0px;
 }
 
+#bottom-bar {
+  display:flex;
+  flex-direction:row;
+}
+
 #list-panel {
   /*min-*/height:160px;
   /*max-height:40vh;*/
@@ -156,6 +161,17 @@ li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
 pre  {
   flex:1;
   overflow:visible;
+}
+
+.filter-input {
+  margin-left: 10px;
+  margin-right: 15px;
+  width:100%;
+}
+
+.filter-icon {
+  margin-top: 10px;
+  margin-left: 5px;
 }
 
 .table-fixed  {
@@ -243,4 +259,20 @@ pre  {
   position: absolute;
   bottom: 8px;
   left: 16px;
+}
+
+.help-title {
+  color: black;
+  font-size: 14px;
+  background-color: LightSkyBlue ;
+}
+
+.help-text {
+  line-height: 2;
+  font-size: 12px;
+}
+
+.help-example {
+  padding:0;
+  margin:0;
 }

@@ -32,8 +32,9 @@
       codeError.before = buffer;
       var content = buffer;
       for (var i = 0; i < listErrors.length; i++) {
-        var nline = listErrors[i].lineNumber - 1;
-        content = cppBuffer.setStyle2(content, nline, 'code-error', listErrors[i].description, 'errorClick({index:' + i + ',event:$event})', false);
+        var item = listErrors[i];
+        var nline = item.lineNumber - 1;
+        content = cppBuffer.setStyle2(content, nline, 'code-error', item.description, 'errorClick({index:' + i + ',event:$event})', false);
       }
       return content;
     };

@@ -1,0 +1,31 @@
+<div modal-movable>
+  <div class="modal-header">
+    <h3 class="modal-title">Help</h3>
+  </div>
+  <div class="modal-body">
+    <div class="help-title">Filtrage par règle ou par catégorie</div>
+    <ol>
+      <li>
+        <p class="help-text">Indiquer un numéro de règle pour n'afficher que les erreurs correspondantes à cette règle.</p>
+        <pre class="help-example">10</pre>
+        <p class="help-text">Ce filtre n'affichera que les erreurs liées à la règle 10.</p>
+      </li>
+      <li>
+        <p class="help-text">Indiquer une catégorie pour n'afficher que les erreurs correspondantes à cette catégorie.<p>
+        <pre class="help-example">Comments</pre>
+        <p class="help-text">Ce filtre n'affichera que les erreurs liées à la catégorie Comments.</p>
+      </li>
+    </ol>
+    <div class="help-title">Sélection de plusieurs règles ou catégories</div>
+    <p class="help-text">Sélectionner plusieurs règles ou catégories en séparant chaque règle ou catégorie par une virgule <code>,</code>.</p>
+    <pre class="help-example">10,Naming</pre>
+    <p class="help-text">Ce filtre n'affichera que les erreurs liées à la règle 10 et à la catégorie Naming.</p>
+    <div class="help-title">Non-sélection de règles ou catégories</div>
+    <p class="help-text">Ne pas sélectionner des règles ou catégories en préfixant le filtre par un point d'interrogation <code>!</code>.</p>
+    <pre class="help-example">!Comments,28</pre>
+    <p class="help-text">Ce filtre affichera toutes les erreurs sauf celles liées à la règle 28 et à la catégorie Comments.</p>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>
+  </div>
+</div>
