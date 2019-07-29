@@ -11,7 +11,8 @@
         var list = [];
         if (exp !== '' && exp !== undefined) {
           var rawBuffer = cppBuffer.raw(buffer);
-          var foundIndex = rawBuffer.search(exp);
+          //console.log(rawBuffer);
+          var foundIndex = rawBuffer.search(exp.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
           var bufferIndex = foundIndex;
           while (foundIndex != -1 && bufferIndex < rawBuffer.length) {
             list.push({

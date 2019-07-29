@@ -88,6 +88,19 @@
       return len;
     };
     
+    this.getTagLen = function(buffer, begin, end) {
+      var tag = { 
+        index : end,
+        length : 0
+      };
+      var i = buffer.indexOf('<', begin);
+      if (i != -1 && i < end) {
+        tag.index = i;
+        tag.length = buffer.indexOf('>', i) + 1 - i;
+      }
+      return tag;
+    };
+    
     this.expandLeft = function(buffer, start) {
       var newStart = start;
       while (newStart > 0 && buffer[newStart-1] != '\n') newStart--;
@@ -112,16 +125,25 @@
       bal1 += '>';
       var bal2 = '</span>';
       var begin = start + offset;
+      var end = begin + len;
       if (expandLine) {
         begin = this.expandLeft(buffer, begin);
-      }
-      buffer = buffer.splice(begin, 0, bal1);
-      offset += bal1.length;
-      var end = start + offset + len;
-      if (expandLine) {
         end = this.expandRight(buffer, end);
       }
-      buffer = buffer.splice(end, 0, bal2);
+      var tag = this.getTagLen(buffer, begin, end);
+      while (begin < end) {
+        if (begin != tag.index) {
+          buffer = buffer.splice(begin, 0, bal1);
+          tag.index += bal1.length;
+          end += bal1.length;
+          buffer = buffer.splice(tag.index, 0, bal2);
+          tag.index += bal2.length;
+          end += bal2.length;
+        }
+        end += tag.length;
+        begin = tag.index + tag.length;
+        tag = this.getTagLen(buffer, begin, end);
+      }
       //console.log(buffer);
       return buffer;
     };
