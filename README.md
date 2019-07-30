@@ -61,6 +61,6 @@ Change the document and save it in XML Word 2003 format.
 You can modify the report programmatically by editing the file Review\CodingRules\CppCustom\review.td. The functions InitDoc, WriteDoc and CloseDoc are use to modify the xml word report.
 
 ## Wiki
-[link](https://github.com/tedi21/SisypheReview/blob/master/Sisyphe\script\Help\wiki\TDScript "Wiki")
+[link](https://github.com/tedi21/SisypheReview/tree/master/Sisyphe/script/Help/wiki/TDScript "Wiki")
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tedi21/SisypheReview/master)
