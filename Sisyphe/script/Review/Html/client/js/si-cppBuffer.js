@@ -114,7 +114,6 @@
     };
     
     this.setStyle = function (buffer, start, len, style, title, clickHandler, expandLine) {
-      var offset = this.getHtmlLen(buffer, start);
       var bal1 = '<span class="' + style + '"';
       if (title !== '') {
         bal1 += ' title="' + title + '"';
@@ -124,8 +123,8 @@
       }
       bal1 += '>';
       var bal2 = '</span>';
-      var begin = start + offset;
-      var end = begin + len;
+      var begin = start + this.getHtmlLen(buffer, start);
+      var end = start + len + this.getHtmlLen(buffer, start + len);
       if (expandLine) {
         begin = this.expandLeft(buffer, begin);
         end = this.expandRight(buffer, end);
@@ -140,7 +139,6 @@
           tag.index += bal2.length;
           end += bal2.length;
         }
-        end += tag.length;
         begin = tag.index + tag.length;
         tag = this.getTagLen(buffer, begin, end);
       }
