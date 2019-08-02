@@ -1075,7 +1075,7 @@ bool check_SymTagEnumType(boost::shared_ptr&lt; Base&lt;EncodingT&gt; &gt; const
 	boost::shared_ptr&lt; Numeric&lt;EncodingT&gt; &gt; value  = dynamic_pointer_cast&lt; Numeric&lt;EncodingT&gt; &gt;(val);&#xD;
 	if (value)&#xD;
 	{&#xD;
-		s = (SymTagEnumType) value-&gt;getLLValue();&#xD;
+		s = (SymTagEnumType) value-&gt;LLvalue();&#xD;
 	}&#xD;
 	else&#xD;
 	{&#xD;

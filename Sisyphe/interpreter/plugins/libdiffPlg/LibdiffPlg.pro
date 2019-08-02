@@ -32,7 +32,7 @@ INCLUDEPATH += \
     ../../../../Common/Interpreter \
     ../../../../Common/Exception \
     ../../../../Common/Pointer \
-    ./Interpreter/src
+    ./interpreter/src
 
 
 CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp
@@ -44,6 +44,12 @@ CONFIG(MinGW-32): LIBS += -L../../../../../../Libraries/log4cpp/lib32 -llog4cpp 
 
 CONFIG(MinGW-32): LIBS += ../../../../CodeGeneration/bin_qt/Encoding32/release/Encoding.dll \
                           ../../../Interpreter/bin/Plugin32/release/Plugin.dll
+
+CONFIG(Linux-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
+                          -L../../../../CodeGeneration/bin_qt/Encoding64 -lEncoding \
+                          -L../../../interpreter/bin/Plugin64 -lPlugin
+
+CONFIG(Linux-64): QMAKE_CXXFLAGS += -std=c++17
 
 unix:!symbian {
     maemo5 {

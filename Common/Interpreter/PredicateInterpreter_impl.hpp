@@ -1,8 +1,5 @@
 #include "Predicate.hpp"
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -15,7 +12,7 @@ NAMESPACE_BEGIN(interp)
     bool PredicateOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
-        bool success = prefix<EncodingT>(expr, C("function:"), expr, false) &&
+        bool success = prefix<EncodingT>(expr, UCS("function:"), expr, false) &&
                        is_identifier<EncodingT>(expr);
         if (success)
         {
@@ -26,5 +23,3 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-#undef A

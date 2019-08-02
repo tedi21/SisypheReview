@@ -12,7 +12,7 @@
 #define _CPPENUM_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -135,63 +135,63 @@ public:
 	boost::shared_ptr< Base<EncodingT> > cppEnumConstantsCount() const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppEnumInterpreter, C("CppEnum") );
-		CLASS_KEY_REGISTER5( CppEnumInterpreter, C("CppEnum") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("CppEnum::Identifier") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, C("CppEnum::Name") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setName, no_const_t, C("CppEnum::Name") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setCppFile, no_const_t, C("CppEnum::CppFile") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, C("CppEnum::CppFile") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFile, const_t, C("CppEnum::HasCppFile") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, void, removeCppFile, no_const_t, C("CppEnum::removeCppFile") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setCppClass, no_const_t, C("CppEnum::CppClass") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppClass, no_const_t, C("CppEnum::CppClass") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppClass, const_t, C("CppEnum::HasCppClass") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, void, removeCppClass, no_const_t, C("CppEnum::removeCppClass") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getAccessSpecifier, const_t, C("CppEnum::AccessSpecifier") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setAccessSpecifier, no_const_t, C("CppEnum::AccessSpecifier") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, C("CppEnum::LineNumber") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setLineNumber, no_const_t, C("CppEnum::LineNumber") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getStartBlock, const_t, C("CppEnum::StartBlock") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setStartBlock, no_const_t, C("CppEnum::StartBlock") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getLengthBlock, const_t, C("CppEnum::LengthBlock") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setLengthBlock, no_const_t, C("CppEnum::LengthBlock") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, removeCppEnumConstant, no_const_t, C("CppEnum::removeCppEnumConstants") );
-		METHOD_KEY_REGISTER2( CppEnumInterpreter, void, insertCppEnumConstant, no_const_t, C("CppEnum::CppEnumConstants") );
-		METHOD_KEY_REGISTER1( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppEnumConstant, no_const_t, C("CppEnum::CppEnumConstants") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, void, clearCppEnumConstants, no_const_t, C("CppEnum::ClearCppEnumConstants") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppEnumConstants, const_t, C("CppEnum::HasCppEnumConstants") );
-		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, cppEnumConstantsCount, const_t, C("CppEnum::CppEnumConstantsCount") );
+		CLASS_KEY_REGISTER ( CppEnumInterpreter, UCS("CppEnum") );
+		CLASS_KEY_REGISTER5( CppEnumInterpreter, UCS("CppEnum") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("CppEnum::Identifier") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, UCS("CppEnum::Name") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setName, no_const_t, UCS("CppEnum::Name") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setCppFile, no_const_t, UCS("CppEnum::CppFile") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, UCS("CppEnum::CppFile") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFile, const_t, UCS("CppEnum::HasCppFile") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, void, removeCppFile, no_const_t, UCS("CppEnum::removeCppFile") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setCppClass, no_const_t, UCS("CppEnum::CppClass") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppClass, no_const_t, UCS("CppEnum::CppClass") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppClass, const_t, UCS("CppEnum::HasCppClass") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, void, removeCppClass, no_const_t, UCS("CppEnum::removeCppClass") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getAccessSpecifier, const_t, UCS("CppEnum::AccessSpecifier") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setAccessSpecifier, no_const_t, UCS("CppEnum::AccessSpecifier") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, UCS("CppEnum::LineNumber") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setLineNumber, no_const_t, UCS("CppEnum::LineNumber") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getStartBlock, const_t, UCS("CppEnum::StartBlock") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setStartBlock, no_const_t, UCS("CppEnum::StartBlock") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getLengthBlock, const_t, UCS("CppEnum::LengthBlock") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, setLengthBlock, no_const_t, UCS("CppEnum::LengthBlock") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, void, removeCppEnumConstant, no_const_t, UCS("CppEnum::removeCppEnumConstants") );
+		METHOD_KEY_REGISTER2( CppEnumInterpreter, void, insertCppEnumConstant, no_const_t, UCS("CppEnum::CppEnumConstants") );
+		METHOD_KEY_REGISTER1( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppEnumConstant, no_const_t, UCS("CppEnum::CppEnumConstants") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, void, clearCppEnumConstants, no_const_t, UCS("CppEnum::ClearCppEnumConstants") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppEnumConstants, const_t, UCS("CppEnum::HasCppEnumConstants") );
+		METHOD_KEY_REGISTER ( CppEnumInterpreter, boost::shared_ptr< Base<EncodingT> >, cppEnumConstantsCount, const_t, UCS("CppEnum::CppEnumConstantsCount") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppEnum") );
-		CLASS_KEY_UNREGISTER5( C("CppEnum") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::Name") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::Name") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::CppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::CppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::HasCppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::removeCppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::CppClass") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::CppClass") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::HasCppClass") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::removeCppClass") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::AccessSpecifier") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::AccessSpecifier") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::LineNumber") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::LineNumber") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::StartBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::StartBlock") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::LengthBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::LengthBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::removeCppEnumConstants") );
-		METHOD_KEY_UNREGISTER2( C("CppEnum::CppEnumConstants") );
-		METHOD_KEY_UNREGISTER1( C("CppEnum::CppEnumConstants") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::ClearCppEnumConstants") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::HasCppEnumConstants") );
-		METHOD_KEY_UNREGISTER ( C("CppEnum::CppEnumConstantsCount") );
+		CLASS_KEY_UNREGISTER ( UCS("CppEnum") );
+		CLASS_KEY_UNREGISTER5( UCS("CppEnum") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::Name") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::Name") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::CppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::CppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::HasCppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::removeCppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::CppClass") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::CppClass") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::HasCppClass") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::removeCppClass") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::AccessSpecifier") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::AccessSpecifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::LineNumber") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::LineNumber") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::StartBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::StartBlock") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::LengthBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::LengthBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::removeCppEnumConstants") );
+		METHOD_KEY_UNREGISTER2( UCS("CppEnum::CppEnumConstants") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnum::CppEnumConstants") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::ClearCppEnumConstants") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::HasCppEnumConstants") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnum::CppEnumConstantsCount") );
 	FACTORY_END_UNREGISTER
 };
 

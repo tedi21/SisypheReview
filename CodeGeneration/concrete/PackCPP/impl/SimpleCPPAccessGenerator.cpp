@@ -19,9 +19,9 @@ namespace dsg {
 				<< CreateEndMacro_R2;            
 
 			CreateInclude_R2 =
-				str_g("#include \"DataConnection.hpp\"\r\n"
-                      "#include \"DataParameters.hpp\"\r\n"
-                      "#include \"DataStatement.hpp\"\r\n"
+				str_g("#include \"dataconnection.hpp\"\r\n"
+                      "#include \"dataparameters.hpp\"\r\n"
+                      "#include \"datastatement.hpp\"\r\n"
 					  "#include \"NullPointerException.hpp\"\r\n"
 					  "#include \"NoSqlRowException.hpp\"\r\n"
 					  "#include \"UnIdentifiedObjectException.hpp\"\r\n"
@@ -146,7 +146,7 @@ namespace dsg {
 
 			AttributeColumns_R2 =
                 str_g("std::vector<typename EncodingT::string_t> columns;                   \r\n\t")
-                << ( "columns.push_back(C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\"));\r\n\t" )
+                << ( "columns.push_back(UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\"));\r\n\t" )
 																[!If_IsREF_R2 || If_IsID_R2]
 																[attr0, attrN];
 
@@ -196,7 +196,7 @@ namespace dsg {
 				<< InitializeAccessLoop_R2
 				<< "\r\n\t"
 				<< AttributeColumns_R2
-                << "statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\")), filter) );" "\r\n\t"
+                << "statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\")), filter) );" "\r\n\t"
 				   "while( statement.executeStep() ) {"                                       "\r\n\t\t"
                 << AttrDeclarationLoop_R2
                 << "if (" << SetAttrLoop_R2 << ") {"                                          "\r\n\t\t\t" 
@@ -216,10 +216,10 @@ namespace dsg {
 
 
 			ConvertCStringLoop_R2 =
-				( +str_g("C(\"") 
-                << attr_g(getAttributeNameHandler(KIND_NAME)) << " = \") /*+ C(\"\\'\") */+ "
+				( +str_g("UCS(\"") 
+                << attr_g(getAttributeNameHandler(KIND_NAME)) << " = \") /*+ UCS(\"\\'\") */+ "
 				<< ConvertToCString_R2( $(0)  )    
-                << "/* + C(\"\\'\")*/" << ~-str_g(" + C(\" AND ") ) [If_IsID_R2]
+                << "/* + UCS(\"\\'\")*/" << ~-str_g(" + UCS(\" AND ") ) [If_IsID_R2]
                                                                     [attr0, attrN];
 
 			VerifyPTR_R2 =
@@ -321,7 +321,7 @@ namespace dsg {
                    "m_transactionSignal(OPERATION_ACCESS_START);"                           "\r\n\t\t"
                    "}"                                                                      "\r\n\t"
                    "}"                                                                      "\r\n\t"
-                   "statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\")), filter, nowait) );\r\n\t"
+                   "statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\")), filter, nowait) );\r\n\t"
 				   "while( statement.executeStep() ) {"                                     "\r\n\t\t"
                 << AttrDeclarationLoop_R2
                 << "if (" << SetAttrLoop_R2 << ") {"                                        "\r\n\t\t\t" 
@@ -400,8 +400,8 @@ namespace dsg {
                 << GetReferencedAttribute_R2(InitializeAccess_R2(AttributeClassName_R2))
 				<< "\r\n\t"
 				<< AttributeValueType_R2 << " id;"                                                  "\r\n\t"
-                << "statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C(\"" << attr_g(getAttributeNameHandler(KIND_NAME))
-                << "\")), std::vector<typename EncodingT::string_t>(1,C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\")), "
+                << "statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME))
+                << "\")), std::vector<typename EncodingT::string_t>(1,UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\")), "
 				<< ConvertCStringLoop_R2(AttributeAccessor_R2(Accessor_R2(str_g("o")))) << ") );"   "\r\n\t"
                    "if( statement.executeStep() && "
                 << GetDataStatement_R2(str_g("statement"), str_g("0"), str_g("id")) << " && id != 0 ) {\r\n\t\t"
@@ -453,10 +453,10 @@ namespace dsg {
 
 			FillMeth3Body_R2 =
                 str_g("\r\n\tfillMany") << URelationNName_R2 << "s(o, "
-                << (( +str_g("C(\"") 
-                << attr_g(getAttributeNameHandler(KIND_NAME)) << " = \") /*+ C(\"\\'\") */+ "
+                << (( +str_g("UCS(\"") 
+                << attr_g(getAttributeNameHandler(KIND_NAME)) << " = \") /*+ UCS(\"\\'\") */+ "
 				<< ConvertToCString_R2( AttributeAccessor_R2(LAttribute_R2) )    
-                << "/* + C(\"\\'\")*/" << ~-str_g(" + C(\" AND ") ) [If_IsID_R2]
+                << "/* + UCS(\"\\'\")*/" << ~-str_g(" + UCS(\" AND ") ) [If_IsID_R2]
 																    [attr0, attrN]
                                                                     [has_g(0, set_g((attr0,attrN), If_IsID_R2), gt_g())]
                 << str_g("EncodingT::EMPTY")
@@ -481,13 +481,13 @@ namespace dsg {
 				<< "\r\n\t"
                    "std::vector< boost::shared_ptr< " << EncodingClass_R2(URelationN_R2) << " > > tab;"    "\r\n\t"
                    "typename EncodingT::string_t " << LRelationN_R2 << "Filter = " 
-                   "C(\"" << rel_g(getRelationTargetRefHandler(KIND_NAME)) << " = \") + "
+                   "UCS(\"" << rel_g(getRelationTargetRefHandler(KIND_NAME)) << " = \") + "
                 << ConvertToCString_R2(AttributeAccessor_R2(Accessor_R2(str_g("o"))))
                                                                                 [If_IsID_R2][attr0, attrN]
                                                                                 [entitiesByRel(FILTER_SOURCE)] 
                 << ";"                                                                              "\r\n\t"
                    "if (!filter.empty()) {"                                                         "\r\n\t\t"
-                << LRelationN_R2 << "Filter += C(\" AND \") + filter;"                              "\r\n\t"
+                << LRelationN_R2 << "Filter += UCS(\" AND \") + filter;"                              "\r\n\t"
                    "}"                                                                              "\r\n\t"
                 << EntityEqualFunctor_R2( LEntity_R2 << "IdEquality", IDParamName_R2(Accessor_R2(str_g("o"))) )
 																			    [entitiesByRel(FILTER_SOURCE)]
@@ -601,7 +601,7 @@ namespace dsg {
                    "try {"                                                                                 "\r\n\t\t"
 				<< ("if ( (*save)->get" << UAttribute_R2 << "() != o->get" << UAttribute_R2 << "() ) {"     "\r\n\t\t\t"
 				<< AddDataParameter_R2(str_g("values"),Accessor_R2(str_g("o"))) <<                         "\r\n\t\t\t"
-                   "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );"      "\r\n\t\t"
+                   "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );"      "\r\n\t\t"
 				   "}"                                                                                     "\r\n\t\t")
 															[!If_IsID_R2 && !If_IsREF_R2]
 															[attr0, attrN]
@@ -626,7 +626,7 @@ namespace dsg {
                 << "!typename " << AttributeClass_R2 << "::" << AttributeClassName_R2 << "IDEquality(*(" << Accessor_R2(str_g("o")) << "))(" << Accessor_R2(str_g("(*save)")) << ") ) {"
                    "\r\n\t\t\t"
                 << AddDataParameter_R2(str_g("values"), "o" << GetReferencedAttribute_R2(Accessor_R2(str_g("")), "->get" << UAttribute_R2 << "()")) << "\r\n\t\t\t"
-                   "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );"     "\r\n\t\t"
+                   "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );"     "\r\n\t\t"
 				   "}"                                                                                    "\r\n\t\t"
 				   "else if ( o->isNull" << UAttribute_R2 << "() "
 				   "&& !(*save)->isNull" << UAttribute_R2 << "() ) {"                                     "\r\n\t\t\t"
@@ -668,13 +668,13 @@ namespace dsg {
 				   "}"                                                                                      "\r\n\t\t"
 				   "}"                                                                                      "\r\n\t\t")
                 << "if (!fields.empty()) {"                                                                 "\r\n\t\t\t"
-                   "statement.swap( connection->update(C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"), fields, "
+                   "statement.swap( connection->update(UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"), fields, "
                 << ConvertCStringLoop_R2(AttributeAccessor_R2(Accessor_R2(str_g("o")))) << ") );"           "\r\n\t\t\t"
 				<< "if ( !values.fill(statement) || !statement.executeQuery() ) {"                          "\r\n\t\t\t\t"
 				   "m_logger->fatalStream() << \"invalid query.\";"                                         "\r\n\t\t\t\t"
 				   "throw InvalidQueryException(\"invalid query.\");"                                       "\r\n\t\t\t"
 				   "}"                                                                                      "\r\n\t\t\t"
-                   "m_updateSignal(OPERATION_ACCESS_UPDATE, C(\"" << ent_g(getEntityNameHandler(KIND_ALIAS)) << "\"), o);\r\n\t\t"
+                   "m_updateSignal(OPERATION_ACCESS_UPDATE, UCS(\"" << ent_g(getEntityNameHandler(KIND_ALIAS)) << "\"), o);\r\n\t\t"
                    "}"                                                                                      "\r\n\t\t"
 				<< ListRelationN_R2( 
                    "for ( " << LRelationNName_R2 << "=listOf" << URelationNName_R2 << "ToAdd.begin(); "
@@ -732,14 +732,14 @@ namespace dsg {
                    "m_transactionSignal(OPERATION_ACCESS_START);"                                   "\r\n\t\t"
                    "}"                                                                              "\r\n\t\t"
 				<< ((AddDataParameter_R2(str_g("values"),Accessor_R2(str_g("o"))) <<                "\r\n\t\t"
-                   "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t")
+                   "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t")
 															[!If_IsID_R2 && !If_IsREF_R2]
-                << ("int id = connection->selectMaxID(C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\"), C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"))+1;""\r\n\t\t"
+                << ("int id = connection->selectMaxID(UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\"), UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"))+1;""\r\n\t\t"
 					"values.addInt( id );"                                                          "\r\n\t\t"
-                    "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t")
+                    "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t")
 															[!If_HasREF_ID_R2 && If_IsID_R2]
 				<< (AddDataParameter_R2(str_g("values"),Accessor_R2(str_g("o"))) <<                 "\r\n\t\t"
-                    "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t")
+                    "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t")
 															[If_HasREF_ID_R2 && If_IsID_R2 && !If_IsREF_R2]
 				<< ((
                    "if ( "
@@ -762,7 +762,7 @@ namespace dsg {
                                                             [ReferencedRelations_R2]
                 << " ) {"                                                                           "\r\n\t\t\t"
 				<< AddDataParameter_R2(str_g("values"), "o" << GetReferencedAttribute_R2(Accessor_R2(str_g("")), "->get" << UAttribute_R2 << "()")) << "\r\n\t\t\t"
-                   "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t"
+                   "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t"
 				   "}"                                                                              "\r\n\t\t"
 				   "else {"                                                                         "\r\n\t\t\t"
 				<< InsertNULLAttribute_R2                   [relationsByAttr(FILTER_TARGET)]
@@ -775,7 +775,7 @@ namespace dsg {
 				   "}"                                                                              "\r\n\t\t"
                    "if ( !o->isNull" << UAttribute_R2 << "() ) {"                                   "\r\n\t\t\t"
 				<< AddDataParameter_R2(str_g("values"), AttributeAccessor_R2(Accessor_R2(str_g("o")))) << "\r\n\t\t\t"
-                   "fields.push_back( C(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t"
+                   "fields.push_back( UCS(\"" << attr_g(getAttributeNameHandler(KIND_NAME)) << "\") );\r\n\t\t"
 				   "}"                                                                              "\r\n\t\t"
 				   "else {"                                                                         "\r\n\t\t\t"
 				<< InsertNULLAttribute_R2                   [relationsByAttr(FILTER_TARGET)]
@@ -784,7 +784,7 @@ namespace dsg {
 															[If_IsREF_R2])
 															[!If_IsAUTO_R2]
 															[attr0, attrN]
-                << "statement.swap( connection->insert(C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"), fields) );\r\n\t\t"
+                << "statement.swap( connection->insert(UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"), fields) );\r\n\t\t"
 				<< "if ( !values.fill(statement) || !statement.executeQuery() ) {"                  "\r\n\t\t\t"
 				   "m_logger->fatalStream() << \"invalid query.\";"                                 "\r\n\t\t\t"
 				   "throw InvalidQueryException(\"invalid query.\");"                               "\r\n\t\t"
@@ -795,7 +795,7 @@ namespace dsg {
 															[If_IsID_R2]
 															[attr0, attrN]
 															[!If_HasREF_ID_R2]
-                << "m_insertSignal(OPERATION_ACCESS_INSERT, C(\"" << ent_g(getEntityNameHandler(KIND_ALIAS)) << "\"), o);\r\n\t\t"
+                << "m_insertSignal(OPERATION_ACCESS_INSERT, UCS(\"" << ent_g(getEntityNameHandler(KIND_ALIAS)) << "\"), o);\r\n\t\t"
 				<< ListRelationN_R2( 
                    "typename " << Relation1Class_R2 << "::" << RelationNIterator_R2 
                 << " " << LRelationNName_R2 << ";"                                                      "\r\n\t\t"
@@ -854,13 +854,13 @@ namespace dsg {
                 << LRelationNName_R2 << " ) {"                                                          "\r\n\t\t\t"
                 << UpdateRelationOnDelete_R2(LRelationNName_R2) <<                                      "\r\n\t\t"
 				   "}"                                                                              "\r\n\t\t")
-                << "statement.swap( connection->deleteFrom(C(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"), "
+                << "statement.swap( connection->deleteFrom(UCS(\"" << ent_g(getEntityNameHandler(KIND_NAME)) << "\"), "
 				<< ConvertCStringLoop_R2(AttributeAccessor_R2(Accessor_R2(str_g("o")))) << ") );"   "\r\n\t\t"
 				<< "if ( !statement.executeQuery() ) {"                                             "\r\n\t\t\t"
 				   "m_logger->fatalStream() << \"invalid query.\";"                                 "\r\n\t\t\t"
 				   "throw InvalidQueryException(\"invalid query.\");"                               "\r\n\t\t"
 				   "}"                                                                              "\r\n\t\t"
-                   "m_deleteSignal(OPERATION_ACCESS_DELETE, C(\"" << ent_g(getEntityNameHandler(KIND_ALIAS)) << "\"), o);\r\n\t\t"
+                   "m_deleteSignal(OPERATION_ACCESS_DELETE, UCS(\"" << ent_g(getEntityNameHandler(KIND_ALIAS)) << "\"), o);\r\n\t\t"
                 << ListRelationPB_R2(
                    "if (deleteid) {\r\n\t\t\t"
                 << LAttribute_R2 << "Access->delete" << AttributeClassName_R2 << "(" << Accessor_R2(str_g("o")) << ");\r\n\t\t"
@@ -893,7 +893,7 @@ namespace dsg {
 															[!If_IsNotNULL_R2];
 			InsertNULLAttribute_R2 =
 				(str_g("values.addNull();\r\n\t\t\t"
-                 "fields.push_back( C(\"") << rel_g(getRelationTargetRefHandler(KIND_NAME)) << "\") );\r\n\t\t")
+                 "fields.push_back( UCS(\"") << rel_g(getRelationTargetRefHandler(KIND_NAME)) << "\") );\r\n\t\t")
 															[!If_IsNotNULL_R2]
                 << (str_g("m_logger->errorStream() << \"") << rel_g(getRelationTargetRefHandler(KIND_NAME)) << " : null reference is forbidden.\";\r\n\t\t\t"
                    "throw InvalidQueryException(\"" << rel_g(getRelationTargetRefHandler(KIND_NAME)) << " : null reference is forbidden.\");\r\n\t\t")

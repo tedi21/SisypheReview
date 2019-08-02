@@ -6,11 +6,9 @@
 #include <functional>
 #include <string>
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Indexable.hpp"
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace log4cpp;
@@ -156,17 +154,17 @@ NAMESPACE_BEGIN(interp)
             METHOD_REGISTER3  (String, void, insertList, no_const_t)
             METHOD_REGISTER1  (String, void, removeValue, no_const_t)
             METHOD_REGISTER2  (String, void, removeList, no_const_t)
-            METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, match, const_t, C("String::Match"))
-            METHOD_KEY_REGISTER5  (String, boost::shared_ptr< Base<EncodingT> >, search, const_t, C("String::Search"))
-            METHOD_KEY_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, split, const_t, C("String::Split"))
-            METHOD_KEY_REGISTER2  (String, void, replaceAll, no_const_t, C("String::ReplaceAll"))
-            METHOD_KEY_REGISTER4  (String, void, replaceRegex, no_const_t, C("String::ReplaceRegex"))
-            METHOD_KEY_REGISTER1  (String, void, append, no_const_t, C("String::Append"))
-            METHOD_KEY_REGISTER2  (String, void, insert, no_const_t, C("String::Insert"))
-            METHOD_KEY_REGISTER2  (String, void, remove, no_const_t, C("String::Remove"))
-            METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, substring, const_t, C("String::SubString"))
-            METHOD_KEY_REGISTER   (String, boost::shared_ptr< Base<EncodingT> >, hash, const_t, C("String::Hash"))
-            METHOD_KEY_REGISTER   (String, void, trim, no_const_t, C("String::Trim"))
+            METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, match, const_t, UCS("String::Match"))
+            METHOD_KEY_REGISTER5  (String, boost::shared_ptr< Base<EncodingT> >, search, const_t, UCS("String::Search"))
+            METHOD_KEY_REGISTER1  (String, boost::shared_ptr< Base<EncodingT> >, split, const_t, UCS("String::Split"))
+            METHOD_KEY_REGISTER2  (String, void, replaceAll, no_const_t, UCS("String::ReplaceAll"))
+            METHOD_KEY_REGISTER4  (String, void, replaceRegex, no_const_t, UCS("String::ReplaceRegex"))
+            METHOD_KEY_REGISTER1  (String, void, append, no_const_t, UCS("String::Append"))
+            METHOD_KEY_REGISTER2  (String, void, insert, no_const_t, UCS("String::Insert"))
+            METHOD_KEY_REGISTER2  (String, void, remove, no_const_t, UCS("String::Remove"))
+            METHOD_KEY_REGISTER2  (String, boost::shared_ptr< Base<EncodingT> >, substring, const_t, UCS("String::SubString"))
+            METHOD_KEY_REGISTER   (String, boost::shared_ptr< Base<EncodingT> >, hash, const_t, UCS("String::Hash"))
+            METHOD_KEY_REGISTER   (String, void, trim, no_const_t, UCS("String::Trim"))
         FACTORY_END_REGISTER
 
         // Methods unregistration
@@ -190,17 +188,17 @@ NAMESPACE_BEGIN(interp)
             METHOD_UNREGISTER3(String, insertList)
             METHOD_UNREGISTER1(String, removeValue)
             METHOD_UNREGISTER2(String, removeList)
-            METHOD_KEY_UNREGISTER2(C("String::Match"))
-            METHOD_KEY_UNREGISTER5(C("String::Search"))
-            METHOD_KEY_UNREGISTER1(C("String::Split"))
-            METHOD_KEY_UNREGISTER2(C("String::ReplaceAll"))
-            METHOD_KEY_UNREGISTER4(C("String::ReplaceRegex"))
-            METHOD_KEY_UNREGISTER1(C("String::Append"))
-            METHOD_KEY_UNREGISTER2(C("String::Insert"))
-            METHOD_KEY_UNREGISTER2(C("String::Remove"))
-            METHOD_KEY_UNREGISTER2(C("String::SubString"))
-            METHOD_KEY_UNREGISTER (C("String::Hash"))
-            METHOD_KEY_UNREGISTER (C("String::Trim"))
+            METHOD_KEY_UNREGISTER2(UCS("String::Match"))
+            METHOD_KEY_UNREGISTER5(UCS("String::Search"))
+            METHOD_KEY_UNREGISTER1(UCS("String::Split"))
+            METHOD_KEY_UNREGISTER2(UCS("String::ReplaceAll"))
+            METHOD_KEY_UNREGISTER4(UCS("String::ReplaceRegex"))
+            METHOD_KEY_UNREGISTER1(UCS("String::Append"))
+            METHOD_KEY_UNREGISTER2(UCS("String::Insert"))
+            METHOD_KEY_UNREGISTER2(UCS("String::Remove"))
+            METHOD_KEY_UNREGISTER2(UCS("String::SubString"))
+            METHOD_KEY_UNREGISTER (UCS("String::Hash"))
+            METHOD_KEY_UNREGISTER (UCS("String::Trim"))
         FACTORY_END_UNREGISTER
     };
 
@@ -215,8 +213,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-
-#include "string_impl.hpp"
+#include "String_impl.hpp"
 
 #endif

@@ -1,6 +1,6 @@
-#include "DataConnection.hpp"
-#include "DataParameters.hpp"
-#include "DataStatement.hpp"
+#include "dataconnection.hpp"
+#include "dataparameters.hpp"
+#include "datastatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,13 +56,13 @@ _CppFileAccess<EncodingT>::getManyCppFiles(typename EncodingT::string_t const&  
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("path"));
-	columns.push_back(C("name"));
-	columns.push_back(C("linesCount"));
-	columns.push_back(C("hash"));
-	columns.push_back(C("analyzed"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppFile")), filter) );
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("path"));
+	columns.push_back(UCS("name"));
+	columns.push_back(UCS("linesCount"));
+	columns.push_back(UCS("hash"));
+	columns.push_back(UCS("analyzed"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t path;
@@ -104,7 +104,7 @@ _CppFileAccess<EncodingT>::getOneCppFile(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = getManyCppFiles(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = getManyCppFiles(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -124,12 +124,12 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("path"));
-	columns.push_back(C("name"));
-	columns.push_back(C("linesCount"));
-	columns.push_back(C("hash"));
-	columns.push_back(C("analyzed"));
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("path"));
+	columns.push_back(UCS("name"));
+	columns.push_back(UCS("linesCount"));
+	columns.push_back(UCS("hash"));
+	columns.push_back(UCS("analyzed"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -138,7 +138,7 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppFile")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t path;
@@ -182,7 +182,7 @@ _CppFileAccess<EncodingT>::selectOneCppFile(long long identifier, bool nowait, b
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = selectManyCppFiles(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > result = selectManyCppFiles(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -297,7 +297,7 @@ _CppFileAccess<EncodingT>::fillTextFile(boost::shared_ptr< _CppFile<EncodingT> >
 		throw NullPointerException("TextFileAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idText")), std::vector<typename EncodingT::string_t>(1,C("cppFile")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idText")), std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 		boost::shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
@@ -337,7 +337,7 @@ _CppFileAccess<EncodingT>::fillCppFileType(boost::shared_ptr< _CppFile<EncodingT
 		throw NullPointerException("CppFileTypeAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idType")), std::vector<typename EncodingT::string_t>(1,C("cppFile")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idType")), std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFileType<EncodingT> > val = cppFileTypeAccess->getOneCppFileType(id);
@@ -364,7 +364,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppDeclarationFunction(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppDeclarationFunctions(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppDeclarationFunctions(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -385,9 +385,9 @@ _CppFileAccess<EncodingT>::fillManyCppDeclarationFunctions(boost::shared_ptr< _C
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
-	typename EncodingT::string_t cppFunctionFilter = C("idDecFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppFunctionFilter = UCS("idDecFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppFunctionFilter += C(" AND ") + filter;
+		cppFunctionFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -416,7 +416,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppDefinitionFunction(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppDefinitionFunctions(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppDefinitionFunctions(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -437,9 +437,9 @@ _CppFileAccess<EncodingT>::fillManyCppDefinitionFunctions(boost::shared_ptr< _Cp
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > tab;
-	typename EncodingT::string_t cppFunctionFilter = C("idDefFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppFunctionFilter = UCS("idDefFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppFunctionFilter += C(" AND ") + filter;
+		cppFunctionFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -468,7 +468,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppClass(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppClasss(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppClasss(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -489,9 +489,9 @@ _CppFileAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< _CppFile<Encodin
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppClass<EncodingT> > > tab;
-	typename EncodingT::string_t cppClassFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppClassFilter = UCS("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppClassFilter += C(" AND ") + filter;
+		cppClassFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -520,7 +520,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppInclude(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppIncludes(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppIncludes(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -541,9 +541,9 @@ _CppFileAccess<EncodingT>::fillManyCppIncludes(boost::shared_ptr< _CppFile<Encod
 		throw NullPointerException("CppIncludeAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > tab;
-	typename EncodingT::string_t cppIncludeFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppIncludeFilter = UCS("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppIncludeFilter += C(" AND ") + filter;
+		cppIncludeFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -572,7 +572,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppVariable(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppVariables(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppVariables(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -593,9 +593,9 @@ _CppFileAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< _CppFile<Enco
 		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > tab;
-	typename EncodingT::string_t cppVariableFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppVariableFilter = UCS("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppVariableFilter += C(" AND ") + filter;
+		cppVariableFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -624,7 +624,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppEnum(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppEnums(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppEnums(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -645,9 +645,9 @@ _CppFileAccess<EncodingT>::fillManyCppEnums(boost::shared_ptr< _CppFile<Encoding
 		throw NullPointerException("CppEnumAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > tab;
-	typename EncodingT::string_t cppEnumFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppEnumFilter = UCS("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppEnumFilter += C(" AND ") + filter;
+		cppEnumFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -676,7 +676,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCMacro(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCMacros(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCMacros(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -697,9 +697,9 @@ _CppFileAccess<EncodingT>::fillManyCMacros(boost::shared_ptr< _CppFile<EncodingT
 		throw NullPointerException("CMacroAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CMacro<EncodingT> > > tab;
-	typename EncodingT::string_t cMacroFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cMacroFilter = UCS("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cMacroFilter += C(" AND ") + filter;
+		cMacroFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -728,7 +728,7 @@ template<class EncodingT>
 void
 _CppFileAccess<EncodingT>::fillOneCppNotice(boost::shared_ptr< _CppFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppNotices(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppNotices(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -749,9 +749,9 @@ _CppFileAccess<EncodingT>::fillManyCppNotices(boost::shared_ptr< _CppFile<Encodi
 		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppNotice<EncodingT> > > tab;
-	typename EncodingT::string_t cppNoticeFilter = C("idFile = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppNoticeFilter = UCS("idFile = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppNoticeFilter += C(" AND ") + filter;
+		cppNoticeFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
@@ -1055,23 +1055,23 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 	try {
 		if ( (*save)->getPath() != o->getPath() ) {
 			values.addText( o->getPath() );
-			fields.push_back( C("path") );
+			fields.push_back( UCS("path") );
 		}
 		if ( (*save)->getName() != o->getName() ) {
 			values.addText( o->getName() );
-			fields.push_back( C("name") );
+			fields.push_back( UCS("name") );
 		}
 		if ( (*save)->getLinesCount() != o->getLinesCount() ) {
 			values.addInt64( o->getLinesCount() );
-			fields.push_back( C("linesCount") );
+			fields.push_back( UCS("linesCount") );
 		}
 		if ( (*save)->getHash() != o->getHash() ) {
 			values.addInt64( o->getHash() );
-			fields.push_back( C("hash") );
+			fields.push_back( UCS("hash") );
 		}
 		if ( (*save)->getAnalyzed() != o->getAnalyzed() ) {
 			values.addInt64( o->getAnalyzed() );
-			fields.push_back( C("analyzed") );
+			fields.push_back( UCS("analyzed") );
 		}
 		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
 			m_logger->errorStream() << "idText : Identifier is null.";
@@ -1079,7 +1079,7 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		}
 		else if ( !o->isNullTextFile() && !typename _TextFile<EncodingT>::TextFileIDEquality(*(o->getTextFile()))((*save)->getTextFile()) ) {
 			values.addInt64( o->getTextFile()->getRowid() );
-			fields.push_back( C("idText") );
+			fields.push_back( UCS("idText") );
 		}
 		else if ( o->isNullTextFile() && !(*save)->isNullTextFile() ) {
 			m_logger->errorStream() << "idText : null reference is forbidden.";
@@ -1091,7 +1091,7 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		}
 		else if ( !o->isNullCppFileType() && !typename _CppFileType<EncodingT>::CppFileTypeIDEquality(*(o->getCppFileType()))((*save)->getCppFileType()) ) {
 			values.addInt64( o->getCppFileType()->getIdentifier() );
-			fields.push_back( C("idType") );
+			fields.push_back( UCS("idType") );
 		}
 		else if ( o->isNullCppFileType() && !(*save)->isNullCppFileType() ) {
 			m_logger->errorStream() << "idType : null reference is forbidden.";
@@ -1330,12 +1330,12 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("cppFile"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+			statement.swap( connection->update(UCS("cppFile"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppFile"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppFile"), o);
 		}
 		for ( cppDeclarationFunction=listOfCppDeclarationFunctionToAdd.begin(); cppDeclarationFunction!=listOfCppDeclarationFunctionToAdd.end() ; ++cppDeclarationFunction ) {
 			cppDeclarationFunctionAccess->insertCppFunction(*cppDeclarationFunction);
@@ -1489,50 +1489,50 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(C("identifier"), C("cppFile"))+1;
+		int id = connection->selectMaxID(UCS("identifier"), UCS("cppFile"))+1;
 		values.addInt( id );
-		fields.push_back( C("identifier") );
+		fields.push_back( UCS("identifier") );
 		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
 			m_logger->errorStream() << "idText : Identifier is null.";
 			throw InvalidQueryException("idText : Identifier is null.");
 		}
 		else if ( !o->isNullTextFile() ) {
 			values.addInt64( o->getTextFile()->getRowid() );
-			fields.push_back( C("idText") );
+			fields.push_back( UCS("idText") );
 		}
 		else {
 			m_logger->errorStream() << "idText : null reference is forbidden.";
 			throw InvalidQueryException("idText : null reference is forbidden.");
 		}
 		values.addText( o->getPath() );
-		fields.push_back( C("path") );
+		fields.push_back( UCS("path") );
 		values.addText( o->getName() );
-		fields.push_back( C("name") );
+		fields.push_back( UCS("name") );
 		if ( !o->isNullCppFileType() && typename _CppFileType<EncodingT>::CppFileTypeIDEquality(-1)(o->getCppFileType()) ) {
 			m_logger->errorStream() << "idType : Identifier is null.";
 			throw InvalidQueryException("idType : Identifier is null.");
 		}
 		else if ( !o->isNullCppFileType() ) {
 			values.addInt64( o->getCppFileType()->getIdentifier() );
-			fields.push_back( C("idType") );
+			fields.push_back( UCS("idType") );
 		}
 		else {
 			m_logger->errorStream() << "idType : null reference is forbidden.";
 			throw InvalidQueryException("idType : null reference is forbidden.");
 		}
 		values.addInt64( o->getLinesCount() );
-		fields.push_back( C("linesCount") );
+		fields.push_back( UCS("linesCount") );
 		values.addInt64( o->getHash() );
-		fields.push_back( C("hash") );
+		fields.push_back( UCS("hash") );
 		values.addInt64( o->getAnalyzed() );
-		fields.push_back( C("analyzed") );
-		statement.swap( connection->insert(C("cppFile"), fields) );
+		fields.push_back( UCS("analyzed") );
+		statement.swap( connection->insert(UCS("cppFile"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppFile"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppFile"), o);
 		typename _CppFile<EncodingT>::CppDeclarationFunctionIterator cppDeclarationFunction;
 		for ( cppDeclarationFunction=o->getCppDeclarationFunctionsBeginning(); cppDeclarationFunction!=o->getCppDeclarationFunctionsEnd(); ++cppDeclarationFunction ) {
 			(*cppDeclarationFunction)->setCppDeclarationFile(o);
@@ -1697,12 +1697,12 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		for ( cppNotice=o->getCppNoticesBeginning(); cppNotice!=o->getCppNoticesEnd(); ++cppNotice ) {
 			cppNoticeAccess->deleteCppNotice(*cppNotice);
 		}
-		statement.swap( connection->deleteFrom(C("cppFile"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(UCS("cppFile"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppFile"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppFile"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

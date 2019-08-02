@@ -11,7 +11,7 @@
 #define _DIFF_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 #include "Predicate.hpp"
@@ -105,23 +105,23 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getModifies() const;
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( DiffInterpreter, C("Diff") );
-            METHOD_KEY_REGISTER3( DiffInterpreter, void, compare, no_const_t, C("Diff::Compare") );
-            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getList, const_t, C("Diff::List") );
-            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getMatches, const_t, C("Diff::Matches") );
-            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getAdds, const_t, C("Diff::Adds") );
-            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getDeletes, const_t, C("Diff::Deletes") );
-            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getModifies, const_t, C("Diff::Modifies") );
+            CLASS_KEY_REGISTER  ( DiffInterpreter, UCS("Diff") );
+            METHOD_KEY_REGISTER3( DiffInterpreter, void, compare, no_const_t, UCS("Diff::Compare") );
+            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getList, const_t, UCS("Diff::List") );
+            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getMatches, const_t, UCS("Diff::Matches") );
+            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getAdds, const_t, UCS("Diff::Adds") );
+            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getDeletes, const_t, UCS("Diff::Deletes") );
+            METHOD_KEY_REGISTER ( DiffInterpreter, boost::shared_ptr< Base<EncodingT> >, getModifies, const_t, UCS("Diff::Modifies") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("Diff") );
-            METHOD_KEY_UNREGISTER3( C("Diff::Compare") );
-            METHOD_KEY_UNREGISTER ( C("Diff::List") );
-            METHOD_KEY_UNREGISTER ( C("Diff::Matches") );
-            METHOD_KEY_UNREGISTER ( C("Diff::Adds") );
-            METHOD_KEY_UNREGISTER ( C("Diff::Deletes") );
-            METHOD_KEY_UNREGISTER ( C("Diff::Modifies") );
+            CLASS_KEY_UNREGISTER  ( UCS("Diff") );
+            METHOD_KEY_UNREGISTER3( UCS("Diff::Compare") );
+            METHOD_KEY_UNREGISTER ( UCS("Diff::List") );
+            METHOD_KEY_UNREGISTER ( UCS("Diff::Matches") );
+            METHOD_KEY_UNREGISTER ( UCS("Diff::Adds") );
+            METHOD_KEY_UNREGISTER ( UCS("Diff::Deletes") );
+            METHOD_KEY_UNREGISTER ( UCS("Diff::Modifies") );
 		FACTORY_END_UNREGISTER
 	};
 

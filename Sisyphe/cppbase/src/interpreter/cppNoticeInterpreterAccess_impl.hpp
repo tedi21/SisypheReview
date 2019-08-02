@@ -25,7 +25,7 @@ boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::clon
 template <class EncodingT>
 typename EncodingT::string_t CppNoticeInterpreterAccess<EncodingT>::getClassName() const
 {
-	return C("CppNoticeAccess");
+	return UCS("CppNoticeAccess");
 }
 
 template <class EncodingT>
@@ -36,8 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::invo
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppNoticeAccess"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("CppNoticeAccess"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

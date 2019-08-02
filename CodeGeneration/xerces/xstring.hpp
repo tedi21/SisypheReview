@@ -19,6 +19,7 @@ typedef std::basic_string<XMLCh> xstring;
 
 namespace enc {
 
+    #define XML(s) u ## s
     struct XENCODING_API xml {
         typedef XMLCh        char_t;
         typedef xstring      string_t;

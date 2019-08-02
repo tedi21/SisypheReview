@@ -11,11 +11,11 @@ DEFINES += HAS_LIBWORDPLG_DLL \
            LOG4CPP_HAS_DLL
 
 SOURCES += \
-    LibwordPlg.cpp
+    LibWordPlg.cpp
 
 HEADERS += \
     config.hpp \
-    LibwordPlg.h
+    LibWordPlg.h
 
 INCLUDEPATH += \
     ../../../../../../Libraries/boost_1_66_0 \
@@ -29,9 +29,9 @@ INCLUDEPATH += \
     ../../../../Common/Interpreter \
     ../../../../Common/Exception \
     ../../../../Common/Pointer \
-    ../../../Libword/src \
-    ./Interpreter/std \
-    ./Interpreter/src
+    ../../../libword/src \
+    ./interpreter/std \
+    ./interpreter/src
 
 
 CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
@@ -39,7 +39,7 @@ CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp 
                           -L../../../../../../Libraries/xalan-c-1.11/c/lib64 -lxalan-c
 
 CONFIG(MinGW-64): LIBS += ../../../../CodeGeneration/bin_qt/Encoding64/release/Encoding.dll \
-                          ../../../Libword/bin64/release/Libword.dll \
+                          ../../../libword/bin64/release/Libword.dll \
                           ../../../Interpreter/bin/Plugin64/release/Plugin.dll
 
 CONFIG(MinGW-32): LIBS += -L../../../../../../Libraries/log4cpp/lib32 -llog4cpp \
@@ -47,8 +47,17 @@ CONFIG(MinGW-32): LIBS += -L../../../../../../Libraries/log4cpp/lib32 -llog4cpp 
                           -L../../../../../../Libraries/xalan-c-1.11/c/lib32 -lxalan-c
 
 CONFIG(MinGW-32): LIBS += ../../../../CodeGeneration/bin_qt/Encoding32/release/Encoding.dll \
-                          ../../../Libword/bin32/release/Libword.dll \
+                          ../../../libword/bin32/release/Libword.dll \
                           ../../../Interpreter/bin/Plugin32/release/Plugin.dll
+
+CONFIG(Linux-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
+                          -L../../../../../../Libraries/xerces-c-3.2.1/lib64 -lxerces-c \
+                          -L../../../../../../Libraries/xalan-c-1.11/c/lib64 -lxalan-c \
+                          -L../../../../CodeGeneration/bin_qt/Encoding64 -lEncoding \
+                          -L../../../interpreter/bin/Plugin64 -lPlugin \
+                          -L../../../libword/bin64 -llibword
+
+CONFIG(Linux-64): QMAKE_CXXFLAGS += -std=c++17
 
 unix:!symbian {
     maemo5 {

@@ -39,5 +39,5 @@ typedef _DataTextParameter<ansi>       DataTextParameter;
 
 NAMESPACE_END
 
-#include "DataTextParameter_impl.hpp"
+#include "datatextparameter_impl.hpp"
 #endif

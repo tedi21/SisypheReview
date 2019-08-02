@@ -12,7 +12,7 @@
 #define _CPPFILE_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -209,87 +209,87 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppFileInterpreterAccess, C("CppFileAccess") );
-		METHOD_KEY_REGISTER ( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppFiles, no_const_t, C("CppFileAccess::GetAllCppFiles") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppFiles, no_const_t, C("CppFileAccess::GetManyCppFiles") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppFile, no_const_t, C("CppFileAccess::GetOneCppFile") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppFile, no_const_t, C("CppFileAccess::SelectOneCppFile") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppFiles, no_const_t, C("CppFileAccess::SelectManyCppFiles") );
-		METHOD_KEY_REGISTER ( CppFileInterpreterAccess, void, cancelSelection, no_const_t, C("CppFileAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppFile, no_const_t, C("CppFileAccess::IsSelectedCppFile") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, fillTextFile, no_const_t, C("CppFileAccess::FillTextFile") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, fillCppFileType, no_const_t, C("CppFileAccess::FillCppFileType") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppDeclarationFunctions, no_const_t, C("CppFileAccess::FillAllCppDeclarationFunctions") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppDeclarationFunction, no_const_t, C("CppFileAccess::FillOneCppDeclarationFunction") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppDeclarationFunctions, no_const_t, C("CppFileAccess::FillManyCppDeclarationFunctions") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppDefinitionFunctions, no_const_t, C("CppFileAccess::FillAllCppDefinitionFunctions") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppDefinitionFunction, no_const_t, C("CppFileAccess::FillOneCppDefinitionFunction") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppDefinitionFunctions, no_const_t, C("CppFileAccess::FillManyCppDefinitionFunctions") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppClasss, no_const_t, C("CppFileAccess::FillAllCppClasss") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppClass, no_const_t, C("CppFileAccess::FillOneCppClass") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppClasss, no_const_t, C("CppFileAccess::FillManyCppClasss") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppIncludes, no_const_t, C("CppFileAccess::FillAllCppIncludes") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppInclude, no_const_t, C("CppFileAccess::FillOneCppInclude") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppIncludes, no_const_t, C("CppFileAccess::FillManyCppIncludes") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppVariables, no_const_t, C("CppFileAccess::FillAllCppVariables") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppVariable, no_const_t, C("CppFileAccess::FillOneCppVariable") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppVariables, no_const_t, C("CppFileAccess::FillManyCppVariables") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppEnums, no_const_t, C("CppFileAccess::FillAllCppEnums") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppEnum, no_const_t, C("CppFileAccess::FillOneCppEnum") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppEnums, no_const_t, C("CppFileAccess::FillManyCppEnums") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCMacros, no_const_t, C("CppFileAccess::FillAllCMacros") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCMacro, no_const_t, C("CppFileAccess::FillOneCMacro") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCMacros, no_const_t, C("CppFileAccess::FillManyCMacros") );
-		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppNotices, no_const_t, C("CppFileAccess::FillAllCppNotices") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppNotice, no_const_t, C("CppFileAccess::FillOneCppNotice") );
-		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppNotices, no_const_t, C("CppFileAccess::FillManyCppNotices") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppFile, no_const_t, C("CppFileAccess::IsModifiedCppFile") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, updateCppFile, no_const_t, C("CppFileAccess::UpdateCppFile") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, insertCppFile, no_const_t, C("CppFileAccess::InsertCppFile") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, deleteCppFile, no_const_t, C("CppFileAccess::DeleteCppFile") );
-		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("CppFileAccess::GetError") );
+		CLASS_KEY_REGISTER ( CppFileInterpreterAccess, UCS("CppFileAccess") );
+		METHOD_KEY_REGISTER ( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppFiles, no_const_t, UCS("CppFileAccess::GetAllCppFiles") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppFiles, no_const_t, UCS("CppFileAccess::GetManyCppFiles") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppFile, no_const_t, UCS("CppFileAccess::GetOneCppFile") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppFile, no_const_t, UCS("CppFileAccess::SelectOneCppFile") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppFiles, no_const_t, UCS("CppFileAccess::SelectManyCppFiles") );
+		METHOD_KEY_REGISTER ( CppFileInterpreterAccess, void, cancelSelection, no_const_t, UCS("CppFileAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppFile, no_const_t, UCS("CppFileAccess::IsSelectedCppFile") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, fillTextFile, no_const_t, UCS("CppFileAccess::FillTextFile") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, fillCppFileType, no_const_t, UCS("CppFileAccess::FillCppFileType") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppDeclarationFunctions, no_const_t, UCS("CppFileAccess::FillAllCppDeclarationFunctions") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppDeclarationFunction, no_const_t, UCS("CppFileAccess::FillOneCppDeclarationFunction") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppDeclarationFunctions, no_const_t, UCS("CppFileAccess::FillManyCppDeclarationFunctions") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppDefinitionFunctions, no_const_t, UCS("CppFileAccess::FillAllCppDefinitionFunctions") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppDefinitionFunction, no_const_t, UCS("CppFileAccess::FillOneCppDefinitionFunction") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppDefinitionFunctions, no_const_t, UCS("CppFileAccess::FillManyCppDefinitionFunctions") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppClasss, no_const_t, UCS("CppFileAccess::FillAllCppClasss") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppClass, no_const_t, UCS("CppFileAccess::FillOneCppClass") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppClasss, no_const_t, UCS("CppFileAccess::FillManyCppClasss") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppIncludes, no_const_t, UCS("CppFileAccess::FillAllCppIncludes") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppInclude, no_const_t, UCS("CppFileAccess::FillOneCppInclude") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppIncludes, no_const_t, UCS("CppFileAccess::FillManyCppIncludes") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppVariables, no_const_t, UCS("CppFileAccess::FillAllCppVariables") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppVariable, no_const_t, UCS("CppFileAccess::FillOneCppVariable") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppVariables, no_const_t, UCS("CppFileAccess::FillManyCppVariables") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppEnums, no_const_t, UCS("CppFileAccess::FillAllCppEnums") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppEnum, no_const_t, UCS("CppFileAccess::FillOneCppEnum") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppEnums, no_const_t, UCS("CppFileAccess::FillManyCppEnums") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCMacros, no_const_t, UCS("CppFileAccess::FillAllCMacros") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCMacro, no_const_t, UCS("CppFileAccess::FillOneCMacro") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCMacros, no_const_t, UCS("CppFileAccess::FillManyCMacros") );
+		METHOD_KEY_REGISTER2( CppFileInterpreterAccess, void, fillAllCppNotices, no_const_t, UCS("CppFileAccess::FillAllCppNotices") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillOneCppNotice, no_const_t, UCS("CppFileAccess::FillOneCppNotice") );
+		METHOD_KEY_REGISTER3( CppFileInterpreterAccess, void, fillManyCppNotices, no_const_t, UCS("CppFileAccess::FillManyCppNotices") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppFile, no_const_t, UCS("CppFileAccess::IsModifiedCppFile") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, updateCppFile, no_const_t, UCS("CppFileAccess::UpdateCppFile") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, insertCppFile, no_const_t, UCS("CppFileAccess::InsertCppFile") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, void, deleteCppFile, no_const_t, UCS("CppFileAccess::DeleteCppFile") );
+		METHOD_KEY_REGISTER1( CppFileInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("CppFileAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppFileAccess") );
-		METHOD_KEY_UNREGISTER ( C("CppFileAccess::GetAllCppFiles") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::GetManyCppFiles") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::GetOneCppFile") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::SelectOneCppFile") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::SelectManyCppFiles") );
-		METHOD_KEY_UNREGISTER ( C("CppFileAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::IsSelectedCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::FillTextFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::FillCppFileType") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppDeclarationFunctions") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppDeclarationFunction") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppDeclarationFunctions") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppDefinitionFunctions") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppDefinitionFunction") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppDefinitionFunctions") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppClasss") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppClass") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppClasss") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppIncludes") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppInclude") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppIncludes") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppVariables") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppVariable") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppVariables") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppEnums") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppEnum") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppEnums") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCMacros") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCMacro") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCMacros") );
-		METHOD_KEY_UNREGISTER2( C("CppFileAccess::FillAllCppNotices") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillOneCppNotice") );
-		METHOD_KEY_UNREGISTER3( C("CppFileAccess::FillManyCppNotices") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::IsModifiedCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::UpdateCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::InsertCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::DeleteCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFileAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("CppFileAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileAccess::GetAllCppFiles") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::GetManyCppFiles") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::GetOneCppFile") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::SelectOneCppFile") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::SelectManyCppFiles") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::IsSelectedCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::FillTextFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::FillCppFileType") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppDeclarationFunctions") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppDeclarationFunction") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppDeclarationFunctions") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppDefinitionFunctions") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppDefinitionFunction") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppDefinitionFunctions") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppClasss") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppClass") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppClasss") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppIncludes") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppInclude") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppIncludes") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppVariables") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppVariable") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppVariables") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppEnums") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppEnum") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppEnums") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCMacros") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCMacro") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCMacros") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileAccess::FillAllCppNotices") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillOneCppNotice") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFileAccess::FillManyCppNotices") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::IsModifiedCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::UpdateCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::InsertCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::DeleteCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _CppFile<EncodingT> > >& value) const;

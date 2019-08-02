@@ -15,16 +15,16 @@ NAMESPACE_BEGIN(libword)
 
     using namespace enc;
 
-    const wchar_t* WordXMLNode::DOCUMENT_TAG    = L"w:wordDocument";
-    const wchar_t* WordXMLNode::BODY_TAG        = L"w:body";
-    const wchar_t* WordXMLNode::SECTION_TAG     = L"wx:sect";
-    const wchar_t* WordXMLNode::SUBSECTION_TAG  = L"wx:sub-section";
-    const wchar_t* WordXMLNode::TABLE_TAG       = L"w:tbl";
-    const wchar_t* WordXMLNode::ROW_TAG         = L"w:tr";
-    const wchar_t* WordXMLNode::CELL_TAG        = L"w:tc";
-    const wchar_t* WordXMLNode::PARAGRAPH_TAG   = L"w:p";
-    const wchar_t* WordXMLNode::REVISION_TAG    = L"aml:annotation";
-    const wchar_t* WordXMLNode::RUN_TAG         = L"w:r";
+    const ucs::char_t* WordXMLNode::DOCUMENT_TAG    = UCS("w:wordDocument");
+    const ucs::char_t* WordXMLNode::BODY_TAG        = UCS("w:body");
+    const ucs::char_t* WordXMLNode::SECTION_TAG     = UCS("wx:sect");
+    const ucs::char_t* WordXMLNode::SUBSECTION_TAG  = UCS("wx:sub-section");
+    const ucs::char_t* WordXMLNode::TABLE_TAG       = UCS("w:tbl");
+    const ucs::char_t* WordXMLNode::ROW_TAG         = UCS("w:tr");
+    const ucs::char_t* WordXMLNode::CELL_TAG        = UCS("w:tc");
+    const ucs::char_t* WordXMLNode::PARAGRAPH_TAG   = UCS("w:p");
+    const ucs::char_t* WordXMLNode::REVISION_TAG    = UCS("aml:annotation");
+    const ucs::char_t* WordXMLNode::RUN_TAG         = UCS("w:r");
 
     WordXMLNode::WordXMLNode()
     : m_document(NULL),
@@ -41,9 +41,9 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne le nom du noeud
-    std::wstring WordXMLNode::getTagName() const
+    enc::ucs::string_t WordXMLNode::getTagName() const
     {
-        std::wstring res;
+        enc::ucs::string_t res;
         if (m_node)
         {
             if (m_node->getNodeType() == xercesc::DOMNode::ELEMENT_NODE)
@@ -64,7 +64,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Execute une requête XPath
-    WordXMLNodeList WordXMLNode::evaluate(const wchar_t* xpath) const
+    WordXMLNodeList WordXMLNode::evaluate(const ucs::char_t* xpath) const
     {
         xalanc::NodeRefList result;
         if (m_node && m_document        &&
@@ -110,7 +110,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne les noeuds fils avec le nom tagName
-    WordXMLNodeList WordXMLNode::getNodes(const wchar_t* tagName) const
+    WordXMLNodeList WordXMLNode::getNodes(const ucs::char_t* tagName) const
     {
         xercesc::DOMNodeList* nodes = NULL;
         if (m_node)
@@ -148,7 +148,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne le noeud suivant
-    WordXMLNode WordXMLNode::getNextNode(const wchar_t* tagName) const
+    WordXMLNode WordXMLNode::getNextNode(const ucs::char_t* tagName) const
     {
         xercesc::DOMNode* node = m_node;
         if (m_node)
@@ -191,7 +191,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne le noeud précèdent
-    WordXMLNode WordXMLNode::getPreviousNode(const wchar_t* tagName) const
+    WordXMLNode WordXMLNode::getPreviousNode(const ucs::char_t* tagName) const
     {
         xercesc::DOMNode* node = m_node;
         if (m_node)
@@ -234,7 +234,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne le noeud parent avec le nom tagName
-    WordXMLNode WordXMLNode::getParent(const wchar_t* tagName) const
+    WordXMLNode WordXMLNode::getParent(const ucs::char_t* tagName) const
     {
         xercesc::DOMNode* node = m_node;
         if (m_node)
@@ -262,9 +262,9 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne le contenu d'un noeud
-    std::wstring WordXMLNode::getContent() const
+    ucs::string_t WordXMLNode::getContent() const
     {
-        std::wstring res;
+        ucs::string_t res;
         if (m_node)
         {
             if (m_node->getNodeType() == xercesc::DOMNode::ELEMENT_NODE)
@@ -285,7 +285,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Indique si le noeud à un attribut attrName
-    bool WordXMLNode::hasAttribute(const wchar_t* attrName) const
+    bool WordXMLNode::hasAttribute(const ucs::char_t* attrName) const
     {
         bool res = false;
         if (m_node)
@@ -308,9 +308,9 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne la valeur de l'attribut attrName
-    std::wstring WordXMLNode::getAttribute(const wchar_t* attrName) const
+    ucs::string_t WordXMLNode::getAttribute(const ucs::char_t* attrName) const
     {
-        std::wstring res;
+        ucs::string_t res;
         if (m_node)
         {
             if (m_node->getNodeType() == xercesc::DOMNode::ELEMENT_NODE)
@@ -331,9 +331,9 @@ NAMESPACE_BEGIN(libword)
     }
 
     // retourne les noms des attributs du noeud
-    std::list<std::wstring> WordXMLNode::getAttributesNames() const
+    std::list<ucs::string_t> WordXMLNode::getAttributesNames() const
     {
-        std::list<std::wstring> res;
+        std::list<ucs::string_t> res;
         if (m_node)
         {
             xercesc::DOMNamedNodeMap* map = m_node->getAttributes();
@@ -358,30 +358,30 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Retourne le texte brut du noeud
-    std::wstring WordXMLNode::getString() const
+    ucs::string_t WordXMLNode::getString() const
     {
-        std::wstring res;
+        ucs::string_t res;
         if (m_node)
         {
             WordXMLNodeList paragraphs = getNodes(PARAGRAPH_TAG);
             for (size_t i=0; i<paragraphs.length(); ++i)
             {
                 WordXMLNode paragraph = paragraphs.item(i);
-                WordXMLNodeList texts = paragraph.getNodes(L"w:t");
+                WordXMLNodeList texts = paragraph.getNodes(UCS("w:t"));
                 for (size_t j=0; j<texts.length(); ++j)
                 {
                     res += texts.item(j).getContent();
                 }
                 if (i<paragraphs.length()-1 &&
                     (!paragraph.getPropertiesNode().isValid() ||
-                     paragraph.getPropertiesNode().evaluate(L".//aml:annotation[@w:type='Word.Deletion']").length() == 0))
+                     paragraph.getPropertiesNode().evaluate(UCS(".//aml:annotation[@w:type='Word.Deletion']")).length() == 0))
                 {
-                    res += L"\r\n";
+                    res += UCS("\r\n");
                 }
             }
             if (paragraphs.length() == 0)
             {
-                WordXMLNodeList texts = getNodes(L"w:t");
+                WordXMLNodeList texts = getNodes(UCS("w:t"));
                 for (size_t j=0; j<texts.length(); ++j)
                 {
                     res += texts.item(j).getContent();
@@ -401,7 +401,7 @@ NAMESPACE_BEGIN(libword)
         WordXMLNode res;
         if (m_node)
         {
-            std::wstring tagName = getTagName() + L"Pr";
+            ucs::string_t tagName = getTagName() + UCS("Pr");
             xercesc::DOMNodeList* list = m_node->getChildNodes();
             if (list)
             {
@@ -442,7 +442,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Définit le contenu
-    void WordXMLNode::setContent(const wchar_t* content)
+    void WordXMLNode::setContent(const ucs::char_t* content)
     {
         if (m_node && m_document)
         {
@@ -464,7 +464,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Définit un attribut
-    void WordXMLNode::setAttribute(const wchar_t* attrName, const wchar_t* attrValue)
+    void WordXMLNode::setAttribute(const ucs::char_t* attrName, const ucs::char_t* attrValue)
     {
         if (m_node)
         {
@@ -485,7 +485,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Supprime un attribut
-    void WordXMLNode::eraseAttribute(const wchar_t* attrName)
+    void WordXMLNode::eraseAttribute(const ucs::char_t* attrName)
     {
         if (m_node)
         {
@@ -515,7 +515,7 @@ NAMESPACE_BEGIN(libword)
             res = getPropertiesNode();
             if (!res.m_node)
             {
-                res = m_document->createNode((getTagName() + L"Pr").c_str());
+                res = m_document->createNode((getTagName() + UCS("Pr")).c_str());
                 WordXMLNodeList nodes = getNodes();
                 WordXMLNode ref;
                 if (nodes.length() > 0)
@@ -640,7 +640,7 @@ NAMESPACE_BEGIN(libword)
     }
     
     // Ajoute du texte
-    WordXMLNodeList WordXMLNode::appendString(bool trackedChanges, const wchar_t* str)
+    WordXMLNodeList WordXMLNode::appendString(bool trackedChanges, const ucs::char_t* str)
     {
         std::vector<WordXMLNode> res;
         if (m_node)
@@ -695,14 +695,14 @@ NAMESPACE_BEGIN(libword)
             // Mise en place du suivi de modification
             if (trackedChanges)
             {
-                createRevisionNode(paragraph, refRun, L"Word.Insertion", runParent);
+                createRevisionNode(paragraph, refRun, UCS("Word.Insertion"), runParent);
                 nextRun = refRun;
                 refRun = WordXMLNode(m_document, NULL);
             }
             // Découpage du texte en paragraphe
-            std::vector<std::wstring> texts = splitParagraphs(str);
+            std::vector<ucs::string_t> texts = splitParagraphs(str);
             // Création des noeuds run
-            for (std::vector<std::wstring>::const_iterator i = texts.begin();
+            for (std::vector<ucs::string_t>::const_iterator i = texts.begin();
                  i != texts.end();
                  ++i)
             {
@@ -711,10 +711,10 @@ NAMESPACE_BEGIN(libword)
                 if (previousRun.isValid())
                 {
                     run = previousRun.cloneNode(true);
-                    WordXMLNodeList nodeList = run.getNodes(L"w:t");
+                    WordXMLNodeList nodeList = run.getNodes(UCS("w:t"));
                     if (nodeList.length() == 0)
                     {
-                        nodeList = run.getNodes(L"w:delText");
+                        nodeList = run.getNodes(UCS("w:delText"));
                     }
                     run.replace(text, nodeList.item(0));
                 }
@@ -734,9 +734,9 @@ NAMESPACE_BEGIN(libword)
                     // Mise en place du suivi de modification
                     if (trackedChanges)
                     {
-                        setParagraphRevisionProperty(paragraph, L"Word.Insertion");
+                        setParagraphRevisionProperty(paragraph, UCS("Word.Insertion"));
                         paragraph = runParent;
-                        createRevisionNode(paragraph, refRun, L"Word.Insertion", runParent);
+                        createRevisionNode(paragraph, refRun, UCS("Word.Insertion"), runParent);
                     }
                     else
                     {
@@ -787,7 +787,7 @@ NAMESPACE_BEGIN(libword)
                 {
                     tmpNode = refRevision;
                 }
-                createRevisionNode(refParagraph, tmpNode, L"Word.Deletion", revisionNode);
+                createRevisionNode(refParagraph, tmpNode, UCS("Word.Deletion"), revisionNode);
             }
             // Parcours des noeuds à supprimer
             while ((refRun.isValid() && (length == NO_LENGTH || (pLength -= refRun.getString().length()) >= 0)) ||
@@ -800,14 +800,14 @@ NAMESPACE_BEGIN(libword)
                     {
                         // Marquage du texte comme supprimé
                         WordXMLNode delRun  = refRun.cloneNode(true);
-                        WordXMLNode delText = m_document->createNode(L"w:delText");
+                        WordXMLNode delText = m_document->createNode(UCS("w:delText"));
                         if (delText.m_node && m_document->m_xmldocument)
                         {
                             delText.m_node->appendChild(
                                         (xercesc::DOMNode*) m_document->m_xmldocument->createTextNode(
                                             encode<ucs,xml>(delRun.getString()).c_str()));
                         }
-                        delRun.replace(delText, delRun.getNodes(L"w:t").item(0));
+                        delRun.replace(delText, delRun.getNodes(UCS("w:t")).item(0));
                         // recopie du noeud dans la révision Deletion
                         revisionNode.append(delRun);
                     }
@@ -833,11 +833,11 @@ NAMESPACE_BEGIN(libword)
                 {
                     tmpNode = refParagraph.getNextNode();
                     // suppression du paragraphe si celui-ci est vide
-                    if (refParagraph.getNodes(L"w:t").length() == 0)
+                    if (refParagraph.getNodes(UCS("w:t")).length() == 0)
                     {
                         if (trackedChanges)
                         {
-                            setParagraphRevisionProperty(refParagraph, L"Word.Deletion");
+                            setParagraphRevisionProperty(refParagraph, UCS("Word.Deletion"));
                         }
                         else
                         {
@@ -858,22 +858,22 @@ NAMESPACE_BEGIN(libword)
             // Recherche si le point de fin se trouve à l'intérieur d'un run
             if (length != NO_LENGTH && pLength < 0 && refRun.isValid() && -((int)refRun.getString().length()) < pLength)
             {
-                std::wstring str = refRun.getString();
+                ucs::string_t str = refRun.getString();
                 size_t separation = str.length() + pLength;
-                std::wstring after = str.substr(separation);
-                refRun.replace(m_document->createTextNode(after.c_str()), refRun.getNodes(L"w:t").item(0));
+                ucs::string_t after = str.substr(separation);
+                refRun.replace(m_document->createTextNode(after.c_str()), refRun.getNodes(UCS("w:t")).item(0));
                 if (trackedChanges)
                 {
-                    std::wstring before = str.substr(0, separation);
+                    ucs::string_t before = str.substr(0, separation);
                     WordXMLNode delRun  = refRun.cloneNode(true);
-                    WordXMLNode delText = m_document->createNode(L"w:delText");
+                    WordXMLNode delText = m_document->createNode(UCS("w:delText"));
                     if (delText.m_node && m_document->m_xmldocument)
                     {
                         delText.m_node->appendChild(
                                     (xercesc::DOMNode*) m_document->m_xmldocument->createTextNode(
                                         encode<ucs,xml>(before).c_str()));
                     }
-                    delRun.replace(delText, delRun.getNodes(L"w:t").item(0));
+                    delRun.replace(delText, delRun.getNodes(UCS("w:t")).item(0));
                     // recopie du noeud dans la révision Deletion
                     revisionNode.append(delRun);
                 }
@@ -891,7 +891,7 @@ NAMESPACE_BEGIN(libword)
                 if (trackedChanges)
                 {
                     // Marquage du noeud comme supprimé
-                    setParagraphRevisionProperty(startParagraph, L"Word.Deletion");
+                    setParagraphRevisionProperty(startParagraph, UCS("Word.Deletion"));
                 }
                 else
                 {
@@ -908,7 +908,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Insère du texte
-    WordXMLNodeList WordXMLNode::insertString(bool trackedChanges, size_t pos, const wchar_t* str)
+    WordXMLNodeList WordXMLNode::insertString(bool trackedChanges, size_t pos, const ucs::char_t* str)
     {
         WordXMLNodeList res;
         if (m_node)

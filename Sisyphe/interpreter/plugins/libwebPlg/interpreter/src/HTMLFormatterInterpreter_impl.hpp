@@ -8,7 +8,7 @@
  */
 
 #include <cstdint>
-#include "Convert.hpp"
+#include "convert.hpp"
 #include <cctype>
 
 #define A(str) encode<EncodingT,ansi>(str)
@@ -18,43 +18,43 @@ NAMESPACE_BEGIN(interp)
 
 template <class EncodingT>
 const std::set<typename EncodingT::string_t> HTMLFormatterInterpreter<EncodingT>::KEYWORDS = {
-C("switch"), C("case"), C("break"), C("continue"), C("default"),
-C("if"), C("else"),
-C("while"), C("do"), C("for"),
-C("return"), C("goto"),
-C("try"), C("catch"), C("throw"),
-C("inline"), C("sizeof"), C("typeof"), C("alignof"), C("explicit"),
-C("typedef"), C("using"), C("namespace"),
-C("new"), C("delete"), C("operator"), C("this"),
-C("public"), C("protected"), C("private"), C("friend"),
-C("true"), C("false"), C("NULL"), C("nullptr"),
-C("import"), C("asm"), C("export"),
-C("const_cast"), C("static_cast"), C("dynamic_cast"), C("reinterpret_cast"),
-C("static_assert"), C("typeid"),
-C("CALLBACK"), C("APIENTRY"), C("WINAPI")
+UCS("switch"), UCS("case"), UCS("break"), UCS("continue"), UCS("default"),
+UCS("if"), UCS("else"),
+UCS("while"), UCS("do"), UCS("for"),
+UCS("return"), UCS("goto"),
+UCS("try"), UCS("catch"), UCS("throw"),
+UCS("inline"), UCS("sizeof"), UCS("typeof"), UCS("alignof"), UCS("explicit"),
+UCS("typedef"), UCS("using"), UCS("namespace"),
+UCS("new"), UCS("delete"), UCS("operator"), UCS("this"),
+UCS("public"), UCS("protected"), UCS("private"), UCS("friend"),
+UCS("true"), UCS("false"), UCS("NULL"), UCS("nullptr"),
+UCS("import"), UCS("asm"), UCS("export"),
+UCS("const_cast"), UCS("static_cast"), UCS("dynamic_cast"), UCS("reinterpret_cast"),
+UCS("static_assert"), UCS("typeid"),
+UCS("CALLBACK"), UCS("APIENTRY"), UCS("WINAPI")
 };
 
 template <class EncodingT>
 const std::set<typename EncodingT::string_t> HTMLFormatterInterpreter<EncodingT>::TYPES = {
-C("auto"), C("static"), C("virtual"), C("override"), C("final"),
-C("const"), C("volatile"), C("extern"), C("register"), C("mutable"),
-C("constexpr"), C("decltype"),
-C("enum"), C("struct"), C("class"), C("union"), C("typename"), C("template"),
-C("unsigned"), C("signed"),
-C("void"), C("char"), C("short"), C("int"), C("long"), C("double"), C("float"), C("bool"), C("time_t"), C("size_t"), C("clock_t"),
-C("std"), C("string"), C("wstring"), C("map"), C("set"), C("list"), C("vector"), C("multimap"), C("bitset"), C("array"), C("deque"), C("multiset"), C("forward_list"), C("queue"), C("priority_queue"), C("stack"), C("unordered_map"), C("unordered_set"), C("unordered_multimap"), C("unordered_multiset"), C("initializer_list"),
-C("iterator"), C("const_iterator"), C("pair"), C("hash"), C("exception"), C("complex"), C("regex"), C("wregex"), C("cmatch"), C("wcmatch"), C("smatch"), C("wsmatch"), C("tuple"),
-C("intmax_t"), C("int8_t"), C("int16_t"), C("int32_t"), C("int64_t"), C("int_least8_t"), C("int_least16_t"), C("int_least32_t"), C("int_least64_t"), C("int_fast8_t"), C("int_fast16_t"), C("int_fast32_t"), C("int_fast64_t"), C("intptr_t"),
-C("uintmax_t"), C("uint8_t"), C("uint16_t"), C("uint32_t"), C("uint64_t"), C("uint_least8_t"), C("int_least16_t"), C("uint_least32_t"), C("uint_least64_t"), C("uint_fast8_t"), C("uint_fast16_t"), C("uint_fast32_t"), C("uint_fast64_t"), C("uintptr_t"),
-C("BOOL"), C("BOOLEAN"), C("BYTE"), C("CCHAR"), C("CHAR"), C("COLORREF"), C("DWORD"), C("DWORDLONG"), C("DWORD_PTR"), C("DWORD32"), C("DWORD64"), C("FLOAT"), C("HACCEL"), C("HALF_PTR"), C("HANDLE"), C("HBITMAP"), C("HBRUSH"),
-C("HCOLORSPACE"), C("HCONV"), C("HCONVLIST"), C("HCURSOR"), C("HDC"), C("HDDEDATA"), C("HDESK"), C("HDROP"), C("HDWP"), C("HENHMETAFILE"), C("HFILE"), C("HFONT"), C("HGDIOBJ"), C("HGLOBAL"), C("HHOOK"), C("HICON"), C("HINSTANCE"), C("HKEY"), C("HKL"), C("HLOCAL"),
-C("HMENU"), C("HMETAFILE"), C("HMODULE"), C("HMONITOR"), C("HPALETTE"), C("HPEN"), C("HRESULT"), C("HRGN"), C("HRSRC"), C("HSZ"), C("HWINSTA"), C("HWND"), C("INT"), C("INT_PTR"), C("INT8"), C("INT16"), C("INT32"), C("INT64"), C("LANGID"), C("LCID"), C("LCTYPE"), C("LGRPID"),
-C("LONG"), C("LONGLONG"), C("LONG_PTR"), C("LONG32"), C("LONG64"), C("LPARAM"), C("LPBOOL"), C("LPBYTE"), C("LPCOLORREF"), C("LPCSTR"), C("LPCTSTR"), C("LPCVOID"), C("LPCWSTR"), C("LPDWORD"), C("LPHANDLE"), C("LPINT"), C("LPLONG"), C("LPSTR"), C("LPTSTR"), C("LPVOID"), C("LPWORD"), C("LPWSTR"), C("LRESULT"),
-C("PBOOL"), C("PBOOLEAN"), C("PBYTE"), C("PCHAR"), C("PCSTR"), C("PCTSTR"), C("PCWSTR"), C("PDWORD"), C("PDWORDLONG"), C("PDWORD_PTR"), C("PDWORD32"), C("PDWORD64"), C("PFLOAT"), C("PHALF_PTR"), C("PHANDLE"), C("PHKEY"), C("PINT"), C("PINT_PTR"), C("PINT8"), C("PINT16"), C("PINT32"),
-C("PINT64"), C("PLCID"), C("PLONG"), C("PLONGLONG"), C("PLONG_PTR"), C("PLONG32"), C("PLONG64"), C("POINTER_32"), C("POINTER_64"), C("POINTER_SIGNED"), C("POINTER_UNSIGNED"), C("PSHORT"), C("PSIZE_T"), C("PSSIZE_T"), C("PSTR"), C("PTBYTE"), C("PTCHAR"), C("PTSTR"), C("PUCHAR"), C("PUHALF_PTR"), C("PUINT"), C("PUINT_PTR"), C("PUINT8"), C("PUINT16"), C("PUINT32"),
-C("PUINT64"), C("PULONG"), C("PULONGLONG"), C("PULONG_PTR"), C("PULONG32"), C("PULONG64"), C("PUSHORT"), C("PVOID"), C("PWCHAR"), C("PWORD"), C("PWSTR"), C("QWORD"), C("SC_HANDLE"), C("SC_LOCK"), C("SERVICE_STATUS_HANDLE"), C("SHORT"), C("SIZE_T"), C("SSIZE_T"), C("TBYTE"), C("TCHAR"), C("UCHAR"), C("UHALF_PTR"), C("UINT"), C("UINT_PTR"), C("UINT8"),
-C("UINT16"), C("UINT32"), C("UINT64"), C("ULONG"), C("ULONGLONG"), C("ULONG_PTR"), C("ULONG32"), C("ULONG64"), C("UNICODE_STRING"), C("USHORT"), C("USN"), C("VOID"), C("WCHAR"), C("WORD"), C("WPARAM"),
-C("CString"), C("CList"), C("CArray"), C("CMap")
+UCS("auto"), UCS("static"), UCS("virtual"), UCS("override"), UCS("final"),
+UCS("const"), UCS("volatile"), UCS("extern"), UCS("register"), UCS("mutable"),
+UCS("constexpr"), UCS("decltype"),
+UCS("enum"), UCS("struct"), UCS("class"), UCS("union"), UCS("typename"), UCS("template"),
+UCS("unsigned"), UCS("signed"),
+UCS("void"), UCS("char"), UCS("short"), UCS("int"), UCS("long"), UCS("double"), UCS("float"), UCS("bool"), UCS("time_t"), UCS("size_t"), UCS("clock_t"),
+UCS("std"), UCS("string"), UCS("wstring"), UCS("map"), UCS("set"), UCS("list"), UCS("vector"), UCS("multimap"), UCS("bitset"), UCS("array"), UCS("deque"), UCS("multiset"), UCS("forward_list"), UCS("queue"), UCS("priority_queue"), UCS("stack"), UCS("unordered_map"), UCS("unordered_set"), UCS("unordered_multimap"), UCS("unordered_multiset"), UCS("initializer_list"),
+UCS("iterator"), UCS("const_iterator"), UCS("pair"), UCS("hash"), UCS("exception"), UCS("complex"), UCS("regex"), UCS("wregex"), UCS("cmatch"), UCS("wcmatch"), UCS("smatch"), UCS("wsmatch"), UCS("tuple"),
+UCS("intmax_t"), UCS("int8_t"), UCS("int16_t"), UCS("int32_t"), UCS("int64_t"), UCS("int_least8_t"), UCS("int_least16_t"), UCS("int_least32_t"), UCS("int_least64_t"), UCS("int_fast8_t"), UCS("int_fast16_t"), UCS("int_fast32_t"), UCS("int_fast64_t"), UCS("intptr_t"),
+UCS("uintmax_t"), UCS("uint8_t"), UCS("uint16_t"), UCS("uint32_t"), UCS("uint64_t"), UCS("uint_least8_t"), UCS("int_least16_t"), UCS("uint_least32_t"), UCS("uint_least64_t"), UCS("uint_fast8_t"), UCS("uint_fast16_t"), UCS("uint_fast32_t"), UCS("uint_fast64_t"), UCS("uintptr_t"),
+UCS("BOOL"), UCS("BOOLEAN"), UCS("BYTE"), UCS("CCHAR"), UCS("CHAR"), UCS("COLORREF"), UCS("DWORD"), UCS("DWORDLONG"), UCS("DWORD_PTR"), UCS("DWORD32"), UCS("DWORD64"), UCS("FLOAT"), UCS("HACCEL"), UCS("HALF_PTR"), UCS("HANDLE"), UCS("HBITMAP"), UCS("HBRUSH"),
+UCS("HCOLORSPACE"), UCS("HCONV"), UCS("HCONVLIST"), UCS("HCURSOR"), UCS("HDC"), UCS("HDDEDATA"), UCS("HDESK"), UCS("HDROP"), UCS("HDWP"), UCS("HENHMETAFILE"), UCS("HFILE"), UCS("HFONT"), UCS("HGDIOBJ"), UCS("HGLOBAL"), UCS("HHOOK"), UCS("HICON"), UCS("HINSTANCE"), UCS("HKEY"), UCS("HKL"), UCS("HLOCAL"),
+UCS("HMENU"), UCS("HMETAFILE"), UCS("HMODULE"), UCS("HMONITOR"), UCS("HPALETTE"), UCS("HPEN"), UCS("HRESULT"), UCS("HRGN"), UCS("HRSRC"), UCS("HSZ"), UCS("HWINSTA"), UCS("HWND"), UCS("INT"), UCS("INT_PTR"), UCS("INT8"), UCS("INT16"), UCS("INT32"), UCS("INT64"), UCS("LANGID"), UCS("LCID"), UCS("LCTYPE"), UCS("LGRPID"),
+UCS("LONG"), UCS("LONGLONG"), UCS("LONG_PTR"), UCS("LONG32"), UCS("LONG64"), UCS("LPARAM"), UCS("LPBOOL"), UCS("LPBYTE"), UCS("LPCOLORREF"), UCS("LPCSTR"), UCS("LPCTSTR"), UCS("LPCVOID"), UCS("LPCWSTR"), UCS("LPDWORD"), UCS("LPHANDLE"), UCS("LPINT"), UCS("LPLONG"), UCS("LPSTR"), UCS("LPTSTR"), UCS("LPVOID"), UCS("LPWORD"), UCS("LPWSTR"), UCS("LRESULT"),
+UCS("PBOOL"), UCS("PBOOLEAN"), UCS("PBYTE"), UCS("PCHAR"), UCS("PCSTR"), UCS("PCTSTR"), UCS("PCWSTR"), UCS("PDWORD"), UCS("PDWORDLONG"), UCS("PDWORD_PTR"), UCS("PDWORD32"), UCS("PDWORD64"), UCS("PFLOAT"), UCS("PHALF_PTR"), UCS("PHANDLE"), UCS("PHKEY"), UCS("PINT"), UCS("PINT_PTR"), UCS("PINT8"), UCS("PINT16"), UCS("PINT32"),
+UCS("PINT64"), UCS("PLCID"), UCS("PLONG"), UCS("PLONGLONG"), UCS("PLONG_PTR"), UCS("PLONG32"), UCS("PLONG64"), UCS("POINTER_32"), UCS("POINTER_64"), UCS("POINTER_SIGNED"), UCS("POINTER_UNSIGNED"), UCS("PSHORT"), UCS("PSIZE_T"), UCS("PSSIZE_T"), UCS("PSTR"), UCS("PTBYTE"), UCS("PTCHAR"), UCS("PTSTR"), UCS("PUCHAR"), UCS("PUHALF_PTR"), UCS("PUINT"), UCS("PUINT_PTR"), UCS("PUINT8"), UCS("PUINT16"), UCS("PUINT32"),
+UCS("PUINT64"), UCS("PULONG"), UCS("PULONGLONG"), UCS("PULONG_PTR"), UCS("PULONG32"), UCS("PULONG64"), UCS("PUSHORT"), UCS("PVOID"), UCS("PWCHAR"), UCS("PWORD"), UCS("PWSTR"), UCS("QWORD"), UCS("SC_HANDLE"), UCS("SC_LOCK"), UCS("SERVICE_STATUS_HANDLE"), UCS("SHORT"), UCS("SIZE_T"), UCS("SSIZE_T"), UCS("TBYTE"), UCS("TCHAR"), UCS("UCHAR"), UCS("UHALF_PTR"), UCS("UINT"), UCS("UINT_PTR"), UCS("UINT8"),
+UCS("UINT16"), UCS("UINT32"), UCS("UINT64"), UCS("ULONG"), UCS("ULONGLONG"), UCS("ULONG_PTR"), UCS("ULONG32"), UCS("ULONG64"), UCS("UNICODE_STRING"), UCS("USHORT"), UCS("USN"), UCS("VOID"), UCS("WCHAR"), UCS("WORD"), UCS("WPARAM"),
+UCS("CString"), UCS("CList"), UCS("CArray"), UCS("CMap")
 };
 
 template <class EncodingT>
@@ -119,7 +119,7 @@ constexpr enum EChange operator& (const enum EChange selfValue,
 template <class EncodingT>
 typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(const typename EncodingT::string_t& content)
 {
-    typename EncodingT::string_t result = C("<ol class=\"linenums\"><li class=\"L0\"><span id=\"L0\">");
+    typename EncodingT::string_t result = UCS("<ol class=\"linenums\"><li class=\"L0\"><span id=\"L0\">");
     result.reserve(content.size() * 2U);
     bool escaping = false;
     bool startComment = false;
@@ -136,17 +136,17 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
     EChange change = EChange::no_change;
     int remainder = 0;
     int nline = 0;
-    typename EncodingT::string_t style = C("pln"), next_style = C("pln");
-    typename EncodingT::string_t wordStyle = C("kwd");
+    typename EncodingT::string_t style = UCS("pln"), next_style = UCS("pln");
+    typename EncodingT::string_t wordStyle = UCS("kwd");
 
     size_t end = content.size();
     const size_t beginNspaces = spaceLTR(content, 0U, end);
     const typename EncodingT::string_t beginSpaces = content.substr(0U, beginNspaces);
     if (!beginSpaces.empty())
     {
-        result += C("<span class=\"pln\">") + beginSpaces + C("</span>");
+        result += UCS("<span class=\"pln\">") + beginSpaces + UCS("</span>");
     }
-    result += C("<span id=\"T0\">");
+    result += UCS("<span id=\"T0\">");
 
     size_t i = beginNspaces;
     size_t analysing = 0U;
@@ -162,7 +162,7 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             {
                 inPuntuaction = false;
                 betweenWord = false;
-                next_style = C("str");
+                next_style = UCS("str");
                 remainder = 1;
             }
             change = EChange::style_change;
@@ -174,7 +174,7 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             {
                 inPuntuaction = false;
                 betweenWord = false;
-                next_style = C("str");
+                next_style = UCS("str");
                 remainder = 1;
             }
             change = EChange::style_change;
@@ -185,14 +185,14 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             inPreprocessor = false;
             inPuntuaction = false;
             betweenWord = false;
-            next_style = C("com");
+            next_style = UCS("com");
             remainder = 2;
             change = EChange::style_change;
         }
         else if ((content[i] == '\n') && inCppComment)
         {
             inCppComment = false;
-            next_style = C("pln");
+            next_style = UCS("pln");
             remainder = 1;
             change = EChange::style_change;
         }
@@ -201,7 +201,7 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             inCComment = true;
             inPuntuaction = false;
             betweenWord = false;
-            next_style = C("com");
+            next_style = UCS("com");
             remainder = 2;
             change = EChange::style_change;
         }
@@ -210,11 +210,11 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             inCComment = false;
             if (inPreprocessor)
             {
-                next_style = C("pre");
+                next_style = UCS("pre");
             }
             else
             {
-                next_style = C("pln");
+                next_style = UCS("pln");
             }
             change = EChange::style_change;
         }
@@ -223,14 +223,14 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             inPreprocessor = true;
             inPuntuaction = false;
             betweenWord = false;
-            next_style = C("pre");
+            next_style = UCS("pre");
             remainder = 1;
             change = EChange::style_change;
         }
         else if ((content[i] == '\n') && inPreprocessor && !escaping)
         {
             inPreprocessor = false;
-            next_style = C("pln");
+            next_style = UCS("pln");
             remainder = 1;
             change = EChange::style_change;
         }
@@ -239,21 +239,21 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             inLiteral = !inLiteral;
             inPuntuaction = false;
             betweenWord = false;
-            next_style = C("lit");
+            next_style = UCS("lit");
             remainder = 1;
             change = EChange::style_change;
         }
         else if ((ispunct(content[i]) != 0) && (content[i] != '_') && ((content[i] != '.') || !inLiteral) && !inPuntuaction && !inPreprocessor && !inCppComment && !inCComment && !inStringDblQuotes && !inStringSplQuote)
         {
              inPuntuaction = !inPuntuaction;
-             next_style = C("pun");
+             next_style = UCS("pun");
              remainder = 1;
              change = EChange::style_change;
         }
         else if ((ispunct(content[i]) == 0) && inPuntuaction && !inHtmlPuntuaction)
         {
              inPuntuaction = !inPuntuaction;
-             next_style = C("pln");
+             next_style = UCS("pln");
              remainder = 1;
              change = EChange::style_change;
         }
@@ -268,14 +268,14 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
                 if (k != KEYWORDS.end())
                 {
                     remainder = wordSize + 1;
-                    wordStyle = C("kwd");
+                    wordStyle = UCS("kwd");
                     change = change | EChange::word_change;
                 }
                 typename std::set<typename EncodingT::string_t>::const_iterator t = TYPES.find(word);
                 if (t != TYPES.end())
                 {
                     remainder = wordSize + 1;
-                    wordStyle = C("typ");
+                    wordStyle = UCS("typ");
                     change = change | EChange::word_change;
                 }
             }
@@ -299,9 +299,9 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             {
                 const typename EncodingT::string_t htmlAmp = content.substr(i, 5U);
                 const typename EncodingT::string_t htmLtGt = content.substr(i, 4U);
-                inHtmlPuntuaction = ((htmlAmp.compare(C("&amp;")) == 0) ||
-                    (htmLtGt.compare(C("&lt;")) == 0)  ||
-                    (htmLtGt.compare(C("&gt;")) == 0));
+                inHtmlPuntuaction = ((htmlAmp.compare(UCS("&amp;")) == 0) ||
+                    (htmLtGt.compare(UCS("&lt;")) == 0)  ||
+                    (htmLtGt.compare(UCS("&gt;")) == 0));
             }
             else
             {
@@ -323,14 +323,14 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             const typename EncodingT::string_t txt = content.substr(analysed, size);
             if (!txt.empty())
             {
-                result += C("<span class=\"") + style + C("\">") + txt + C("</span>");
+                result += UCS("<span class=\"") + style + UCS("\">") + txt + UCS("</span>");
             }
             analysing -= size;
             analysed += size;
             if ((change & EChange::style_change) == EChange::style_change)
             {
                 style = next_style;
-                next_style = C("pln");
+                next_style = UCS("pln");
             }
             if ((change & EChange::word_change) == EChange::word_change)
             {
@@ -338,7 +338,7 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
                 const typename EncodingT::string_t word = content.substr(analysed, wordSize);
                 if (!word.empty())
                 {
-                    result += C("<span class=\"") + wordStyle + C("\">") + word + C("</span>");
+                    result += UCS("<span class=\"") + wordStyle + UCS("\">") + word + UCS("</span>");
                 }
                 analysing -= wordSize;
                 analysed += wordSize;
@@ -347,20 +347,20 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             if ((change & EChange::line_change) == EChange::line_change)
             {
                 ++nline;
-                result += C("</span>");
+                result += UCS("</span>");
                 const typename EncodingT::string_t rigthSpaces = content.substr(analysed, remainder - 1);
                 if (!rigthSpaces.empty())
                 {
-                    result += C("<span class=\"pln\">") + rigthSpaces + C("</span>");
+                    result += UCS("<span class=\"pln\">") + rigthSpaces + UCS("</span>");
                 }
-                result += C("</span></li><li class=\"L") + Convert<typename EncodingT::string_t>::parse(nline % 10) + C("\"><span id=\"L") + Convert<typename EncodingT::string_t>::parse(nline) + C("\">");
+                result += UCS("</span></li><li class=\"L") + Convert<typename EncodingT::string_t>::parse(nline % 10) + UCS("\"><span id=\"L") + Convert<typename EncodingT::string_t>::parse(nline) + UCS("\">");
                 const size_t leftNspaces = spaceLTR(content, i, end);
                 const typename EncodingT::string_t leftSpaces = content.substr(i, leftNspaces);
                 if (!leftSpaces.empty())
                 {
-                    result += C("<span class=\"pln\">") + leftSpaces + C("</span>");
+                    result += UCS("<span class=\"pln\">") + leftSpaces + UCS("</span>");
                 }
-                result += C("<span id=\"T") + Convert<typename EncodingT::string_t>::parse(nline) + C("\">");
+                result += UCS("<span id=\"T") + Convert<typename EncodingT::string_t>::parse(nline) + UCS("\">");
                 analysing -= remainder;
                 analysed += remainder + leftNspaces;
                 i += leftNspaces;
@@ -369,7 +369,7 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             change = EChange::no_change;
         }
     }
-    result += C("</span></span></li></ol>");
+    result += UCS("</span></span></li></ol>");
     return result;
 }
 
@@ -393,7 +393,7 @@ boost::shared_ptr< Base<EncodingT> > HTMLFormatterInterpreter<EncodingT>::clone(
 template <class EncodingT>
 typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::getClassName() const
 {
-    return C("HTMLFormatter");
+    return UCS("HTMLFormatter");
 }
 
 template <class EncodingT>
@@ -403,8 +403,8 @@ boost::shared_ptr< Base<EncodingT> > HTMLFormatterInterpreter<EncodingT>::invoke
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
 	{
-        if (tryInvoke(this, C("HTMLFormatter"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("HTMLFormatter"), method, args, ret) ||
+            tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

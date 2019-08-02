@@ -1,4 +1,4 @@
-﻿#include "xstring.hpp"
+﻿#include "encoding.hpp"
 #include "WordXMLNode.h"
 #include "WordXMLNodeList.h"
 #include "WordXMLDocument.h"
@@ -8,24 +8,24 @@
 NAMESPACE_BEGIN(libword)
 
     // Split text into paragraphs
-    std::vector<std::wstring> splitParagraphs(const wchar_t* str)
+    std::vector<enc::ucs::string_t> splitParagraphs(const enc::ucs::char_t* str)
     {
         // Découpage de la string en paragraphe
-        std::vector<std::wstring> texts;
-        std::wstring sentence = str;
-        typedef std::vector< boost::iterator_range<std::wstring::iterator> > find_vector_type;
+        std::vector<enc::ucs::string_t> texts;
+        enc::ucs::string_t sentence = str;
+        typedef std::vector< boost::iterator_range<enc::ucs::string_t::iterator> > find_vector_type;
         find_vector_type separators;
 
-        boost::ifind_all( separators, sentence, L"\r\n" );
-        std::wstring::iterator start = sentence.begin();
+        boost::ifind_all( separators, sentence, UCS("\r\n") );
+        enc::ucs::string_t::iterator start = sentence.begin();
         for (find_vector_type::const_iterator i = separators.begin();
              i != separators.end();
              ++i)
         {
-            texts.push_back(std::wstring(start, i->begin()));
+            texts.push_back(enc::ucs::string_t(start, i->begin()));
             start = i->end();
         }
-        texts.push_back(std::wstring(start, sentence.end()));
+        texts.push_back(enc::ucs::string_t(start, sentence.end()));
         return texts;
     }
 
@@ -170,16 +170,16 @@ NAMESPACE_BEGIN(libword)
         if (pPos < 0 && run.isValid() && -((int)run.getString().length()) < pPos)
         {
             WordXMLDocument* document = run.getDocument();
-            std::wstring str = run.getString();
+            enc::ucs::string_t str = run.getString();
             size_t separation = str.length() + pPos;
-            std::wstring before = str.substr(0, separation);
-            std::wstring after = str.substr(separation);
+            enc::ucs::string_t before = str.substr(0, separation);
+            enc::ucs::string_t after = str.substr(separation);
             WordXMLNode previousRun = run.cloneNode(true);
             // Scission du run
             WordXMLNode text1 = document->createTextNode(before.c_str());
-            previousRun.replace(text1, previousRun.getNodes(L"w:t").item(0));
+            previousRun.replace(text1, previousRun.getNodes(UCS("w:t")).item(0));
             WordXMLNode text2 = document->createTextNode(after.c_str());
-            run.replace(text2, run.getNodes(L"w:t").item(0));
+            run.replace(text2, run.getNodes(UCS("w:t")).item(0));
             if (revision.isValid())
             {
                 // Scission de la révision
@@ -211,7 +211,7 @@ NAMESPACE_BEGIN(libword)
     {
         WordXMLDocument* document  = revision.getDocument();
         WordXMLNode parent         = revision.getParent();
-        WordXMLNode nextAnnotation = document->createNode(L"aml:content");
+        WordXMLNode nextAnnotation = document->createNode(UCS("aml:content"));
         WordXMLNode nextRevision   = revision.cloneNode(false);
         nextRevision.append(nextAnnotation);
         parent.insertBefore(nextRevision, revision.getNextNode());
@@ -220,25 +220,25 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Create revision node
-    WordXMLNode createRevisionNode(WordXMLNode& parent, const WordXMLNode& refNode, const wchar_t* type, WordXMLNode& content)
+    WordXMLNode createRevisionNode(WordXMLNode& parent, const WordXMLNode& refNode, const enc::ucs::char_t* type, WordXMLNode& content)
     {
         WordXMLDocument* document = parent.getDocument();
         WordXMLNode annotation    = document->createNode(WordXMLNode::REVISION_TAG);
-        annotation.setAttribute(L"w:type", type);
+        annotation.setAttribute(UCS("w:type"), type);
         parent.insertBefore(annotation, refNode);
-        content = document->createNode(L"aml:content");
+        content = document->createNode(UCS("aml:content"));
         annotation.append(content);
         return annotation;
     }
 
     // Set paragraph revision property
-    WordXMLNode setParagraphRevisionProperty(WordXMLNode& paragraph, const wchar_t* type)
+    WordXMLNode setParagraphRevisionProperty(WordXMLNode& paragraph, const enc::ucs::char_t* type)
     {
         WordXMLDocument* document       = paragraph.getDocument();
-        WordXMLNode paragraphProperties = document->createNode(L"w:pPr");
-        WordXMLNode runProperties       = document->createNode(L"w:rPr");
+        WordXMLNode paragraphProperties = document->createNode(UCS("w:pPr"));
+        WordXMLNode runProperties       = document->createNode(UCS("w:rPr"));
         WordXMLNode paragraphAnnotation = document->createNode(WordXMLNode::REVISION_TAG);
-        paragraphAnnotation.setAttribute(L"w:type", type);
+        paragraphAnnotation.setAttribute(UCS("w:type"), type);
         runProperties.append(paragraphAnnotation);
         paragraphProperties.append(runProperties);
         paragraph.setPropertiesNode(paragraphProperties);

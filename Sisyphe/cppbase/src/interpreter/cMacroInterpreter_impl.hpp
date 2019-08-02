@@ -221,7 +221,7 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::clone() const
 template <class EncodingT>
 typename EncodingT::string_t CMacroInterpreter<EncodingT>::getClassName() const
 {
-	return C("CMacro");
+	return UCS("CMacro");
 }
 
 template <class EncodingT>
@@ -232,8 +232,8 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreter<EncodingT>::invoke(const 
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CMacro"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("CMacro"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

@@ -11,7 +11,7 @@
 #define _JSON_STRUCTURE_FORMATTER_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
@@ -52,19 +52,19 @@ NAMESPACE_BEGIN(interp)
         void clear();
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( JSONStructureFormatterInterpreter, C("JSONStructureFormatter") );
-            METHOD_KEY_REGISTER ( JSONStructureFormatterInterpreter, boost::shared_ptr< Base<EncodingT> >, getText, const_t, C("JSONStructureFormatter::Text") );
-            METHOD_KEY_REGISTER2( JSONStructureFormatterInterpreter, void, append, no_const_t, C("JSONStructureFormatter::Append") );
-            METHOD_KEY_REGISTER2( JSONStructureFormatterInterpreter, void, appendAsText, no_const_t, C("JSONStructureFormatter::AppendAsText") );
-            METHOD_KEY_REGISTER ( JSONStructureFormatterInterpreter, void, clear, no_const_t, C("JSONStructureFormatter::Clear") );
+            CLASS_KEY_REGISTER  ( JSONStructureFormatterInterpreter, UCS("JSONStructureFormatter") );
+            METHOD_KEY_REGISTER ( JSONStructureFormatterInterpreter, boost::shared_ptr< Base<EncodingT> >, getText, const_t, UCS("JSONStructureFormatter::Text") );
+            METHOD_KEY_REGISTER2( JSONStructureFormatterInterpreter, void, append, no_const_t, UCS("JSONStructureFormatter::Append") );
+            METHOD_KEY_REGISTER2( JSONStructureFormatterInterpreter, void, appendAsText, no_const_t, UCS("JSONStructureFormatter::AppendAsText") );
+            METHOD_KEY_REGISTER ( JSONStructureFormatterInterpreter, void, clear, no_const_t, UCS("JSONStructureFormatter::Clear") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("JSONStructureFormatter") );
-            METHOD_KEY_UNREGISTER ( C("JSONStructureFormatter::Text") );
-            METHOD_KEY_UNREGISTER2( C("JSONStructureFormatter::Append") );
-            METHOD_KEY_UNREGISTER2( C("JSONStructureFormatter::AppendAsText") );
-            METHOD_KEY_UNREGISTER ( C("JSONStructureFormatter::Clear") );
+            CLASS_KEY_UNREGISTER  ( UCS("JSONStructureFormatter") );
+            METHOD_KEY_UNREGISTER ( UCS("JSONStructureFormatter::Text") );
+            METHOD_KEY_UNREGISTER2( UCS("JSONStructureFormatter::Append") );
+            METHOD_KEY_UNREGISTER2( UCS("JSONStructureFormatter::AppendAsText") );
+            METHOD_KEY_UNREGISTER ( UCS("JSONStructureFormatter::Clear") );
 		FACTORY_END_UNREGISTER
 	};
 

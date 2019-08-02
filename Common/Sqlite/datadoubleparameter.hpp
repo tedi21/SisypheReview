@@ -39,5 +39,5 @@ typedef _DataDoubleParameter<ansi>       DataDoubleParameter;
 
 NAMESPACE_END
 
-#include "DataDoubleParameter_impl.hpp"
+#include "datadoubleparameter_impl.hpp"
 #endif

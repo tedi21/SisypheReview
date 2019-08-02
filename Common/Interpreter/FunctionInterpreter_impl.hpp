@@ -1,8 +1,5 @@
 #include "ProgramInterpreter.hpp"
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -28,8 +25,8 @@ NAMESPACE_BEGIN(interp)
     {
         bool success =  false;
         const typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
-        typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(expr.begin(), expr.end(), C("("));
-        typename EncodingT::string_t::const_iterator j = find_symbol<EncodingT>(i, expr.end(), C(")"));
+        typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(expr.begin(), expr.end(), UCS("("));
+        typename EncodingT::string_t::const_iterator j = find_symbol<EncodingT>(i, expr.end(), UCS(")"));
         if (j != expr.end())
         {
             ++j;
@@ -39,15 +36,15 @@ NAMESPACE_BEGIN(interp)
             block = eat_space<EncodingT>(block);
             boost::shared_ptr< Term<EncodingT> > block_value;
             std::vector<typename EncodingT::string_t> params;
-            success =   prefix<EncodingT>(name, C("function"), name, true) &&
-                        suffix<EncodingT>(block, C("endfunction"), block, true) &&
+            success =   prefix<EncodingT>(name, UCS("function"), name, true) &&
+                        suffix<EncodingT>(block, UCS("endfunction"), block, true) &&
                         is_identifier<EncodingT>(name) &&
-                        embrace<EncodingT>(parameters, C("("), C(")"), parameters) &&
+                        embrace<EncodingT>(parameters, UCS("("), UCS(")"), parameters) &&
                         Block<EncodingT>::parse(block, block_value);
             if (!parameters.empty())
             {
                 size_t k = 0;
-                tuple_op<EncodingT>(parameters, C(","), params);
+                tuple_op<EncodingT>(parameters, UCS(","), params);
                 while (success && k<params.size())
                 {
                     success = is_identifier<EncodingT>(params[k]);
@@ -68,8 +65,8 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t::const_iterator i = start, j;
         if ( end-start > 20 &&
-             equal_symbol<EncodingT>(start, start+8, C("function")) &&
-            (j = find_symbol<EncodingT>(start+8, end, C("endfunction")))!=end)
+             equal_symbol<EncodingT>(start, start+8, UCS("function")) &&
+            (j = find_symbol<EncodingT>(start+8, end, UCS("endfunction")))!=end)
         {
             i = j + 11;
         }
@@ -114,18 +111,18 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t name;
         vector< boost::shared_ptr< Term<EncodingT> > > params_values;
-        typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(buf.begin(), buf.end(), C("("));
+        typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(buf.begin(), buf.end(), UCS("("));
         typename EncodingT::string_t parameters(i, buf.end());
         name = eat_space<EncodingT>(typename EncodingT::string_t(buf.begin(), i));
 
         bool success =  is_identifier<EncodingT>(name) &&
-                        embrace<EncodingT>(parameters, C("("), C(")"), parameters);
+                        embrace<EncodingT>(parameters, UCS("("), UCS(")"), parameters);
         if (!parameters.empty())
         {
             vector<typename EncodingT::string_t> params;
             size_t j = 0;
             ignore_literal_comment<EncodingT> predicat;
-            tuple_op_if<EncodingT>(parameters, C(","), params, predicat);
+            tuple_op_if<EncodingT>(parameters, UCS(","), params, predicat);
             while (success && j<params.size())
             {
                 boost::shared_ptr< Address<EncodingT> > ref_value;
@@ -153,5 +150,3 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-#undef A

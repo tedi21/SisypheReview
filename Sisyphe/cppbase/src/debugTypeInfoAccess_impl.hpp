@@ -1,6 +1,6 @@
-#include "DataConnection.hpp"
-#include "DataParameters.hpp"
-#include "DataStatement.hpp"
+#include "dataconnection.hpp"
+#include "dataparameters.hpp"
+#include "datastatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,30 +56,30 @@ _DebugTypeInfoAccess<EncodingT>::getManyDebugTypeInfos(typename EncodingT::strin
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("isChar"));
-	columns.push_back(C("isString"));
-	columns.push_back(C("isBool"));
-	columns.push_back(C("isFloat"));
-	columns.push_back(C("isSigned"));
-	columns.push_back(C("isWide"));
-	columns.push_back(C("isPointer"));
-	columns.push_back(C("isReference"));
-	columns.push_back(C("isArray"));
-	columns.push_back(C("isConst"));
-	columns.push_back(C("isVolatile"));
-	columns.push_back(C("isStruct"));
-	columns.push_back(C("isClass"));
-	columns.push_back(C("isUnion"));
-	columns.push_back(C("isInterface"));
-	columns.push_back(C("isEnum"));
-	columns.push_back(C("isFunction"));
-	columns.push_back(C("baseName"));
-	columns.push_back(C("name"));
-	columns.push_back(C("sizeOf"));
-	columns.push_back(C("typeId"));
-	columns.push_back(C("arrayDim"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("debugTypeInfo")), filter) );
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("isChar"));
+	columns.push_back(UCS("isString"));
+	columns.push_back(UCS("isBool"));
+	columns.push_back(UCS("isFloat"));
+	columns.push_back(UCS("isSigned"));
+	columns.push_back(UCS("isWide"));
+	columns.push_back(UCS("isPointer"));
+	columns.push_back(UCS("isReference"));
+	columns.push_back(UCS("isArray"));
+	columns.push_back(UCS("isConst"));
+	columns.push_back(UCS("isVolatile"));
+	columns.push_back(UCS("isStruct"));
+	columns.push_back(UCS("isClass"));
+	columns.push_back(UCS("isUnion"));
+	columns.push_back(UCS("isInterface"));
+	columns.push_back(UCS("isEnum"));
+	columns.push_back(UCS("isFunction"));
+	columns.push_back(UCS("baseName"));
+	columns.push_back(UCS("name"));
+	columns.push_back(UCS("sizeOf"));
+	columns.push_back(UCS("typeId"));
+	columns.push_back(UCS("arrayDim"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("debugTypeInfo")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		long long isChar;
@@ -172,7 +172,7 @@ _DebugTypeInfoAccess<EncodingT>::getOneDebugTypeInfo(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > result = getManyDebugTypeInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > result = getManyDebugTypeInfos(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -192,29 +192,29 @@ _DebugTypeInfoAccess<EncodingT>::selectManyDebugTypeInfos(typename EncodingT::st
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("isChar"));
-	columns.push_back(C("isString"));
-	columns.push_back(C("isBool"));
-	columns.push_back(C("isFloat"));
-	columns.push_back(C("isSigned"));
-	columns.push_back(C("isWide"));
-	columns.push_back(C("isPointer"));
-	columns.push_back(C("isReference"));
-	columns.push_back(C("isArray"));
-	columns.push_back(C("isConst"));
-	columns.push_back(C("isVolatile"));
-	columns.push_back(C("isStruct"));
-	columns.push_back(C("isClass"));
-	columns.push_back(C("isUnion"));
-	columns.push_back(C("isInterface"));
-	columns.push_back(C("isEnum"));
-	columns.push_back(C("isFunction"));
-	columns.push_back(C("baseName"));
-	columns.push_back(C("name"));
-	columns.push_back(C("sizeOf"));
-	columns.push_back(C("typeId"));
-	columns.push_back(C("arrayDim"));
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("isChar"));
+	columns.push_back(UCS("isString"));
+	columns.push_back(UCS("isBool"));
+	columns.push_back(UCS("isFloat"));
+	columns.push_back(UCS("isSigned"));
+	columns.push_back(UCS("isWide"));
+	columns.push_back(UCS("isPointer"));
+	columns.push_back(UCS("isReference"));
+	columns.push_back(UCS("isArray"));
+	columns.push_back(UCS("isConst"));
+	columns.push_back(UCS("isVolatile"));
+	columns.push_back(UCS("isStruct"));
+	columns.push_back(UCS("isClass"));
+	columns.push_back(UCS("isUnion"));
+	columns.push_back(UCS("isInterface"));
+	columns.push_back(UCS("isEnum"));
+	columns.push_back(UCS("isFunction"));
+	columns.push_back(UCS("baseName"));
+	columns.push_back(UCS("name"));
+	columns.push_back(UCS("sizeOf"));
+	columns.push_back(UCS("typeId"));
+	columns.push_back(UCS("arrayDim"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -223,7 +223,7 @@ _DebugTypeInfoAccess<EncodingT>::selectManyDebugTypeInfos(typename EncodingT::st
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("debugTypeInfo")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("debugTypeInfo")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		long long isChar;
@@ -318,7 +318,7 @@ _DebugTypeInfoAccess<EncodingT>::selectOneDebugTypeInfo(long long identifier, bo
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > result = selectManyDebugTypeInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > result = selectManyDebugTypeInfos(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -403,7 +403,7 @@ _DebugTypeInfoAccess<EncodingT>::fillPrimitiveType(boost::shared_ptr< _DebugType
 		throw NullPointerException("DebugTypeInfoAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idPrimitiveType")), std::vector<typename EncodingT::string_t>(1,C("debugTypeInfo")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idPrimitiveType")), std::vector<typename EncodingT::string_t>(1,UCS("debugTypeInfo")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality debugTypeInfoIdEquality(o->getIdentifier());
 		boost::shared_ptr< _DebugTypeInfo<EncodingT> > val = primitiveTypeAccess->getOneDebugTypeInfo(id);
@@ -429,7 +429,7 @@ template<class EncodingT>
 void
 _DebugTypeInfoAccess<EncodingT>::fillOneRichType(boost::shared_ptr< _DebugTypeInfo<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyRichTypes(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyRichTypes(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -450,9 +450,9 @@ _DebugTypeInfoAccess<EncodingT>::fillManyRichTypes(boost::shared_ptr< _DebugType
 		throw NullPointerException("DebugTypeInfoAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > tab;
-	typename EncodingT::string_t debugTypeInfoFilter = C("idPrimitiveType = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t debugTypeInfoFilter = UCS("idPrimitiveType = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		debugTypeInfoFilter += C(" AND ") + filter;
+		debugTypeInfoFilter += UCS(" AND ") + filter;
 	}
 	typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality debugTypeInfoIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _DebugTypeInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugTypeInfoIdEquality);
@@ -481,7 +481,7 @@ template<class EncodingT>
 void
 _DebugTypeInfoAccess<EncodingT>::fillOneDebugFunctionInfo(boost::shared_ptr< _DebugTypeInfo<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyDebugFunctionInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyDebugFunctionInfos(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -502,9 +502,9 @@ _DebugTypeInfoAccess<EncodingT>::fillManyDebugFunctionInfos(boost::shared_ptr< _
 		throw NullPointerException("DebugFunctionInfoAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > tab;
-	typename EncodingT::string_t debugFunctionInfoFilter = C("idReturnType = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t debugFunctionInfoFilter = UCS("idReturnType = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		debugFunctionInfoFilter += C(" AND ") + filter;
+		debugFunctionInfoFilter += UCS(" AND ") + filter;
 	}
 	typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality debugTypeInfoIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _DebugTypeInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugTypeInfoIdEquality);
@@ -533,7 +533,7 @@ template<class EncodingT>
 void
 _DebugTypeInfoAccess<EncodingT>::fillOneDebugVariableInfo(boost::shared_ptr< _DebugTypeInfo<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyDebugVariableInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyDebugVariableInfos(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -554,9 +554,9 @@ _DebugTypeInfoAccess<EncodingT>::fillManyDebugVariableInfos(boost::shared_ptr< _
 		throw NullPointerException("DebugVariableInfoAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > > tab;
-	typename EncodingT::string_t debugVariableInfoFilter = C("idDebugType = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t debugVariableInfoFilter = UCS("idDebugType = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		debugVariableInfoFilter += C(" AND ") + filter;
+		debugVariableInfoFilter += UCS(" AND ") + filter;
 	}
 	typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality debugTypeInfoIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _DebugTypeInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugTypeInfoIdEquality);
@@ -734,91 +734,91 @@ _DebugTypeInfoAccess<EncodingT>::updateDebugTypeInfo(boost::shared_ptr< _DebugTy
 	try {
 		if ( (*save)->getIsChar() != o->getIsChar() ) {
 			values.addInt64( o->getIsChar() );
-			fields.push_back( C("isChar") );
+			fields.push_back( UCS("isChar") );
 		}
 		if ( (*save)->getIsString() != o->getIsString() ) {
 			values.addInt64( o->getIsString() );
-			fields.push_back( C("isString") );
+			fields.push_back( UCS("isString") );
 		}
 		if ( (*save)->getIsBool() != o->getIsBool() ) {
 			values.addInt64( o->getIsBool() );
-			fields.push_back( C("isBool") );
+			fields.push_back( UCS("isBool") );
 		}
 		if ( (*save)->getIsFloat() != o->getIsFloat() ) {
 			values.addInt64( o->getIsFloat() );
-			fields.push_back( C("isFloat") );
+			fields.push_back( UCS("isFloat") );
 		}
 		if ( (*save)->getIsSigned() != o->getIsSigned() ) {
 			values.addInt64( o->getIsSigned() );
-			fields.push_back( C("isSigned") );
+			fields.push_back( UCS("isSigned") );
 		}
 		if ( (*save)->getIsWide() != o->getIsWide() ) {
 			values.addInt64( o->getIsWide() );
-			fields.push_back( C("isWide") );
+			fields.push_back( UCS("isWide") );
 		}
 		if ( (*save)->getIsPointer() != o->getIsPointer() ) {
 			values.addInt64( o->getIsPointer() );
-			fields.push_back( C("isPointer") );
+			fields.push_back( UCS("isPointer") );
 		}
 		if ( (*save)->getIsReference() != o->getIsReference() ) {
 			values.addInt64( o->getIsReference() );
-			fields.push_back( C("isReference") );
+			fields.push_back( UCS("isReference") );
 		}
 		if ( (*save)->getIsArray() != o->getIsArray() ) {
 			values.addInt64( o->getIsArray() );
-			fields.push_back( C("isArray") );
+			fields.push_back( UCS("isArray") );
 		}
 		if ( (*save)->getIsConst() != o->getIsConst() ) {
 			values.addInt64( o->getIsConst() );
-			fields.push_back( C("isConst") );
+			fields.push_back( UCS("isConst") );
 		}
 		if ( (*save)->getIsVolatile() != o->getIsVolatile() ) {
 			values.addInt64( o->getIsVolatile() );
-			fields.push_back( C("isVolatile") );
+			fields.push_back( UCS("isVolatile") );
 		}
 		if ( (*save)->getIsStruct() != o->getIsStruct() ) {
 			values.addInt64( o->getIsStruct() );
-			fields.push_back( C("isStruct") );
+			fields.push_back( UCS("isStruct") );
 		}
 		if ( (*save)->getIsClass() != o->getIsClass() ) {
 			values.addInt64( o->getIsClass() );
-			fields.push_back( C("isClass") );
+			fields.push_back( UCS("isClass") );
 		}
 		if ( (*save)->getIsUnion() != o->getIsUnion() ) {
 			values.addInt64( o->getIsUnion() );
-			fields.push_back( C("isUnion") );
+			fields.push_back( UCS("isUnion") );
 		}
 		if ( (*save)->getIsInterface() != o->getIsInterface() ) {
 			values.addInt64( o->getIsInterface() );
-			fields.push_back( C("isInterface") );
+			fields.push_back( UCS("isInterface") );
 		}
 		if ( (*save)->getIsEnum() != o->getIsEnum() ) {
 			values.addInt64( o->getIsEnum() );
-			fields.push_back( C("isEnum") );
+			fields.push_back( UCS("isEnum") );
 		}
 		if ( (*save)->getIsFunction() != o->getIsFunction() ) {
 			values.addInt64( o->getIsFunction() );
-			fields.push_back( C("isFunction") );
+			fields.push_back( UCS("isFunction") );
 		}
 		if ( (*save)->getBaseName() != o->getBaseName() ) {
 			values.addText( o->getBaseName() );
-			fields.push_back( C("baseName") );
+			fields.push_back( UCS("baseName") );
 		}
 		if ( (*save)->getName() != o->getName() ) {
 			values.addText( o->getName() );
-			fields.push_back( C("name") );
+			fields.push_back( UCS("name") );
 		}
 		if ( (*save)->getSizeOf() != o->getSizeOf() ) {
 			values.addInt64( o->getSizeOf() );
-			fields.push_back( C("sizeOf") );
+			fields.push_back( UCS("sizeOf") );
 		}
 		if ( (*save)->getTypeId() != o->getTypeId() ) {
 			values.addInt64( o->getTypeId() );
-			fields.push_back( C("typeId") );
+			fields.push_back( UCS("typeId") );
 		}
 		if ( (*save)->getArrayDim() != o->getArrayDim() ) {
 			values.addInt64( o->getArrayDim() );
-			fields.push_back( C("arrayDim") );
+			fields.push_back( UCS("arrayDim") );
 		}
 		if ( !o->isNullPrimitiveType() && typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality(-1)(o->getPrimitiveType()) ) {
 			m_logger->errorStream() << "idPrimitiveType : Identifier is null.";
@@ -826,11 +826,11 @@ _DebugTypeInfoAccess<EncodingT>::updateDebugTypeInfo(boost::shared_ptr< _DebugTy
 		}
 		else if ( !o->isNullPrimitiveType() && !typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality(*(o->getPrimitiveType()))((*save)->getPrimitiveType()) ) {
 			values.addInt64( o->getPrimitiveType()->getIdentifier() );
-			fields.push_back( C("idPrimitiveType") );
+			fields.push_back( UCS("idPrimitiveType") );
 		}
 		else if ( o->isNullPrimitiveType() && !(*save)->isNullPrimitiveType() ) {
 			values.addNull();
-			fields.push_back( C("idPrimitiveType") );
+			fields.push_back( UCS("idPrimitiveType") );
 		}
 		std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > listOfRichTypeToAdd;
 		std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > > listOfRichTypeToUpdate;
@@ -920,12 +920,12 @@ _DebugTypeInfoAccess<EncodingT>::updateDebugTypeInfo(boost::shared_ptr< _DebugTy
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("debugTypeInfo"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+			statement.swap( connection->update(UCS("debugTypeInfo"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, C("debugTypeInfo"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("debugTypeInfo"), o);
 		}
 		for ( richType=listOfRichTypeToAdd.begin(); richType!=listOfRichTypeToAdd.end() ; ++richType ) {
 			richTypeAccess->insertDebugTypeInfo(*richType);
@@ -1013,66 +1013,66 @@ _DebugTypeInfoAccess<EncodingT>::insertDebugTypeInfo(boost::shared_ptr< _DebugTy
 		}
 		else if ( !o->isNullPrimitiveType() ) {
 			values.addInt64( o->getPrimitiveType()->getIdentifier() );
-			fields.push_back( C("idPrimitiveType") );
+			fields.push_back( UCS("idPrimitiveType") );
 		}
 		else {
 			values.addNull();
-			fields.push_back( C("idPrimitiveType") );
+			fields.push_back( UCS("idPrimitiveType") );
 		}
-		int id = connection->selectMaxID(C("identifier"), C("debugTypeInfo"))+1;
+		int id = connection->selectMaxID(UCS("identifier"), UCS("debugTypeInfo"))+1;
 		values.addInt( id );
-		fields.push_back( C("identifier") );
+		fields.push_back( UCS("identifier") );
 		values.addInt64( o->getIsChar() );
-		fields.push_back( C("isChar") );
+		fields.push_back( UCS("isChar") );
 		values.addInt64( o->getIsString() );
-		fields.push_back( C("isString") );
+		fields.push_back( UCS("isString") );
 		values.addInt64( o->getIsBool() );
-		fields.push_back( C("isBool") );
+		fields.push_back( UCS("isBool") );
 		values.addInt64( o->getIsFloat() );
-		fields.push_back( C("isFloat") );
+		fields.push_back( UCS("isFloat") );
 		values.addInt64( o->getIsSigned() );
-		fields.push_back( C("isSigned") );
+		fields.push_back( UCS("isSigned") );
 		values.addInt64( o->getIsWide() );
-		fields.push_back( C("isWide") );
+		fields.push_back( UCS("isWide") );
 		values.addInt64( o->getIsPointer() );
-		fields.push_back( C("isPointer") );
+		fields.push_back( UCS("isPointer") );
 		values.addInt64( o->getIsReference() );
-		fields.push_back( C("isReference") );
+		fields.push_back( UCS("isReference") );
 		values.addInt64( o->getIsArray() );
-		fields.push_back( C("isArray") );
+		fields.push_back( UCS("isArray") );
 		values.addInt64( o->getIsConst() );
-		fields.push_back( C("isConst") );
+		fields.push_back( UCS("isConst") );
 		values.addInt64( o->getIsVolatile() );
-		fields.push_back( C("isVolatile") );
+		fields.push_back( UCS("isVolatile") );
 		values.addInt64( o->getIsStruct() );
-		fields.push_back( C("isStruct") );
+		fields.push_back( UCS("isStruct") );
 		values.addInt64( o->getIsClass() );
-		fields.push_back( C("isClass") );
+		fields.push_back( UCS("isClass") );
 		values.addInt64( o->getIsUnion() );
-		fields.push_back( C("isUnion") );
+		fields.push_back( UCS("isUnion") );
 		values.addInt64( o->getIsInterface() );
-		fields.push_back( C("isInterface") );
+		fields.push_back( UCS("isInterface") );
 		values.addInt64( o->getIsEnum() );
-		fields.push_back( C("isEnum") );
+		fields.push_back( UCS("isEnum") );
 		values.addInt64( o->getIsFunction() );
-		fields.push_back( C("isFunction") );
+		fields.push_back( UCS("isFunction") );
 		values.addText( o->getBaseName() );
-		fields.push_back( C("baseName") );
+		fields.push_back( UCS("baseName") );
 		values.addText( o->getName() );
-		fields.push_back( C("name") );
+		fields.push_back( UCS("name") );
 		values.addInt64( o->getSizeOf() );
-		fields.push_back( C("sizeOf") );
+		fields.push_back( UCS("sizeOf") );
 		values.addInt64( o->getTypeId() );
-		fields.push_back( C("typeId") );
+		fields.push_back( UCS("typeId") );
 		values.addInt64( o->getArrayDim() );
-		fields.push_back( C("arrayDim") );
-		statement.swap( connection->insert(C("debugTypeInfo"), fields) );
+		fields.push_back( UCS("arrayDim") );
+		statement.swap( connection->insert(UCS("debugTypeInfo"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, C("debugTypeInfo"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("debugTypeInfo"), o);
 		typename _DebugTypeInfo<EncodingT>::RichTypeIterator richType;
 		for ( richType=o->getRichTypesBeginning(); richType!=o->getRichTypesEnd(); ++richType ) {
 			(*richType)->setPrimitiveType(o);
@@ -1160,12 +1160,12 @@ _DebugTypeInfoAccess<EncodingT>::deleteDebugTypeInfo(boost::shared_ptr< _DebugTy
 		for ( debugVariableInfo=o->getDebugVariableInfosBeginning(); debugVariableInfo!=o->getDebugVariableInfosEnd(); ++debugVariableInfo ) {
 			debugVariableInfoAccess->deleteDebugVariableInfo(*debugVariableInfo);
 		}
-		statement.swap( connection->deleteFrom(C("debugTypeInfo"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(UCS("debugTypeInfo"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, C("debugTypeInfo"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("debugTypeInfo"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

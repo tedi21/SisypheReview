@@ -40,24 +40,29 @@ template <class EncodingT>
 typename EncodingT::string_t CPPParserInterpreter<EncodingT>::getNativeContent(const typename EncodingT::string_t& path)
 {
     typename EncodingT::string_t content;
-    std::wifstream file(A(path).c_str(), ios::binary|ios::in);
-    if (file.is_open())
+    std::ifstream in_file(A(path).c_str(), ios::binary);
+    if (in_file.is_open())
     {
-        wchar_t bom[3] = {0, 0, 0};
-        file.read(bom, 3);
-        std::codecvt<wchar_t, char, std::mbstate_t>* codecvt_facet = NULL;
+        char bom[3] = {0, 0, 0};
+        in_file.read(bom, 3);
+        in_file.close();
+        std::codecvt<ucs::char_t, char, std::mbstate_t>* codecvt_facet = NULL;
         size_t offset_bom = 0U;
-        if (0xEF == bom[0] && 0xBB == bom[1] && 0xBF == bom[2])
+        if (0xEF == static_cast<unsigned char>(bom[0]) &&
+            0xBB == static_cast<unsigned char>(bom[1]) &&
+            0xBF == static_cast<unsigned char>(bom[2]))
         {
             codecvt_facet = new utf8_codecvt_facet;
             offset_bom = 3U;
         }
-        else if (0xFF == bom[0] && 0xFE == bom[1])
+        else if (0xFF == static_cast<unsigned char>(bom[0]) &&
+                 0xFE == static_cast<unsigned char>(bom[1]))
         {
             codecvt_facet = new utf16LE_codecvt_facet;
             offset_bom = 2U;
         }
-        else if (0xFE == bom[0] && 0xFF == bom[1])
+        else if (0xFE == static_cast<unsigned char>(bom[0]) &&
+                 0xFF == static_cast<unsigned char>(bom[1]))
         {
             codecvt_facet = new utf16BE_codecvt_facet;
             offset_bom = 2U;
@@ -66,21 +71,26 @@ typename EncodingT::string_t CPPParserInterpreter<EncodingT>::getNativeContent(c
         {
             codecvt_facet = new iso_8859_15_codecvt_facet;
         }
-        std::locale old_locale;
-        std::locale new_locale(old_locale,codecvt_facet);
-        file.imbue(new_locale);
-        // get length of file:
-        file.seekg (0, ios::end);
-        size_t length = file.tellg() - offset_bom;
-        file.clear();
-        file.seekg(0, ios::beg);
-        file.seekg(offset_bom);
-        // allocate memory
-        content.resize(length);
-        // read data as a block:
-        file.read(&content[0], length);
-        content.erase(std::find(content.begin(), content.end(), '\0'), content.end());
-        content.shrink_to_fit();
+
+        std::basic_ifstream<ucs::char_t> file(A(path).c_str());
+        if (file.is_open())
+        {
+            std::locale old_locale;
+            std::locale new_locale(old_locale,codecvt_facet);
+            file.imbue(new_locale);
+            // get length of file:
+            file.seekg (0, ios::end);
+            size_t length = file.tellg() - offset_bom;
+            file.clear();
+            file.seekg(0, ios::beg);
+            file.seekg(offset_bom);
+            // allocate memory
+            content.resize(length);
+            // read data as a block:
+            file.read(&content[0], length);
+            content.erase(std::find(content.begin(), content.end(), '\0'), content.end());
+            content.shrink_to_fit();
+        }
     }
     return content;
 }
@@ -407,14 +417,14 @@ void CPPParserInterpreter<EncodingT>::parseCodeBlock(size_t i, FlagSet& flags)
 template <class EncodingT>
 void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
 {
-    static const typename EncodingT::string_t CLASS_KEYWORD = C("class");
-    static const typename EncodingT::string_t STRUCT_KEYWORD = C("struct");
-    static const typename EncodingT::string_t UNION_KEYWORD = C("union");
-    static const typename EncodingT::string_t PRIVATE_KEYWORD = C("private");
-    static const typename EncodingT::string_t PROTECTED_KEYWORD = C("protected");
-    static const typename EncodingT::string_t PUBLIC_KEYWORD = C("public");
+    static const typename EncodingT::string_t CLASS_KEYWORD = UCS("class");
+    static const typename EncodingT::string_t STRUCT_KEYWORD = UCS("struct");
+    static const typename EncodingT::string_t UNION_KEYWORD = UCS("union");
+    static const typename EncodingT::string_t PRIVATE_KEYWORD = UCS("private");
+    static const typename EncodingT::string_t PROTECTED_KEYWORD = UCS("protected");
+    static const typename EncodingT::string_t PUBLIC_KEYWORD = UCS("public");
     static const std::set<typename EncodingT::string_t> SPEC_KEYWORDS = {
-            C("alignas"), C("__declspec")
+            UCS("alignas"), UCS("__declspec")
     };
     if (flags_test(flags, FLAGS::IN_CLASS_DECL))
     {
@@ -567,7 +577,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
                     if (!mType.empty() && mType.back() == CLASS_ID)
                     {
                         mSpecifierStart.push_back(i + 1);
-                        mSpecifierName.push_back(C("private"));
+                        mSpecifierName.push_back(UCS("private"));
                     }
                     flags_set(flags, FLAGS::IN_CLASS_BLOCK);
                     flags_set(flags, FLAGS::IN_CLASS_SPACE);
@@ -602,7 +612,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
 template <class EncodingT>
 void CPPParserInterpreter<EncodingT>::parseNamespace(size_t i, FlagSet& flags)
 {
-    static const typename EncodingT::string_t NAMESPACE_KEYWORD = C("namespace");
+    static const typename EncodingT::string_t NAMESPACE_KEYWORD = UCS("namespace");
     if (!flags_test(flags, FLAGS::IN_NAMESPACE_ID))
     {
         if (!flags_test(flags, FLAGS::IN_PREPROCESSOR)  && !flags_test(flags, FLAGS::IN_TYPEDEF))
@@ -662,7 +672,7 @@ void CPPParserInterpreter<EncodingT>::parseNamespace(size_t i, FlagSet& flags)
 template <class EncodingT>
 void CPPParserInterpreter<EncodingT>::parseEnum(size_t i, FlagSet& flags)
 {
-    static const typename EncodingT::string_t ENUM_KEYWORD = C("enum");
+    static const typename EncodingT::string_t ENUM_KEYWORD = UCS("enum");
     if (!flags_test(flags, FLAGS::IN_ENUM))
     {
         if (!flags_test(flags, FLAGS::IN_PREPROCESSOR))
@@ -733,8 +743,8 @@ void CPPParserInterpreter<EncodingT>::parseEnum(size_t i, FlagSet& flags)
 template <class EncodingT>
 void CPPParserInterpreter<EncodingT>::parseType(size_t i, FlagSet& flags)
 {
-    static const typename EncodingT::string_t TYPEDEF_KEYWORD = C("typedef");
-    static const typename EncodingT::string_t USING_KEYWORD = C("using");
+    static const typename EncodingT::string_t TYPEDEF_KEYWORD = UCS("typedef");
+    static const typename EncodingT::string_t USING_KEYWORD = UCS("using");
     if (!flags_test(flags, FLAGS::IN_TYPEDEF))
     {
         if (!flags_test(flags, FLAGS::IN_PREPROCESSOR))
@@ -762,10 +772,10 @@ template <class EncodingT>
 void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
 {
     static const std::set<typename EncodingT::string_t> KEYWORDS = {
-            C("typedef"), C("using"),
-            C("namespace"),
-            C("public"), C("protected"), C("private"),
-            C("alignas"), C("__declspec")
+            UCS("typedef"), UCS("using"),
+            UCS("namespace"),
+            UCS("public"), UCS("protected"), UCS("private"),
+            UCS("alignas"), UCS("__declspec")
     };
     if (flags_test(flags, FLAGS::IN_MEMBER_DECL))
     {
@@ -873,7 +883,7 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
                     {
                         if (mContent[i - mWord.size() - 1] == '~')
                         {
-                            mWord.insert(0, C("~"));
+                            mWord.insert(0, UCS("~"));
                         }
                         mMemberName.push_back(mWord);
                         flags_reset(flags, FLAGS::IN_MEMBER_ID);
@@ -893,14 +903,14 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
                     if (flags_test(flags, FLAGS::IN_MEMBER_ID))
                     {
                         if ((mContent[i] == '<') &&
-                            (mWord != C("operator")))
+                            (mWord != UCS("operator")))
                         {
                             mMemberName.push_back(mWord);
                             flags_reset(flags, FLAGS::IN_MEMBER_ID);
                             flags_set(flags, FLAGS::SET_TEMPLATE);
                         }
                         else if (((mContent[i] == '[') || (mContent[i] == '=')) &&
-                                 (mWord != C("operator")))
+                                 (mWord != UCS("operator")))
                         {
                             mMemberName.push_back(mWord);
                             flags_reset(flags, FLAGS::IN_MEMBER_ID);
@@ -947,7 +957,7 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
 template <class EncodingT>
 void CPPParserInterpreter<EncodingT>::parseTemplate(size_t i, FlagSet& flags)
 {
-    static const typename EncodingT::string_t TEMPLATE_KEYWORD = C("template");
+    static const typename EncodingT::string_t TEMPLATE_KEYWORD = UCS("template");
     if (!flags_test(flags, FLAGS::IN_PREPROCESSOR))
     {
         if (!flags_test(flags, FLAGS::IN_WORD) && (mWord == TEMPLATE_KEYWORD) &&
@@ -1021,7 +1031,7 @@ void CPPParserInterpreter<EncodingT>::parseWord(size_t i, FlagSet& flags)
 {
     if (flags_test(flags, FLAGS::CLEAR_WORD))
     {
-        mWord = C("");
+        mWord = UCS("");
         flags_reset(flags, FLAGS::CLEAR_WORD);
     }
     if (((ispunct(mContent[i]) != 0) || (isspace(mContent[i]) != 0)) &&
@@ -1184,7 +1194,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::clone() co
 template <class EncodingT>
 typename EncodingT::string_t CPPParserInterpreter<EncodingT>::getClassName() const
 {
-    return C("CPPParser");
+    return UCS("CPPParser");
 }
 
 template <class EncodingT>
@@ -1194,8 +1204,8 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::invoke(con
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
     {
-        if (tryInvoke(this, C("CPPParser"), method, args, ret) ||
-            tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("CPPParser"), method, args, ret) ||
+            tryInvoke(this, UCS("Base"), method, args, ret))
         {
             find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
             for (size_t i = 0; i < params.size(); ++i)

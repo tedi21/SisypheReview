@@ -3,6 +3,7 @@
 
 #include "LibWordExport.h"
 #include "config.hpp"
+#include "encoding.hpp"
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xalanc/XercesParserLiaison/XercesDOMSupport.hpp>
 #include <xalanc/XercesParserLiaison/XercesParserLiaison.hpp>
@@ -19,7 +20,7 @@ NAMESPACE_BEGIN(libword)
     {
     private:
         log4cpp::Category* m_logger;
-        std::wstring       m_documentName;
+        enc::ucs::string_t m_documentName;
         friend class WordXMLNode;
         friend class WordXMLNodeList;
         xercesc::XercesDOMParser*    m_parser;
@@ -41,16 +42,16 @@ NAMESPACE_BEGIN(libword)
         ~WordXMLDocument();
 
         // Ouvre un fichier Word XML
-        void parse(const std::wstring& doc);
+        void parse(const enc::ucs::string_t& doc);
 
         // Retourne le noeud racine du document
         WordXMLNode getDocumentNode();
 
         // Crée un nouveau noeud
-        WordXMLNode createNode(const wchar_t* tagName);
+        WordXMLNode createNode(const enc::ucs::char_t* tagName);
 
         // Crée un noeud texte
-        WordXMLNode createTextNode(const wchar_t* str);
+        WordXMLNode createTextNode(const enc::ucs::char_t* str);
 
         // Enregistre le document
         void save() const ;

@@ -12,7 +12,7 @@
 #define _CPPINHERITANCE_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -84,31 +84,31 @@ public:
 	void removeDerived();
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppInheritanceInterpreter, C("CppInheritance") );
-		CLASS_KEY_REGISTER2( CppInheritanceInterpreter, C("CppInheritance") );
-		METHOD_KEY_REGISTER1( CppInheritanceInterpreter, void, setDerived, no_const_t, C("CppInheritance::Derived") );
-		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getDerived, no_const_t, C("CppInheritance::Derived") );
-		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDerived, const_t, C("CppInheritance::HasDerived") );
-		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, void, removeDerived, no_const_t, C("CppInheritance::removeDerived") );
-		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("CppInheritance::Identifier") );
-		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getBaseClassName, const_t, C("CppInheritance::BaseClassName") );
-		METHOD_KEY_REGISTER1( CppInheritanceInterpreter, void, setBaseClassName, no_const_t, C("CppInheritance::BaseClassName") );
-		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getBaseAccess, const_t, C("CppInheritance::BaseAccess") );
-		METHOD_KEY_REGISTER1( CppInheritanceInterpreter, void, setBaseAccess, no_const_t, C("CppInheritance::BaseAccess") );
+		CLASS_KEY_REGISTER ( CppInheritanceInterpreter, UCS("CppInheritance") );
+		CLASS_KEY_REGISTER2( CppInheritanceInterpreter, UCS("CppInheritance") );
+		METHOD_KEY_REGISTER1( CppInheritanceInterpreter, void, setDerived, no_const_t, UCS("CppInheritance::Derived") );
+		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getDerived, no_const_t, UCS("CppInheritance::Derived") );
+		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDerived, const_t, UCS("CppInheritance::HasDerived") );
+		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, void, removeDerived, no_const_t, UCS("CppInheritance::removeDerived") );
+		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("CppInheritance::Identifier") );
+		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getBaseClassName, const_t, UCS("CppInheritance::BaseClassName") );
+		METHOD_KEY_REGISTER1( CppInheritanceInterpreter, void, setBaseClassName, no_const_t, UCS("CppInheritance::BaseClassName") );
+		METHOD_KEY_REGISTER ( CppInheritanceInterpreter, boost::shared_ptr< Base<EncodingT> >, getBaseAccess, const_t, UCS("CppInheritance::BaseAccess") );
+		METHOD_KEY_REGISTER1( CppInheritanceInterpreter, void, setBaseAccess, no_const_t, UCS("CppInheritance::BaseAccess") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppInheritance") );
-		CLASS_KEY_UNREGISTER2( C("CppInheritance") );
-		METHOD_KEY_UNREGISTER ( C("CppInheritance::Derived") );
-		METHOD_KEY_UNREGISTER1( C("CppInheritance::Derived") );
-		METHOD_KEY_UNREGISTER ( C("CppInheritance::HasDerived") );
-		METHOD_KEY_UNREGISTER ( C("CppInheritance::removeDerived") );
-		METHOD_KEY_UNREGISTER ( C("CppInheritance::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("CppInheritance::BaseClassName") );
-		METHOD_KEY_UNREGISTER1( C("CppInheritance::BaseClassName") );
-		METHOD_KEY_UNREGISTER ( C("CppInheritance::BaseAccess") );
-		METHOD_KEY_UNREGISTER1( C("CppInheritance::BaseAccess") );
+		CLASS_KEY_UNREGISTER ( UCS("CppInheritance") );
+		CLASS_KEY_UNREGISTER2( UCS("CppInheritance") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInheritance::Derived") );
+		METHOD_KEY_UNREGISTER1( UCS("CppInheritance::Derived") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInheritance::HasDerived") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInheritance::removeDerived") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInheritance::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInheritance::BaseClassName") );
+		METHOD_KEY_UNREGISTER1( UCS("CppInheritance::BaseClassName") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInheritance::BaseAccess") );
+		METHOD_KEY_UNREGISTER1( UCS("CppInheritance::BaseAccess") );
 	FACTORY_END_UNREGISTER
 };
 

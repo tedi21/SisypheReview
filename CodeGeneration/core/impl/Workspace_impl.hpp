@@ -22,16 +22,16 @@ namespace dsg {
         DOMText*    xml_text    = NULL;
         try 
         {
-            xml_wrks = xml_doc->createElement( AX("Workspace") );
-            xml_wrks->setAttribute( AX("Name"), CX(m_name) );
-            xml_wrks->setAttribute( AX("Author"), CX(m_author) );
-            xml_wrks->setAttribute( AX("Brief"), CX(m_brief) );
-            xml_wrks->setAttribute( AX("Version"), CX(m_version) );
-            xml_wrks->setAttribute( AX("Type"), (m_type==WRK_FILE)?AX("File"):AX("Project") );
-            xml_wrks->setAttribute( AX("Option"), AX(ToString::parse(m_option)));
+            xml_wrks = xml_doc->createElement( XML("Workspace") );
+            xml_wrks->setAttribute( XML("Name"), CX(m_name) );
+            xml_wrks->setAttribute( XML("Author"), CX(m_author) );
+            xml_wrks->setAttribute( XML("Brief"), CX(m_brief) );
+            xml_wrks->setAttribute( XML("Version"), CX(m_version) );
+            xml_wrks->setAttribute( XML("Type"), (m_type==WRK_FILE)?XML("File"):XML("Project") );
+            xml_wrks->setAttribute( XML("Option"), AX(ToString::parse(m_option)));
             if (hasComment()) 
             {
-                xml_comment = xml_doc->createElement( AX("Comments") );
+                xml_comment = xml_doc->createElement( XML("Comments") );
                 xml_wrks->appendChild(xml_comment);
                 xml_text = xml_doc->createTextNode( CX(m_comment) );
                 xml_comment->appendChild(xml_text);
@@ -64,12 +64,12 @@ namespace dsg {
             //throw BadXmlFormatException("XML entity element expected");
         }
         else {
-            m_name = C(xml_wrks->getAttribute( AX("Name") ));
-            m_author = C(xml_wrks->getAttribute( AX("Author") ));
-            m_brief = C(xml_wrks->getAttribute( AX("Brief") ));
-            m_version = C(xml_wrks->getAttribute( AX("Version") ));
-            m_type = (A(xml_wrks->getAttribute( AX("Type") ))==string("File"))?WRK_FILE:WRK_PROJECT;
-            m_option = ToInt::parse(A(xml_wrks->getAttribute( AX("Option") )));
+            m_name = C(xml_wrks->getAttribute( XML("Name") ));
+            m_author = C(xml_wrks->getAttribute( XML("Author") ));
+            m_brief = C(xml_wrks->getAttribute( XML("Brief") ));
+            m_version = C(xml_wrks->getAttribute( XML("Version") ));
+            m_type = (A(xml_wrks->getAttribute( XML("Type") ))==string("File"))?WRK_FILE:WRK_PROJECT;
+            m_option = ToInt::parse(A(xml_wrks->getAttribute( XML("Option") )));
             m_comment = EncodingT::EMPTY;
             m_files.clear();
             if (xml_wrks->hasChildNodes())

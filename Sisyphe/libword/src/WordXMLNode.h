@@ -3,6 +3,7 @@
 
 #include "LibWordExport.h"
 #include "config.hpp"
+#include "encoding.hpp"
 #include <xercesc/dom/DOMNode.hpp>
 #include <list>
 
@@ -20,67 +21,67 @@ NAMESPACE_BEGIN(libword)
         xercesc::DOMNode*  m_node;
 
     public:
-        static const wchar_t* DOCUMENT_TAG;
-        static const wchar_t* BODY_TAG;
-        static const wchar_t* SECTION_TAG;
-        static const wchar_t* SUBSECTION_TAG;
-        static const wchar_t* TABLE_TAG;
-        static const wchar_t* ROW_TAG;
-        static const wchar_t* CELL_TAG;
-        static const wchar_t* PARAGRAPH_TAG;
-        static const wchar_t* REVISION_TAG;
-        static const wchar_t* RUN_TAG;
+        static const enc::ucs::char_t* DOCUMENT_TAG;
+        static const enc::ucs::char_t* BODY_TAG;
+        static const enc::ucs::char_t* SECTION_TAG;
+        static const enc::ucs::char_t* SUBSECTION_TAG;
+        static const enc::ucs::char_t* TABLE_TAG;
+        static const enc::ucs::char_t* ROW_TAG;
+        static const enc::ucs::char_t* CELL_TAG;
+        static const enc::ucs::char_t* PARAGRAPH_TAG;
+        static const enc::ucs::char_t* REVISION_TAG;
+        static const enc::ucs::char_t* RUN_TAG;
 
-        static const size_t NO_LENGTH = -1;
+        static const size_t NO_LENGTH = static_cast<size_t>(-1);
 
         WordXMLNode();
 
         WordXMLNode(WordXMLDocument* doc, xercesc::DOMNode* node);
 
         // Retourne le nom du noeud
-        std::wstring getTagName() const;
+        enc::ucs::string_t getTagName() const;
 
         // Execute une requête XPath
-        WordXMLNodeList evaluate(const wchar_t* xpath) const;
+        WordXMLNodeList evaluate(const enc::ucs::char_t* xpath) const;
 
         // Retourne les noeuds fils
         WordXMLNodeList getNodes() const;
 
         // Retourne les noeuds fils avec le nom tagName
-        WordXMLNodeList getNodes(const wchar_t* tagName) const;
+        WordXMLNodeList getNodes(const enc::ucs::char_t* tagName) const;
 
         // Retourne le noeud suivant
         WordXMLNode getNextNode() const;
 
         // Retourne le noeud suivant
-        WordXMLNode getNextNode(const wchar_t* tagName) const;
+        WordXMLNode getNextNode(const enc::ucs::char_t* tagName) const;
 
         // Retourne le noeud précèdent
         WordXMLNode getPreviousNode() const;
 
         // Retourne le noeud précèdent
-        WordXMLNode getPreviousNode(const wchar_t* tagName) const;
+        WordXMLNode getPreviousNode(const enc::ucs::char_t* tagName) const;
 
         // Retourne le noeud parent
         WordXMLNode getParent() const;
 
         // Retourne le noeud parent avec le nom tagName
-        WordXMLNode getParent(const wchar_t* tagName) const;
+        WordXMLNode getParent(const enc::ucs::char_t* tagName) const;
 
         // Retourne le contenu d'un noeud
-        std::wstring getContent() const;
+        enc::ucs::string_t getContent() const;
 
         // Indique si le noeud à un attribut attrName
-        bool hasAttribute(const wchar_t* attrName) const;
+        bool hasAttribute(const enc::ucs::char_t* attrName) const;
 
         // Retourne la valeur de l'attribut attrName
-        std::wstring getAttribute(const wchar_t* attrName) const;
+        enc::ucs::string_t getAttribute(const enc::ucs::char_t* attrName) const;
 
         // retourne les noms des attributs du noeud
-        std::list<std::wstring> getAttributesNames() const;
+        std::list<enc::ucs::string_t> getAttributesNames() const;
 
         // Retourne le texte brut du noeud
-        std::wstring getString() const;
+        enc::ucs::string_t getString() const;
 
         // Retourne le noeud Propriétés correspondant au noeud conteneur en cours
         WordXMLNode getPropertiesNode() const;
@@ -92,13 +93,13 @@ NAMESPACE_BEGIN(libword)
         bool isValid() const;
 
         // Définit le contenu
-        void setContent(const wchar_t* content);
+        void setContent(const enc::ucs::char_t* content);
 
         // Définit un attribut
-        void setAttribute(const wchar_t* attrName, const wchar_t* attrValue);
+        void setAttribute(const enc::ucs::char_t* attrName, const enc::ucs::char_t* attrValue);
 
         // Supprime un attribut
-        void eraseAttribute(const wchar_t* attrName);
+        void eraseAttribute(const enc::ucs::char_t* attrName);
 
         // Retourne le noeud Propriétés correspondant au noeud conteneur en cours
         // ou crée le noeud si celui-ci n'existe pas
@@ -126,13 +127,13 @@ NAMESPACE_BEGIN(libword)
         WordXMLNode cloneNode(bool deep) const;
 
         // Ajoute du texte
-        WordXMLNodeList appendString(bool trackedChanges, const wchar_t* str);
+        WordXMLNodeList appendString(bool trackedChanges, const enc::ucs::char_t* str);
 
         // Supprime du texte
         void eraseString(bool trackedChanges, size_t pos = 0, size_t length = NO_LENGTH);
 
         // Insère du texte
-        WordXMLNodeList insertString(bool trackedChanges, size_t pos, const wchar_t* str);
+        WordXMLNodeList insertString(bool trackedChanges, size_t pos, const enc::ucs::char_t* str);
     };
 
 NAMESPACE_END

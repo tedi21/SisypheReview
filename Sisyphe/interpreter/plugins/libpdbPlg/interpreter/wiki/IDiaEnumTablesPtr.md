@@ -15,7 +15,7 @@
 Get_Count();
 ```
 
-## Méthode Item
+## Méthode ItemByIndex
 *Paramètres*
 * Numeric : 
 * IDiaTablePtr : 
@@ -26,7 +26,21 @@ Get_Count();
 *Description*
 *  Récupère une table à l'aide d'un index ou d'une étiquette.
 ```
-Item();
+ItemByIndex();
+```
+
+## Méthode ItemByName
+*Paramètres*
+* String : 
+* IDiaTablePtr : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+* 
+```
+ItemByName();
 ```
 
 ## Méthode Next

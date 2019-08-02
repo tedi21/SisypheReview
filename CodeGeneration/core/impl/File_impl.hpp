@@ -20,15 +20,15 @@ namespace dsg {
         DOMText*    xml_text    = NULL;
         try 
         {
-            xml_file = xml_doc->createElement( AX("File") ); 
-            xml_file->setAttribute( AX("Name"), CX(m_name) );
+            xml_file = xml_doc->createElement( XML("File") ); 
+            xml_file->setAttribute( XML("Name"), CX(m_name) );
             if (hasAlias())
             {
-                xml_file->setAttribute( AX("Alias"), CX(m_alias) );
+                xml_file->setAttribute( XML("Alias"), CX(m_alias) );
             }
             if (hasComment()) 
             {
-                xml_comment = xml_doc->createElement( AX("Comments") );
+                xml_comment = xml_doc->createElement( XML("Comments") );
                 xml_file->appendChild(xml_comment);
                 xml_text = xml_doc->createTextNode( CX(m_comment) );
                 xml_comment->appendChild(xml_text);
@@ -70,8 +70,8 @@ namespace dsg {
         }
         else 
         {
-            m_name = C(xml_file->getAttribute( AX("Name") ));
-            m_alias = C(xml_file->getAttribute( AX("Alias") ));
+            m_name = C(xml_file->getAttribute( XML("Name") ));
+            m_alias = C(xml_file->getAttribute( XML("Alias") ));
             m_comment = EncodingT::EMPTY;
             m_entities.clear();
             m_relations.clear();

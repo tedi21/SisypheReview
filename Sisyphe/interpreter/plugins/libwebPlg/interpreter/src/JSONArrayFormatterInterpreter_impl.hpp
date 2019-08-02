@@ -27,7 +27,7 @@ JSONArrayFormatterInterpreter<EncodingT>::JSONArrayFormatterInterpreter(const ty
 template <class EncodingT>
 typename EncodingT::string_t JSONArrayFormatterInterpreter<EncodingT>::toString() const
 {
-    return C("[") + m_buffer + C("]");
+    return UCS("[") + m_buffer + UCS("]");
 }
 
 template <class EncodingT>
@@ -39,7 +39,7 @@ boost::shared_ptr< Base<EncodingT> > JSONArrayFormatterInterpreter<EncodingT>::c
 template <class EncodingT>
 typename EncodingT::string_t JSONArrayFormatterInterpreter<EncodingT>::getClassName() const
 {
-    return C("JSONArrayFormatter");
+    return UCS("JSONArrayFormatter");
 }
 
 template <class EncodingT>
@@ -49,8 +49,8 @@ boost::shared_ptr< Base<EncodingT> > JSONArrayFormatterInterpreter<EncodingT>::i
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-        if (tryInvoke(this, C("JSONArrayFormatter"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("JSONArrayFormatter"), method, args, ret) ||
+            tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -79,7 +79,7 @@ void JSONArrayFormatterInterpreter<EncodingT>::append(const boost::shared_ptr< B
     const typename EncodingT::string_t nativeText = JSONConverterInterpreter<EncodingT>::toNativeText(val);
     if (!m_buffer.empty())
     {
-        m_buffer += C(",");
+        m_buffer += UCS(",");
     }
     m_buffer += nativeText;
 }
@@ -93,7 +93,7 @@ void JSONArrayFormatterInterpreter<EncodingT>::appendAsText(const boost::shared_
         const typename EncodingT::string_t nativeText = text->value();
         if (!m_buffer.empty())
         {
-            m_buffer += C(",");
+            m_buffer += UCS(",");
         }
         m_buffer += nativeText;
     }

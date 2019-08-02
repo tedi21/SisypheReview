@@ -41,5 +41,5 @@ typedef _DataBlobParameter<ansi>       DataBlobParameter;
 
 NAMESPACE_END
 
-#include "DataBlobParameter_impl.hpp"
+#include "datablobparameter_impl.hpp"
 #endif

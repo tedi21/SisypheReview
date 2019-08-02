@@ -6,6 +6,7 @@ C++ code review
  
 ## Download
 Windows Binaries are available [here](https://github.com/tedi21/SisypheReview/blob/master/sisyphe.7z "SisypheReview").
+Linux Binaries are available [here](https://github.com/tedi21/SisypheReview/blob/master/sisyphe.tar.gz "SisypheReview").
 
 ## Start
 Modify the script .\Review\processes.bat with the source folder.

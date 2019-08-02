@@ -120,6 +120,9 @@ CONFIG(MinGW-32): LIBS += -L../../../../../Libraries/log4cpp/lib32 -llog4cpp
 
 CONFIG(MinGW-32): LIBS += ../../../CodeGeneration/bin_qt/Encoding32/release/Encoding.dll
 
+CONFIG(Linux-64): LIBS += -L../../../../../Libraries/log4cpp/lib64 -llog4cpp \
+                          -L../../../CodeGeneration/bin_qt/Encoding64/ -lEncoding
+
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/lib

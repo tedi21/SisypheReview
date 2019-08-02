@@ -12,7 +12,7 @@
 #define _CMACRO_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -94,37 +94,37 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CMacroInterpreterAccess, C("CMacroAccess") );
-		METHOD_KEY_REGISTER ( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCMacros, no_const_t, C("CMacroAccess::GetAllCMacros") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCMacros, no_const_t, C("CMacroAccess::GetManyCMacros") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCMacro, no_const_t, C("CMacroAccess::GetOneCMacro") );
-		METHOD_KEY_REGISTER2( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCMacro, no_const_t, C("CMacroAccess::SelectOneCMacro") );
-		METHOD_KEY_REGISTER2( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCMacros, no_const_t, C("CMacroAccess::SelectManyCMacros") );
-		METHOD_KEY_REGISTER ( CMacroInterpreterAccess, void, cancelSelection, no_const_t, C("CMacroAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCMacro, no_const_t, C("CMacroAccess::IsSelectedCMacro") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, fillCppFile, no_const_t, C("CMacroAccess::FillCppFile") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCMacro, no_const_t, C("CMacroAccess::IsModifiedCMacro") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, updateCMacro, no_const_t, C("CMacroAccess::UpdateCMacro") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, insertCMacro, no_const_t, C("CMacroAccess::InsertCMacro") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, deleteCMacro, no_const_t, C("CMacroAccess::DeleteCMacro") );
-		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("CMacroAccess::GetError") );
+		CLASS_KEY_REGISTER ( CMacroInterpreterAccess, UCS("CMacroAccess") );
+		METHOD_KEY_REGISTER ( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCMacros, no_const_t, UCS("CMacroAccess::GetAllCMacros") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCMacros, no_const_t, UCS("CMacroAccess::GetManyCMacros") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCMacro, no_const_t, UCS("CMacroAccess::GetOneCMacro") );
+		METHOD_KEY_REGISTER2( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCMacro, no_const_t, UCS("CMacroAccess::SelectOneCMacro") );
+		METHOD_KEY_REGISTER2( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCMacros, no_const_t, UCS("CMacroAccess::SelectManyCMacros") );
+		METHOD_KEY_REGISTER ( CMacroInterpreterAccess, void, cancelSelection, no_const_t, UCS("CMacroAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCMacro, no_const_t, UCS("CMacroAccess::IsSelectedCMacro") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, fillCppFile, no_const_t, UCS("CMacroAccess::FillCppFile") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCMacro, no_const_t, UCS("CMacroAccess::IsModifiedCMacro") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, updateCMacro, no_const_t, UCS("CMacroAccess::UpdateCMacro") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, insertCMacro, no_const_t, UCS("CMacroAccess::InsertCMacro") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, void, deleteCMacro, no_const_t, UCS("CMacroAccess::DeleteCMacro") );
+		METHOD_KEY_REGISTER1( CMacroInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("CMacroAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CMacroAccess") );
-		METHOD_KEY_UNREGISTER ( C("CMacroAccess::GetAllCMacros") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::GetManyCMacros") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::GetOneCMacro") );
-		METHOD_KEY_UNREGISTER2( C("CMacroAccess::SelectOneCMacro") );
-		METHOD_KEY_UNREGISTER2( C("CMacroAccess::SelectManyCMacros") );
-		METHOD_KEY_UNREGISTER ( C("CMacroAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::IsSelectedCMacro") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::FillCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::IsModifiedCMacro") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::UpdateCMacro") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::InsertCMacro") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::DeleteCMacro") );
-		METHOD_KEY_UNREGISTER1( C("CMacroAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("CMacroAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("CMacroAccess::GetAllCMacros") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::GetManyCMacros") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::GetOneCMacro") );
+		METHOD_KEY_UNREGISTER2( UCS("CMacroAccess::SelectOneCMacro") );
+		METHOD_KEY_UNREGISTER2( UCS("CMacroAccess::SelectManyCMacros") );
+		METHOD_KEY_UNREGISTER ( UCS("CMacroAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::IsSelectedCMacro") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::FillCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::IsModifiedCMacro") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::UpdateCMacro") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::InsertCMacro") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::DeleteCMacro") );
+		METHOD_KEY_UNREGISTER1( UCS("CMacroAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _CMacro<EncodingT> > >& value) const;

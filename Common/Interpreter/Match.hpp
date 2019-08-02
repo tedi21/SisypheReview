@@ -4,10 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace log4cpp;
@@ -76,30 +74,28 @@ NAMESPACE_BEGIN(interp)
         // Methods registration
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER    (Match)
-            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getString, const_t, C("Match::String"))
-            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSubStrings, const_t, C("Match::SubStrings"))
-            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getStringPos, const_t, C("Match::StringPos"))
-            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSubStringsPos, const_t, C("Match::SubStringsPos"))
-            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getPrefix, const_t, C("Match::Prefix"))
-            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSuffix, const_t, C("Match::Suffix"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getString, const_t, UCS("Match::String"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSubStrings, const_t, UCS("Match::SubStrings"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getStringPos, const_t, UCS("Match::StringPos"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSubStringsPos, const_t, UCS("Match::SubStringsPos"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getPrefix, const_t, UCS("Match::Prefix"))
+            METHOD_KEY_REGISTER   (Match, boost::shared_ptr< Base<EncodingT> >, getSuffix, const_t, UCS("Match::Suffix"))
         FACTORY_END_REGISTER
 
         // Methods unregistration
         FACTORY_BEGIN_UNREGISTER
             CLASS_UNREGISTER  (Match)
-            METHOD_KEY_UNREGISTER (C("Match::String"))
-            METHOD_KEY_UNREGISTER (C("Match::SubStrings"))
-            METHOD_KEY_UNREGISTER (C("Match::StringPos"))
-            METHOD_KEY_UNREGISTER (C("Match::SubStringsPos"))
-            METHOD_KEY_UNREGISTER (C("Match::Prefix"))
-            METHOD_KEY_UNREGISTER (C("Match::Suffix"))
+            METHOD_KEY_UNREGISTER (UCS("Match::String"))
+            METHOD_KEY_UNREGISTER (UCS("Match::SubStrings"))
+            METHOD_KEY_UNREGISTER (UCS("Match::StringPos"))
+            METHOD_KEY_UNREGISTER (UCS("Match::SubStringsPos"))
+            METHOD_KEY_UNREGISTER (UCS("Match::Prefix"))
+            METHOD_KEY_UNREGISTER (UCS("Match::Suffix"))
         FACTORY_END_UNREGISTER
     };
 
 NAMESPACE_END
 
-#undef C
-
-#include "match_impl.hpp"
+#include "Match_impl.hpp"
 
 #endif

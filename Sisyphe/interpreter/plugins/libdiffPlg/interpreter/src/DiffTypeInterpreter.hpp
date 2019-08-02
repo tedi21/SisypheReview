@@ -11,7 +11,7 @@
 #define _DIFFTYPE_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -55,19 +55,19 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getMODIFY() const;
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( DiffTypeInterpreter, C("DiffType") );
-            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getNONE, const_t, C("DiffType::NONE") );
-            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getADD, const_t, C("DiffType::ADD") );
-            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getDELETE, const_t, C("DiffType::DELETE") );
-            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getMODIFY, const_t, C("DiffType::MODIFY") );
+            CLASS_KEY_REGISTER  ( DiffTypeInterpreter, UCS("DiffType") );
+            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getNONE, const_t, UCS("DiffType::NONE") );
+            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getADD, const_t, UCS("DiffType::ADD") );
+            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getDELETE, const_t, UCS("DiffType::DELETE") );
+            METHOD_KEY_REGISTER ( DiffTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getMODIFY, const_t, UCS("DiffType::MODIFY") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("DiffType") );
-            METHOD_KEY_UNREGISTER ( C("DiffType::NONE") );
-            METHOD_KEY_UNREGISTER ( C("DiffType::ADD") );
-            METHOD_KEY_UNREGISTER ( C("DiffType::DELETE") );
-            METHOD_KEY_UNREGISTER ( C("DiffType::MODIFY") );
+            CLASS_KEY_UNREGISTER  ( UCS("DiffType") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffType::NONE") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffType::ADD") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffType::DELETE") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffType::MODIFY") );
 		FACTORY_END_UNREGISTER
 	};
 

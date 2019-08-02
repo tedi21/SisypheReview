@@ -2,7 +2,7 @@
 #define _DATE_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
@@ -10,9 +10,6 @@
 using namespace boost;
 using namespace log4cpp;
 namespace dates = boost::gregorian;
-
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
 
 NAMESPACE_BEGIN(interp)
 
@@ -51,28 +48,25 @@ NAMESPACE_BEGIN(interp)
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER      (Date)
             CLASS_REGISTER3     (Date)
-            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getCurrentDate, const_t, C("Date::CurrentDate") )
-            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getDay, const_t, C("Date::Day") )
-            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getMonth, const_t, C("Date::Month") )
-            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getYear, const_t, C("Date::Year") )
+            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getCurrentDate, const_t, UCS("Date::CurrentDate") )
+            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getDay, const_t, UCS("Date::Day") )
+            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getMonth, const_t, UCS("Date::Month") )
+            METHOD_KEY_REGISTER (Date, boost::shared_ptr< Base<EncodingT> >, getYear, const_t, UCS("Date::Year") )
         FACTORY_END_REGISTER
 
         // Methods unregistration
         FACTORY_BEGIN_UNREGISTER
             CLASS_UNREGISTER      (Date)
             CLASS_UNREGISTER3     (Date)
-            METHOD_KEY_UNREGISTER (C("Date::CurrentDate"))
-            METHOD_KEY_UNREGISTER (C("Date::Day"))
-            METHOD_KEY_UNREGISTER (C("Date::Month"))
-            METHOD_KEY_UNREGISTER (C("Date::Year"))
+            METHOD_KEY_UNREGISTER (UCS("Date::CurrentDate"))
+            METHOD_KEY_UNREGISTER (UCS("Date::Day"))
+            METHOD_KEY_UNREGISTER (UCS("Date::Month"))
+            METHOD_KEY_UNREGISTER (UCS("Date::Year"))
         FACTORY_END_UNREGISTER
     };
 
 NAMESPACE_END
 
-#undef C
-#undef A
-
-#include "date_impl.hpp"
+#include "Date_impl.hpp"
 
 #endif

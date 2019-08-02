@@ -16,7 +16,7 @@
 CreateProcess();
 ```
 
-## Méthode CreateProcess2
+## Méthode CreateProcess
 *Paramètres*
 * String : 
 * Numeric : 
@@ -26,9 +26,9 @@ CreateProcess();
 * Numeric : 
 
 *Description*
-*  La méthode CreateProcess2 crée un processus à partir de la ligne de commande en paramètre et d'un répertoire courant spécifique.
+*  La méthode CreateProcess crée un processus à partir de la ligne de commande en paramètre et d'un répertoire courant spécifique.
 ```
-CreateProcess2();
+CreateProcess();
 ```
 
 ## Méthode GetRunningProcessSystemIds

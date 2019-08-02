@@ -2,11 +2,9 @@
 #define _BASE_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include <boost/shared_ptr.hpp>
 #include <vector>
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace log4cpp;
@@ -34,12 +32,12 @@ NAMESPACE_BEGIN(interp)
 
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER        (Base)
-            METHOD_KEY_REGISTER1  (Base, boost::shared_ptr< Base<EncodingT> >, isType, const_t, C("Base::IsType"))
+            METHOD_KEY_REGISTER1  (Base, boost::shared_ptr< Base<EncodingT> >, isType, const_t, UCS("Base::IsType"))
         FACTORY_END_REGISTER
 
         FACTORY_BEGIN_UNREGISTER
             CLASS_UNREGISTER  (Base)
-            METHOD_KEY_UNREGISTER1(C("Base::IsType"))
+            METHOD_KEY_UNREGISTER1(UCS("Base::IsType"))
         FACTORY_END_UNREGISTER
     };
 
@@ -58,8 +56,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-
-#include "base_impl.hpp"
+#include "Base_impl.hpp"
 
 #endif

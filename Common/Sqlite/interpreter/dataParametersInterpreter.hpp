@@ -11,9 +11,9 @@
 #define _DATA_PARAMETERS_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
-#include "DataParameters.hpp"
+#include "dataparameters.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -74,23 +74,23 @@ NAMESPACE_BEGIN(interp)
         addText		(const boost::shared_ptr< Base<EncodingT> >& value);
 
         FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( DataParametersInterpreter, C("DataParameters") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, boost::shared_ptr< Base<EncodingT> >, fill, const_t, C("DataParameters::Fill") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addBlob, no_const_t, C("DataParameters::AddBlob") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addDouble, no_const_t, C("DataParameters::AddDouble") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addInt, no_const_t, C("DataParameters::AddInt") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addInt64, no_const_t, C("DataParameters::AddInt64") );
-            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addText, no_const_t, C("DataParameters::AddText") );
+            CLASS_KEY_REGISTER  ( DataParametersInterpreter, UCS("DataParameters") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, boost::shared_ptr< Base<EncodingT> >, fill, const_t, UCS("DataParameters::Fill") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addBlob, no_const_t, UCS("DataParameters::AddBlob") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addDouble, no_const_t, UCS("DataParameters::AddDouble") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addInt, no_const_t, UCS("DataParameters::AddInt") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addInt64, no_const_t, UCS("DataParameters::AddInt64") );
+            METHOD_KEY_REGISTER1( DataParametersInterpreter, void, addText, no_const_t, UCS("DataParameters::AddText") );
         FACTORY_END_REGISTER
 
         FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("DataParameters") );
-            METHOD_KEY_UNREGISTER1( C("DataParameters::Fill") );
-            METHOD_KEY_UNREGISTER1( C("DataParameters::AddBlob") );
-            METHOD_KEY_UNREGISTER1( C("DataParameters::AddDouble") );
-            METHOD_KEY_UNREGISTER1( C("DataParameters::AddInt") );
-            METHOD_KEY_UNREGISTER1( C("DataParameters::AddInt64") );
-            METHOD_KEY_UNREGISTER1( C("DataParameters::AddText") );
+            CLASS_KEY_UNREGISTER  ( UCS("DataParameters") );
+            METHOD_KEY_UNREGISTER1( UCS("DataParameters::Fill") );
+            METHOD_KEY_UNREGISTER1( UCS("DataParameters::AddBlob") );
+            METHOD_KEY_UNREGISTER1( UCS("DataParameters::AddDouble") );
+            METHOD_KEY_UNREGISTER1( UCS("DataParameters::AddInt") );
+            METHOD_KEY_UNREGISTER1( UCS("DataParameters::AddInt64") );
+            METHOD_KEY_UNREGISTER1( UCS("DataParameters::AddText") );
         FACTORY_END_UNREGISTER
     };
 

@@ -289,7 +289,7 @@ boost::shared_ptr< Base<EncodingT> > CppEnumInterpreter<EncodingT>::clone() cons
 template <class EncodingT>
 typename EncodingT::string_t CppEnumInterpreter<EncodingT>::getClassName() const
 {
-	return C("CppEnum");
+	return UCS("CppEnum");
 }
 
 template <class EncodingT>
@@ -300,8 +300,8 @@ boost::shared_ptr< Base<EncodingT> > CppEnumInterpreter<EncodingT>::invoke(const
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppEnum"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("CppEnum"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

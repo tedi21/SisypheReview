@@ -24,7 +24,7 @@ namespace dsg {
 
 			CreateInclude_R2 =
                 str_g(  "#include \"config.hpp\"\r\n"
-						"#include \"macros.hpp\"\r\n"
+						"#include \"Macros.hpp\"\r\n"
                         "#include \"String.hpp\"\r\n\r\n" )
                 << (str_g("#include \"") << call_g(getWorkspaceNameHandler()) << "Export.hpp\"\r\n")
                 << (str_g("#include \"") << call_g(getWorkspaceNameHandler()) << "Data.h\"\r\n");
@@ -148,54 +148,54 @@ namespace dsg {
 
 			CreateFactoryRegister_R2 =
 				line_g(2) << htab_g(1) << "FACTORY_BEGIN_REGISTER"
-				<< line_g(1) << htab_g(2) << "CLASS_KEY_REGISTER ( " << UEntity_R2 << "InterpreterAccess, C(\"" << UEntity_R2 << "Access\") );" 
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER ( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAll" << UEntity_R2 << "s, no_const_t, C(\"" << UEntity_R2 << "Access::GetAll" << UEntity_R2 << "s\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getMany" << UEntity_R2 << "s, no_const_t, C(\"" << UEntity_R2 << "Access::GetMany" << UEntity_R2 << "s\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER" << EntityIDParamSize_R2 << "( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOne" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::GetOne" << UEntity_R2 << "\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER" << SelectOneParamSize_R2 << "( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOne" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::SelectOne" << UEntity_R2 << "\") );"
-                << (line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER2( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectMany" << UEntity_R2 << "s, no_const_t, C(\"" << UEntity_R2 << "Access::SelectMany" << UEntity_R2 << "s\") );")
+				<< line_g(1) << htab_g(2) << "CLASS_KEY_REGISTER ( " << UEntity_R2 << "InterpreterAccess, UCS(\"" << UEntity_R2 << "Access\") );" 
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER ( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAll" << UEntity_R2 << "s, no_const_t, UCS(\"" << UEntity_R2 << "Access::GetAll" << UEntity_R2 << "s\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getMany" << UEntity_R2 << "s, no_const_t, UCS(\"" << UEntity_R2 << "Access::GetMany" << UEntity_R2 << "s\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER" << EntityIDParamSize_R2 << "( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOne" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::GetOne" << UEntity_R2 << "\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER" << SelectOneParamSize_R2 << "( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOne" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::SelectOne" << UEntity_R2 << "\") );"
+                << (line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER2( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectMany" << UEntity_R2 << "s, no_const_t, UCS(\"" << UEntity_R2 << "Access::SelectMany" << UEntity_R2 << "s\") );")
 				[has_g(0, set_g((attr0,attrN), If_IsREF_R2), gt_g())]
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER ( " << UEntity_R2 << "InterpreterAccess, void, cancelSelection, no_const_t, C(\"" << UEntity_R2 << "Access::CancelSelection\") );" 
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelected" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::IsSelected" << UEntity_R2 << "\") );"
-				<< (line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, fill" << UAttribute_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::Fill" << UAttribute_R2 << "\") );")
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER ( " << UEntity_R2 << "InterpreterAccess, void, cancelSelection, no_const_t, UCS(\"" << UEntity_R2 << "Access::CancelSelection\") );" 
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelected" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::IsSelected" << UEntity_R2 << "\") );"
+				<< (line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, fill" << UAttribute_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::Fill" << UAttribute_R2 << "\") );")
 				[If_IsREF_R2 && !If_IsID_R2]       
 				[attr0, attrN]
 				<< ListRelationN_R2(
-                line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER2( " << URelation1_R2 << "InterpreterAccess, void, fillAll" << URelationNName_R2 << "s, no_const_t, C(\"" << URelation1_R2 << "Access::FillAll" << URelationNName_R2 << "s\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER" << FillRelationParamSize_R2 << "( " << URelation1_R2 << "InterpreterAccess, void, fillOne" << URelationNName_R2 << ", no_const_t, C(\"" << URelation1_R2 << "Access::FillOne" << URelationNName_R2 << "\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER3( " << URelation1_R2 << "InterpreterAccess, void, fillMany" << URelationNName_R2 << "s, no_const_t, C(\"" << URelation1_R2 << "Access::FillMany" << URelationNName_R2 << "s\") );"
+                line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER2( " << URelation1_R2 << "InterpreterAccess, void, fillAll" << URelationNName_R2 << "s, no_const_t, UCS(\"" << URelation1_R2 << "Access::FillAll" << URelationNName_R2 << "s\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER" << FillRelationParamSize_R2 << "( " << URelation1_R2 << "InterpreterAccess, void, fillOne" << URelationNName_R2 << ", no_const_t, UCS(\"" << URelation1_R2 << "Access::FillOne" << URelationNName_R2 << "\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER3( " << URelation1_R2 << "InterpreterAccess, void, fillMany" << URelationNName_R2 << "s, no_const_t, UCS(\"" << URelation1_R2 << "Access::FillMany" << URelationNName_R2 << "s\") );"
 				)
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModified" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::IsModified" << UEntity_R2 << "\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, update" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::Update" << UEntity_R2 << "\") );" 
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, insert" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::Insert" << UEntity_R2 << "\") );" 
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, delete" << UEntity_R2 << ", no_const_t, C(\"" << UEntity_R2 << "Access::Delete" << UEntity_R2 << "\") );" 
-                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C(\"" << UEntity_R2 << "Access::GetError\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModified" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::IsModified" << UEntity_R2 << "\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, update" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::Update" << UEntity_R2 << "\") );" 
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, insert" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::Insert" << UEntity_R2 << "\") );" 
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, void, delete" << UEntity_R2 << ", no_const_t, UCS(\"" << UEntity_R2 << "Access::Delete" << UEntity_R2 << "\") );" 
+                << line_g(1) << htab_g(2) << "METHOD_KEY_REGISTER1( " << UEntity_R2 << "InterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS(\"" << UEntity_R2 << "Access::GetError\") );"
 				<< line_g(1) << htab_g(1) << "FACTORY_END_REGISTER";
 
 			CreateFactoryUnRegister_R2 =
 				line_g(2) << htab_g(1) << "FACTORY_BEGIN_UNREGISTER"
-				<< line_g(1) << htab_g(2) << "CLASS_KEY_UNREGISTER ( C(\"" << UEntity_R2 << "Access\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER ( C(\"" << UEntity_R2 << "Access::GetAll" << UEntity_R2 << "s\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::GetMany" << UEntity_R2 << "s\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER" << EntityIDParamSize_R2 << "( C(\"" << UEntity_R2 << "Access::GetOne" << UEntity_R2 << "\") );"            
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER" << SelectOneParamSize_R2 << "( C(\"" << UEntity_R2 << "Access::SelectOne" << UEntity_R2 << "\") );" 
-				<< (line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER2( C(\"" << UEntity_R2 << "Access::SelectMany" << UEntity_R2 << "s\") );")
+				<< line_g(1) << htab_g(2) << "CLASS_KEY_UNREGISTER ( UCS(\"" << UEntity_R2 << "Access\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER ( UCS(\"" << UEntity_R2 << "Access::GetAll" << UEntity_R2 << "s\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::GetMany" << UEntity_R2 << "s\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER" << EntityIDParamSize_R2 << "( UCS(\"" << UEntity_R2 << "Access::GetOne" << UEntity_R2 << "\") );"            
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER" << SelectOneParamSize_R2 << "( UCS(\"" << UEntity_R2 << "Access::SelectOne" << UEntity_R2 << "\") );" 
+				<< (line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER2( UCS(\"" << UEntity_R2 << "Access::SelectMany" << UEntity_R2 << "s\") );")
 				[has_g(0, set_g((attr0,attrN), If_IsREF_R2), gt_g())]
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER ( C(\"" << UEntity_R2 << "Access::CancelSelection\") );" 
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::IsSelected" << UEntity_R2 << "\") );"
-				<< (line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::Fill" << UAttribute_R2 << "\") );")
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER ( UCS(\"" << UEntity_R2 << "Access::CancelSelection\") );" 
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::IsSelected" << UEntity_R2 << "\") );"
+				<< (line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::Fill" << UAttribute_R2 << "\") );")
 				[If_IsREF_R2 && !If_IsID_R2]       
 				[attr0, attrN]
 				<< ListRelationN_R2(
-                line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER2( C(\"" << URelation1_R2 << "Access::FillAll" << URelationNName_R2 << "s\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER" << FillRelationParamSize_R2 << "( C(\"" << URelation1_R2 << "Access::FillOne" << URelationNName_R2 << "\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER3( C(\"" << URelation1_R2 << "Access::FillMany" << URelationNName_R2 << "s\") );"
+                line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER2( UCS(\"" << URelation1_R2 << "Access::FillAll" << URelationNName_R2 << "s\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER" << FillRelationParamSize_R2 << "( UCS(\"" << URelation1_R2 << "Access::FillOne" << URelationNName_R2 << "\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER3( UCS(\"" << URelation1_R2 << "Access::FillMany" << URelationNName_R2 << "s\") );"
 				)
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::IsModified" << UEntity_R2 << "\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::Update" << UEntity_R2 << "\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::Insert" << UEntity_R2 << "\") );"
-				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::Delete" << UEntity_R2 << "\") );"
-                << line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( C(\"" << UEntity_R2 << "Access::GetError\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::IsModified" << UEntity_R2 << "\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::Update" << UEntity_R2 << "\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::Insert" << UEntity_R2 << "\") );"
+				<< line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::Delete" << UEntity_R2 << "\") );"
+                << line_g(1) << htab_g(2) << "METHOD_KEY_UNREGISTER1( UCS(\"" << UEntity_R2 << "Access::GetError\") );"
 				<< line_g(1) << htab_g(1) << "FACTORY_END_UNREGISTER";
 
 			ConvertPtrVectorToArray_R2 =

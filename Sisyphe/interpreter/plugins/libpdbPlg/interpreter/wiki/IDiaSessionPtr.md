@@ -87,6 +87,7 @@ FindSymbolByRVA();
 
 ## Méthode SymbolById
 *Paramètres*
+* Numeric : 
 * IDiaSymbolPtr : 
 
 *Retour*

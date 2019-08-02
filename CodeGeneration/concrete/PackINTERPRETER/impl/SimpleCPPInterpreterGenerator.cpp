@@ -54,9 +54,9 @@ namespace dsg {
                 << (line_g(2) << "template <class EncodingT>"
                 <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::tidyValue()"
                 <<  line_g(1) << "{"
-                <<  (line_g(1) << cnt_g(getContentDataHandler()))    [contentByType(CONTENT_TYPE_DESTRUCTIONBODY)]
-                <<  line_g(1) << "}"
-                <<  line_g(2) << "template <class EncodingT>"
+                <<  (line_g(1) << cnt_g(getContentDataHandler()))   [contentByType(CONTENT_TYPE_DESTRUCTIONBODY)]
+                <<  line_g(1) << "}")                               [has_g(0, contentByType(CONTENT_TYPE_DESTRUCTIONBODY), gt_g()) || Has_DynamicMethod || Has_Attribute]
+                << (line_g(2) << "template <class EncodingT>"
                 <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::initValue(const " << ClassName << "& object)"
                 <<  line_g(1) << "{"
                 <<  (line_g(1) << htab_g(1) << "m_object = object;") [empty_g(contentByType(CONTENT_TYPE_COPYBODY))]
@@ -98,7 +98,7 @@ namespace dsg {
                 <<  line_g(2) << "template <class EncodingT>"
                 <<  line_g(1) << "void " << ClassName << "Interpreter<EncodingT>::value(" << ClassName << " const& object)"
                 <<  line_g(1) << "{"
-                <<  line_g(1) << htab_g(1) << "if (&object != &refValue()) {"
+                <<  line_g(1) << htab_g(1) << "if (&object != &value()) {"
                 <<  line_g(1) << htab_g(2) << "tidyValue();"
                 <<  line_g(1) << htab_g(2) << "initValue(object);"
                 <<  line_g(1) << htab_g(1) << "}"
@@ -116,7 +116,7 @@ namespace dsg {
                 << line_g(2) << "template <class EncodingT>"
                 << line_g(1) << "typename EncodingT::string_t " << ClassName << "Interpreter<EncodingT>::getClassName() const"
                 << line_g(1) << "{"
-                << line_g(1) << htab_g(1) << "return C(\"" << ClassName << "\");"
+                << line_g(1) << htab_g(1) << "return UCS(\"" << ClassName << "\");"
                 << line_g(1) << "}"
                 << line_g(2) << "template <class EncodingT>"
                 << line_g(1) << "boost::shared_ptr< Base<EncodingT> > " << ClassName << "Interpreter<EncodingT>::invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params)"
@@ -125,8 +125,8 @@ namespace dsg {
                 << line_g(1) << htab_g(1) << "ParameterArray args, ret;"
                 << line_g(1) << htab_g(1) << "if (check_parameters_array(params, args))"
                 << line_g(1) << htab_g(1) << "{"
-                << line_g(1) << htab_g(2) << "if (tryInvoke(this, C(\"" << ClassName << "\"), method, args, ret) ||"
-                << line_g(1) << htab_g(3) << "tryInvoke(this, C(\"Base\"), method, args, ret))"
+                << line_g(1) << htab_g(2) << "if (tryInvoke(this, UCS(\"" << ClassName << "\"), method, args, ret) ||"
+                << line_g(1) << htab_g(3) << "tryInvoke(this, UCS(\"Base\"), method, args, ret))"
                 << line_g(1) << htab_g(2) << "{"
                 << line_g(1) << htab_g(3) << "find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);"
                 << line_g(1) << htab_g(3) << "for (size_t i = 0; i < params.size(); ++i)"

@@ -1,5 +1,3 @@
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
 
 NAMESPACE_BEGIN(interp)
 
@@ -16,8 +14,8 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t left, right;
         boost::shared_ptr< Term<EncodingT> > right_value;
-        bool success = binary_op<EncodingT>(buf, C("="), left, right)     &&
-                       prefix<EncodingT>(left, C("constant"), left, true) &&
+        bool success = binary_op<EncodingT>(buf, UCS("="), left, right)     &&
+                       prefix<EncodingT>(left, UCS("constant"), left, true) &&
                        is_identifier<EncodingT>(left)                     &&
                        Instruction<EncodingT>::parse(right, right_value);
         if (success)
@@ -37,7 +35,7 @@ NAMESPACE_BEGIN(interp)
     bool ConstantOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
-        bool success = prefix<EncodingT>(expr, C("constant:"), expr, false) &&
+        bool success = prefix<EncodingT>(expr, UCS("constant:"), expr, false) &&
                        is_identifier<EncodingT>(expr);
         if (success)
         {
@@ -48,5 +46,3 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-#undef A

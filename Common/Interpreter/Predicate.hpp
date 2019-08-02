@@ -3,11 +3,9 @@
 
 #include <boost/shared_ptr.hpp>
 #include "config.hpp"
-#include "macros.hpp"
-#include "interpreter.hpp"
+#include "Macros.hpp"
+#include "Interpreter.hpp"
 #include "Base.hpp"
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace log4cpp;
@@ -64,33 +62,31 @@ NAMESPACE_BEGIN(interp)
 
         // Methods registration
         FACTORY_BEGIN_REGISTER
-            METHOD_KEY_REGISTER1(Predicate, boost::shared_ptr< Base<EncodingT> >, call, no_const_t, C("Predicate::Call") )
-            METHOD_KEY_REGISTER (Predicate, boost::shared_ptr< Base<EncodingT> >, getParameters, const_t, C("Predicate::Parameters") )
-            METHOD_KEY_REGISTER (Predicate, boost::shared_ptr< Base<EncodingT> >, getFunctionName, const_t, C("Predicate::FunctionName") )
-            METHOD_KEY_REGISTER1(Predicate, void, removeVariable, no_const_t, C("Predicate::removeVariables") )
-            METHOD_KEY_REGISTER2(Predicate, void, insertVariable, no_const_t, C("Predicate::Variables") )
-            METHOD_KEY_REGISTER (Predicate, boost::shared_ptr< Base<EncodingT> >, getVariablesCount, const_t, C("Predicate::VariablesCount") )
-            METHOD_KEY_REGISTER2(Predicate, boost::shared_ptr< Base<EncodingT> >, findVariable, const_t, C("Predicate::FindVariable") )
-            METHOD_KEY_REGISTER1(Predicate, boost::shared_ptr< Base<EncodingT> >, getVariable, const_t, C("Predicate::Variables") )
+            METHOD_KEY_REGISTER1(Predicate, boost::shared_ptr< Base<EncodingT> >, call, no_const_t, UCS("Predicate::Call") )
+            METHOD_KEY_REGISTER (Predicate, boost::shared_ptr< Base<EncodingT> >, getParameters, const_t, UCS("Predicate::Parameters") )
+            METHOD_KEY_REGISTER (Predicate, boost::shared_ptr< Base<EncodingT> >, getFunctionName, const_t, UCS("Predicate::FunctionName") )
+            METHOD_KEY_REGISTER1(Predicate, void, removeVariable, no_const_t, UCS("Predicate::removeVariables") )
+            METHOD_KEY_REGISTER2(Predicate, void, insertVariable, no_const_t, UCS("Predicate::Variables") )
+            METHOD_KEY_REGISTER (Predicate, boost::shared_ptr< Base<EncodingT> >, getVariablesCount, const_t, UCS("Predicate::VariablesCount") )
+            METHOD_KEY_REGISTER2(Predicate, boost::shared_ptr< Base<EncodingT> >, findVariable, const_t, UCS("Predicate::FindVariable") )
+            METHOD_KEY_REGISTER1(Predicate, boost::shared_ptr< Base<EncodingT> >, getVariable, const_t, UCS("Predicate::Variables") )
         FACTORY_END_REGISTER
 
         // Methods unregistration
         FACTORY_BEGIN_UNREGISTER
-            METHOD_KEY_UNREGISTER1(C("Predicate::Call"))
-            METHOD_KEY_UNREGISTER (C("Predicate::Parameters"))
-            METHOD_KEY_UNREGISTER (C("Predicate::FunctionName"))
-            METHOD_KEY_UNREGISTER1(C("Predicate::removeVariables"))
-            METHOD_KEY_UNREGISTER2(C("Predicate::Variables"))
-            METHOD_KEY_UNREGISTER (C("Predicate::VariablesCount") )
-            METHOD_KEY_UNREGISTER2(C("Predicate::FindVariable") )
-            METHOD_KEY_UNREGISTER1(C("Predicate::Variables") )
+            METHOD_KEY_UNREGISTER1(UCS("Predicate::Call"))
+            METHOD_KEY_UNREGISTER (UCS("Predicate::Parameters"))
+            METHOD_KEY_UNREGISTER (UCS("Predicate::FunctionName"))
+            METHOD_KEY_UNREGISTER1(UCS("Predicate::removeVariables"))
+            METHOD_KEY_UNREGISTER2(UCS("Predicate::Variables"))
+            METHOD_KEY_UNREGISTER (UCS("Predicate::VariablesCount") )
+            METHOD_KEY_UNREGISTER2(UCS("Predicate::FindVariable") )
+            METHOD_KEY_UNREGISTER1(UCS("Predicate::Variables") )
         FACTORY_END_UNREGISTER
     };
 
 NAMESPACE_END
 
-#undef C
-
-#include "predicate_impl.hpp"
+#include "Predicate_impl.hpp"
 
 #endif

@@ -11,9 +11,9 @@
 #define _STATEMENT_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
-#include "DataStatement.hpp"
+#include "datastatement.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -134,37 +134,37 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
         FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( StatementInterpreter, C("Statement") );
-            METHOD_KEY_REGISTER ( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, executeStep, no_const_t, C("Statement::ExecuteStep") );
-            METHOD_KEY_REGISTER ( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, executeQuery, no_const_t, C("Statement::ExecuteQuery") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setBlob, no_const_t, C("Statement::SetBlob") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setDouble, no_const_t, C("Statement::SetDouble") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setInt, no_const_t, C("Statement::SetInt") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setInt64, no_const_t, C("Statement::SetInt64") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setText, no_const_t, C("Statement::SetText") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getBlob, no_const_t, C("Statement::GetBlob") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getDouble, no_const_t, C("Statement::GetDouble") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getInt, no_const_t, C("Statement::GetInt") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getInt64, no_const_t, C("Statement::GetInt64") );
-            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getText, no_const_t, C("Statement::GetText") );
-            METHOD_KEY_REGISTER1( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("Statement::GetError") );
+            CLASS_KEY_REGISTER  ( StatementInterpreter, UCS("Statement") );
+            METHOD_KEY_REGISTER ( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, executeStep, no_const_t, UCS("Statement::ExecuteStep") );
+            METHOD_KEY_REGISTER ( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, executeQuery, no_const_t, UCS("Statement::ExecuteQuery") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setBlob, no_const_t, UCS("Statement::SetBlob") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setDouble, no_const_t, UCS("Statement::SetDouble") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setInt, no_const_t, UCS("Statement::SetInt") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setInt64, no_const_t, UCS("Statement::SetInt64") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setText, no_const_t, UCS("Statement::SetText") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getBlob, no_const_t, UCS("Statement::GetBlob") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getDouble, no_const_t, UCS("Statement::GetDouble") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getInt, no_const_t, UCS("Statement::GetInt") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getInt64, no_const_t, UCS("Statement::GetInt64") );
+            METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getText, no_const_t, UCS("Statement::GetText") );
+            METHOD_KEY_REGISTER1( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("Statement::GetError") );
         FACTORY_END_REGISTER
 
         FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("Statement") );
-            METHOD_KEY_UNREGISTER ( C("Statement::ExecuteStep") );
-            METHOD_KEY_UNREGISTER ( C("Statement::ExecuteQuery") );
-            METHOD_KEY_UNREGISTER2( C("Statement::SetBlob") );
-            METHOD_KEY_UNREGISTER2( C("Statement::SetDouble") );
-            METHOD_KEY_UNREGISTER2( C("Statement::SetInt") );
-            METHOD_KEY_UNREGISTER2( C("Statement::SetInt64") );
-            METHOD_KEY_UNREGISTER2( C("Statement::SetText") );
-            METHOD_KEY_UNREGISTER2( C("Statement::GetBlob") );
-            METHOD_KEY_UNREGISTER2( C("Statement::GetDouble") );
-            METHOD_KEY_UNREGISTER2( C("Statement::GetInt") );
-            METHOD_KEY_UNREGISTER2( C("Statement::GetInt64") );
-            METHOD_KEY_UNREGISTER2( C("Statement::GetText") );
-            METHOD_KEY_UNREGISTER1( C("Statement::GetError") );
+            CLASS_KEY_UNREGISTER  ( UCS("Statement") );
+            METHOD_KEY_UNREGISTER ( UCS("Statement::ExecuteStep") );
+            METHOD_KEY_UNREGISTER ( UCS("Statement::ExecuteQuery") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::SetBlob") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::SetDouble") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::SetInt") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::SetInt64") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::SetText") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::GetBlob") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::GetDouble") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::GetInt") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::GetInt64") );
+            METHOD_KEY_UNREGISTER2( UCS("Statement::GetText") );
+            METHOD_KEY_UNREGISTER1( UCS("Statement::GetError") );
         FACTORY_END_UNREGISTER
     };
 

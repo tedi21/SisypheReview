@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     Category * logger = &Category::getInstance(LOGNAME);
 
     //if (!data_access::UniDataConnection::openConnection(L"localhost", 3306, L"base", L"teddy", L"teddy"))
-    if (!data_access::UniDataConnection::openConnection(L"", 0, encode<ansi,ucs>(base), L"", L"")) 
+    if (!data_access::UniDataConnection::openConnection(UCS(""), 0, encode<ansi,ucs>(base), UCS(""), UCS(""))) 
     {
         cout << "cannot open DB connection." << endl;
         ::system("PAUSE");

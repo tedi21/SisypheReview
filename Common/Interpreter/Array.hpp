@@ -2,13 +2,11 @@
 #define _ARRAY_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Indexable.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/container/vector.hpp>
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 namespace bc = boost::container;
@@ -98,13 +96,13 @@ NAMESPACE_BEGIN(interp)
             METHOD_REGISTER1  (Array, boost::shared_ptr< Base<EncodingT> >, getValue, const_t)
             METHOD_REGISTER2  (Array, boost::shared_ptr< Base<EncodingT> >, getList, const_t)
             METHOD_REGISTER   (Array, boost::shared_ptr< Base<EncodingT> >, size, const_t)
-            METHOD_KEY_REGISTER   (Array, void, clear, no_const_t, C("Array::Clear"))
-            METHOD_KEY_REGISTER   (Array, void, sort, no_const_t, C("Array::Sort"))
-            METHOD_KEY_REGISTER1  (Array, void, sort, no_const_t, C("Array::Sort"))
-            METHOD_KEY_REGISTER   (Array, void, unique, no_const_t, C("Array::Unique"))
-            METHOD_KEY_REGISTER1  (Array, void, unique, no_const_t, C("Array::Unique"))
-            METHOD_KEY_REGISTER1  (Array, boost::shared_ptr< Base<EncodingT> >, find, const_t, C("Array::Find"))
-            METHOD_KEY_REGISTER2  (Array, boost::shared_ptr< Base<EncodingT> >, dichotomy, const_t, C("Array::Dichotomy"))
+            METHOD_KEY_REGISTER   (Array, void, clear, no_const_t, UCS("Array::Clear"))
+            METHOD_KEY_REGISTER   (Array, void, sort, no_const_t, UCS("Array::Sort"))
+            METHOD_KEY_REGISTER1  (Array, void, sort, no_const_t, UCS("Array::Sort"))
+            METHOD_KEY_REGISTER   (Array, void, unique, no_const_t, UCS("Array::Unique"))
+            METHOD_KEY_REGISTER1  (Array, void, unique, no_const_t, UCS("Array::Unique"))
+            METHOD_KEY_REGISTER1  (Array, boost::shared_ptr< Base<EncodingT> >, find, const_t, UCS("Array::Find"))
+            METHOD_KEY_REGISTER2  (Array, boost::shared_ptr< Base<EncodingT> >, dichotomy, const_t, UCS("Array::Dichotomy"))
         FACTORY_END_REGISTER
 
         // Methods unregistration
@@ -118,13 +116,13 @@ NAMESPACE_BEGIN(interp)
             METHOD_UNREGISTER1(Array, getValue)
             METHOD_UNREGISTER2(Array, getList)
             METHOD_UNREGISTER (Array, size)
-            METHOD_KEY_UNREGISTER (C("Array::Clear"))
-            METHOD_KEY_UNREGISTER (C("Array::Sort"))
-            METHOD_KEY_UNREGISTER1(C("Array::Sort"))
-            METHOD_KEY_UNREGISTER (C("Array::Unique"))
-            METHOD_KEY_UNREGISTER1(C("Array::Unique"))
-            METHOD_KEY_UNREGISTER1(C("Array::Find"))
-            METHOD_KEY_UNREGISTER2(C("Array::Dichotomy"))
+            METHOD_KEY_UNREGISTER (UCS("Array::Clear"))
+            METHOD_KEY_UNREGISTER (UCS("Array::Sort"))
+            METHOD_KEY_UNREGISTER1(UCS("Array::Sort"))
+            METHOD_KEY_UNREGISTER (UCS("Array::Unique"))
+            METHOD_KEY_UNREGISTER1(UCS("Array::Unique"))
+            METHOD_KEY_UNREGISTER1(UCS("Array::Find"))
+            METHOD_KEY_UNREGISTER2(UCS("Array::Dichotomy"))
         FACTORY_END_UNREGISTER
     };
 
@@ -156,8 +154,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-
-#include "array_impl.hpp"
+#include "Array_impl.hpp"
 
 #endif

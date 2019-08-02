@@ -39,5 +39,5 @@ typedef _DataIntParameter<ansi>       DataIntParameter;
 
 NAMESPACE_END
 
-#include "DataIntParameter_impl.hpp"
+#include "dataintparameter_impl.hpp"
 #endif

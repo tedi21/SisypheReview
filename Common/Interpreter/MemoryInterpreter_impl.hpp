@@ -1,6 +1,5 @@
 
 #define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
 
 NAMESPACE_BEGIN(interp)
 
@@ -14,7 +13,7 @@ NAMESPACE_BEGIN(interp)
     bool DeleteOperator<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t str = eat_space<EncodingT>(buf);
-        bool success = (str==C("null"));
+        bool success = (str==UCS("null"));
         if (success)
         {
             value.reset(new DeleteOperator<EncodingT>());
@@ -51,22 +50,22 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t str;
         bool success = false;
-        if (prefix<EncodingT>(buf, C("new"), str, true))
+        if (prefix<EncodingT>(buf, UCS("new"), str, true))
         {
             vector< boost::shared_ptr< Term<EncodingT> > > params_values;
-            typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(str.begin(), str.end(), C("("));
+            typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(str.begin(), str.end(), UCS("("));
             typename EncodingT::string_t type = eat_space<EncodingT>(typename EncodingT::string_t(
                                                 (typename EncodingT::string_t::const_iterator) str.begin(), i));
             typename EncodingT::string_t parameters(i, (typename EncodingT::string_t::const_iterator) str.end());
 
             success = is_identifier<EncodingT>(type) &&
-                      embrace<EncodingT>(parameters, C("("), C(")"), str);
+                      embrace<EncodingT>(parameters, UCS("("), UCS(")"), str);
 
             if (!str.empty())
             {
                 vector<typename EncodingT::string_t> params;
                 size_t j = 0;
-                tuple_op<EncodingT>(str, C(","), params);
+                tuple_op<EncodingT>(str, UCS(","), params);
                 while (success && j<params.size())
                 {
                     boost::shared_ptr< Term<EncodingT> > expr_value;
@@ -86,5 +85,4 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
 #undef A

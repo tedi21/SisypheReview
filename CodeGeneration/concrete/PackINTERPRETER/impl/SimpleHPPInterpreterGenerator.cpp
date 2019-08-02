@@ -31,7 +31,7 @@ namespace dsg {
 
 			CreateInclude =
                    line_g(1) << str_g("#include \"config.hpp\"")
-                << line_g(1) << str_g("#include \"macros.hpp\"")
+                << line_g(1) << str_g("#include \"Macros.hpp\"")
                 << line_g(1) << str_g("#include \"Base.hpp\"")
                 << line_g(1) << str_g("#include \"Array.hpp\"")
                 << (line_g(1) << str_g("#include \"") << file_g(getFileNameHandler(KIND_NAME)) << ".h\"") [empty_g(contentByType(CONTENT_TYPE_GLOBALINCLUSION))]
@@ -66,9 +66,9 @@ namespace dsg {
                  << (line_g(1) << cnt_g(getContentDataHandler()))         [contentByType(CONTENT_TYPE_DECLARATIONBODY)]
                  <<  line_g(2) << htab_g(2) << "void initValue(const " << ClassName << "& object);"
                  <<  line_g(2) << htab_g(2) << ClassName << "& refValue();"
-                 <<  line_g(2) << htab_g(2) << "const " << ClassName << "& refValue() const;"
-                 << line_g(2) << htab_g(2) << "void tidyValue();")
+                 <<  line_g(2) << htab_g(2) << "const " << ClassName << "& refValue() const;")
                                                                           [Has_DynamicMethod || Has_Attribute]
+                 << (line_g(2) << htab_g(2) << "void tidyValue();")       [has_g(0, contentByType(CONTENT_TYPE_DESTRUCTIONBODY), gt_g()) || Has_DynamicMethod || Has_Attribute]
                  << line_g(2) << htab_g(1) << "public:"
                  << line_g(1) << htab_g(2) << ClassName << "Interpreter();"
                  << (line_g(2) << htab_g(2) << "~" << ClassName << "Interpreter();")[has_g(0, contentByType(CONTENT_TYPE_DESTRUCTIONBODY), gt_g())]
@@ -160,14 +160,14 @@ namespace dsg {
 
             CreateInterpreterRegister =
                     line_g(1) << htab_g(2) << "FACTORY_BEGIN_REGISTER"
-                 << line_g(1) << htab_g(3) << "CLASS_KEY_REGISTER  ( " << ClassName << "Interpreter, C(\"" << ClassName << "\") );"
+                 << line_g(1) << htab_g(3) << "CLASS_KEY_REGISTER  ( " << ClassName << "Interpreter, UCS(\"" << ClassName << "\") );"
                  << ListConstant
                     (
                         line_g(1) << htab_g(3) << "METHOD_KEY_REGISTER ( " << ClassName << "Interpreter, "
                      << str_g("boost::shared_ptr< Base<EncodingT> >, ")
                      << "get" << upper_g(InternalConstantName, 0, 1) << ", "
                      << str_g("const_t, ")
-                     << "C(\"" << ClassName << "::" << ConstantName << "\") );"
+                     << "UCS(\"" << ClassName << "::" << ConstantName << "\") );"
                     )
                  << ListMethod
                     (
@@ -177,7 +177,7 @@ namespace dsg {
                      << lower_g(InternalMethodName, 0, 1) << ", "
                      << str_g("const_t")    [If_IsConstMethod]
                      << str_g("no_const_t") [else_g()]
-                     << ", C(\"" << MethodClassName << "::" << MethodName << "\") );"
+                     << ", UCS(\"" << MethodClassName << "::" << MethodName << "\") );"
                     )
                 << ListAttribute
                    (
@@ -185,7 +185,7 @@ namespace dsg {
                     << str_g("boost::shared_ptr< Base<EncodingT> >, ")
                     << "get" << lower_g(InternalAttributeName, 0, 1) << ", "
                     << str_g("const_t, ")
-                    << "C(\"" << ClassName << "::" << AttributeName << "\") );"
+                    << "UCS(\"" << ClassName << "::" << AttributeName << "\") );"
                    )
                  << (line_g(1)
                  <<  cnt_g(getContentDataHandler())) [contentByType(CONTENT_TYPE_REGISTER)]
@@ -193,18 +193,18 @@ namespace dsg {
 
             CreateInterpreterUnregister =
                     line_g(1) << htab_g(2) << "FACTORY_BEGIN_UNREGISTER"
-                 << line_g(1) << htab_g(3) << "CLASS_KEY_UNREGISTER  ( C(\"" << ClassName << "\") );"
+                 << line_g(1) << htab_g(3) << "CLASS_KEY_UNREGISTER  ( UCS(\"" << ClassName << "\") );"
                  << ListConstant
                     (
-                        line_g(1) << htab_g(3) << "METHOD_KEY_UNREGISTER ( C(\"" << ClassName << "::" << ConstantName << "\") );"
+                        line_g(1) << htab_g(3) << "METHOD_KEY_UNREGISTER ( UCS(\"" << ClassName << "::" << ConstantName << "\") );"
                     )
                  << ListMethod
                     (
-                        line_g(1) << htab_g(3) << "METHOD_KEY_UNREGISTER" << RegisterSize << "( C(\"" << MethodClassName << "::" << MethodName << "\") );"
+                        line_g(1) << htab_g(3) << "METHOD_KEY_UNREGISTER" << RegisterSize << "( UCS(\"" << MethodClassName << "::" << MethodName << "\") );"
                     )
                  << ListAttribute
                     (
-                        line_g(1) << htab_g(3) << "METHOD_KEY_UNREGISTER ( C(\"" << ClassName << "::" << AttributeName << "\") );"
+                        line_g(1) << htab_g(3) << "METHOD_KEY_UNREGISTER ( UCS(\"" << ClassName << "::" << AttributeName << "\") );"
                     )
                  << (line_g(1)
                  <<  cnt_g(getContentDataHandler())) [contentByType(CONTENT_TYPE_UNREGISTER)]

@@ -12,18 +12,20 @@
 #define _STRINGLIST_ITERATOR_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 #include "Array.hpp"
 
 #include <list>
-typedef std::list<std::wstring>::const_iterator StringListIterator;
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace std;
+
+template <typename EncodingT>
+using StringListIterator = typename std::list<typename EncodingT::string_t>::const_iterator ;
 
 NAMESPACE_BEGIN(interp)
 
@@ -33,18 +35,17 @@ NAMESPACE_BEGIN(interp)
 	: public Base<EncodingT>
 	{
 	private:
-		StringListIterator m_object;
-
+                StringListIterator<EncodingT> m_object;
 	public:
 		StringListIteratorInterpreter();
 
 		~StringListIteratorInterpreter();
 
-		StringListIteratorInterpreter(const StringListIterator& object);
+                StringListIteratorInterpreter(const StringListIterator<EncodingT>& object);
 
-		const StringListIterator& value() const;
+                const StringListIterator<EncodingT>& value() const;
 
-		void value(StringListIterator const& object);
+                void value(StringListIterator<EncodingT> const& object);
 
 		virtual typename EncodingT::string_t toString() const;
 
@@ -54,45 +55,45 @@ NAMESPACE_BEGIN(interp)
 
                 virtual boost::shared_ptr< Base<EncodingT> > invoke(const typename EncodingT::string_t& method, std::vector< boost::shared_ptr< Base<EncodingT> > >& params);
         
-        // Retourne la valeur courante
-        boost::shared_ptr< Base<EncodingT> > current() const;
+                // Retourne la valeur courante
+                boost::shared_ptr< Base<EncodingT> > current() const;
 
-		// Incrémente l'itérateur
-        void increment();
+                        // Incrémente l'itérateur
+                void increment();
 
-		// Décrémente l'itérateur
-        void decrement();
-        
-        FACTORY_PROTOTYPE1(equals, In< boost::shared_ptr< Base<EncodingT> > >)
-        boost::shared_ptr< Base<EncodingT> > equals(boost::shared_ptr< Base<EncodingT> > const& val) const;
+                        // Décrémente l'itérateur
+                void decrement();
 
-        FACTORY_PROTOTYPE1(notEquals, In< boost::shared_ptr< Base<EncodingT> > >)
-        boost::shared_ptr< Base<EncodingT> > notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const;
+                FACTORY_PROTOTYPE1(equals, In< boost::shared_ptr< Base<EncodingT> > >)
+                boost::shared_ptr< Base<EncodingT> > equals(boost::shared_ptr< Base<EncodingT> > const& val) const;
+
+                FACTORY_PROTOTYPE1(notEquals, In< boost::shared_ptr< Base<EncodingT> > >)
+                boost::shared_ptr< Base<EncodingT> > notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const;
 
 		FACTORY_BEGIN_REGISTER
-			CLASS_KEY_REGISTER  ( StringListIteratorInterpreter, C("StringListIterator") );
-            METHOD_KEY_REGISTER1( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, equals, const_t, C("StringListIterator::equals") );
-            METHOD_KEY_REGISTER1( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, notEquals, const_t, C("StringListIterator::notEquals") );
-            METHOD_KEY_REGISTER ( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, current, const_t, C("StringListIterator::Current") );
-			METHOD_KEY_REGISTER ( StringListIteratorInterpreter, void, increment, no_const_t, C("StringListIterator::Increment") );
-			METHOD_KEY_REGISTER ( StringListIteratorInterpreter, void, decrement, no_const_t, C("StringListIterator::Decrement") );
+                        CLASS_KEY_REGISTER  ( StringListIteratorInterpreter, UCS("StringListIterator") );
+                        METHOD_KEY_REGISTER1( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, equals, const_t, UCS("StringListIterator::equals") );
+                        METHOD_KEY_REGISTER1( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, notEquals, const_t, UCS("StringListIterator::notEquals") );
+                        METHOD_KEY_REGISTER ( StringListIteratorInterpreter, boost::shared_ptr< Base<EncodingT> >, current, const_t, UCS("StringListIterator::Current") );
+                        METHOD_KEY_REGISTER ( StringListIteratorInterpreter, void, increment, no_const_t, UCS("StringListIterator::Increment") );
+                        METHOD_KEY_REGISTER ( StringListIteratorInterpreter, void, decrement, no_const_t, UCS("StringListIterator::Decrement") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-			CLASS_KEY_UNREGISTER  ( C("StringListIterator") );
-            METHOD_KEY_UNREGISTER1( C("StringListIterator::equals") );
-            METHOD_KEY_UNREGISTER1( C("StringListIterator::notEquals") );
-            METHOD_KEY_UNREGISTER ( C("StringListIterator::Current") );
-			METHOD_KEY_UNREGISTER ( C("StringListIterator::Increment") );
-			METHOD_KEY_UNREGISTER ( C("StringListIterator::Decrement") );
+                        CLASS_KEY_UNREGISTER  ( UCS("StringListIterator") );
+                        METHOD_KEY_UNREGISTER1( UCS("StringListIterator::equals") );
+                        METHOD_KEY_UNREGISTER1( UCS("StringListIterator::notEquals") );
+                        METHOD_KEY_UNREGISTER ( UCS("StringListIterator::Current") );
+                        METHOD_KEY_UNREGISTER ( UCS("StringListIterator::Increment") );
+                        METHOD_KEY_UNREGISTER ( UCS("StringListIterator::Decrement") );
 		FACTORY_END_UNREGISTER
 	};
 
 	template <class EncodingT>
-        bool check_StringListIterator(boost::shared_ptr< Base<EncodingT> > const& val, StringListIterator& a);
+        bool check_StringListIterator(boost::shared_ptr< Base<EncodingT> > const& val, StringListIterator<EncodingT>& a);
 
 	template <class EncodingT>
-        bool reset_StringListIterator(boost::shared_ptr< Base<EncodingT> >& val, StringListIterator const& a);
+        bool reset_StringListIterator(boost::shared_ptr< Base<EncodingT> >& val, StringListIterator<EncodingT> const& a);
 
 NAMESPACE_END
 

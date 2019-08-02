@@ -7,7 +7,7 @@
 NAMESPACE_BEGIN(libword)
 
     // Split text into paragraphs
-    std::vector<std::wstring> splitParagraphs(const wchar_t* str);
+    std::vector<enc::ucs::string_t> splitParagraphs(const enc::ucs::char_t* str);
 
     // Get text position
     void getTextPosition(const WordXMLNode& node, WordXMLNode& paragraph, WordXMLNode& revision, WordXMLNode& run, bool reverse = false);
@@ -22,10 +22,10 @@ NAMESPACE_BEGIN(libword)
     WordXMLNode divideRevisionNode(const WordXMLNode& revision, WordXMLNode& firstNewNode);
 
     // Create revision node
-    WordXMLNode createRevisionNode(WordXMLNode& parent, const WordXMLNode& refNode, const wchar_t* type, WordXMLNode& content);
+    WordXMLNode createRevisionNode(WordXMLNode& parent, const WordXMLNode& refNode, const enc::ucs::char_t* type, WordXMLNode& content);
 
     // Set paragraph revision property
-    WordXMLNode setParagraphRevisionProperty(WordXMLNode& paragraph, const wchar_t* type);
+    WordXMLNode setParagraphRevisionProperty(WordXMLNode& paragraph, const enc::ucs::char_t* type);
 
 NAMESPACE_END
 

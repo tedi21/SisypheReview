@@ -423,3 +423,29 @@ Get_lexicalParent();
 ```
 Get_classParent();
 ```
+
+## Méthode Get_symIndexId
+*Paramètres*
+* Numeric : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Extrait l'identificateur unique de symbole.
+```
+Get_symIndexId();
+```
+
+## Méthode Get_count
+*Paramètres*
+* Numeric : 
+
+*Retour*
+* Numeric : 
+
+*Description*
+*  Récupère le nombre d'éléments dans une liste ou un tableau.
+```
+Get_count();
+```

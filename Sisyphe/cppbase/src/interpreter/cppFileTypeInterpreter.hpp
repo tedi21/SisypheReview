@@ -12,7 +12,7 @@
 #define _CPPFILETYPE_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -83,31 +83,31 @@ public:
 	boost::shared_ptr< Base<EncodingT> > cppFilesCount() const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppFileTypeInterpreter, C("CppFileType") );
-		CLASS_KEY_REGISTER1( CppFileTypeInterpreter, C("CppFileType") );
-		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("CppFileType::Identifier") );
-		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getString, const_t, C("CppFileType::String") );
-		METHOD_KEY_REGISTER1( CppFileTypeInterpreter, void, setString, no_const_t, C("CppFileType::String") );
-		METHOD_KEY_REGISTER1( CppFileTypeInterpreter, void, removeCppFile, no_const_t, C("CppFileType::removeCppFiles") );
-		METHOD_KEY_REGISTER2( CppFileTypeInterpreter, void, insertCppFile, no_const_t, C("CppFileType::CppFiles") );
-		METHOD_KEY_REGISTER1( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, C("CppFileType::CppFiles") );
-		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, void, clearCppFiles, no_const_t, C("CppFileType::ClearCppFiles") );
-		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFiles, const_t, C("CppFileType::HasCppFiles") );
-		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, cppFilesCount, const_t, C("CppFileType::CppFilesCount") );
+		CLASS_KEY_REGISTER ( CppFileTypeInterpreter, UCS("CppFileType") );
+		CLASS_KEY_REGISTER1( CppFileTypeInterpreter, UCS("CppFileType") );
+		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("CppFileType::Identifier") );
+		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getString, const_t, UCS("CppFileType::String") );
+		METHOD_KEY_REGISTER1( CppFileTypeInterpreter, void, setString, no_const_t, UCS("CppFileType::String") );
+		METHOD_KEY_REGISTER1( CppFileTypeInterpreter, void, removeCppFile, no_const_t, UCS("CppFileType::removeCppFiles") );
+		METHOD_KEY_REGISTER2( CppFileTypeInterpreter, void, insertCppFile, no_const_t, UCS("CppFileType::CppFiles") );
+		METHOD_KEY_REGISTER1( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, UCS("CppFileType::CppFiles") );
+		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, void, clearCppFiles, no_const_t, UCS("CppFileType::ClearCppFiles") );
+		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFiles, const_t, UCS("CppFileType::HasCppFiles") );
+		METHOD_KEY_REGISTER ( CppFileTypeInterpreter, boost::shared_ptr< Base<EncodingT> >, cppFilesCount, const_t, UCS("CppFileType::CppFilesCount") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppFileType") );
-		CLASS_KEY_UNREGISTER1( C("CppFileType") );
-		METHOD_KEY_UNREGISTER ( C("CppFileType::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("CppFileType::String") );
-		METHOD_KEY_UNREGISTER1( C("CppFileType::String") );
-		METHOD_KEY_UNREGISTER1( C("CppFileType::removeCppFiles") );
-		METHOD_KEY_UNREGISTER2( C("CppFileType::CppFiles") );
-		METHOD_KEY_UNREGISTER1( C("CppFileType::CppFiles") );
-		METHOD_KEY_UNREGISTER ( C("CppFileType::ClearCppFiles") );
-		METHOD_KEY_UNREGISTER ( C("CppFileType::HasCppFiles") );
-		METHOD_KEY_UNREGISTER ( C("CppFileType::CppFilesCount") );
+		CLASS_KEY_UNREGISTER ( UCS("CppFileType") );
+		CLASS_KEY_UNREGISTER1( UCS("CppFileType") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileType::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileType::String") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileType::String") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileType::removeCppFiles") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFileType::CppFiles") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFileType::CppFiles") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileType::ClearCppFiles") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileType::HasCppFiles") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFileType::CppFilesCount") );
 	FACTORY_END_UNREGISTER
 };
 

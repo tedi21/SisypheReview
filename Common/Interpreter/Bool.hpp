@@ -3,7 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 
 using namespace boost;
@@ -70,6 +70,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#include "bool_impl.hpp"
+#include "Bool_impl.hpp"
 
 #endif

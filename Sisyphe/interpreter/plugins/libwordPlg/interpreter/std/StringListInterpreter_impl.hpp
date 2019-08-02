@@ -25,18 +25,18 @@ StringListInterpreter<EncodingT>::~StringListInterpreter()
 }
 
 template <class EncodingT>
-StringListInterpreter<EncodingT>::StringListInterpreter(const StringList& object)
+StringListInterpreter<EncodingT>::StringListInterpreter(const StringList<EncodingT>& object)
 : m_object(object)
 {}
 
 template <class EncodingT>
-const StringList& StringListInterpreter<EncodingT>::value() const
+const StringList<EncodingT>& StringListInterpreter<EncodingT>::value() const
 {
 	return m_object;
 }
 
 template <class EncodingT>
-void StringListInterpreter<EncodingT>::value(StringList const& object)
+void StringListInterpreter<EncodingT>::value(StringList<EncodingT> const& object)
 {
 	m_object = object;
 }
@@ -56,7 +56,7 @@ boost::shared_ptr< Base<EncodingT> > StringListInterpreter<EncodingT>::clone() c
 template <class EncodingT>
 typename EncodingT::string_t StringListInterpreter<EncodingT>::getClassName() const
 {
-	return C("StringList");
+        return UCS("StringList");
 }
 
 template <class EncodingT>
@@ -66,8 +66,8 @@ boost::shared_ptr< Base<EncodingT> > StringListInterpreter<EncodingT>::invoke(co
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("StringList"), method, args, ret) ||
-		    tryInvoke(this, C("Base"), method, args, ret))
+                if (tryInvoke(this, UCS("StringList"), method, args, ret) ||
+                    tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -103,7 +103,7 @@ boost::shared_ptr< Base<EncodingT> > StringListInterpreter<EncodingT>::end() con
 }
 
 template <class EncodingT>
-bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringList& a)
+bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringList<EncodingT>& a)
 {
   boost::shared_ptr< StringListInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListInterpreter<EncodingT> >(val);
   if (value)
@@ -119,7 +119,7 @@ bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringLis
 }
 
 template <class EncodingT>
-bool reset_StringList(boost::shared_ptr< Base<EncodingT> >& val, StringList const& a)
+bool reset_StringList(boost::shared_ptr< Base<EncodingT> >& val, StringList<EncodingT> const& a)
 {
   boost::shared_ptr< StringListInterpreter<EncodingT> > value  = dynamic_pointer_cast< StringListInterpreter<EncodingT> >(val);
   if (value)

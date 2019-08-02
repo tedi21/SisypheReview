@@ -4,6 +4,7 @@
 #include "LibWordExport.h"
 #include "Word.h"
 #include "config.hpp"
+#include "encoding.hpp"
 
 NAMESPACE_BEGIN(libword)
 
@@ -27,7 +28,7 @@ NAMESPACE_BEGIN(libword)
         log4cpp::Category* m_logger;
 
         // Convertit un fichier
-        bool convertTo(word::WdSaveFormat format, const std::wstring& file, const std::wstring& xmlFile, bool acceptAllRevisions = false) const;
+        bool convertTo(word::WdSaveFormat format, const enc::ucs::string_t& file, const enc::ucs::string_t& xmlFile, bool acceptAllRevisions = false) const;
 		
     public:
         WordMacro();
@@ -35,16 +36,16 @@ NAMESPACE_BEGIN(libword)
         ~WordMacro();
 
         // Convertit un fichier en xml
-        bool convertToXML(const std::wstring& file, const std::wstring& xmlFile, bool acceptAllRevisions = false) const;
+        bool convertToXML(const enc::ucs::string_t& file, const enc::ucs::string_t& xmlFile, bool acceptAllRevisions = false) const;
 
         // Convertit un fichier en doc
-        bool convertToDOC(const std::wstring& file, const std::wstring& docFile, bool acceptAllRevisions = false) const;
+        bool convertToDOC(const enc::ucs::string_t& file, const enc::ucs::string_t& docFile, bool acceptAllRevisions = false) const;
 
         // Convertit un fichier en pdf
-        bool convertToPDF(const std::wstring& file, const std::wstring& pdfFile, bool acceptAllRevisions = false) const;
+        bool convertToPDF(const enc::ucs::string_t& file, const enc::ucs::string_t& pdfFile, bool acceptAllRevisions = false) const;
 		
         // Convertit un fichier en xdoc
-        bool convertToXDOC(const std::wstring& file, const std::wstring& xdocFile, bool acceptAllRevisions = false) const;
+        bool convertToXDOC(const enc::ucs::string_t& file, const enc::ucs::string_t& xdocFile, bool acceptAllRevisions = false) const;
     };
 
 NAMESPACE_END

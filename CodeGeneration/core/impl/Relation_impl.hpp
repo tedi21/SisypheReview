@@ -23,26 +23,26 @@ namespace dsg {
         xml::string_t strMultiplicity;
         try 
         {
-            xml_relation = xml_doc->createElement( AX("Relation") ); 
-            xml_relation->setAttribute( AX("Name"),      CX(m_name) );
+            xml_relation = xml_doc->createElement( XML("Relation") ); 
+            xml_relation->setAttribute( XML("Name"),      CX(m_name) );
             if (hasAlias())
             {
-                xml_relation->setAttribute(AX("Alias"),  CX(m_alias));
+                xml_relation->setAttribute(XML("Alias"),  CX(m_alias));
             }
-            xml_relation->setAttribute( AX("Target"),    CX(m_target) );
-            xml_relation->setAttribute( AX("TargetREF"), CX(m_targetRef) );
-            xml_relation->setAttribute( AX("Source"),    CX(m_source) );
-            xml_relation->setAttribute( AX("SourceREF"), CX(m_sourceRef) );
+            xml_relation->setAttribute( XML("Target"),    CX(m_target) );
+            xml_relation->setAttribute( XML("TargetREF"), CX(m_targetRef) );
+            xml_relation->setAttribute( XML("Source"),    CX(m_source) );
+            xml_relation->setAttribute( XML("SourceREF"), CX(m_sourceRef) );
             switch (m_multiplicity)
             {
-            case RELATION_ZERO_ONE : strMultiplicity = u"Zero-One";break;
-            case RELATION_ONE      : strMultiplicity = u"One";     break;
-            default                : strMultiplicity = u"Unknown"; break;
+            case RELATION_ZERO_ONE : strMultiplicity = XML("Zero-One");break;
+            case RELATION_ONE      : strMultiplicity = XML("One");     break;
+            default                : strMultiplicity = XML("Unknown"); break;
             }
-            xml_relation->setAttribute( AX("Multiplicity"), strMultiplicity.c_str() );
+            xml_relation->setAttribute( XML("Multiplicity"), strMultiplicity.c_str() );
             if (hasComment()) 
             {
-                xml_comment = xml_doc->createElement( AX("Comments") );
+                xml_comment = xml_doc->createElement( XML("Comments") );
                 xml_relation->appendChild(xml_comment);
                 xml_text = xml_doc->createTextNode( CX(m_comment) );
                 xml_comment->appendChild(xml_text);
@@ -71,18 +71,18 @@ namespace dsg {
         }
         else 
         {
-            m_name      = C(xml_relation->getAttribute( AX("Name") ));
-            m_alias     = C(xml_relation->getAttribute( AX("Alias") ));
-            m_target    = C(xml_relation->getAttribute( AX("Target") ));
-            m_targetRef = C(xml_relation->getAttribute( AX("TargetREF") ));
-            m_source    = C(xml_relation->getAttribute( AX("Source") ));
-            m_sourceRef = C(xml_relation->getAttribute( AX("SourceREF") ));
-            strMultiplicity = A(xml_relation->getAttribute( AX("Multiplicity") ));
+            m_name      = C(xml_relation->getAttribute( XML("Name") ));
+            m_alias     = C(xml_relation->getAttribute( XML("Alias") ));
+            m_target    = C(xml_relation->getAttribute( XML("Target") ));
+            m_targetRef = C(xml_relation->getAttribute( XML("TargetREF") ));
+            m_source    = C(xml_relation->getAttribute( XML("Source") ));
+            m_sourceRef = C(xml_relation->getAttribute( XML("SourceREF") ));
+            strMultiplicity = A(xml_relation->getAttribute( XML("Multiplicity") ));
             if (strMultiplicity == "Zero-One") m_multiplicity = RELATION_ZERO_ONE;
             else if (strMultiplicity == "One") m_multiplicity = RELATION_ONE;
             else if (strMultiplicity != "")    m_logger->warnStream() << "Relation::loadXML() : unknown multiplicity : " << strMultiplicity;
             m_comment   = EncodingT::EMPTY;
-            xml_list    = xml_relation->getElementsByTagName( AX("Comments") );
+            xml_list    = xml_relation->getElementsByTagName( XML("Comments") );
             if ( xml_list->getLength()>0 )
             {
                 xml_comment = (DOMElement*) xml_list->item(0);

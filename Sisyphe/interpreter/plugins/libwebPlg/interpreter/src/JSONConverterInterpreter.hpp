@@ -11,7 +11,7 @@
 #define _JSON_CONVERTER_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
@@ -56,15 +56,15 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > fromText(const boost::shared_ptr< Base<EncodingT> >& text) const;
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( JSONConverterInterpreter, C("JSONConverter") );
-            METHOD_KEY_REGISTER1( JSONConverterInterpreter, boost::shared_ptr< Base<EncodingT> >, toText, const_t, C("JSONConverter::ToText") );
-            METHOD_KEY_REGISTER1( JSONConverterInterpreter, boost::shared_ptr< Base<EncodingT> >, fromText, const_t, C("JSONConverter::FromText") );
+            CLASS_KEY_REGISTER  ( JSONConverterInterpreter, UCS("JSONConverter") );
+            METHOD_KEY_REGISTER1( JSONConverterInterpreter, boost::shared_ptr< Base<EncodingT> >, toText, const_t, UCS("JSONConverter::ToText") );
+            METHOD_KEY_REGISTER1( JSONConverterInterpreter, boost::shared_ptr< Base<EncodingT> >, fromText, const_t, UCS("JSONConverter::FromText") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("JSONConverter") );
-            METHOD_KEY_UNREGISTER1( C("JSONConverter::ToText") );
-            METHOD_KEY_UNREGISTER1( C("JSONConverter::FromText") );
+            CLASS_KEY_UNREGISTER  ( UCS("JSONConverter") );
+            METHOD_KEY_UNREGISTER1( UCS("JSONConverter::ToText") );
+            METHOD_KEY_UNREGISTER1( UCS("JSONConverter::FromText") );
 		FACTORY_END_UNREGISTER
 	};
 

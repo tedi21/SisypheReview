@@ -103,36 +103,36 @@ typename EncodingT::string_t JSONConverterInterpreter<EncodingT>::toNativeText(c
     }
     else if ((str  = dynamic_pointer_cast< String<EncodingT> >(object)) != nullptr)
     {
-        result = C("\"") + escapeChar(str->value()) + C("\"");
+        result = UCS("\"") + escapeChar(str->value()) + UCS("\"");
     }
     else if ((arr  = dynamic_pointer_cast< Array<EncodingT> >(object)) != nullptr)
     {
         size_t lg = arr->length();
-        result = C("[");
+        result = UCS("[");
         for (size_t i = 0; i < lg; ++i)
         {
             result += toNativeText(arr->valueAt(i));
             if (i != lg-1)
             {
-                result += C(",");
+                result += UCS(",");
             }
         }
-        result += C("]");
+        result += UCS("]");
     }
     else if ((st  = dynamic_pointer_cast< Structure<EncodingT> >(object)) != nullptr)
     {
         size_t lg = st->getFieldsCount();
-        result = C("{");
+        result = UCS("{");
         for (size_t i = 0; i < lg; ++i)
         {
             auto pairIterator = st->getField(i);
-            result += C("\"") + pairIterator->first + C("\":") + toNativeText(pairIterator->second);
+            result += UCS("\"") + pairIterator->first + UCS("\":") + toNativeText(pairIterator->second);
             if (i != lg-1)
             {
-                result += C(",");
+                result += UCS(",");
             }
         }
-        result += C("}");
+        result += UCS("}");
     }
     else
     {
@@ -258,7 +258,7 @@ boost::shared_ptr< Base<EncodingT> > JSONConverterInterpreter<EncodingT>::clone(
 template <class EncodingT>
 typename EncodingT::string_t JSONConverterInterpreter<EncodingT>::getClassName() const
 {
-    return C("JSONConverter");
+    return UCS("JSONConverter");
 }
 
 template <class EncodingT>
@@ -268,8 +268,8 @@ boost::shared_ptr< Base<EncodingT> > JSONConverterInterpreter<EncodingT>::invoke
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-        if (tryInvoke(this, C("JSONConverter"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("JSONConverter"), method, args, ret) ||
+            tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

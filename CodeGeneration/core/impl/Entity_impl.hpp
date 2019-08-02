@@ -21,28 +21,28 @@ namespace dsg {
         xml::string_t strClass;
         try 
         {
-            xml_entity = xml_doc->createElement( AX("Entity") ); 
-            xml_entity->setAttribute( AX("Name"), CX(m_name) );
+            xml_entity = xml_doc->createElement( XML("Entity") ); 
+            xml_entity->setAttribute( XML("Name"), CX(m_name) );
             if (hasFunctionName())
             {
-                xml_entity->setAttribute( AX("FunctionName"), CX(m_functionName) );
+                xml_entity->setAttribute( XML("FunctionName"), CX(m_functionName) );
             }
             if (hasAlias())
             {
-                xml_entity->setAttribute( AX("Alias"), CX(m_alias) );
+                xml_entity->setAttribute( XML("Alias"), CX(m_alias) );
             }
             switch (m_class)
             {
-            case ENTITY_DATA        : strClass = u"Data";       break;
-            case ENTITY_FUNCTION    : strClass = u"Function";   break;
-            case ENTITY_ENUMERATION : strClass = u"Enumeration";break;
-            case ENTITY_PACKAGE     : strClass = u"Package";    break;
-            default                 : strClass = u"Unknown";    break;
+            case ENTITY_DATA        : strClass = XML("Data");       break;
+            case ENTITY_FUNCTION    : strClass = XML("Function");   break;
+            case ENTITY_ENUMERATION : strClass = XML("Enumeration");break;
+            case ENTITY_PACKAGE     : strClass = XML("Package");    break;
+            default                 : strClass = XML("Unknown");    break;
             }
-            xml_entity->setAttribute( AX("Class"), strClass.c_str() );
+            xml_entity->setAttribute( XML("Class"), strClass.c_str() );
             if (hasComment()) 
             {
-                xml_comment = xml_doc->createElement( AX("Comments") );
+                xml_comment = xml_doc->createElement( XML("Comments") );
                 xml_entity->appendChild(xml_comment);
                 xml_text = xml_doc->createTextNode( CX(m_comment) );
                 xml_comment->appendChild(xml_text);
@@ -77,10 +77,10 @@ namespace dsg {
         }
         else 
         {
-            m_name = C(xml_entity->getAttribute( AX("Name") ));
-            m_functionName = C(xml_entity->getAttribute( AX("FunctionName") ));
-            m_alias = C(xml_entity->getAttribute( AX("Alias") ));
-            strClass = A(xml_entity->getAttribute( AX("Class") ));
+            m_name = C(xml_entity->getAttribute( XML("Name") ));
+            m_functionName = C(xml_entity->getAttribute( XML("FunctionName") ));
+            m_alias = C(xml_entity->getAttribute( XML("Alias") ));
+            strClass = A(xml_entity->getAttribute( XML("Class") ));
             if (strClass == "Data")             m_class = ENTITY_DATA;
             else if (strClass == "Function")    m_class = ENTITY_FUNCTION;
             else if (strClass == "Enumeration") m_class = ENTITY_ENUMERATION;

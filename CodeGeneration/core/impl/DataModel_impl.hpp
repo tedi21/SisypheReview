@@ -20,9 +20,9 @@ namespace dsg {
         try
         {
             XMLPlatformUtils::Initialize();
-            DOMImplementation * impl = DOMImplementationRegistry::getDOMImplementation( AX("LS") );
-            DOMDocumentType * docType = impl->createDocumentType( AX("document_schema"), NULL, AX("document_schema.dtd"));  
-            m_xmlDoc.reset(impl->createDocument( 0, AX("document_schema"), docType));
+            DOMImplementation * impl = DOMImplementationRegistry::getDOMImplementation( XML("LS") );
+            DOMDocumentType * docType = impl->createDocumentType( XML("document_schema"), NULL, XML("document_schema.dtd"));  
+            m_xmlDoc.reset(impl->createDocument( 0, XML("document_schema"), docType));
             m_logger->debug("DataModel() : DataModel initialized");
         } 
         catch ( const XMLException& e ) 
@@ -118,7 +118,7 @@ namespace dsg {
     {
         // DOMImplementationLS contains factory methods for creating objects
         // that implement the DOMBuilder and the DOMWriter interfaces
-        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( AX("LS") );
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( XML("LS") );
         // construct the DOMLSSerializer
         DOMLSSerializer* serializer = ((DOMImplementationLS*)impl)->createLSSerializer();
         // Create a new empty output destination object.
@@ -138,7 +138,7 @@ namespace dsg {
             serializer->getDomConfig()->setParameter(XMLUni::fgDOMWRTBOM, true);
 
         // The end-of-line sequence of characters to be used in the XML being written out.
-        serializer->setNewLine( AX("\r\n") );
+        serializer->setNewLine( XML("\r\n") );
 
         // Set the stream to our target.
         output->setByteStream(formatTarget.get());

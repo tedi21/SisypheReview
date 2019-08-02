@@ -2,16 +2,13 @@
 #define _FILE_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include <boost/shared_ptr.hpp>
 #include <fstream>
 
 using namespace boost;
 using namespace log4cpp;
-
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
 
 NAMESPACE_BEGIN(interp)
 
@@ -23,7 +20,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t  m_name;
         typename EncodingT::string_t  m_mode;
         typename EncodingT::string_t  m_format;
-        std::wfstream m_stream;
+        std::basic_fstream<typename EncodingT::char_t> m_stream;
 
         void construct(const typename EncodingT::string_t& name, const typename EncodingT::string_t& mode, const typename EncodingT::string_t& format);
 
@@ -60,7 +57,7 @@ NAMESPACE_BEGIN(interp)
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER      (File)
             CLASS_REGISTER3     (File)
-            METHOD_KEY_REGISTER (File, boost::shared_ptr< Base<EncodingT> >, isOpen, const_t, C("File::Open") )
+            METHOD_KEY_REGISTER (File, boost::shared_ptr< Base<EncodingT> >, isOpen, const_t, UCS("File::Open") )
             METHOD_REGISTER1    (File, boost::shared_ptr< Base<EncodingT> >, load, no_const_t)
             METHOD_REGISTER1    (File, boost::shared_ptr< Base<EncodingT> >, save, no_const_t)
             METHOD_REGISTER     (File, boost::shared_ptr< Base<EncodingT> >, size, no_const_t)
@@ -70,7 +67,7 @@ NAMESPACE_BEGIN(interp)
         FACTORY_BEGIN_UNREGISTER
             CLASS_UNREGISTER      (File)
             CLASS_UNREGISTER3     (File)
-            METHOD_KEY_UNREGISTER (C("File::Open"))
+            METHOD_KEY_UNREGISTER (UCS("File::Open"))
             METHOD_UNREGISTER1    (File, load)
             METHOD_UNREGISTER1    (File, save)
             METHOD_UNREGISTER     (File, size)
@@ -79,9 +76,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-#undef A
-
-#include "file_impl.hpp"
+#include "File_impl.hpp"
 
 #endif

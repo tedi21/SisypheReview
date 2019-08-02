@@ -34,22 +34,22 @@ SymbolByRVA();
 ## Méthode Next
 *Paramètres*
 * Numeric : 
-* IDiaSymbolPtrIDiaSymbolPtr : 
+* IDiaSymbolPtr : 
 * Numeric : 
 
 *Retour*
 * Numeric : 
 
 *Description*
-*  Récupère les symboles précédents dans l'ordre par l'adresse.
+*  Récupère les symboles ci-dessous dans l'ordre par l'adresse.
 ```
 Next();
 ```
 
-## Méthode Next
+## Méthode Prev
 *Paramètres*
 * Numeric : 
-* IDiaSymbolPtrIDiaSymbolPtr : 
+* IDiaSymbolPtr : 
 * Numeric : 
 
 *Retour*
@@ -58,5 +58,5 @@ Next();
 *Description*
 *  Récupère les symboles précédents dans l'ordre par l'adresse.
 ```
-Next();
+Prev();
 ```

@@ -69,7 +69,7 @@ NAMESPACE_BEGIN(libword)
     }
 	
     // Convertit un fichier
-    bool WordMacro::convertTo(word::WdSaveFormat format, const std::wstring& file, const std::wstring& xmlFile, bool acceptAllRevisions) const
+    bool WordMacro::convertTo(word::WdSaveFormat format, const ucs::string_t& file, const ucs::string_t& xmlFile, bool acceptAllRevisions) const
     {
         bool res = false;
         word::Document doc;
@@ -98,25 +98,25 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Convertit un fichier en xml
-    bool WordMacro::convertToXML(const std::wstring& file, const std::wstring& xmlFile, bool acceptAllRevisions) const
+    bool WordMacro::convertToXML(const ucs::string_t& file, const ucs::string_t& xmlFile, bool acceptAllRevisions) const
     {
         return convertTo(word::wdFormatXML, file, xmlFile, acceptAllRevisions);
     }
 
     // Convertit un fichier en doc
-    bool WordMacro::convertToDOC(const std::wstring& file, const std::wstring& docFile, bool acceptAllRevisions) const
+    bool WordMacro::convertToDOC(const ucs::string_t& file, const ucs::string_t& docFile, bool acceptAllRevisions) const
     {
         return convertTo(word::wdFormatDocument, file, docFile, acceptAllRevisions);
     }
 	
 	// Convertit un fichier en pdf
-	bool WordMacro::convertToPDF(const std::wstring& file, const std::wstring& pdfFile, bool acceptAllRevisions) const
+    bool WordMacro::convertToPDF(const ucs::string_t& file, const ucs::string_t& pdfFile, bool acceptAllRevisions) const
     {
         return convertTo(word::wdFormatPDF, file, pdfFile, acceptAllRevisions);
     }
 	
 	// Convertit un fichier en xdoc
-	bool WordMacro::convertToXDOC(const std::wstring& file, const std::wstring& xdocFile, bool acceptAllRevisions) const
+    bool WordMacro::convertToXDOC(const ucs::string_t& file, const ucs::string_t& xdocFile, bool acceptAllRevisions) const
     {
         return convertTo(word::wdFormatXMLDocument, file, xdocFile, acceptAllRevisions);
     }

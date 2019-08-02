@@ -33,7 +33,7 @@ boost::shared_ptr< Base<EncodingT> > DiffValueInterpreter<EncodingT>::clone() co
 template <class EncodingT>
 typename EncodingT::string_t DiffValueInterpreter<EncodingT>::getClassName() const
 {
-    return C("DiffValue");
+    return UCS("DiffValue");
 }
 
 template <class EncodingT>
@@ -43,8 +43,8 @@ boost::shared_ptr< Base<EncodingT> > DiffValueInterpreter<EncodingT>::invoke(con
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-        if (tryInvoke(this, C("DiffValue"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("DiffValue"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

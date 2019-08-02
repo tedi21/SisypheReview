@@ -23,88 +23,88 @@ namespace dsg {
         xml::string_t strType, strModifier;
         try 
         {
-            xml_attribute = xml_doc->createElement(AX("Attribute"));
-            xml_attribute->setAttribute(AX("Name"), CX(m_name));
+            xml_attribute = xml_doc->createElement(XML("Attribute"));
+            xml_attribute->setAttribute(XML("Name"), CX(m_name));
             if (hasAlias())
             {
-                xml_attribute->setAttribute(AX("Alias"), CX(m_alias));
+                xml_attribute->setAttribute(XML("Alias"), CX(m_alias));
             }
             switch (m_type)
             {
-            case ATTR_BOOLEAN     : strType = u"Boolean";     break;
-            case ATTR_SBYTE       : strType = u"SByte";       break;
-            case ATTR_BYTE        : strType = u"Byte";        break;
-            case ATTR_ANSICHAR    : strType = u"AnsiChar";        break;
-            case ATTR_WIDECHAR    : strType = u"WideChar";        break;
-            case ATTR_CHAR        : strType = u"Char";        break;
-            case ATTR_INT16       : strType = u"Int16";       break;
-            case ATTR_UINT16      : strType = u"UInt16";      break;
-            case ATTR_INT32       : strType = u"Int32";       break;
-            case ATTR_UINT32      : strType = u"UInt32";      break;
-            case ATTR_INT64       : strType = u"Int64";       break;
-            case ATTR_UINT64      : strType = u"UInt64";      break;
-            case ATTR_INT         : strType = u"Int";         break;
-            case ATTR_UINT        : strType = u"UInt";        break;
-            case ATTR_SINGLE      : strType = u"Single";      break;
-            case ATTR_DOUBLE      : strType = u"Double";      break;
-            case ATTR_ANSISTRING  : strType = u"AnsiString";  break;
-            case ATTR_WIDESTRING  : strType = u"WideString";  break;
-            case ATTR_STRING      : strType = u"String";      break;
-            case ATTR_TEXT        : strType = u"Text";        break;
-            case ATTR_TIME        : strType = u"Time";        break;
-            case ATTR_DATE        : strType = u"Date";        break;
-            case ATTR_ANY         : strType = u"Any";         break;
-            case ATTR_BINARY      : strType = u"Binary";      break;
-            default               : strType = u"Unknown";     break;
+            case ATTR_BOOLEAN     : strType = XML("Boolean");     break;
+            case ATTR_SBYTE       : strType = XML("SByte");       break;
+            case ATTR_BYTE        : strType = XML("Byte");        break;
+            case ATTR_ANSICHAR    : strType = XML("AnsiChar");        break;
+            case ATTR_WIDECHAR    : strType = XML("WideChar");        break;
+            case ATTR_CHAR        : strType = XML("Char");        break;
+            case ATTR_INT16       : strType = XML("Int16");       break;
+            case ATTR_UINT16      : strType = XML("UInt16");      break;
+            case ATTR_INT32       : strType = XML("Int32");       break;
+            case ATTR_UINT32      : strType = XML("UInt32");      break;
+            case ATTR_INT64       : strType = XML("Int64");       break;
+            case ATTR_UINT64      : strType = XML("UInt64");      break;
+            case ATTR_INT         : strType = XML("Int");         break;
+            case ATTR_UINT        : strType = XML("UInt");        break;
+            case ATTR_SINGLE      : strType = XML("Single");      break;
+            case ATTR_DOUBLE      : strType = XML("Double");      break;
+            case ATTR_ANSISTRING  : strType = XML("AnsiString");  break;
+            case ATTR_WIDESTRING  : strType = XML("WideString");  break;
+            case ATTR_STRING      : strType = XML("String");      break;
+            case ATTR_TEXT        : strType = XML("Text");        break;
+            case ATTR_TIME        : strType = XML("Time");        break;
+            case ATTR_DATE        : strType = XML("Date");        break;
+            case ATTR_ANY         : strType = XML("Any");         break;
+            case ATTR_BINARY      : strType = XML("Binary");      break;
+            default               : strType = XML("Unknown");     break;
             }
-            xml_attribute->setAttribute(AX("Type"), strType.c_str());
+            xml_attribute->setAttribute(XML("Type"), strType.c_str());
             if (isId()) 
             {
-                strModifier += u"Id ";
+                strModifier += XML("Id ");
             }
             if (isRef()) 
             {
-                strModifier += u"Ref ";
+                strModifier += XML("Ref ");
             }
             if (isAuto()) 
             {
-                strModifier += u"Auto ";
+                strModifier += XML("Auto ");
             }
             if (isConst()) 
             {
-                strModifier += u"Const ";
+                strModifier += XML("Const ");
             }
             if (isContextual()) 
             {
-                strModifier += u"Contextual ";
+                strModifier += XML("Contextual ");
             }
             if (isBase()) 
             {
-                strModifier += u"Base ";
+                strModifier += XML("Base ");
             }
             if (isVirtual()) 
             {
-                strModifier += u"Virtual ";
+                strModifier += XML("Virtual ");
             }
             if (isStatic()) 
             {
-                strModifier += u"Static ";
+                strModifier += XML("Static ");
             }
             if (isArray())
             {
-                strModifier += u"Array ";
+                strModifier += XML("Array ");
             }
             if (!strModifier.empty())
             {
-                xml_attribute->setAttribute(AX("Modifier"), strModifier.c_str());
+                xml_attribute->setAttribute(XML("Modifier"), strModifier.c_str());
             }
             if (hasDefault())
             {
-                xml_attribute->setAttribute(AX("Default"), CX(m_default));
+                xml_attribute->setAttribute(XML("Default"), CX(m_default));
             }
             if (hasComment()) 
             {
-                xml_comment = xml_doc->createElement(AX("Comments"));
+                xml_comment = xml_doc->createElement(XML("Comments"));
                 xml_attribute->appendChild(xml_comment);
                 xml_text = xml_doc->createTextNode(CX(m_comment));
                 xml_comment->appendChild(xml_text);
@@ -135,9 +135,9 @@ namespace dsg {
         }
         else
         {
-            m_name = C(xml_attribute->getAttribute(AX("Name")));
-            m_alias = C(xml_attribute->getAttribute( AX("Alias") ));
-            strType = A(xml_attribute->getAttribute(AX("Type")));
+            m_name = C(xml_attribute->getAttribute(XML("Name")));
+            m_alias = C(xml_attribute->getAttribute( XML("Alias") ));
+            strType = A(xml_attribute->getAttribute(XML("Type")));
             if (strType == "Boolean")           m_type = ATTR_BOOLEAN;
             else if (strType == "SByte")        m_type = ATTR_SBYTE;
             else if (strType == "Byte")         m_type = ATTR_BYTE;
@@ -164,9 +164,9 @@ namespace dsg {
             else if (strType == "Binary")       m_type = ATTR_BINARY;
             else m_logger->warnStream() << "Attribute::loadXML() : unknown type : " << strType;
 
-            if (xml_attribute->hasAttribute( AX("Modifier") ))
+            if (xml_attribute->hasAttribute( XML("Modifier") ))
             {
-                istringstream iss(A(xml_attribute->getAttribute(AX("Modifier"))));
+                istringstream iss(A(xml_attribute->getAttribute(XML("Modifier"))));
                 while (!(iss >> strModifier).eof())
                 {
                     if (strModifier == "Id")           		setModifier(ATTR_ID);
@@ -181,12 +181,12 @@ namespace dsg {
                     else m_logger->warnStream() << "Attribute::loadXML() : unknown modifier : " << strModifier;
                 }
             }
-            if (xml_attribute->hasAttribute( AX("Default") ))
+            if (xml_attribute->hasAttribute( XML("Default") ))
             {
-                m_default = C(xml_attribute->getAttribute(AX("Default")));
+                m_default = C(xml_attribute->getAttribute(XML("Default")));
             }
             m_comment = EncodingT::EMPTY;
-            xml_list = xml_attribute->getElementsByTagName( AX("Comments") );
+            xml_list = xml_attribute->getElementsByTagName( XML("Comments") );
             if ( xml_list->getLength()>0 )
             {
                 xml_comment = (DOMElement*) xml_list->item(0);

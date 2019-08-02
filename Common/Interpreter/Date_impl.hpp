@@ -40,7 +40,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     typename EncodingT::string_t Date<EncodingT>::getClassName() const
     {
-        return C("Date");
+        return UCS("Date");
     }
 
     template <class EncodingT>
@@ -51,8 +51,8 @@ NAMESPACE_BEGIN(interp)
         ParameterArray args, ret;
         if (check_parameters_array(params, args))
         {
-            if (tryInvoke(this, C("Date"), method, args, ret)   ||
-                tryInvoke(this, C("Base"), method, args, ret))
+            if (tryInvoke(this, UCS("Date"), method, args, ret)   ||
+                tryInvoke(this, UCS("Base"), method, args, ret))
             {
                 find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
                 for (size_t i = 0; i < params.size(); ++i)
@@ -95,5 +95,5 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
 #undef A
+#undef C

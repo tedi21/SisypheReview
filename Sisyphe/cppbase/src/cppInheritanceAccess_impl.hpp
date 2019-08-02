@@ -1,6 +1,6 @@
-#include "DataConnection.hpp"
-#include "DataParameters.hpp"
-#include "DataStatement.hpp"
+#include "dataconnection.hpp"
+#include "dataparameters.hpp"
+#include "datastatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,10 +56,10 @@ _CppInheritanceAccess<EncodingT>::getManyCppInheritances(typename EncodingT::str
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("baseClassName"));
-	columns.push_back(C("baseAccess"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppInheritance")), filter) );
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("baseClassName"));
+	columns.push_back(UCS("baseAccess"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppInheritance")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t baseClassName;
@@ -92,7 +92,7 @@ _CppInheritanceAccess<EncodingT>::getOneCppInheritance(long long identifier) con
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > result = getManyCppInheritances(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > result = getManyCppInheritances(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -112,9 +112,9 @@ _CppInheritanceAccess<EncodingT>::selectManyCppInheritances(typename EncodingT::
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("baseClassName"));
-	columns.push_back(C("baseAccess"));
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("baseClassName"));
+	columns.push_back(UCS("baseAccess"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -123,7 +123,7 @@ _CppInheritanceAccess<EncodingT>::selectManyCppInheritances(typename EncodingT::
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppInheritance")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppInheritance")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t baseClassName;
@@ -158,7 +158,7 @@ _CppInheritanceAccess<EncodingT>::selectOneCppInheritance(long long identifier, 
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > result = selectManyCppInheritances(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppInheritance<EncodingT> > > result = selectManyCppInheritances(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -225,7 +225,7 @@ _CppInheritanceAccess<EncodingT>::fillDerived(boost::shared_ptr< _CppInheritance
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDerived")), std::vector<typename EncodingT::string_t>(1,C("cppInheritance")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDerived")), std::vector<typename EncodingT::string_t>(1,UCS("cppInheritance")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppInheritance<EncodingT>::CppInheritanceIDEquality cppInheritanceIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = derivedAccess->getOneCppClass(id);
@@ -297,11 +297,11 @@ _CppInheritanceAccess<EncodingT>::updateCppInheritance(boost::shared_ptr< _CppIn
 	try {
 		if ( (*save)->getBaseClassName() != o->getBaseClassName() ) {
 			values.addText( o->getBaseClassName() );
-			fields.push_back( C("baseClassName") );
+			fields.push_back( UCS("baseClassName") );
 		}
 		if ( (*save)->getBaseAccess() != o->getBaseAccess() ) {
 			values.addText( o->getBaseAccess() );
-			fields.push_back( C("baseAccess") );
+			fields.push_back( UCS("baseAccess") );
 		}
 		if ( !o->isNullDerived() && typename _CppClass<EncodingT>::CppClassIDEquality(-1)(o->getDerived()) ) {
 			m_logger->errorStream() << "idDerived : Identifier is null.";
@@ -309,19 +309,19 @@ _CppInheritanceAccess<EncodingT>::updateCppInheritance(boost::shared_ptr< _CppIn
 		}
 		else if ( !o->isNullDerived() && !typename _CppClass<EncodingT>::CppClassIDEquality(*(o->getDerived()))((*save)->getDerived()) ) {
 			values.addInt64( o->getDerived()->getIdentifier() );
-			fields.push_back( C("idDerived") );
+			fields.push_back( UCS("idDerived") );
 		}
 		else if ( o->isNullDerived() && !(*save)->isNullDerived() ) {
 			m_logger->errorStream() << "idDerived : null reference is forbidden.";
 			throw InvalidQueryException("idDerived : null reference is forbidden.");
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("cppInheritance"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+			statement.swap( connection->update(UCS("cppInheritance"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppInheritance"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppInheritance"), o);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -365,26 +365,26 @@ _CppInheritanceAccess<EncodingT>::insertCppInheritance(boost::shared_ptr< _CppIn
 		}
 		else if ( !o->isNullDerived() ) {
 			values.addInt64( o->getDerived()->getIdentifier() );
-			fields.push_back( C("idDerived") );
+			fields.push_back( UCS("idDerived") );
 		}
 		else {
 			m_logger->errorStream() << "idDerived : null reference is forbidden.";
 			throw InvalidQueryException("idDerived : null reference is forbidden.");
 		}
-		int id = connection->selectMaxID(C("identifier"), C("cppInheritance"))+1;
+		int id = connection->selectMaxID(UCS("identifier"), UCS("cppInheritance"))+1;
 		values.addInt( id );
-		fields.push_back( C("identifier") );
+		fields.push_back( UCS("identifier") );
 		values.addText( o->getBaseClassName() );
-		fields.push_back( C("baseClassName") );
+		fields.push_back( UCS("baseClassName") );
 		values.addText( o->getBaseAccess() );
-		fields.push_back( C("baseAccess") );
-		statement.swap( connection->insert(C("cppInheritance"), fields) );
+		fields.push_back( UCS("baseAccess") );
+		statement.swap( connection->insert(UCS("cppInheritance"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppInheritance"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppInheritance"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
@@ -425,12 +425,12 @@ _CppInheritanceAccess<EncodingT>::deleteCppInheritance(boost::shared_ptr< _CppIn
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
-		statement.swap( connection->deleteFrom(C("cppInheritance"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(UCS("cppInheritance"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppInheritance"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppInheritance"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

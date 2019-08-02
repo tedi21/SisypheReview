@@ -12,18 +12,20 @@
 #define _STRINGLIST_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 #include "Array.hpp"
 
 #include <list>
-typedef std::list<std::wstring> StringList;
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace std;
+
+template <typename EncodingT>
+using StringList = typename std::list<typename EncodingT::string_t>;
 
 NAMESPACE_BEGIN(interp)
 
@@ -33,18 +35,18 @@ NAMESPACE_BEGIN(interp)
 	: public Base<EncodingT>
 	{
 	private:
-		StringList m_object;
+                StringList<EncodingT> m_object;
 
 	public:
 		StringListInterpreter();
 
 		~StringListInterpreter();
 
-		StringListInterpreter(const StringList& object);
+                StringListInterpreter(const StringList<EncodingT>& object);
 
-		const StringList& value() const;
+                const StringList<EncodingT>& value() const;
 
-		void value(StringList const& object);
+                void value(StringList<EncodingT> const& object);
 
 		virtual typename EncodingT::string_t toString() const;
 
@@ -61,23 +63,23 @@ NAMESPACE_BEGIN(interp)
                 boost::shared_ptr< Base<EncodingT> > end() const;
 
 		FACTORY_BEGIN_REGISTER
-			CLASS_KEY_REGISTER  ( StringListInterpreter, C("StringList") );
-                        METHOD_KEY_REGISTER ( StringListInterpreter, boost::shared_ptr< Base<EncodingT> >, begin, const_t, C("StringList::Begin") );
-                        METHOD_KEY_REGISTER ( StringListInterpreter, boost::shared_ptr< Base<EncodingT> >, end, const_t, C("StringList::End") );
+                        CLASS_KEY_REGISTER  ( StringListInterpreter, UCS("StringList") );
+                        METHOD_KEY_REGISTER ( StringListInterpreter, boost::shared_ptr< Base<EncodingT> >, begin, const_t, UCS("StringList::Begin") );
+                        METHOD_KEY_REGISTER ( StringListInterpreter, boost::shared_ptr< Base<EncodingT> >, end, const_t, UCS("StringList::End") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-			CLASS_KEY_UNREGISTER  ( C("StringList") );
-			METHOD_KEY_UNREGISTER ( C("StringList::Begin") );
-			METHOD_KEY_UNREGISTER ( C("StringList::End") );
+                        CLASS_KEY_UNREGISTER  ( UCS("StringList") );
+                        METHOD_KEY_UNREGISTER ( UCS("StringList::Begin") );
+                        METHOD_KEY_UNREGISTER ( UCS("StringList::End") );
 		FACTORY_END_UNREGISTER
 	};
 
 	template <class EncodingT>
-        bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringList& a);
+        bool check_StringList(boost::shared_ptr< Base<EncodingT> > const& val, StringList<EncodingT>& a);
 
 	template <class EncodingT>
-        bool reset_StringList(boost::shared_ptr< Base<EncodingT> >& val, StringList const& a);
+        bool reset_StringList(boost::shared_ptr< Base<EncodingT> >& val, StringList<EncodingT> const& a);
 
 NAMESPACE_END
 

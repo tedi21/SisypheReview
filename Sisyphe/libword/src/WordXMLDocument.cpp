@@ -35,7 +35,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Ouvre un fichier Word XML
-    void WordXMLDocument::parse(const std::wstring& doc)
+    void WordXMLDocument::parse(const ucs::string_t& doc)
     {
         m_documentName = doc;
         // Create XML DOM document
@@ -79,7 +79,7 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Crée un nouveau noeud
-    WordXMLNode WordXMLDocument::createNode(const wchar_t* tagName)
+    WordXMLNode WordXMLDocument::createNode(const ucs::char_t* tagName)
     {
         WordXMLNode node;
         if (m_xmldocument)
@@ -94,12 +94,12 @@ NAMESPACE_BEGIN(libword)
     }
 
     // Create text node
-    WordXMLNode WordXMLDocument::createTextNode(const wchar_t* str)
+    WordXMLNode WordXMLDocument::createTextNode(const ucs::char_t* str)
     {
         WordXMLNode text;
         if (m_xmldocument)
         {
-            text = createNode(L"w:t");
+            text = createNode(UCS("w:t"));
             text.setContent(str);
         }
         else
@@ -115,7 +115,7 @@ NAMESPACE_BEGIN(libword)
         if (m_xmldocument)
         {
             //Return the first registered implementation that has the desired features. In this case, we are after a DOM implementation that has the LS feature... or Load/Save.
-            xercesc::DOMImplementation *implementation = xercesc::DOMImplementationRegistry::getDOMImplementation(encode<ansi,xml>("LS").c_str());
+            xercesc::DOMImplementation *implementation = xercesc::DOMImplementationRegistry::getDOMImplementation(XML("LS"));
 
             // Create a DOMLSSerializer which is used to serialize a DOM tree into an XML document.
             xercesc::DOMLSSerializer *serializer = ((xercesc::DOMImplementationLS*)implementation)->createLSSerializer();

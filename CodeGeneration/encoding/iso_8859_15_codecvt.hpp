@@ -30,14 +30,14 @@ namespace std {
 #endif
 
 struct ENCODING_API iso_8859_15_codecvt_facet :
-    public std::codecvt<wchar_t, char, std::mbstate_t>  
+    public std::codecvt<wchar_t, char, std::mbstate_t>
 {
 private:
     static const int iso_8859_15_SIZE = 256;        
-    static wchar_t table[iso_8859_15_SIZE][2]; 
+    static wchar_t table[iso_8859_15_SIZE][2];
 public:
     explicit iso_8859_15_codecvt_facet(std::size_t no_locale_manage=0)
-        : std::codecvt<wchar_t, char, std::mbstate_t>(no_locale_manage) 
+        : std::codecvt<wchar_t, char, std::mbstate_t>(no_locale_manage)
     {}
 protected:
     virtual std::codecvt_base::result do_in(
@@ -45,15 +45,19 @@ protected:
         const char * from,
         const char * from_end, 
         const char * & from_next,
-        wchar_t * to, 
-        wchar_t * to_end, 
-        wchar_t*& to_next
+        wchar_t * to,
+        wchar_t * to_end,
+        wchar_t * & to_next
     ) const;
 
     virtual std::codecvt_base::result do_out(
-        std::mbstate_t & state, const wchar_t * from,
-        const wchar_t * from_end, const wchar_t*  & from_next,
-        char * to, char * to_end, char * & to_next
+        std::mbstate_t & state,
+        const wchar_t * from,
+        const wchar_t * from_end,
+        const wchar_t * & from_next,
+        char * to,
+        char * to_end,
+        char * & to_next
     ) const;
 
     virtual bool do_always_noconv() const throw() { return false; }

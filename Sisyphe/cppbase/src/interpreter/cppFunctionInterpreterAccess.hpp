@@ -12,7 +12,7 @@
 #define _CPPFUNCTION_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -128,53 +128,53 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppFunctionInterpreterAccess, C("CppFunctionAccess") );
-		METHOD_KEY_REGISTER ( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppFunctions, no_const_t, C("CppFunctionAccess::GetAllCppFunctions") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppFunctions, no_const_t, C("CppFunctionAccess::GetManyCppFunctions") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppFunction, no_const_t, C("CppFunctionAccess::GetOneCppFunction") );
-		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppFunction, no_const_t, C("CppFunctionAccess::SelectOneCppFunction") );
-		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppFunctions, no_const_t, C("CppFunctionAccess::SelectManyCppFunctions") );
-		METHOD_KEY_REGISTER ( CppFunctionInterpreterAccess, void, cancelSelection, no_const_t, C("CppFunctionAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppFunction, no_const_t, C("CppFunctionAccess::IsSelectedCppFunction") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, fillCppDeclarationFile, no_const_t, C("CppFunctionAccess::FillCppDeclarationFile") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, fillCppDefinitionFile, no_const_t, C("CppFunctionAccess::FillCppDefinitionFile") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, fillCppClass, no_const_t, C("CppFunctionAccess::FillCppClass") );
-		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, void, fillAllCppParameters, no_const_t, C("CppFunctionAccess::FillAllCppParameters") );
-		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillOneCppParameter, no_const_t, C("CppFunctionAccess::FillOneCppParameter") );
-		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillManyCppParameters, no_const_t, C("CppFunctionAccess::FillManyCppParameters") );
-		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, void, fillAllCppVariables, no_const_t, C("CppFunctionAccess::FillAllCppVariables") );
-		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillOneCppVariable, no_const_t, C("CppFunctionAccess::FillOneCppVariable") );
-		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillManyCppVariables, no_const_t, C("CppFunctionAccess::FillManyCppVariables") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppFunction, no_const_t, C("CppFunctionAccess::IsModifiedCppFunction") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, updateCppFunction, no_const_t, C("CppFunctionAccess::UpdateCppFunction") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, insertCppFunction, no_const_t, C("CppFunctionAccess::InsertCppFunction") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, deleteCppFunction, no_const_t, C("CppFunctionAccess::DeleteCppFunction") );
-		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("CppFunctionAccess::GetError") );
+		CLASS_KEY_REGISTER ( CppFunctionInterpreterAccess, UCS("CppFunctionAccess") );
+		METHOD_KEY_REGISTER ( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppFunctions, no_const_t, UCS("CppFunctionAccess::GetAllCppFunctions") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppFunctions, no_const_t, UCS("CppFunctionAccess::GetManyCppFunctions") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppFunction, no_const_t, UCS("CppFunctionAccess::GetOneCppFunction") );
+		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppFunction, no_const_t, UCS("CppFunctionAccess::SelectOneCppFunction") );
+		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppFunctions, no_const_t, UCS("CppFunctionAccess::SelectManyCppFunctions") );
+		METHOD_KEY_REGISTER ( CppFunctionInterpreterAccess, void, cancelSelection, no_const_t, UCS("CppFunctionAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppFunction, no_const_t, UCS("CppFunctionAccess::IsSelectedCppFunction") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, fillCppDeclarationFile, no_const_t, UCS("CppFunctionAccess::FillCppDeclarationFile") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, fillCppDefinitionFile, no_const_t, UCS("CppFunctionAccess::FillCppDefinitionFile") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, fillCppClass, no_const_t, UCS("CppFunctionAccess::FillCppClass") );
+		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, void, fillAllCppParameters, no_const_t, UCS("CppFunctionAccess::FillAllCppParameters") );
+		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillOneCppParameter, no_const_t, UCS("CppFunctionAccess::FillOneCppParameter") );
+		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillManyCppParameters, no_const_t, UCS("CppFunctionAccess::FillManyCppParameters") );
+		METHOD_KEY_REGISTER2( CppFunctionInterpreterAccess, void, fillAllCppVariables, no_const_t, UCS("CppFunctionAccess::FillAllCppVariables") );
+		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillOneCppVariable, no_const_t, UCS("CppFunctionAccess::FillOneCppVariable") );
+		METHOD_KEY_REGISTER3( CppFunctionInterpreterAccess, void, fillManyCppVariables, no_const_t, UCS("CppFunctionAccess::FillManyCppVariables") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppFunction, no_const_t, UCS("CppFunctionAccess::IsModifiedCppFunction") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, updateCppFunction, no_const_t, UCS("CppFunctionAccess::UpdateCppFunction") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, insertCppFunction, no_const_t, UCS("CppFunctionAccess::InsertCppFunction") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, void, deleteCppFunction, no_const_t, UCS("CppFunctionAccess::DeleteCppFunction") );
+		METHOD_KEY_REGISTER1( CppFunctionInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("CppFunctionAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppFunctionAccess") );
-		METHOD_KEY_UNREGISTER ( C("CppFunctionAccess::GetAllCppFunctions") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::GetManyCppFunctions") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::GetOneCppFunction") );
-		METHOD_KEY_UNREGISTER2( C("CppFunctionAccess::SelectOneCppFunction") );
-		METHOD_KEY_UNREGISTER2( C("CppFunctionAccess::SelectManyCppFunctions") );
-		METHOD_KEY_UNREGISTER ( C("CppFunctionAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::IsSelectedCppFunction") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::FillCppDeclarationFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::FillCppDefinitionFile") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::FillCppClass") );
-		METHOD_KEY_UNREGISTER2( C("CppFunctionAccess::FillAllCppParameters") );
-		METHOD_KEY_UNREGISTER3( C("CppFunctionAccess::FillOneCppParameter") );
-		METHOD_KEY_UNREGISTER3( C("CppFunctionAccess::FillManyCppParameters") );
-		METHOD_KEY_UNREGISTER2( C("CppFunctionAccess::FillAllCppVariables") );
-		METHOD_KEY_UNREGISTER3( C("CppFunctionAccess::FillOneCppVariable") );
-		METHOD_KEY_UNREGISTER3( C("CppFunctionAccess::FillManyCppVariables") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::IsModifiedCppFunction") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::UpdateCppFunction") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::InsertCppFunction") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::DeleteCppFunction") );
-		METHOD_KEY_UNREGISTER1( C("CppFunctionAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("CppFunctionAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFunctionAccess::GetAllCppFunctions") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::GetManyCppFunctions") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::GetOneCppFunction") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFunctionAccess::SelectOneCppFunction") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFunctionAccess::SelectManyCppFunctions") );
+		METHOD_KEY_UNREGISTER ( UCS("CppFunctionAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::IsSelectedCppFunction") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::FillCppDeclarationFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::FillCppDefinitionFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::FillCppClass") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFunctionAccess::FillAllCppParameters") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFunctionAccess::FillOneCppParameter") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFunctionAccess::FillManyCppParameters") );
+		METHOD_KEY_UNREGISTER2( UCS("CppFunctionAccess::FillAllCppVariables") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFunctionAccess::FillOneCppVariable") );
+		METHOD_KEY_UNREGISTER3( UCS("CppFunctionAccess::FillManyCppVariables") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::IsModifiedCppFunction") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::UpdateCppFunction") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::InsertCppFunction") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::DeleteCppFunction") );
+		METHOD_KEY_UNREGISTER1( UCS("CppFunctionAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _CppFunction<EncodingT> > >& value) const;

@@ -12,7 +12,6 @@
 #include "ConstantInterpreter.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
 
 NAMESPACE_BEGIN(interp)
 
@@ -261,7 +260,7 @@ NAMESPACE_BEGIN(interp)
     {
         boost::shared_ptr< Term<EncodingT> > instruction;
         typename EncodingT::string_t expr;
-        bool success =  suffix<EncodingT>(buf, C(";"), expr) &&
+        bool success =  suffix<EncodingT>(buf, UCS(";"), expr) &&
                         Instruction<EncodingT>::parse(expr, instruction);
         if (success)
         {
@@ -275,7 +274,7 @@ NAMESPACE_BEGIN(interp)
     InstructionsList<EncodingT>::look_for(typename InstructionsList<EncodingT>::char_iterator start, typename InstructionsList<EncodingT>::char_iterator end)
     {
         typename EncodingT::string_t::const_iterator i = start, j;
-        while ( (j = find_symbol<EncodingT>(start, end, C(";"))) != end &&
+        while ( (j = find_symbol<EncodingT>(start, end, UCS(";"))) != end &&
                 (std::count(i, j, '"')%2) != 0 )
         {
             start = j + 1;
@@ -298,7 +297,7 @@ NAMESPACE_BEGIN(interp)
     {
         boost::shared_ptr< Term<EncodingT> > instruction;
         typename EncodingT::string_t expr;
-        bool success =  embrace<EncodingT>(buf, C("/*"), C("*/"), expr);
+        bool success =  embrace<EncodingT>(buf, UCS("/*"), UCS("*/"), expr);
         if (success)
         {
             value.reset(new CommentBlock<EncodingT>(expr));
@@ -312,8 +311,8 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t::const_iterator i = start, j;
         if ( end-start > 2 &&
-             equal_symbol<EncodingT>(start, start+2, C("/*")) &&
-            (j = find_symbol<EncodingT>(start+2, end, C("*/")))!=end)
+             equal_symbol<EncodingT>(start, start+2, UCS("/*")) &&
+            (j = find_symbol<EncodingT>(start+2, end, UCS("*/")))!=end)
         {
             i = j + 2;
         }
@@ -354,9 +353,9 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t condition, instructions;
         boost::shared_ptr< Term<EncodingT> > condition_value;
         boost::shared_ptr< Term<EncodingT> > instructions_value;
-        bool success =  prefix<EncodingT>(expr, C("while"), expr, true) &&
-                        suffix<EncodingT>(expr, C("endwhile"), expr, true) &&
-                        hyphenation<EncodingT>(expr, C("do"), condition, instructions, true) &&
+        bool success =  prefix<EncodingT>(expr, UCS("while"), expr, true) &&
+                        suffix<EncodingT>(expr, UCS("endwhile"), expr, true) &&
+                        hyphenation<EncodingT>(expr, UCS("do"), condition, instructions, true) &&
                         /*Bool*/Instruction<EncodingT>::parse(condition, condition_value) &&
                         Block<EncodingT>::parse(instructions, instructions_value);
         if (success)
@@ -372,33 +371,33 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t::const_iterator i = start, j = start, k = start;
         k = next_space<EncodingT>(j, end);
-        if (equal_symbol<EncodingT>(j, k, C("while")))
+        if (equal_symbol<EncodingT>(j, k, UCS("while")))
         {
             j = k;
             int ignore = 0;
             size_t cpt = 1;
             while (cpt != 0 && j != end)
             {
-                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("/*")))
+                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, UCS("/*")))
                 {
                     ignore = 1;
                     j += 1;
                 }
-                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("\"")))
+                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, UCS("\"")))
                 {
                     ignore ^= 2;
                 }
-                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("*/")))
+                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, UCS("*/")))
                 {
                     ignore = 0;
                     j += 1;
                 }
-                else if ((ignore == 0) && j+5 < end && isspace_(*(j-1)) && isspace_(*(j+5)) && equal_symbol<EncodingT>(j, j+5, C("while")))
+                else if ((ignore == 0) && j+5 < end && isspace_(*(j-1)) && isspace_(*(j+5)) && equal_symbol<EncodingT>(j, j+5, UCS("while")))
                 {
                     ++cpt;
                     j += 4;
                 }
-                else if ((ignore == 0) && ((j+8 < end && isspace_(*(j+8))) || (j+8 == end)) && isspace_(*(j-1)) && equal_symbol<EncodingT>(j, j+8, C("endwhile")))
+                else if ((ignore == 0) && ((j+8 < end && isspace_(*(j+8))) || (j+8 == end)) && isspace_(*(j-1)) && equal_symbol<EncodingT>(j, j+8, UCS("endwhile")))
                 {
                     --cpt;
                     j += 7;
@@ -448,9 +447,9 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t condition, instructions, if_instructions, else_instructions;
         boost::shared_ptr< Term<EncodingT> > condition_value;
         boost::shared_ptr< Term<EncodingT> > if_instructions_value, else_instructions_value;
-        bool success =  prefix<EncodingT>(expr, C("if"), expr, true) &&
-                        suffix<EncodingT>(expr, C("endif"), expr, true) &&
-                        hyphenation<EncodingT>(expr, C("then"), condition, instructions, true) &&
+        bool success =  prefix<EncodingT>(expr, UCS("if"), expr, true) &&
+                        suffix<EncodingT>(expr, UCS("endif"), expr, true) &&
+                        hyphenation<EncodingT>(expr, UCS("then"), condition, instructions, true) &&
                         /*Bool*/Instruction<EncodingT>::parse(condition, condition_value);
         if (success)
         {
@@ -458,7 +457,7 @@ NAMESPACE_BEGIN(interp)
             size_t i = 0;
             while (i != EncodingT::string_t::npos && !success)
             {
-                success = ((hyphenation<EncodingT>(instructions, C("else"), if_instructions, else_instructions, i, true) &&
+                success = ((hyphenation<EncodingT>(instructions, UCS("else"), if_instructions, else_instructions, i, true) &&
                             Block<EncodingT>::parse(if_instructions, if_instructions_value) &&
                             Block<EncodingT>::parse(else_instructions, else_instructions_value)) ||
                             Block<EncodingT>::parse(instructions, if_instructions_value));
@@ -477,33 +476,33 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t::const_iterator i = start, j = start, k = start;
         k = next_space<EncodingT>(j, end);
-        if (equal_symbol<EncodingT>(j, k, C("if")))
+        if (equal_symbol<EncodingT>(j, k, UCS("if")))
         {
             j = k;
             int ignore = 0;
             size_t cpt = 1;
             while (cpt != 0 && j != end)
             {
-                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("/*")))
+                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, UCS("/*")))
                 {
                     ignore = 1;
                     j += 1;
                 }
-                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("\"")))
+                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, UCS("\"")))
                 {
                     ignore ^= 2;
                 }
-                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("*/")))
+                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, UCS("*/")))
                 {
                     ignore = 0;
                     j += 1;
                 }
-                else if ((ignore == 0) && j+2 < end && isspace_(*(j-1)) && isspace_(*(j+2)) && equal_symbol<EncodingT>(j, j+2, C("if")))
+                else if ((ignore == 0) && j+2 < end && isspace_(*(j-1)) && isspace_(*(j+2)) && equal_symbol<EncodingT>(j, j+2, UCS("if")))
                 {
                     ++cpt;
                     j += 1;
                 }
-                else if ((ignore == 0) && ((j+5 < end && isspace_(*(j+5))) || (j+5 == end)) && isspace_(*(j-1)) && equal_symbol<EncodingT>(j, j+5, C("endif")))
+                else if ((ignore == 0) && ((j+5 < end && isspace_(*(j+5))) || (j+5 == end)) && isspace_(*(j-1)) && equal_symbol<EncodingT>(j, j+5, UCS("endif")))
                 {
                     --cpt;
                     j += 4;
@@ -530,7 +529,7 @@ NAMESPACE_BEGIN(interp)
     {
         boost::shared_ptr< Term<EncodingT> > instruction;
         typename EncodingT::string_t expr;
-        bool success =  suffix<EncodingT>(buf, C(";"), expr) &&
+        bool success =  suffix<EncodingT>(buf, UCS(";"), expr) &&
                         ConstantAssignment<EncodingT>::parse(expr, instruction);
         if (success)
         {
@@ -544,9 +543,9 @@ NAMESPACE_BEGIN(interp)
     ConstantsList<EncodingT>::look_for(typename ConstantsList<EncodingT>::char_iterator start, typename ConstantsList<EncodingT>::char_iterator end)
     {
         typename EncodingT::string_t::const_iterator i = start, j;
-        if (end-start > 13 && equal_symbol<EncodingT>(start, start+8, C("constant")))
+        if (end-start > 13 && equal_symbol<EncodingT>(start, start+8, UCS("constant")))
         {
-            while ( (j = find_symbol<EncodingT>(start, end, C(";"))) != end &&
+            while ( (j = find_symbol<EncodingT>(start, end, UCS(";"))) != end &&
                     (std::count(i, j, '"')%2) != 0 )
             {
                 start = j + 1;
@@ -604,7 +603,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t left, right;
         boost::shared_ptr< Term<EncodingT> > right_value;
         boost::shared_ptr< Address<EncodingT> > left_value;
-        bool success = binary_op<EncodingT>(buf, C("="), left, right) &&
+        bool success = binary_op<EncodingT>(buf, UCS("="), left, right) &&
                        Assignable<EncodingT>::parse(left, left_value) &&
                        Instruction<EncodingT>::parse(right, right_value);
         if (success)
@@ -628,7 +627,7 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t left, right;
         boost::shared_ptr< Term<EncodingT> > right_value;
         boost::shared_ptr< Address<EncodingT> > left_value;
-        bool success = binary_op<EncodingT>(buf, C(":="), left, right) &&
+        bool success = binary_op<EncodingT>(buf, UCS(":="), left, right) &&
                        Assignable<EncodingT>::parse(left, left_value) &&
                        Instruction<EncodingT>::parse(right, right_value);
         if (success)
@@ -649,7 +648,7 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t expr;
         boost::shared_ptr< Term<EncodingT> > expr_value;
-        bool success = embrace<EncodingT>(buf, C("("), C(")"), expr) &&
+        bool success = embrace<EncodingT>(buf, UCS("("), UCS(")"), expr) &&
                        Instruction<EncodingT>::parse(expr, expr_value);
         if (success)
         {
@@ -663,32 +662,32 @@ NAMESPACE_BEGIN(interp)
     Bracket<EncodingT>::look_for(typename Bracket<EncodingT>::char_iterator start, typename Bracket<EncodingT>::char_iterator end)
     {
         typename EncodingT::string_t::const_iterator i = start;
-        if (start!=end && equal_symbol<EncodingT>(start, start+1, C("(")))
+        if (start!=end && equal_symbol<EncodingT>(start, start+1, UCS("(")))
         {
             typename EncodingT::string_t::const_iterator j = start+1;
             int ignore = 0;
             size_t cpt = 1;
             while (cpt != 0 && j != end)
             {
-                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("/*")))
+                if ((ignore == 0) && j+2 < end && equal_symbol<EncodingT>(j, j+2, UCS("/*")))
                 {
                     ignore = 1;
                     j += 1;
                 }
-                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("\"")))
+                else if ((ignore == 0 || ignore == 2) && j+1 < end && equal_symbol<EncodingT>(j, j+1, UCS("\"")))
                 {
                     ignore ^= 2;
                 }
-                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, C("*/")))
+                else if ((ignore == 1) && j+2 < end && equal_symbol<EncodingT>(j, j+2, UCS("*/")))
                 {
                     ignore = 0;
                     j += 1;
                 }
-                else if ((ignore == 0) && j+1 < end && equal_symbol<EncodingT>(j, j+1, C("(")))
+                else if ((ignore == 0) && j+1 < end && equal_symbol<EncodingT>(j, j+1, UCS("(")))
                 {
                     ++cpt;
                 }
-                else if ((ignore == 0) && j+1 <= end && equal_symbol<EncodingT>(j, j+1, C(")")))
+                else if ((ignore == 0) && j+1 <= end && equal_symbol<EncodingT>(j, j+1, UCS(")")))
                 {
                     --cpt;
                 }
@@ -739,7 +738,7 @@ NAMESPACE_BEGIN(interp)
         }
         if (dynamic_pointer_cast< Null<EncodingT> >(value))
         {
-            obj->invoke(C("remove") + m_methodName, parameters);
+            obj->invoke(UCS("remove") + m_methodName, parameters);
         }
         else
         {
@@ -758,23 +757,23 @@ NAMESPACE_BEGIN(interp)
         size_t i = buf.length();
         while (i != EncodingT::string_t::npos && !success)
         {
-            if (rbinary_op<EncodingT>(buf, C("."), left, right, i) &&
+            if (rbinary_op<EncodingT>(buf, UCS("."), left, right, i) &&
                 Instruction<EncodingT>::parse(left, left_value))
             {
-                typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(right.begin(), right.end(), C("("));
+                typename EncodingT::string_t::const_iterator i = find_symbol<EncodingT>(right.begin(), right.end(), UCS("("));
                 typename EncodingT::string_t parameters(i, (typename EncodingT::string_t::const_iterator) right.end());
                 method = eat_space<EncodingT>(typename EncodingT::string_t(
                          (typename EncodingT::string_t::const_iterator) right.begin(), i));
 
                 success = is_identifier<EncodingT>(method);
-                embrace<EncodingT>(parameters, C("("), C(")"), parameters);
+                embrace<EncodingT>(parameters, UCS("("), UCS(")"), parameters);
 
                 if (!parameters.empty())
                 {
                     vector<typename EncodingT::string_t> params;
                     size_t j = 0;
                     ignore_literal_comment<EncodingT> predicat;
-                    tuple_op_if<EncodingT>(parameters, C(","), params, predicat);
+                    tuple_op_if<EncodingT>(parameters, UCS(","), params, predicat);
                     params_values.clear();
                     while (success && j<params.size())
                     {
@@ -941,19 +940,19 @@ NAMESPACE_BEGIN(interp)
             if (i1 <= j)
             {
                 // Search first comment
-                i1 = find_symbol<EncodingT>(j, end, L"/*");
+                i1 = find_symbol<EncodingT>(j, end, UCS("/*"));
             }
             if (i2 <= j)
             {
                 // Search first quote
-                i2 = find_symbol<EncodingT>(j, end, L"\"");
+                i2 = find_symbol<EncodingT>(j, end, UCS("\""));
             }
             if ((i1 != end) || (i2 != end))
             {
                 if (i1 < i2)
                 {
                     // comment is before quote
-                    j = find_symbol<EncodingT>(i1 + 2, end, L"*/");
+                    j = find_symbol<EncodingT>(i1 + 2, end, UCS("*/"));
                     if (j != end)
                     {
                         j += 2;
@@ -963,7 +962,7 @@ NAMESPACE_BEGIN(interp)
                 else
                 {
                     // quote is before comment
-                    j = find_symbol<EncodingT>(i2 + 1, end, L"\"");
+                    j = find_symbol<EncodingT>(i2 + 1, end, UCS("\""));
                     if (j != end)
                     {
                         j += 1;
@@ -1000,6 +999,5 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
 #undef A
 

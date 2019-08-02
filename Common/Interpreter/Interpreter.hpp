@@ -13,9 +13,6 @@ using namespace boost;
 using namespace log4cpp;
 using namespace std;
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
 template <class EncodingT>
@@ -76,9 +73,6 @@ public:
 
 NAMESPACE_END
 
-#include "interpreter_impl.hpp"
-
-#undef C
-#undef A
+#include "Interpreter_impl.hpp"
 
 #endif

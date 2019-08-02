@@ -11,7 +11,7 @@
 #define _HTML_FORMATTER_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
@@ -52,13 +52,13 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > prettyPrint(const boost::shared_ptr< Base<EncodingT> >& source) const;
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( HTMLFormatterInterpreter, C("HTMLFormatter") );
-            METHOD_KEY_REGISTER1( HTMLFormatterInterpreter, boost::shared_ptr< Base<EncodingT> >, prettyPrint, const_t, C("HTMLFormatter::PrettyPrint") );
+            CLASS_KEY_REGISTER  ( HTMLFormatterInterpreter, UCS("HTMLFormatter") );
+            METHOD_KEY_REGISTER1( HTMLFormatterInterpreter, boost::shared_ptr< Base<EncodingT> >, prettyPrint, const_t, UCS("HTMLFormatter::PrettyPrint") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("HTMLFormatter") );
-            METHOD_KEY_UNREGISTER1( C("HTMLFormatter::PrettyPrint") );
+            CLASS_KEY_UNREGISTER  ( UCS("HTMLFormatter") );
+            METHOD_KEY_UNREGISTER1( UCS("HTMLFormatter::PrettyPrint") );
 		FACTORY_END_UNREGISTER
 	};
 

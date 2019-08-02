@@ -12,7 +12,7 @@
 #define _CPPINCLUDE_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -94,37 +94,37 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppIncludeInterpreterAccess, C("CppIncludeAccess") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppIncludes, no_const_t, C("CppIncludeAccess::GetAllCppIncludes") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppIncludes, no_const_t, C("CppIncludeAccess::GetManyCppIncludes") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppInclude, no_const_t, C("CppIncludeAccess::GetOneCppInclude") );
-		METHOD_KEY_REGISTER2( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppInclude, no_const_t, C("CppIncludeAccess::SelectOneCppInclude") );
-		METHOD_KEY_REGISTER2( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppIncludes, no_const_t, C("CppIncludeAccess::SelectManyCppIncludes") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreterAccess, void, cancelSelection, no_const_t, C("CppIncludeAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppInclude, no_const_t, C("CppIncludeAccess::IsSelectedCppInclude") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, fillCppFile, no_const_t, C("CppIncludeAccess::FillCppFile") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppInclude, no_const_t, C("CppIncludeAccess::IsModifiedCppInclude") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, updateCppInclude, no_const_t, C("CppIncludeAccess::UpdateCppInclude") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, insertCppInclude, no_const_t, C("CppIncludeAccess::InsertCppInclude") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, deleteCppInclude, no_const_t, C("CppIncludeAccess::DeleteCppInclude") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("CppIncludeAccess::GetError") );
+		CLASS_KEY_REGISTER ( CppIncludeInterpreterAccess, UCS("CppIncludeAccess") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppIncludes, no_const_t, UCS("CppIncludeAccess::GetAllCppIncludes") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppIncludes, no_const_t, UCS("CppIncludeAccess::GetManyCppIncludes") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppInclude, no_const_t, UCS("CppIncludeAccess::GetOneCppInclude") );
+		METHOD_KEY_REGISTER2( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppInclude, no_const_t, UCS("CppIncludeAccess::SelectOneCppInclude") );
+		METHOD_KEY_REGISTER2( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppIncludes, no_const_t, UCS("CppIncludeAccess::SelectManyCppIncludes") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreterAccess, void, cancelSelection, no_const_t, UCS("CppIncludeAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppInclude, no_const_t, UCS("CppIncludeAccess::IsSelectedCppInclude") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, fillCppFile, no_const_t, UCS("CppIncludeAccess::FillCppFile") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppInclude, no_const_t, UCS("CppIncludeAccess::IsModifiedCppInclude") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, updateCppInclude, no_const_t, UCS("CppIncludeAccess::UpdateCppInclude") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, insertCppInclude, no_const_t, UCS("CppIncludeAccess::InsertCppInclude") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, void, deleteCppInclude, no_const_t, UCS("CppIncludeAccess::DeleteCppInclude") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("CppIncludeAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppIncludeAccess") );
-		METHOD_KEY_UNREGISTER ( C("CppIncludeAccess::GetAllCppIncludes") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::GetManyCppIncludes") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::GetOneCppInclude") );
-		METHOD_KEY_UNREGISTER2( C("CppIncludeAccess::SelectOneCppInclude") );
-		METHOD_KEY_UNREGISTER2( C("CppIncludeAccess::SelectManyCppIncludes") );
-		METHOD_KEY_UNREGISTER ( C("CppIncludeAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::IsSelectedCppInclude") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::FillCppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::IsModifiedCppInclude") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::UpdateCppInclude") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::InsertCppInclude") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::DeleteCppInclude") );
-		METHOD_KEY_UNREGISTER1( C("CppIncludeAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("CppIncludeAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("CppIncludeAccess::GetAllCppIncludes") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::GetManyCppIncludes") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::GetOneCppInclude") );
+		METHOD_KEY_UNREGISTER2( UCS("CppIncludeAccess::SelectOneCppInclude") );
+		METHOD_KEY_UNREGISTER2( UCS("CppIncludeAccess::SelectManyCppIncludes") );
+		METHOD_KEY_UNREGISTER ( UCS("CppIncludeAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::IsSelectedCppInclude") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::FillCppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::IsModifiedCppInclude") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::UpdateCppInclude") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::InsertCppInclude") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::DeleteCppInclude") );
+		METHOD_KEY_UNREGISTER1( UCS("CppIncludeAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _CppInclude<EncodingT> > >& value) const;

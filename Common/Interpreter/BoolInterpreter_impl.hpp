@@ -1,8 +1,5 @@
 #include "Bool.hpp"
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -15,15 +12,12 @@ NAMESPACE_BEGIN(interp)
     bool BoolConstant<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {  
         typename EncodingT::string_t str = eat_space<EncodingT>(buf);
-        bool success = (str==C("true") || str==C("false"));
+        bool success = (str==UCS("true") || str==UCS("false"));
         if (success)
         {
-            value.reset(new BoolConstant<EncodingT>((str==C("true"))?true:false));
+            value.reset(new BoolConstant<EncodingT>((str==UCS("true"))?true:false));
         }
         return success; 
     }
 
 NAMESPACE_END
-
-#undef C
-#undef A

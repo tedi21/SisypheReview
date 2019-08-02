@@ -19,15 +19,15 @@ namespace dsg {
         DOMText*    xml_data       = NULL;
         try 
         {
-            xml_content = xml_doc->createElement( AX("Content") ); 
-            xml_content->setAttribute( AX("Type"), CX(m_type) );
+            xml_content = xml_doc->createElement( XML("Content") ); 
+            xml_content->setAttribute( XML("Type"), CX(m_type) );
             if (!m_target.empty())
             {
-                xml_content->setAttribute( AX("Target"), CX(m_target) );
+                xml_content->setAttribute( XML("Target"), CX(m_target) );
             }
             if (!m_targetREF.empty())
             {
-                xml_content->setAttribute( AX("TargetREF"), CX(m_targetREF) );
+                xml_content->setAttribute( XML("TargetREF"), CX(m_targetREF) );
             }
             xml_data = xml_doc->createTextNode( CX(m_data) );
             xml_content->appendChild(xml_data);
@@ -54,9 +54,9 @@ namespace dsg {
         }
         else 
         {
-            m_type = C(xml_content->getAttribute( AX("Type") ));
-            m_target = C(xml_content->getAttribute( AX("Target") ));
-            m_targetREF = C(xml_content->getAttribute( AX("TargetREF") ));
+            m_type = C(xml_content->getAttribute( XML("Type") ));
+            m_target = C(xml_content->getAttribute( XML("Target") ));
+            m_targetREF = C(xml_content->getAttribute( XML("TargetREF") ));
             m_data = EncodingT::EMPTY;
             if (xml_content->hasChildNodes()) 
             {

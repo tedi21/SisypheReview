@@ -38,5 +38,5 @@ typedef _DataNullParameter<ansi>       DataNullParameter;
 
 NAMESPACE_END
 
-#include "DataNullParameter_impl.hpp"
+#include "datanullparameter_impl.hpp"
 #endif

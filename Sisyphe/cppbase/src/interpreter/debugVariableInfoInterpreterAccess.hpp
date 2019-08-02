@@ -12,7 +12,7 @@
 #define _DEBUGVARIABLEINFO_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -111,45 +111,45 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( DebugVariableInfoInterpreterAccess, C("DebugVariableInfoAccess") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllDebugVariableInfos, no_const_t, C("DebugVariableInfoAccess::GetAllDebugVariableInfos") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyDebugVariableInfos, no_const_t, C("DebugVariableInfoAccess::GetManyDebugVariableInfos") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::GetOneDebugVariableInfo") );
-		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::SelectOneDebugVariableInfo") );
-		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyDebugVariableInfos, no_const_t, C("DebugVariableInfoAccess::SelectManyDebugVariableInfos") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreterAccess, void, cancelSelection, no_const_t, C("DebugVariableInfoAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::IsSelectedDebugVariableInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, fillDebugTypeInfo, no_const_t, C("DebugVariableInfoAccess::FillDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, fillDebugFunctionInfo, no_const_t, C("DebugVariableInfoAccess::FillDebugFunctionInfo") );
-		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreterAccess, void, fillAllDebugValueInfos, no_const_t, C("DebugVariableInfoAccess::FillAllDebugValueInfos") );
-		METHOD_KEY_REGISTER3( DebugVariableInfoInterpreterAccess, void, fillOneDebugValueInfo, no_const_t, C("DebugVariableInfoAccess::FillOneDebugValueInfo") );
-		METHOD_KEY_REGISTER3( DebugVariableInfoInterpreterAccess, void, fillManyDebugValueInfos, no_const_t, C("DebugVariableInfoAccess::FillManyDebugValueInfos") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::IsModifiedDebugVariableInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, updateDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::UpdateDebugVariableInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, insertDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::InsertDebugVariableInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, deleteDebugVariableInfo, no_const_t, C("DebugVariableInfoAccess::DeleteDebugVariableInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("DebugVariableInfoAccess::GetError") );
+		CLASS_KEY_REGISTER ( DebugVariableInfoInterpreterAccess, UCS("DebugVariableInfoAccess") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllDebugVariableInfos, no_const_t, UCS("DebugVariableInfoAccess::GetAllDebugVariableInfos") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyDebugVariableInfos, no_const_t, UCS("DebugVariableInfoAccess::GetManyDebugVariableInfos") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::GetOneDebugVariableInfo") );
+		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::SelectOneDebugVariableInfo") );
+		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyDebugVariableInfos, no_const_t, UCS("DebugVariableInfoAccess::SelectManyDebugVariableInfos") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreterAccess, void, cancelSelection, no_const_t, UCS("DebugVariableInfoAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::IsSelectedDebugVariableInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, fillDebugTypeInfo, no_const_t, UCS("DebugVariableInfoAccess::FillDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, fillDebugFunctionInfo, no_const_t, UCS("DebugVariableInfoAccess::FillDebugFunctionInfo") );
+		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreterAccess, void, fillAllDebugValueInfos, no_const_t, UCS("DebugVariableInfoAccess::FillAllDebugValueInfos") );
+		METHOD_KEY_REGISTER3( DebugVariableInfoInterpreterAccess, void, fillOneDebugValueInfo, no_const_t, UCS("DebugVariableInfoAccess::FillOneDebugValueInfo") );
+		METHOD_KEY_REGISTER3( DebugVariableInfoInterpreterAccess, void, fillManyDebugValueInfos, no_const_t, UCS("DebugVariableInfoAccess::FillManyDebugValueInfos") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::IsModifiedDebugVariableInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, updateDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::UpdateDebugVariableInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, insertDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::InsertDebugVariableInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, void, deleteDebugVariableInfo, no_const_t, UCS("DebugVariableInfoAccess::DeleteDebugVariableInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("DebugVariableInfoAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("DebugVariableInfoAccess") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfoAccess::GetAllDebugVariableInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::GetManyDebugVariableInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::GetOneDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER2( C("DebugVariableInfoAccess::SelectOneDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER2( C("DebugVariableInfoAccess::SelectManyDebugVariableInfos") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfoAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::IsSelectedDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::FillDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::FillDebugFunctionInfo") );
-		METHOD_KEY_UNREGISTER2( C("DebugVariableInfoAccess::FillAllDebugValueInfos") );
-		METHOD_KEY_UNREGISTER3( C("DebugVariableInfoAccess::FillOneDebugValueInfo") );
-		METHOD_KEY_UNREGISTER3( C("DebugVariableInfoAccess::FillManyDebugValueInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::IsModifiedDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::UpdateDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::InsertDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::DeleteDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfoAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("DebugVariableInfoAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfoAccess::GetAllDebugVariableInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::GetManyDebugVariableInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::GetOneDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugVariableInfoAccess::SelectOneDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugVariableInfoAccess::SelectManyDebugVariableInfos") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfoAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::IsSelectedDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::FillDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::FillDebugFunctionInfo") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugVariableInfoAccess::FillAllDebugValueInfos") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugVariableInfoAccess::FillOneDebugValueInfo") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugVariableInfoAccess::FillManyDebugValueInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::IsModifiedDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::UpdateDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::InsertDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::DeleteDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfoAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > >& value) const;

@@ -3,9 +3,6 @@
 
 #include "Interpreter.hpp"
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 #define    BINARY_OP_CLASS( Name )                                                                      \
 template <class EncodingT>                                                                              \
 class Name                                                                                              \
@@ -30,7 +27,7 @@ boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<Encoding
     boost::shared_ptr< Base<EncodingT> > rhs = m_right->interpret(c);                                   \
     vector<boost::shared_ptr< Base<EncodingT> > > params;                                               \
     params.push_back(rhs);                                                                              \
-    return var->invoke(C( #MethodName ), params);                                                       \
+    return var->invoke(UCS( #MethodName ), params);                                                     \
 }
 
 #define    BINARY_OP_PARSE( Name, Op )                                                                  \
@@ -43,7 +40,7 @@ bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shar
     bool success = false;                                                                               \
     while ( i != EncodingT::string_t::npos && !success)                                                 \
     {                                                                                                   \
-        success = rbinary_op<EncodingT>(buf, C( #Op ), left, right, i) &&                               \
+        success = rbinary_op<EncodingT>(buf, UCS( #Op ), left, right, i) &&                             \
                   Instruction<EncodingT>::parse(left, left_value) &&                                    \
                   Instruction<EncodingT>::parse(right, right_value);                                    \
     }                                                                                                   \
@@ -68,7 +65,7 @@ bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shar
     bool success = false;                                                                               \
     while ( i != EncodingT::string_t::npos && !success)                                                 \
     {                                                                                                   \
-        success = reverse_hyphenation<EncodingT>(buf, C( #Op ), left, right, i, true) &&                \
+        success = reverse_hyphenation<EncodingT>(buf, UCS( #Op ), left, right, i, true) &&              \
                   Instruction<EncodingT>::parse(left, left_value) &&                                    \
                   Instruction<EncodingT>::parse(right, right_value);                                    \
     }                                                                                                   \
@@ -91,7 +88,7 @@ boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<Encoding
     boost::shared_ptr< Base<EncodingT> > rhs = m_right->interpret(c);                                   \
     vector<boost::shared_ptr< Base<EncodingT> > > params;                                               \
     params.push_back(rhs);                                                                              \
-    boost::shared_ptr< Base<EncodingT> >    ret = var->invoke(C( #MethodName ), params);                \
+    boost::shared_ptr< Base<EncodingT> >    ret = var->invoke(UCS( #MethodName ), params);              \
     boost::shared_ptr< Address<EncodingT> > ref = dynamic_pointer_cast< Address<EncodingT> >(m_right);  \
     if (ref)                                                                                            \
     {                                                                                                   \
@@ -111,7 +108,7 @@ bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shar
     bool success = false;                                                                               \
     while ( i != EncodingT::string_t::npos && !success)                                                 \
     {                                                                                                   \
-        success = rbinary_op<EncodingT>(buf, C( #Op ), left, right, i) &&                               \
+        success = rbinary_op<EncodingT>(buf, UCS( #Op ), left, right, i) &&                             \
                   Instruction<EncodingT>::parse(left, left_value) &&                                    \
                   Assignable<EncodingT>::parse(right, ref_right_value);                                 \
     }                                                                                                   \
@@ -146,7 +143,7 @@ template <class EncodingT>                                                      
 boost::shared_ptr< Base<EncodingT> > Name<EncodingT>::interpret(Context<EncodingT> & c)                 \
 {                                                                                                       \
     boost::shared_ptr< Base<EncodingT> >  var   = m_right->interpret(c);                                \
-    return var->invoke(C( #MethodName ));                                                               \
+    return var->invoke(UCS( #MethodName ));                                                             \
 }
 
 #define    UNARY_OP_PARSE( Name, Op )                                                                   \
@@ -154,8 +151,8 @@ template <class EncodingT>                                                      
 bool Name<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)\
 {                                                                                                       \
     typename EncodingT::string_t right;                                                                 \
-    boost::shared_ptr< Term<EncodingT> > right_value;                                                          \
-    bool success = unary_op<EncodingT>(buf, C( #Op ), right) &&                                         \
+    boost::shared_ptr< Term<EncodingT> > right_value;                                                   \
+    bool success = unary_op<EncodingT>(buf, UCS( #Op ), right) &&                                       \
                    Instruction<EncodingT>::parse(right, right_value);                                   \
     if (success)                                                                                        \
     {                                                                                                   \

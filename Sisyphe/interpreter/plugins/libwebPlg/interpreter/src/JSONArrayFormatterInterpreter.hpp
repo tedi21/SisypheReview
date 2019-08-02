@@ -11,7 +11,7 @@
 #define _JSON_ARRAY_FORMATTER_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
@@ -52,19 +52,19 @@ NAMESPACE_BEGIN(interp)
         void clear();
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( JSONArrayFormatterInterpreter, C("JSONArrayFormatter") );
-            METHOD_KEY_REGISTER ( JSONArrayFormatterInterpreter, boost::shared_ptr< Base<EncodingT> >, getText, const_t, C("JSONArrayFormatter::Text") );
-            METHOD_KEY_REGISTER1( JSONArrayFormatterInterpreter, void, append, no_const_t, C("JSONArrayFormatter::Append") );
-            METHOD_KEY_REGISTER1( JSONArrayFormatterInterpreter, void, appendAsText, no_const_t, C("JSONArrayFormatter::AppendAsText") );
-            METHOD_KEY_REGISTER ( JSONArrayFormatterInterpreter, void, clear, no_const_t, C("JSONArrayFormatter::Clear") );
+            CLASS_KEY_REGISTER  ( JSONArrayFormatterInterpreter, UCS("JSONArrayFormatter") );
+            METHOD_KEY_REGISTER ( JSONArrayFormatterInterpreter, boost::shared_ptr< Base<EncodingT> >, getText, const_t, UCS("JSONArrayFormatter::Text") );
+            METHOD_KEY_REGISTER1( JSONArrayFormatterInterpreter, void, append, no_const_t, UCS("JSONArrayFormatter::Append") );
+            METHOD_KEY_REGISTER1( JSONArrayFormatterInterpreter, void, appendAsText, no_const_t, UCS("JSONArrayFormatter::AppendAsText") );
+            METHOD_KEY_REGISTER ( JSONArrayFormatterInterpreter, void, clear, no_const_t, UCS("JSONArrayFormatter::Clear") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("JSONArrayFormatter") );
-            METHOD_KEY_UNREGISTER ( C("JSONArrayFormatter::Text") );
-            METHOD_KEY_UNREGISTER1( C("JSONArrayFormatter::Append") );
-            METHOD_KEY_UNREGISTER1( C("JSONArrayFormatter::AppendAsText") );
-            METHOD_KEY_UNREGISTER ( C("JSONArrayFormatter::Clear") );
+            CLASS_KEY_UNREGISTER  ( UCS("JSONArrayFormatter") );
+            METHOD_KEY_UNREGISTER ( UCS("JSONArrayFormatter::Text") );
+            METHOD_KEY_UNREGISTER1( UCS("JSONArrayFormatter::Append") );
+            METHOD_KEY_UNREGISTER1( UCS("JSONArrayFormatter::AppendAsText") );
+            METHOD_KEY_UNREGISTER ( UCS("JSONArrayFormatter::Clear") );
 		FACTORY_END_UNREGISTER
 	};
 

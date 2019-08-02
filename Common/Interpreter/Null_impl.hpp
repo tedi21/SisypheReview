@@ -1,7 +1,4 @@
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -11,7 +8,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     typename EncodingT::string_t Null<EncodingT>::toString() const
     {
-        return C("null");
+        return UCS("null");
     }
 
     template <class EncodingT>
@@ -23,10 +20,8 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     typename EncodingT::string_t Null<EncodingT>::getClassName() const
     {
-        return C("Null");
+        return UCS("Null");
     }
 
 NAMESPACE_END
 
-#undef C
-#undef A

@@ -111,7 +111,7 @@ extern "C" CPPBASEPLG_API void PlugInit(va_list vl, void** res)
     if (!args.empty())
     {
         logger->debugStream() << "try to open DB connection " << args[0];
-        if (!data_access::UniDataConnection::openConnection(L"", 0, encode<ansi,ucs>(args[0]), L"", L""))
+        if (!data_access::UniDataConnection::openConnection(UCS(""), 0, encode<ansi,ucs>(args[0]), UCS(""), UCS("")))
         {
             logger->errorStream() << "cannot open DB connection " << args[0] << ".";
         }

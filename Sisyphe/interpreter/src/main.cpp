@@ -159,14 +159,22 @@ int main(int argc, char *argv[])
     boost::ptr_vector<CPlug<char> > dllplugged;
     std::auto_ptr<CPlug<char> > dll;
     logger->debugStream() << "search in " << my_path.string();
+#ifdef _WIN32
+    const size_t extLen = 7U;
+    const size_t extOff = 0U;
     find_file(my_path, "Plg.dll", modules );
+#else
+    const size_t extLen = 11U;
+    const size_t extOff = 3U;
+    find_file(my_path, "Plg.so.1", modules );
+#endif
     for (i = modules.begin(); i < modules.end(); ++i)
     {
         dll.reset(new CPlug<char>);
         logger->debugStream() << "try to load " << i->filename().string();
         if(dll->LoadPlugin(i->c_str()))
         {
-            string moduleName = i->filename().string().substr(0, i->filename().string().size()-7);
+            string moduleName = i->filename().string().substr(extOff, i->filename().string().size() - extLen);
             logger->debugStream() << moduleName << " loaded";
             vector<string> args;
             map< string, vector<string> >::const_iterator i = modulesArgs.find(moduleName);

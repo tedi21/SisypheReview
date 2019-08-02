@@ -11,9 +11,9 @@
 #define _CONNECTION_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
-#include "DataConnection.hpp"
+#include "dataconnection.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -136,43 +136,43 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
         FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( ConnectionInterpreter, C("Connection") );
-            CLASS_KEY_REGISTER1 ( ConnectionInterpreter, C("Connection") );
-            METHOD_KEY_REGISTER3( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, select, no_const_t, C("Connection::Select") );
-            METHOD_KEY_REGISTER4( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, selectForUpdate, no_const_t, C("Connection::SelectForUpdate") );
-            METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, insert, no_const_t, C("Connection::Insert") );
-            METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, deleteFrom, no_const_t, C("Connection::DeleteFrom") );
-            METHOD_KEY_REGISTER3( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, update, no_const_t, C("Connection::Update") );
-            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, getLastInsertID, no_const_t, C("Connection::LastInsertID") );
-            METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, selectMaxID, no_const_t, C("Connection::SelectMaxID") );
-            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, commit, no_const_t, C("Connection::Commit") );
-            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, rollback, no_const_t, C("Connection::Rollback") );
-            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, startTransaction, no_const_t, C("Connection::StartTransaction") );
-            METHOD_KEY_REGISTER1( ConnectionInterpreter, void, setPragma, no_const_t, C("Connection::SetPragma") );
-            METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, openConnection, no_const_t, C("Connection::OpenConnection") );
-            METHOD_KEY_REGISTER1( ConnectionInterpreter, void, closeConnection, no_const_t, C("Connection::CloseConnection") );
-            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, isTransactionInProgress, no_const_t, C("Connection::IsTransactionInProgress") );
-            METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("Connection::GetError") );
+            CLASS_KEY_REGISTER  ( ConnectionInterpreter, UCS("Connection") );
+            CLASS_KEY_REGISTER1 ( ConnectionInterpreter, UCS("Connection") );
+            METHOD_KEY_REGISTER3( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, select, no_const_t, UCS("Connection::Select") );
+            METHOD_KEY_REGISTER4( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, selectForUpdate, no_const_t, UCS("Connection::SelectForUpdate") );
+            METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, insert, no_const_t, UCS("Connection::Insert") );
+            METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, deleteFrom, no_const_t, UCS("Connection::DeleteFrom") );
+            METHOD_KEY_REGISTER3( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, update, no_const_t, UCS("Connection::Update") );
+            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, getLastInsertID, no_const_t, UCS("Connection::LastInsertID") );
+            METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, selectMaxID, no_const_t, UCS("Connection::SelectMaxID") );
+            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, commit, no_const_t, UCS("Connection::Commit") );
+            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, rollback, no_const_t, UCS("Connection::Rollback") );
+            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, startTransaction, no_const_t, UCS("Connection::StartTransaction") );
+            METHOD_KEY_REGISTER1( ConnectionInterpreter, void, setPragma, no_const_t, UCS("Connection::SetPragma") );
+            METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, openConnection, no_const_t, UCS("Connection::OpenConnection") );
+            METHOD_KEY_REGISTER1( ConnectionInterpreter, void, closeConnection, no_const_t, UCS("Connection::CloseConnection") );
+            METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, isTransactionInProgress, no_const_t, UCS("Connection::IsTransactionInProgress") );
+            METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("Connection::GetError") );
         FACTORY_END_REGISTER
 
         FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("Connection") );
-            CLASS_KEY_UNREGISTER1 ( C("Connection") );
-            METHOD_KEY_UNREGISTER3( C("Connection::Select") );
-            METHOD_KEY_UNREGISTER4( C("Connection::SelectForUpdate") );
-            METHOD_KEY_UNREGISTER2( C("Connection::Insert") );
-            METHOD_KEY_UNREGISTER2( C("Connection::DeleteFrom") );
-            METHOD_KEY_UNREGISTER3( C("Connection::Update") );
-            METHOD_KEY_UNREGISTER ( C("Connection::LastInsertID") );
-            METHOD_KEY_UNREGISTER2( C("Connection::SelectMaxID") );
-            METHOD_KEY_UNREGISTER ( C("Connection::Commit") );
-            METHOD_KEY_UNREGISTER ( C("Connection::Rollback") );
-            METHOD_KEY_UNREGISTER ( C("Connection::StartTransaction") );
-            METHOD_KEY_UNREGISTER ( C("Connection::IsTransactionInProgress") );
-            METHOD_KEY_UNREGISTER1( C("Connection::SetPragma") );
-            METHOD_KEY_UNREGISTER1( C("Connection::OpenConnection") );
-            METHOD_KEY_UNREGISTER1( C("Connection::CloseConnection") );
-            METHOD_KEY_UNREGISTER1( C("Connection::GetError") );
+            CLASS_KEY_UNREGISTER  ( UCS("Connection") );
+            CLASS_KEY_UNREGISTER1 ( UCS("Connection") );
+            METHOD_KEY_UNREGISTER3( UCS("Connection::Select") );
+            METHOD_KEY_UNREGISTER4( UCS("Connection::SelectForUpdate") );
+            METHOD_KEY_UNREGISTER2( UCS("Connection::Insert") );
+            METHOD_KEY_UNREGISTER2( UCS("Connection::DeleteFrom") );
+            METHOD_KEY_UNREGISTER3( UCS("Connection::Update") );
+            METHOD_KEY_UNREGISTER ( UCS("Connection::LastInsertID") );
+            METHOD_KEY_UNREGISTER2( UCS("Connection::SelectMaxID") );
+            METHOD_KEY_UNREGISTER ( UCS("Connection::Commit") );
+            METHOD_KEY_UNREGISTER ( UCS("Connection::Rollback") );
+            METHOD_KEY_UNREGISTER ( UCS("Connection::StartTransaction") );
+            METHOD_KEY_UNREGISTER ( UCS("Connection::IsTransactionInProgress") );
+            METHOD_KEY_UNREGISTER1( UCS("Connection::SetPragma") );
+            METHOD_KEY_UNREGISTER1( UCS("Connection::OpenConnection") );
+            METHOD_KEY_UNREGISTER1( UCS("Connection::CloseConnection") );
+            METHOD_KEY_UNREGISTER1( UCS("Connection::GetError") );
         FACTORY_END_UNREGISTER
     };
 

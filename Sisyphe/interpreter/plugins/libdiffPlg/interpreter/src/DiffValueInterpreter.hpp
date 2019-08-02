@@ -11,7 +11,7 @@
 #define _DIFFVALUE_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 #include "DiffTypeInterpreter.hpp"
@@ -56,21 +56,21 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getItem2() const;
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( DiffValueInterpreter, C("DiffValue") );
-            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getType, const_t, C("DiffValue::Type") );
-            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getIndex1, const_t, C("DiffValue::Index1") );
-            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getIndex2, const_t, C("DiffValue::Index2") );
-            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getItem1, const_t, C("DiffValue::Item1") );
-            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getItem2, const_t, C("DiffValue::Item2") );
+            CLASS_KEY_REGISTER  ( DiffValueInterpreter, UCS("DiffValue") );
+            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getType, const_t, UCS("DiffValue::Type") );
+            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getIndex1, const_t, UCS("DiffValue::Index1") );
+            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getIndex2, const_t, UCS("DiffValue::Index2") );
+            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getItem1, const_t, UCS("DiffValue::Item1") );
+            METHOD_KEY_REGISTER ( DiffValueInterpreter, boost::shared_ptr< Base<EncodingT> >, getItem2, const_t, UCS("DiffValue::Item2") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("DiffValue") );
-            METHOD_KEY_UNREGISTER ( C("DiffValue::Type") );
-            METHOD_KEY_UNREGISTER ( C("DiffValue::Index1") );
-            METHOD_KEY_UNREGISTER ( C("DiffValue::Index2") );
-            METHOD_KEY_UNREGISTER ( C("DiffValue::Item1") );
-            METHOD_KEY_UNREGISTER ( C("DiffValue::Item2") );
+            CLASS_KEY_UNREGISTER  ( UCS("DiffValue") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffValue::Type") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffValue::Index1") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffValue::Index2") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffValue::Item1") );
+            METHOD_KEY_UNREGISTER ( UCS("DiffValue::Item2") );
 		FACTORY_END_UNREGISTER
 	};
 

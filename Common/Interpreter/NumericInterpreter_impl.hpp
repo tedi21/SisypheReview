@@ -1,8 +1,5 @@
 #include "Numeric.hpp"
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -42,5 +39,3 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-#undef A

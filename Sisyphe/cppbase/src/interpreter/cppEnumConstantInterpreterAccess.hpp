@@ -12,7 +12,7 @@
 #define _CPPENUMCONSTANT_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -94,37 +94,37 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppEnumConstantInterpreterAccess, C("CppEnumConstantAccess") );
-		METHOD_KEY_REGISTER ( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppEnumConstants, no_const_t, C("CppEnumConstantAccess::GetAllCppEnumConstants") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppEnumConstants, no_const_t, C("CppEnumConstantAccess::GetManyCppEnumConstants") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppEnumConstant, no_const_t, C("CppEnumConstantAccess::GetOneCppEnumConstant") );
-		METHOD_KEY_REGISTER2( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppEnumConstant, no_const_t, C("CppEnumConstantAccess::SelectOneCppEnumConstant") );
-		METHOD_KEY_REGISTER2( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppEnumConstants, no_const_t, C("CppEnumConstantAccess::SelectManyCppEnumConstants") );
-		METHOD_KEY_REGISTER ( CppEnumConstantInterpreterAccess, void, cancelSelection, no_const_t, C("CppEnumConstantAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppEnumConstant, no_const_t, C("CppEnumConstantAccess::IsSelectedCppEnumConstant") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, fillCppEnum, no_const_t, C("CppEnumConstantAccess::FillCppEnum") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppEnumConstant, no_const_t, C("CppEnumConstantAccess::IsModifiedCppEnumConstant") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, updateCppEnumConstant, no_const_t, C("CppEnumConstantAccess::UpdateCppEnumConstant") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, insertCppEnumConstant, no_const_t, C("CppEnumConstantAccess::InsertCppEnumConstant") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, deleteCppEnumConstant, no_const_t, C("CppEnumConstantAccess::DeleteCppEnumConstant") );
-		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("CppEnumConstantAccess::GetError") );
+		CLASS_KEY_REGISTER ( CppEnumConstantInterpreterAccess, UCS("CppEnumConstantAccess") );
+		METHOD_KEY_REGISTER ( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllCppEnumConstants, no_const_t, UCS("CppEnumConstantAccess::GetAllCppEnumConstants") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyCppEnumConstants, no_const_t, UCS("CppEnumConstantAccess::GetManyCppEnumConstants") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::GetOneCppEnumConstant") );
+		METHOD_KEY_REGISTER2( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::SelectOneCppEnumConstant") );
+		METHOD_KEY_REGISTER2( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyCppEnumConstants, no_const_t, UCS("CppEnumConstantAccess::SelectManyCppEnumConstants") );
+		METHOD_KEY_REGISTER ( CppEnumConstantInterpreterAccess, void, cancelSelection, no_const_t, UCS("CppEnumConstantAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::IsSelectedCppEnumConstant") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, fillCppEnum, no_const_t, UCS("CppEnumConstantAccess::FillCppEnum") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::IsModifiedCppEnumConstant") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, updateCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::UpdateCppEnumConstant") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, insertCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::InsertCppEnumConstant") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, void, deleteCppEnumConstant, no_const_t, UCS("CppEnumConstantAccess::DeleteCppEnumConstant") );
+		METHOD_KEY_REGISTER1( CppEnumConstantInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("CppEnumConstantAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppEnumConstantAccess") );
-		METHOD_KEY_UNREGISTER ( C("CppEnumConstantAccess::GetAllCppEnumConstants") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::GetManyCppEnumConstants") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::GetOneCppEnumConstant") );
-		METHOD_KEY_UNREGISTER2( C("CppEnumConstantAccess::SelectOneCppEnumConstant") );
-		METHOD_KEY_UNREGISTER2( C("CppEnumConstantAccess::SelectManyCppEnumConstants") );
-		METHOD_KEY_UNREGISTER ( C("CppEnumConstantAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::IsSelectedCppEnumConstant") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::FillCppEnum") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::IsModifiedCppEnumConstant") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::UpdateCppEnumConstant") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::InsertCppEnumConstant") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::DeleteCppEnumConstant") );
-		METHOD_KEY_UNREGISTER1( C("CppEnumConstantAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("CppEnumConstantAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnumConstantAccess::GetAllCppEnumConstants") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::GetManyCppEnumConstants") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::GetOneCppEnumConstant") );
+		METHOD_KEY_UNREGISTER2( UCS("CppEnumConstantAccess::SelectOneCppEnumConstant") );
+		METHOD_KEY_UNREGISTER2( UCS("CppEnumConstantAccess::SelectManyCppEnumConstants") );
+		METHOD_KEY_UNREGISTER ( UCS("CppEnumConstantAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::IsSelectedCppEnumConstant") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::FillCppEnum") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::IsModifiedCppEnumConstant") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::UpdateCppEnumConstant") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::InsertCppEnumConstant") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::DeleteCppEnumConstant") );
+		METHOD_KEY_UNREGISTER1( UCS("CppEnumConstantAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > >& value) const;

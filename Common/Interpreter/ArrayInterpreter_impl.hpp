@@ -2,9 +2,6 @@
 #include "Null.hpp"
 #include <vector>
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -19,11 +16,11 @@ NAMESPACE_BEGIN(interp)
         {
             boost::shared_ptr< Base<EncodingT> > index2 = m_index2->interpret(c);
             params.push_back(index2);
-            res = var->invoke(C("getList"), params);
+            res = var->invoke(UCS("getList"), params);
         }
         else
         {
-            res = var->invoke(C("getValue"), params);
+            res = var->invoke(UCS("getValue"), params);
         }
         return res;
     }
@@ -41,11 +38,11 @@ NAMESPACE_BEGIN(interp)
             {
                 boost::shared_ptr< Base<EncodingT> > index2 = m_index2->interpret(c);
                 params.push_back(index2);
-                var->invoke(C("removeList"), params);
+                var->invoke(UCS("removeList"), params);
             }
             else
             {
-                var->invoke(C("removeValue"), params);
+                var->invoke(UCS("removeValue"), params);
             }
         }
         else
@@ -55,12 +52,12 @@ NAMESPACE_BEGIN(interp)
                 boost::shared_ptr< Base<EncodingT> > index2 = m_index2->interpret(c);
                 params.push_back(index2);
                 params.push_back(value);
-                var->invoke(C("insertList"), params);
+                var->invoke(UCS("insertList"), params);
             }
             else
             {
                 params.push_back(value);
-                var->invoke(C("insertValue"), params);
+                var->invoke(UCS("insertValue"), params);
             }
         }
     }
@@ -72,14 +69,14 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Term<EncodingT> > expr_value, right_value;
         boost::shared_ptr< Address<EncodingT> > arr_value;
         bool listIndex = false;
-        typename EncodingT::string_t::const_iterator i = rfind_symbol<EncodingT>(expr.begin(), expr.end(), C("["));
+        typename EncodingT::string_t::const_iterator i = rfind_symbol<EncodingT>(expr.begin(), expr.end(), UCS("["));
         typename EncodingT::string_t arr((typename EncodingT::string_t::const_iterator) expr.begin(), i);
         typename EncodingT::string_t square(i, (typename EncodingT::string_t::const_iterator) expr.end());
         bool success =  (i != expr.end()) &&
                         Assignable<EncodingT>::parse(arr, arr_value) &&
-                        embrace<EncodingT>(square, C("["), C("]"), expr);
+                        embrace<EncodingT>(square, UCS("["), UCS("]"), expr);
         typename EncodingT::string_t left, right;
-        if (success && hyphenation<EncodingT>(expr, C("_"), left, right, true))
+        if (success && hyphenation<EncodingT>(expr, UCS("_"), left, right, true))
         {
             listIndex = true;
             success = success &&
@@ -99,5 +96,3 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-#undef A

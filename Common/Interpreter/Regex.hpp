@@ -4,10 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 using namespace log4cpp;
@@ -61,20 +59,20 @@ NAMESPACE_BEGIN(interp)
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER       (Regex)
             CLASS_REGISTER1      (Regex)
-            METHOD_KEY_REGISTER1 (Regex, void, setICase, no_const_t, C("Regex::ICase"))
-            METHOD_KEY_REGISTER1 (Regex, void, setNoSubs, no_const_t, C("Regex::NoSubs"))
-            METHOD_KEY_REGISTER1 (Regex, void, setCollate, no_const_t, C("Regex::Collate"))
-            METHOD_KEY_REGISTER1 (Regex, void, setOptimize, no_const_t, C("Regex::Optimize"))
+            METHOD_KEY_REGISTER1 (Regex, void, setICase, no_const_t, UCS("Regex::ICase"))
+            METHOD_KEY_REGISTER1 (Regex, void, setNoSubs, no_const_t, UCS("Regex::NoSubs"))
+            METHOD_KEY_REGISTER1 (Regex, void, setCollate, no_const_t, UCS("Regex::Collate"))
+            METHOD_KEY_REGISTER1 (Regex, void, setOptimize, no_const_t, UCS("Regex::Optimize"))
         FACTORY_END_REGISTER
 
         // Methods unregistration
         FACTORY_BEGIN_UNREGISTER
             CLASS_UNREGISTER      (Regex)
             CLASS_UNREGISTER1     (Regex)
-            METHOD_KEY_UNREGISTER1(C("Regex::ICase"))
-            METHOD_KEY_UNREGISTER1(C("Regex::NoSubs"))
-            METHOD_KEY_UNREGISTER1(C("Regex::Collate"))
-            METHOD_KEY_UNREGISTER1(C("Regex::Optimize"))
+            METHOD_KEY_UNREGISTER1(UCS("Regex::ICase"))
+            METHOD_KEY_UNREGISTER1(UCS("Regex::NoSubs"))
+            METHOD_KEY_UNREGISTER1(UCS("Regex::Collate"))
+            METHOD_KEY_UNREGISTER1(UCS("Regex::Optimize"))
         FACTORY_END_UNREGISTER
     };
     
@@ -86,8 +84,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-
-#include "regex_impl.hpp"
+#include "Regex_impl.hpp"
 
 #endif

@@ -14,6 +14,7 @@ namespace enc {
         static const char * EMPTY;
     };
 
+    #define UCS(s) L ## s
     struct ENCODING_API ucs {
         typedef wchar_t        char_t;
         typedef wstring        string_t;

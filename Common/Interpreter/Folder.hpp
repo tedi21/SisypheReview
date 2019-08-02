@@ -2,7 +2,7 @@
 #define _FOLDER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem.hpp>
@@ -12,8 +12,28 @@ using namespace boost;
 using namespace log4cpp;
 namespace files = boost::filesystem;
 
-#define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
+namespace enc {
+
+    struct path {
+        typedef files::path::value_type char_t;
+        typedef files::path::string_type string_t;
+    };
+
+    template<>
+    inline path::string_t
+    encode<path,path>(const path::string_t & from)
+    {
+        return from;
+    }
+
+    template<>
+    inline path::string_t
+    encode<path,path>(const path::char_t * from)
+    {
+        return path::string_t(from);
+    }
+
+}
 
 NAMESPACE_BEGIN(interp)
 
@@ -72,44 +92,41 @@ NAMESPACE_BEGIN(interp)
         FACTORY_BEGIN_REGISTER
             CLASS_REGISTER      (Folder)
             CLASS_REGISTER1     (Folder)
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getPath, const_t, C("Folder::Path") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getAbsolutePath, const_t, C("Folder::AbsolutePath") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getParentPath, const_t, C("Folder::ParentPath") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFilename, const_t, C("Folder::Filename") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFiles, const_t, C("Folder::Files") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFolders, const_t, C("Folder::Folders") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, exists, const_t, C("Folder::Exists") )
-            METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, createFolder, no_const_t, C("Folder::CreateFolder") )
-            METHOD_KEY_REGISTER2(Folder, void, copyTo, no_const_t, C("Folder::CopyTo") )
-            METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, remove, no_const_t, C("Folder::Remove") )
-            METHOD_KEY_REGISTER2(Folder, void, rename, no_const_t, C("Folder::Rename") )
-            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getModificationDate, const_t, C("Folder::ModificationDate") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getPath, const_t, UCS("Folder::Path") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getAbsolutePath, const_t, UCS("Folder::AbsolutePath") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getParentPath, const_t, UCS("Folder::ParentPath") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFilename, const_t, UCS("Folder::Filename") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFiles, const_t, UCS("Folder::Files") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getFolders, const_t, UCS("Folder::Folders") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, exists, const_t, UCS("Folder::Exists") )
+            METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, createFolder, no_const_t, UCS("Folder::CreateFolder") )
+            METHOD_KEY_REGISTER2(Folder, void, copyTo, no_const_t, UCS("Folder::CopyTo") )
+            METHOD_KEY_REGISTER1(Folder, boost::shared_ptr< Base<EncodingT> >, remove, no_const_t, UCS("Folder::Remove") )
+            METHOD_KEY_REGISTER2(Folder, void, rename, no_const_t, UCS("Folder::Rename") )
+            METHOD_KEY_REGISTER (Folder, boost::shared_ptr< Base<EncodingT> >, getModificationDate, const_t, UCS("Folder::ModificationDate") )
         FACTORY_END_REGISTER
 
         // Methods unregistration
         FACTORY_BEGIN_UNREGISTER
             CLASS_UNREGISTER      (Folder)
             CLASS_UNREGISTER1     (Folder)
-            METHOD_KEY_UNREGISTER (C("Folder::Path"))
-            METHOD_KEY_UNREGISTER (C("Folder::AbsolutePath"))
-            METHOD_KEY_UNREGISTER (C("Folder::ParentPath"))
-            METHOD_KEY_UNREGISTER (C("Folder::Filename"))
-            METHOD_KEY_UNREGISTER (C("Folder::Files"))
-            METHOD_KEY_UNREGISTER (C("Folder::Folders"))
-            METHOD_KEY_UNREGISTER (C("Folder::Exists"))
-            METHOD_KEY_UNREGISTER1(C("Folder::CreateFolder"))
-            METHOD_KEY_UNREGISTER2(C("Folder::CopyTo"))
-            METHOD_KEY_UNREGISTER1(C("Folder::Remove"))
-            METHOD_KEY_UNREGISTER2(C("Folder::Rename"))
-            METHOD_KEY_UNREGISTER (C("Folder::ModificationDate"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::Path"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::AbsolutePath"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::ParentPath"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::Filename"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::Files"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::Folders"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::Exists"))
+            METHOD_KEY_UNREGISTER1(UCS("Folder::CreateFolder"))
+            METHOD_KEY_UNREGISTER2(UCS("Folder::CopyTo"))
+            METHOD_KEY_UNREGISTER1(UCS("Folder::Remove"))
+            METHOD_KEY_UNREGISTER2(UCS("Folder::Rename"))
+            METHOD_KEY_UNREGISTER (UCS("Folder::ModificationDate"))
         FACTORY_END_UNREGISTER
     };
 
 NAMESPACE_END
 
-#undef C
-#undef A
-
-#include "folder_impl.hpp"
+#include "Folder_impl.hpp"
 
 #endif

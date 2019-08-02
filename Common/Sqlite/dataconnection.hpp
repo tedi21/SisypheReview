@@ -12,7 +12,7 @@
 #define _SQLITE_DATA_CONNECTION_HPP_
 
 #include "config.hpp"
-#include "DBExport.h"
+#include "dbexport.h"
 #include "encoding.hpp"
 #include "datastatement.hpp"
 #include <vector>
@@ -142,7 +142,7 @@ typedef _DataConnection<ansi>       DataConnection;
 NAMESPACE_END
 
 #if !defined(HAS_DB_DLL) || defined(BUILD_DB_DLL)
-#include "DataConnection_impl.hpp"
+#include "dataconnection_impl.hpp"
 #endif // !defined(HAS_DB_DLL) || defined(BUILD_DB_DLL)
 
 #endif

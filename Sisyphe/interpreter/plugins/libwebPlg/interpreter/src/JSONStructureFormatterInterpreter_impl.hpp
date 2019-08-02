@@ -27,7 +27,7 @@ JSONStructureFormatterInterpreter<EncodingT>::JSONStructureFormatterInterpreter(
 template <class EncodingT>
 typename EncodingT::string_t JSONStructureFormatterInterpreter<EncodingT>::toString() const
 {
-    return C("{") + m_buffer + C("}");
+    return UCS("{") + m_buffer + UCS("}");
 }
 
 template <class EncodingT>
@@ -39,7 +39,7 @@ boost::shared_ptr< Base<EncodingT> > JSONStructureFormatterInterpreter<EncodingT
 template <class EncodingT>
 typename EncodingT::string_t JSONStructureFormatterInterpreter<EncodingT>::getClassName() const
 {
-    return C("JSONStructureFormatter");
+    return UCS("JSONStructureFormatter");
 }
 
 template <class EncodingT>
@@ -49,8 +49,8 @@ boost::shared_ptr< Base<EncodingT> > JSONStructureFormatterInterpreter<EncodingT
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
 	{
-        if (tryInvoke(this, C("JSONStructureFormatter"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("JSONStructureFormatter"), method, args, ret) ||
+            tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
@@ -82,9 +82,9 @@ void JSONStructureFormatterInterpreter<EncodingT>::append(const boost::shared_pt
         const typename EncodingT::string_t nativeText = JSONConverterInterpreter<EncodingT>::toNativeText(val);
         if (!m_buffer.empty())
         {
-            m_buffer += C(",");
+            m_buffer += UCS(",");
         }
-        m_buffer += C("\"") + str->value() + C("\":") + nativeText;
+        m_buffer += UCS("\"") + str->value() + UCS("\":") + nativeText;
     }
     else
     {
@@ -103,9 +103,9 @@ void JSONStructureFormatterInterpreter<EncodingT>::appendAsText(const boost::sha
         const typename EncodingT::string_t nativeText = text->value();
         if (!m_buffer.empty())
         {
-            m_buffer += C(",");
+            m_buffer += UCS(",");
         }
-        m_buffer += C("\"") + str->value() + C("\":") + nativeText;
+        m_buffer += UCS("\"") + str->value() + UCS("\":") + nativeText;
     }
     else
     {

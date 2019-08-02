@@ -1,8 +1,6 @@
 #include "ProgramInterpreter.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
-
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
@@ -21,7 +19,7 @@ NAMESPACE_BEGIN(interp)
     {
         typename EncodingT::string_t expr;
         boost::shared_ptr< Term<EncodingT> > expr_value;
-        bool success = prefix<EncodingT>(buf, C("print"), expr) &&
+        bool success = prefix<EncodingT>(buf, UCS("print"), expr) &&
                        Bracket<EncodingT>::parse(expr, expr_value);
         if (success)
         {
@@ -32,5 +30,4 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
 #undef A

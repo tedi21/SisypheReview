@@ -40,7 +40,7 @@ boost::shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::clone() co
 template <class EncodingT>
 typename EncodingT::string_t StatementInterpreter<EncodingT>::getClassName() const
 {
-    return C("Statement");
+    return UCS("Statement");
 }
 
 template <class EncodingT>
@@ -51,8 +51,8 @@ boost::shared_ptr< Base<EncodingT> > StatementInterpreter<EncodingT>::invoke(con
     ParameterArray args, ret;
     if (check_parameters_array(params, args))
     {
-        if (tryInvoke(this, C("Statement"), method, args, ret) ||
-            tryInvoke(this, C("Base"), method, args, ret))
+        if (tryInvoke(this, UCS("Statement"), method, args, ret) ||
+            tryInvoke(this, UCS("Base"), method, args, ret))
         {
             find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
             for (size_t i = 0; i < params.size(); ++i)

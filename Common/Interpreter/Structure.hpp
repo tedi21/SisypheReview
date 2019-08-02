@@ -2,13 +2,11 @@
 #define _STRUCTURE_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
-#include "numeric.hpp"
+#include "Numeric.hpp"
 #include <boost/shared_ptr.hpp>
 #include <boost/container/vector.hpp>
-
-#define C(str) encode<ansi,EncodingT>(str)
 
 using namespace boost;
 namespace bc = boost::container;
@@ -59,8 +57,6 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
-
-#include "structure_impl.hpp"
+#include "Structure_impl.hpp"
 
 #endif

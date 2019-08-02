@@ -11,7 +11,7 @@
 #define _CPP_PARSER_INTERPRETER_H_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "String.hpp"
 #include <vector>
@@ -381,83 +381,83 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > include(const boost::shared_ptr< Base<EncodingT> >& index, const boost::shared_ptr< Base<EncodingT> >& blockId, const boost::shared_ptr< Base<EncodingT> >& origin, const boost::shared_ptr< Base<EncodingT> >& blockOrig) const;
 
 		FACTORY_BEGIN_REGISTER
-            CLASS_KEY_REGISTER  ( CPPParserInterpreter, C("CPPParser") );
-            METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getFileContent, const_t, C("CPPParser::FileContent") );
-            METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parseFile, no_const_t, C("CPPParser::ParseFile") );
-            METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parse, no_const_t, C("CPPParser::Parse") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getContent, const_t, C("CPPParser::Content") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getSourceCode, const_t, C("CPPParser::SourceCode") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, linesId, const_t, C("CPPParser::Lines") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, stringsId, const_t, C("CPPParser::Strings") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, CCommentsId, const_t, C("CPPParser::CComments") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, CppCommentsId, const_t, C("CPPParser::CppComments") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, preprocessorsId, const_t, C("CPPParser::Preprocessors") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, commentsId, const_t, C("CPPParser::Comments") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, noCodeId, const_t, C("CPPParser::NoCode") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, codeBlockId, const_t, C("CPPParser::CodeBlock") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, classId, const_t, C("CPPParser::Class") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, structId, const_t, C("CPPParser::Struct") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, unionId, const_t, C("CPPParser::Union") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, classSpecifierId, const_t, C("CPPParser::ClassSpecifier") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, namespaceId, const_t, C("CPPParser::Namespace") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, compositionId, const_t, C("CPPParser::Composition") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, enumId, const_t, C("CPPParser::Enum") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, statementId, const_t, C("CPPParser::Statement") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, functionId, const_t, C("CPPParser::Function") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, attributeId, const_t, C("CPPParser::Attribute") );
-            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, noPos, const_t, C("CPPParser::NoPos") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, indexOf, const_t, C("CPPParser::IndexOf") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, inRange, const_t, C("CPPParser::InRange") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, range, const_t, C("CPPParser::Range") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, previous, const_t, C("CPPParser::Previous") );
-            METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, array, const_t, C("CPPParser::Array") );
-            METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, size, const_t, C("CPPParser::Size") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, extract, const_t, C("CPPParser::Extract") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, extractCode, const_t, C("CPPParser::ExtractCode") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, at, const_t, C("CPPParser::At") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, name, const_t, C("CPPParser::Name") );
-            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, type, const_t, C("CPPParser::Type") );
-            METHOD_KEY_REGISTER4( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, include, const_t, C("CPPParser::Include") );
+            CLASS_KEY_REGISTER  ( CPPParserInterpreter, UCS("CPPParser") );
+            METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getFileContent, const_t, UCS("CPPParser::FileContent") );
+            METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parseFile, no_const_t, UCS("CPPParser::ParseFile") );
+            METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parse, no_const_t, UCS("CPPParser::Parse") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getContent, const_t, UCS("CPPParser::Content") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getSourceCode, const_t, UCS("CPPParser::SourceCode") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, linesId, const_t, UCS("CPPParser::Lines") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, stringsId, const_t, UCS("CPPParser::Strings") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, CCommentsId, const_t, UCS("CPPParser::CComments") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, CppCommentsId, const_t, UCS("CPPParser::CppComments") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, preprocessorsId, const_t, UCS("CPPParser::Preprocessors") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, commentsId, const_t, UCS("CPPParser::Comments") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, noCodeId, const_t, UCS("CPPParser::NoCode") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, codeBlockId, const_t, UCS("CPPParser::CodeBlock") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, classId, const_t, UCS("CPPParser::Class") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, structId, const_t, UCS("CPPParser::Struct") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, unionId, const_t, UCS("CPPParser::Union") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, classSpecifierId, const_t, UCS("CPPParser::ClassSpecifier") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, namespaceId, const_t, UCS("CPPParser::Namespace") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, compositionId, const_t, UCS("CPPParser::Composition") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, enumId, const_t, UCS("CPPParser::Enum") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, statementId, const_t, UCS("CPPParser::Statement") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, functionId, const_t, UCS("CPPParser::Function") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, attributeId, const_t, UCS("CPPParser::Attribute") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, noPos, const_t, UCS("CPPParser::NoPos") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, indexOf, const_t, UCS("CPPParser::IndexOf") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, inRange, const_t, UCS("CPPParser::InRange") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, range, const_t, UCS("CPPParser::Range") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, previous, const_t, UCS("CPPParser::Previous") );
+            METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, array, const_t, UCS("CPPParser::Array") );
+            METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, size, const_t, UCS("CPPParser::Size") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, extract, const_t, UCS("CPPParser::Extract") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, extractCode, const_t, UCS("CPPParser::ExtractCode") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, at, const_t, UCS("CPPParser::At") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, name, const_t, UCS("CPPParser::Name") );
+            METHOD_KEY_REGISTER2( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, type, const_t, UCS("CPPParser::Type") );
+            METHOD_KEY_REGISTER4( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, include, const_t, UCS("CPPParser::Include") );
 		FACTORY_END_REGISTER
 
 		FACTORY_BEGIN_UNREGISTER
-            CLASS_KEY_UNREGISTER  ( C("CPPParser") );
-            METHOD_KEY_UNREGISTER1( C("CPPParser::FileContent") );
-            METHOD_KEY_UNREGISTER1( C("CPPParser::ParseFile") );
-            METHOD_KEY_UNREGISTER1( C("CPPParser::Parse") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Content") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::SourceCode") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Lines") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Strings") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::CComments") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::CppComments") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Preprocessors") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Comments") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::NoCode") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::CodeBlock") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Class") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Struct") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Union") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Composition") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Namespace") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::ClassSpecifier") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Enum") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Statement") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Function") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::Attribute") );
-            METHOD_KEY_UNREGISTER ( C("CPPParser::NoPos") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::IndexOf") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::InRange") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::Range") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::Previous") );
-            METHOD_KEY_UNREGISTER1( C("CPPParser::Array") );
-            METHOD_KEY_UNREGISTER1( C("CPPParser::Size") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::Extract") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::ExtractCode") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::At") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::Name") );
-            METHOD_KEY_UNREGISTER2( C("CPPParser::Type") );
-            METHOD_KEY_UNREGISTER4( C("CPPParser::Include") );
+            CLASS_KEY_UNREGISTER  ( UCS("CPPParser") );
+            METHOD_KEY_UNREGISTER1( UCS("CPPParser::FileContent") );
+            METHOD_KEY_UNREGISTER1( UCS("CPPParser::ParseFile") );
+            METHOD_KEY_UNREGISTER1( UCS("CPPParser::Parse") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Content") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::SourceCode") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Lines") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Strings") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::CComments") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::CppComments") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Preprocessors") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Comments") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::NoCode") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::CodeBlock") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Class") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Struct") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Union") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Composition") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Namespace") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::ClassSpecifier") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Enum") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Statement") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Function") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Attribute") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::NoPos") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::IndexOf") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::InRange") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::Range") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::Previous") );
+            METHOD_KEY_UNREGISTER1( UCS("CPPParser::Array") );
+            METHOD_KEY_UNREGISTER1( UCS("CPPParser::Size") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::Extract") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::ExtractCode") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::At") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::Name") );
+            METHOD_KEY_UNREGISTER2( UCS("CPPParser::Type") );
+            METHOD_KEY_UNREGISTER4( UCS("CPPParser::Include") );
 		FACTORY_END_UNREGISTER
 	};
 

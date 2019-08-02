@@ -15,7 +15,7 @@ DEFINES += HAS_XENCODING_DLL \
 SOURCES += \
     ../../xerces/impl/xstring.cpp
 
-HEADERS += xerces.h\
+HEADERS += \
     ../../xerces/xstring.hpp \
     ../../xerces/xiterator.hpp \
     ../../xerces/XEncodingExport.hpp

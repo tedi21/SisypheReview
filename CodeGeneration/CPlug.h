@@ -1,6 +1,8 @@
 #ifndef _CPLUG_H_
 #define _CPLUG_H_
 
+#include <stdexcept>
+#include <stdarg.h>
 
 #if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__MINGW32__)
     template <class Plug>
@@ -49,7 +51,7 @@
             if(m_pPlug) return m_pPlug;
 
             if(!m_bLoad) return NULL;
-            typedef UINT ( * LPDLLFUNC)(va_list, Plug **);
+            typedef void (*LPDLLFUNC)(va_list, Plug **);
             LPDLLFUNC lpfnDllFunc = NULL;
             lpfnDllFunc = (LPDLLFUNC)::GetProcAddress(m_hDLL, "PlugInit");
             if (!lpfnDllFunc)
@@ -70,7 +72,7 @@
         {
             //
             if(m_pPlug && m_bLoad) {
-                typedef UINT ( * LPDLLFUNC)(Plug **);
+                typedef void (*LPDLLFUNC)(Plug **);
                 LPDLLFUNC lpfnDllFunc = NULL;
                 lpfnDllFunc = (LPDLLFUNC)::GetProcAddress(m_hDLL, "PlugTerm");
                 if (!lpfnDllFunc)
@@ -98,7 +100,7 @@
         CPlug(const CPlug &rPlug);
         void operator=(const CPlug&);
     public:
-        CPlug():m_pPlug(NULL),m_dlHandle(NULL){}
+        CPlug():m_pPlug(NULL),m_dlHandle(NULL),m_bLoad(false){}
         CPlug(const char* szFileName)
         {
             if(!LoadPlugin(szFileName))
@@ -122,7 +124,7 @@
         {
             FreePlugin();
             m_dlHandle = dlopen(szFileName, RTLD_NOW);
-            if(dlhandle == NULL)
+            if(m_dlHandle == NULL)
             {
                 return false;
             }
@@ -134,7 +136,7 @@
             if(m_pPlug) return m_pPlug;
 
             if(!m_bLoad) return NULL;
-            typedef UINT ( * LPDLLFUNC)(va_list, Plug **);
+            typedef void (*LPDLLFUNC)(va_list, Plug **);
             LPDLLFUNC lpfnDllFunc = NULL;
             lpfnDllFunc = (LPDLLFUNC)dlsym(m_dlHandle, "PlugInit");
             if (!lpfnDllFunc)
@@ -152,7 +154,7 @@
         void ReleasePlugIn()
         {
             if(m_pPlug && m_bLoad) {
-                typedef UINT ( * LPDLLFUNC)(Plug **);
+                typedef void (*LPDLLFUNC)(Plug **);
                 LPDLLFUNC lpfnDllFunc = NULL;
                 lpfnDllFunc = (LPDLLFUNC)dlsym(m_dlHandle, "PlugTerm");
                 if (!lpfnDllFunc)

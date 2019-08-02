@@ -1,7 +1,6 @@
 #include "String.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
-#define C(str) encode<ansi,EncodingT>(str)
 
 NAMESPACE_BEGIN(interp)
 
@@ -15,11 +14,11 @@ NAMESPACE_BEGIN(interp)
     bool StringConstant<EncodingT>::parse(typename EncodingT::string_t const& buf, boost::shared_ptr< Term<EncodingT> > & value)
     {
         typename EncodingT::string_t expr = eat_space<EncodingT>(buf);
-        bool specialCrLf = (expr==C("CrLf"));
-        bool specialCr = (expr==C("Cr"));
-        bool specialLf = (expr==C("Lf"));
-        bool specialDoubleQuotes = (expr==C("DblQuotes"));
-        bool specialTab = (expr==C("Tab"));
+        bool specialCrLf = (expr==UCS("CrLf"));
+        bool specialCr = (expr==UCS("Cr"));
+        bool specialLf = (expr==UCS("Lf"));
+        bool specialDoubleQuotes = (expr==UCS("DblQuotes"));
+        bool specialTab = (expr==UCS("Tab"));
         bool success =  expr.size()>1 &&
                         (specialCrLf         ||
                          specialCr           ||
@@ -32,23 +31,23 @@ NAMESPACE_BEGIN(interp)
         {
             if (specialCrLf)
             {
-                expr = C("\r\n");
+                expr = UCS("\r\n");
             }
             else if (specialCr)
             {
-                expr = C("\r");
+                expr = UCS("\r");
             }
             else if (specialLf)
             {
-                expr = C("\n");
+                expr = UCS("\n");
             }
             else if (specialTab)
             {
-                expr = C("\t");
+                expr = UCS("\t");
             }
             else if (specialDoubleQuotes)
             {
-                expr = C("\"");
+                expr = UCS("\"");
             }
             else
             {
@@ -61,5 +60,4 @@ NAMESPACE_BEGIN(interp)
 
 NAMESPACE_END
 
-#undef C
 #undef A
