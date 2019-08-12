@@ -138,7 +138,7 @@
               <table class="table table-hover">
                 <tbody>
                 <!-- -->
-                  <tr class="list-cursor" ng-repeat="item in currentFilter.list | ruleFilter:filterInput" ng-class="{'info':item.clicked}" data-ng-click="listClicked(item)" id="row-list-{{item.start}}">
+                  <tr class="list-cursor" ng-repeat="item in currentFilter.list | ruleFilter:{'query': filterInput, 'enabled': currentFilter.name!='Search'}" ng-class="{'info':item.clicked}" data-ng-click="listClicked(item)" id="row-list-{{item.start}}">
                     <td class="columnIcon">
                       <div ng-switch on="currentFilter.name">
                         <div ng-switch-when="Errors">

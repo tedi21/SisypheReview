@@ -10,9 +10,10 @@
       searchFactory.search = function (buffer, exp) {
         var list = [];
         if (exp !== '' && exp !== undefined) {
+          var esc_exp = exp.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
           var rawBuffer = cppBuffer.raw(buffer);
           //console.log(rawBuffer);
-          var foundIndex = rawBuffer.search(exp.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+          var foundIndex = rawBuffer.search(esc_exp);
           var bufferIndex = foundIndex;
           while (foundIndex != -1 && bufferIndex < rawBuffer.length) {
             list.push({
@@ -25,7 +26,7 @@
                       });
             //console.log(list[list.length - 1].lineNumber + ' ' + list[list.length - 1].category + ' ' + list[list.length - 1].description);
             bufferIndex += 1;
-            foundIndex = rawBuffer.substring(bufferIndex).search(exp);
+            foundIndex = rawBuffer.substring(bufferIndex).search(esc_exp);
             bufferIndex += foundIndex;
           }
         }

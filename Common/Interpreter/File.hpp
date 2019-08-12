@@ -17,10 +17,47 @@ NAMESPACE_BEGIN(interp)
     : public Base<EncodingT>
     {
     private:
+         class BaseStream
+         {
+         public:
+             virtual ~BaseStream() = default;
+             virtual void open(const typename EncodingT::string_t& name, std::ios_base::openmode mode) = 0;
+             virtual void imbue(const std::locale& locale) = 0;
+             virtual bool is_open() const = 0;
+             virtual void close() = 0;
+             virtual int tellg() = 0;
+             virtual void seekg(int off, std::ios_base::seekdir dir) = 0;
+             virtual void clear() = 0;
+             virtual size_t size_of_char() = 0;
+             virtual void read(std::vector<uint8_t>& b) = 0;
+             virtual void write(const std::vector<uint8_t>& b) = 0;
+         };
+
+        template <class CharT>
+        class FileStream : public BaseStream
+        {
+        private:
+            std::basic_fstream<CharT> m_fstream;
+
+        public:
+            FileStream();
+            ~FileStream();
+            void open(const typename EncodingT::string_t& name, std::ios_base::openmode mode) override;
+            void imbue(const std::locale& locale) override;
+            bool is_open() const override;
+            void close() override;
+            int tellg() override;
+            void seekg(int off, std::ios_base::seekdir dir) override;
+            void clear() override;
+            size_t size_of_char() override;
+            void read(std::vector<uint8_t>& b) override;
+            void write(const std::vector<uint8_t>& b) override;
+        };
+
         typename EncodingT::string_t  m_name;
         typename EncodingT::string_t  m_mode;
         typename EncodingT::string_t  m_format;
-        std::basic_fstream<typename EncodingT::char_t> m_stream;
+        boost::scoped_ptr<BaseStream> m_stream;
 
         void construct(const typename EncodingT::string_t& name, const typename EncodingT::string_t& mode, const typename EncodingT::string_t& format);
 

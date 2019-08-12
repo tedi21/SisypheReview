@@ -4,10 +4,11 @@
   var sisypheApp = angular.module('sisypheApp');
     
   sisypheApp.filter('ruleFilter', function(){
-    return function (items, query){
+    return function (items, obj){
       var filtered = items;
-      if (query)
+      if (obj.query && obj.enabled)
       {
+        var query = obj.query;
         filtered = [];
         var neg = query.startsWith('!');
         if (neg)

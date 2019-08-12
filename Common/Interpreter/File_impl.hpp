@@ -13,11 +13,104 @@ using namespace boost::archive::iterators;
 NAMESPACE_BEGIN(interp)
 
     template <class EncodingT>
+    template <class CharT>
+    File<EncodingT>::FileStream<CharT>::FileStream()
+    {}
+
+    template <class EncodingT>
+    template <class CharT>
+    File<EncodingT>::FileStream<CharT>::~FileStream()
+    {
+        if (m_fstream.is_open())
+        {
+            m_fstream.close();
+        }
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::open(const typename EncodingT::string_t& name, std::ios_base::openmode mode)
+    {
+        m_fstream.open(A(name).c_str(), mode);
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::imbue(const std::locale& locale)
+    {
+        m_fstream.imbue(locale);
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    bool File<EncodingT>::FileStream<CharT>::is_open() const
+    {
+        return m_fstream.is_open();
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::close()
+    {
+        m_fstream.close();
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    int File<EncodingT>::FileStream<CharT>::tellg()
+    {
+        return m_fstream.tellg();
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::seekg(int off, std::ios_base::seekdir dir)
+    {
+        m_fstream.seekg(off, dir);
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::clear()
+    {
+        m_fstream.clear();
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    size_t File<EncodingT>::FileStream<CharT>::size_of_char()
+    {
+        return sizeof(CharT);
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::read(std::vector<uint8_t>& b)
+    {
+        m_fstream.read(reinterpret_cast<CharT*>(b.data()), static_cast<std::streamsize>(b.size() / sizeof(CharT)));
+    }
+
+    template <class EncodingT>
+    template <class CharT>
+    void File<EncodingT>::FileStream<CharT>::write(const std::vector<uint8_t>& b)
+    {
+        m_fstream.write(reinterpret_cast<const CharT*>(b.data()), static_cast<std::streamsize>(b.size() / sizeof(CharT)));
+    }
+
+    template <class EncodingT>
     void File<EncodingT>::construct(const typename EncodingT::string_t& name, const typename EncodingT::string_t& mode, const typename EncodingT::string_t& format)
     {
         m_name   = name;
         m_mode   = mode;
         m_format = format;
+        if (m_format != UCS("BASE64"))
+        {
+            m_stream.reset(new FileStream<typename EncodingT::char_t>());
+        }
+        else
+        {
+            m_stream.reset(new FileStream<char>());
+        }
 
         ios_base::openmode mde;
         if (m_mode == UCS("APPEND"))
@@ -64,10 +157,10 @@ NAMESPACE_BEGIN(interp)
                 logger->errorStream() << "Format unknown : " << A(m_format) << ".";
             }
             std::locale new_locale(old_locale,codecvt_facet);
-            m_stream.imbue(new_locale);
+            m_stream->imbue(new_locale);
         }
 
-        m_stream.open(A(m_name).c_str(), ios::binary|ios::in|ios::out|mde);
+        m_stream->open(m_name, ios::binary|ios::in|ios::out|mde);
     }
 
     template <class EncodingT>
@@ -93,9 +186,9 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     File<EncodingT>::~File()
     {
-        if (m_stream.is_open())
+        if (m_stream != nullptr && m_stream->is_open())
         {
-            m_stream.close();
+            m_stream->close();
         }
     }
 
@@ -146,7 +239,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > File<EncodingT>::isOpen() const
     {
-        return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_stream.is_open()));
+        return boost::shared_ptr< Base<EncodingT> >(new Bool<EncodingT>(m_stream->is_open()));
     }
 
     template <class EncodingT>
@@ -155,53 +248,52 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
         typename EncodingT::string_t text;
 
-        if (m_stream.is_open())
+        if (m_stream != nullptr && m_stream->is_open())
         {
-            scoped_array<typename EncodingT::char_t> buffer;
+            std::vector<uint8_t> buffer;
             int start = 0, length = 0;
             // get length of file:
-            m_stream.clear();
-            m_stream.seekg (0, ios::end);
-            length = m_stream.tellg();
-            m_stream.seekg (0, ios::beg);
+            m_stream->clear();
+            m_stream->seekg (0, ios::end);
+            length = m_stream->tellg();
+            m_stream->seekg (0, ios::beg);
 
-            // allocate memory: exact(latin-1) or larger than necessary(Unicode)
-            buffer.reset( new typename EncodingT::char_t[length+1] );
-            memset(buffer.get(), 0, (length+1)*sizeof(typename EncodingT::char_t));
+            // allocate memory
+            buffer.resize(length * m_stream->size_of_char());
             
             // read data as a block:
-            m_stream.read(buffer.get(), length);
+            m_stream->read(buffer);
 		
-            if (m_format == UCS("BASE64"))
+            if (m_format != UCS("BASE64"))
+            {
+                if (length > 0)
+                {
+                    if (0xFF == buffer[0] &&
+                        0xFE == buffer[1] &&
+                        (m_format == UCS("UTF16-LE") ||
+                         m_format == UCS("UTF16-BE") ||
+                         m_format == UCS("UTF8")))
+                    {
+                        start = sizeof(typename EncodingT::char_t);
+                    }
+                    typename EncodingT::char_t* begin = reinterpret_cast<typename EncodingT::char_t*>(buffer.data() + start);
+                    typename EncodingT::char_t* end = reinterpret_cast<typename EncodingT::char_t*>(buffer.data() + buffer.size());
+                    text.assign(begin, std::find(begin, end, '\0'));
+                }
+            }
+            else
             {
                 typedef 
                     base64_from_binary<
                        transform_width<
-                            typename EncodingT::char_t *,
+                            std::vector<uint8_t>::const_iterator,
                             6,
                             8
                         >
                     > 
                     base64_text;
                 // Convert to Base64
-                text.assign(base64_text(buffer.get()), base64_text(buffer.get() + length));
-            }
-            else
-            {
-                if (length >= 1)
-                {
-                    if (m_format == UCS("UTF16-LE") ||
-                        m_format == UCS("UTF16-BE"))
-                    {
-                        start = 1;
-                    }
-                    else if (m_format == UCS("UTF8") &&
-                             buffer.get()[0] == static_cast<typename EncodingT::char_t>(0xFEFF))
-                    {
-                        start = 1;
-                    }
-                    text = buffer.get() + start;
-                }
+                text.assign(base64_text(buffer.begin()), base64_text(buffer.end()));
             }
             val.reset(new String<EncodingT>(text));
             res.reset(new Bool<EncodingT>(true));
@@ -216,39 +308,44 @@ NAMESPACE_BEGIN(interp)
         typename EncodingT::string_t text;
         if (check_string<EncodingT>(val, text))
         {
-            if (m_stream.is_open())
+            if (m_stream != nullptr && m_stream->is_open())
             {
-                vector<typename EncodingT::char_t> buffer;
-                if (m_format == UCS("BASE64"))
+                std::vector<uint8_t> buffer;
+                if (m_format != UCS("BASE64"))
+                {
+                    if (m_stream->tellg() == 0)
+                    {
+                        if (m_format == UCS("UTF16-LE") ||
+                            m_format == UCS("UTF16-BE")||
+                            m_format == UCS("UTF8"))
+                        {
+                            buffer.push_back(0xFF);
+                            buffer.push_back(0xFE);
+                            for (size_t i = buffer.size(); i < sizeof(typename EncodingT::char_t); ++i)
+                            {
+                                buffer.push_back(0x00);
+                            }
+                        }
+                    }
+                    buffer.insert(buffer.end(),
+                                  reinterpret_cast<uint8_t*>(text.data()),
+                                  reinterpret_cast<uint8_t*>(text.data() + text.size()));
+                }
+                else
                 {
                     typedef
                         transform_width<
                             binary_from_base64<
                                 typename EncodingT::string_t::const_iterator
                                 >, 
-                            8, 
-                           6
+                            8,
+                            6
                         > 
                         binary_text;
                     buffer.assign(binary_text(text.begin()), binary_text(text.end()));
                 }
-                else
-                {
-                    if (m_stream.tellg() == 0)
-                    {
-                        if (m_format == UCS("UTF16-LE") ||
-                             m_format == UCS("UTF16-BE"))
-                        {
-                            m_stream << utf16_codecvt_facet<>::BOM;
-                        }
-                        else if (m_format == UCS("UTF8"))
-                        {
-                            m_stream << static_cast<typename EncodingT::char_t>(0xFEFF);
-                        }
-                    }
-                    buffer.assign(text.begin(), text.end());
-                }
-                m_stream.write(buffer.data(), (streamsize) buffer.size());
+
+                m_stream->write(buffer);
                 res.reset(new Bool<EncodingT>(true));
             }
         }
@@ -260,12 +357,15 @@ NAMESPACE_BEGIN(interp)
     {
         boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(0));
 
-        int length = 0;
-        // get length of file:
-        m_stream.seekg (0, ios::end);
-        length = m_stream.tellg();
-        m_stream.seekg (0, ios::beg);
-        res.reset(new Numeric<EncodingT>(length));
+        if (m_stream != nullptr && m_stream->is_open())
+        {
+            int length = 0;
+            // get length of file:
+            m_stream->seekg (0, ios::end);
+            length = m_stream->tellg();
+            m_stream->seekg (0, ios::beg);
+            res.reset(new Numeric<EncodingT>(length));
+        }
 
         return res;
     }
