@@ -72,7 +72,7 @@ typename EncodingT::string_t CPPParserInterpreter<EncodingT>::getNativeContent(c
             codecvt_facet = new iso_8859_15_codecvt_facet;
         }
 
-        std::basic_ifstream<ucs::char_t> file(A(path).c_str());
+        std::basic_ifstream<ucs::char_t> file(A(path).c_str(), ios::binary);
         if (file.is_open())
         {
             std::locale old_locale;
