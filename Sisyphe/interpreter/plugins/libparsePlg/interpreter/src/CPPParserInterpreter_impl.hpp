@@ -775,7 +775,7 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
             UCS("typedef"), UCS("using"),
             UCS("namespace"),
             UCS("public"), UCS("protected"), UCS("private"),
-            UCS("alignas"), UCS("__declspec")
+            UCS("alignas"), UCS("__declspec"), UCS("explicit")
     };
     if (flags_test(flags, FLAGS::IN_MEMBER_DECL))
     {
