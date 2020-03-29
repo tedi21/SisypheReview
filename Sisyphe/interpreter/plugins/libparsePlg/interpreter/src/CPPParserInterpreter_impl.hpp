@@ -126,6 +126,7 @@ void CPPParserInterpreter<EncodingT>::parse()
     size_t end = mContent.size();
     FlagSet flags = static_cast<FlagSet>(0);
     mLineStart = i;
+    mLiteralStart = i;
     mStringStart = i;
     mCppCommentStart = i;
     mCCommentStart = i;
@@ -134,6 +135,7 @@ void CPPParserInterpreter<EncodingT>::parse()
     mStatementStart = i;
     mWordStart = i;
     mTemplateDelcStart = i;
+    mLiterals.clear();
     mLines.clear();
     mNoCode.clear();
     mStrings.clear();
@@ -166,6 +168,7 @@ void CPPParserInterpreter<EncodingT>::parse()
         parseDblString(i, flags);
         parseSplString(i, flags);
         parseWord(i, flags);
+        parseLiteral(i, flags);
         parsePreprocessor(i, flags);
         parseCodeBlock(i, flags);
         parseType(i, flags);
@@ -343,6 +346,31 @@ void CPPParserInterpreter<EncodingT>::parseCComment(size_t i, FlagSet& flags)
             flags_set(flags, FLAGS::IN_COMMENT);
             flags_set(flags, FLAGS::IN_NO_CODE);
             flags_set(flags, FLAGS::CODE_BREAK);
+        }
+    }
+}
+
+template <class EncodingT>
+void CPPParserInterpreter<EncodingT>::parseLiteral(size_t i, FlagSet& flags)
+{
+    if (flags_test(flags, FLAGS::IN_LITERAL))
+    {
+        if ((((ispunct(mContent[i]) != 0) || (isspace(mContent[i]) != 0)) &&
+            (mContent[i] != '.') && (((i > 0U) && (mContent[i-1] != 'e') && (mContent[i-1] != 'E')) || ((mContent[i] != '+') && (mContent[i] != '-')))) ||
+            (i >= mContent.size()))
+        {
+            mLiterals.push_back(Block(mLiteralStart, i));
+            flags_reset(flags, FLAGS::IN_LITERAL);
+        }
+    }
+    if (IN_CODE(flags))
+    {
+        if (!flags_test(flags, FLAGS::IN_LITERAL) && 
+            ((i > 0U) && (((ispunct(mContent[i-1]) != 0) && (mContent[i-1] != '_')) || (isspace(mContent[i-1]) != 0))) &&
+            ((isdigit(mContent[i]) != 0) || (((i + 1) < mContent.size()) && (mContent[i] == '.') && (isdigit(mContent[i + 1]) != 0))))
+        {
+            mLiteralStart = i;
+            flags_set(flags, FLAGS::IN_LITERAL);
         }
     }
 }
@@ -789,6 +817,9 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
             flags_reset(flags, FLAGS::IN_MEMBER_ID);
             flags_reset(flags, FLAGS::IN_ATTRIBUTE);
             flags_reset(flags, FLAGS::IN_MEMBER_DECL);
+            flags_reset(flags, FLAGS::IN_FUNCTION_INIT);
+            flags_reset(flags, FLAGS::IN_FUNCTION_SPACE);
+            flags_reset(flags, FLAGS::IN_FUNCTION_PARAM);
             mMemberStart.pop_back();
             mIsFunction.pop_back();
             if (mMemberStart.empty())
@@ -863,6 +894,9 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
                     }
                     flags_reset(flags, FLAGS::IN_MEMBER_DECL);
                     flags_reset(flags, FLAGS::IN_ATTRIBUTE);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_INIT);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_SPACE);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_PARAM);
                     if (mMemberStart.empty())
                     {
                         flags_reset(flags, FLAGS::IN_MEMBER);
@@ -872,7 +906,11 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
                         flags_set(flags, FLAGS::IN_CLASS_SPACE);
                     }
                 }
-                else if ((mContent[i] == '(') && !flags_test(flags, FLAGS::IN_ATTRIBUTE))
+                else if ((mContent[i] == '(')
+                         && !flags_test(flags, FLAGS::IN_ATTRIBUTE)
+                         && !flags_test(flags, FLAGS::IN_FUNCTION_PARAM)
+                         && !flags_test(flags, FLAGS::IN_FUNCTION_SPACE)
+                         && !flags_test(flags, FLAGS::IN_FUNCTION_INIT))
                 {
                     if (flags_test(flags, FLAGS::IN_TEMPLATE_DECL))
                     {
@@ -891,12 +929,35 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
                     mIsFunction.back() = true;
                     flags_reset(flags, FLAGS::IN_ATTRIBUTE);
                     flags_set(flags, FLAGS::IN_FUNCTION);
+                    mFctParamParenth = 1U;
+                    flags_set(flags, FLAGS::IN_FUNCTION_PARAM);
+                }
+                else if ((mContent[i] == '(') && flags_test(flags, FLAGS::IN_FUNCTION) && flags_test(flags, FLAGS::IN_FUNCTION_PARAM))
+                {
+                    ++mFctParamParenth;
+                }
+                else if ((mContent[i] == ')') && flags_test(flags, FLAGS::IN_FUNCTION) && flags_test(flags, FLAGS::IN_FUNCTION_PARAM))
+                {
+                    --mFctParamParenth;
+                    if (mFctParamParenth == 0U)
+                    {
+                        flags_set(flags, FLAGS::IN_FUNCTION_SPACE);
+                        flags_reset(flags, FLAGS::IN_FUNCTION_PARAM);
+                    }
+                }
+                else if ((mContent[i] == ':') && flags_test(flags, FLAGS::IN_FUNCTION_SPACE))
+                {
+                    flags_set(flags, FLAGS::IN_FUNCTION_INIT);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_SPACE);
                 }
                 else if (mContent[i] == '{')
                 {
                     mFunctionBlock.push_back(i);
                     flags_set(flags, FLAGS::IN_FUNCTION_BLOCK);
                     flags_reset(flags, FLAGS::IN_MEMBER_DECL);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_INIT);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_SPACE);
+                    flags_reset(flags, FLAGS::IN_FUNCTION_PARAM);
                 }
                 else
                 {
@@ -935,6 +996,7 @@ void CPPParserInterpreter<EncodingT>::parseMember(size_t i, FlagSet& flags)
                 (mContent[i] != '}') &&
                 (mContent[i] != ':') &&
                 (mContent[i] != ';') &&
+                !flags_test(flags, FLAGS::IN_NO_CODE) &&
                 !flags_test(flags, FLAGS::IN_TEMPLATE) &&
                 !flags_test(flags, FLAGS::IN_PREPROCESSOR) &&
                 !flags_test(flags, FLAGS::IN_CLASS_END) &&
@@ -1006,15 +1068,30 @@ void CPPParserInterpreter<EncodingT>::parseStatement(size_t i, FlagSet& flags)
     {
         if (flags_test(flags, FLAGS::IN_STATEMENT))
         {
-            if ((i > 0U) && ((mContent[i - 1] == ';') || (mContent[i] == '{')))
+            if (((i > 0U) && (mContent[i - 1] == ';')) ||
+                (mContent[i] == '{') ||
+                (mContent[i] == '}') ||
+                (i >= mContent.size()))
             {
                 mStatements.push_back(Block(mStatementStart, i));
                 flags_reset(flags, FLAGS::IN_STATEMENT);
             }
         }
-        if (flags_test(flags, FLAGS::IN_FUNCTION_BLOCK))
+        if (flags_test(flags, FLAGS::IN_FUNCTION_BLOCK) && !flags_test(flags, FLAGS::IN_NO_CODE))
         {
             if ((isspace(mContent[i]) == 0) &&
+                (mContent[i] != '{') &&
+                (mContent[i] != '}') &&
+                !flags_test(flags, FLAGS::IN_STATEMENT))
+            {
+                mStatementStart = i;
+                flags_set(flags, FLAGS::IN_STATEMENT);
+            }
+        }
+        if (flags_test(flags, FLAGS::IN_FUNCTION_INIT) && !flags_test(flags, FLAGS::IN_NO_CODE))
+        {
+            if ((isspace(mContent[i]) == 0) &&
+                (mContent[i] != ':') &&
                 (mContent[i] != '{') &&
                 (mContent[i] != '}') &&
                 !flags_test(flags, FLAGS::IN_STATEMENT))
@@ -1036,15 +1113,13 @@ void CPPParserInterpreter<EncodingT>::parseWord(size_t i, FlagSet& flags)
     }
     if (((ispunct(mContent[i]) != 0) || (isspace(mContent[i]) != 0)) &&
         (mContent[i] != '_') &&
-        ((mContent[i] != '.') || (isdigit(mContent[i + 1]) == 0)) &&
         flags_test(flags, FLAGS::IN_WORD))
     {
         mWord = mContent.substr(mWordStart, i - mWordStart);
         flags_reset(flags, FLAGS::IN_WORD);
     }
     if (((isalnum(mContent[i]) != 0) ||
-         (mContent[i] == '_') ||
-         ((mContent[i] == '.') && (isdigit(mContent[i + 1]) != 0))) &&
+         (mContent[i] == '_')) &&
         !flags_test(flags, FLAGS::IN_WORD) &&
         IN_CODE(flags))
     {
@@ -1147,6 +1222,11 @@ bool CPPParserInterpreter<EncodingT>::iterators(size_t blockId, std::vector<Bloc
     case COMPOSITION_ID:
         first = mComposition.cbegin();
         last = mComposition.cend();
+        initIt = true;
+    break;
+    case LITERAL_ID:
+        first = mLiterals.cbegin();
+        last = mLiterals.cend();
         initIt = true;
     break;
     default:
@@ -1409,6 +1489,13 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::statementI
 {
     static boost::shared_ptr< Base<EncodingT> > STATEMENT_ID_PTR = boost::make_shared< Numeric<EncodingT> >(STATEMENT_ID);
     return STATEMENT_ID_PTR;
+}
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::literalId() const
+{
+    static boost::shared_ptr< Base<EncodingT> > LITERAL_ID_PTR = boost::make_shared< Numeric<EncodingT> >(LITERAL_ID);
+    return LITERAL_ID_PTR;
 }
 
 template <class EncodingT>

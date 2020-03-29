@@ -243,7 +243,7 @@ typename EncodingT::string_t HTMLFormatterInterpreter<EncodingT>::formatCpp(cons
             remainder = 1;
             change = EChange::style_change;
         }
-        else if ((ispunct(content[i]) != 0) && (content[i] != '_') && ((content[i] != '.') || !inLiteral) && !inPuntuaction && !inPreprocessor && !inCppComment && !inCComment && !inStringDblQuotes && !inStringSplQuote)
+        else if ((ispunct(content[i]) != 0) && (content[i] != '_') && (!inLiteral || (content[i] != '.')) && (!inLiteral || (((content[i-1] != 'e') && (content[i-1] != 'E')) || ((content[i] != '+') && (content[i] != '-')))) && !inPuntuaction && !inPreprocessor && !inCppComment && !inCComment && !inStringDblQuotes && !inStringSplQuote)
         {
              inPuntuaction = !inPuntuaction;
              next_style = UCS("pun");

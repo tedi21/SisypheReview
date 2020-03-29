@@ -165,7 +165,11 @@ NAMESPACE_BEGIN(interp)
             IN_FUNCTION,
             IN_FUNCTION_BLOCK,
             IN_STATEMENT,
-            CODE_BREAK
+            IN_LITERAL,
+            CODE_BREAK,
+            IN_FUNCTION_SPACE,
+            IN_FUNCTION_INIT,
+            IN_FUNCTION_PARAM,
         };
 
         static bool IN_CODE(const FlagSet& flags);
@@ -247,6 +251,10 @@ NAMESPACE_BEGIN(interp)
         size_t mTemplateDelcStart;
         std::vector<size_t> mTemplateStart;
         void parseTemplate(size_t i, FlagSet& flags);
+        
+        std::vector<Block> mLiterals;
+        size_t mLiteralStart;
+        void parseLiteral(size_t i, FlagSet& flags);
 
         std::vector<Block> mFunctions;
         std::vector<Block> mAttributes;
@@ -254,6 +262,7 @@ NAMESPACE_BEGIN(interp)
         std::vector<bool> mIsFunction;
         std::vector<typename EncodingT::string_t> mMemberName;
         std::vector<size_t> mFunctionBlock;
+        size_t mFctParamParenth;
         void parseMember(size_t i, FlagSet& flags);
 
         static constexpr size_t LINES_ID = 1U;
@@ -271,6 +280,7 @@ NAMESPACE_BEGIN(interp)
         static constexpr size_t ATTRIBUTE_ID = (1U << 13U);
         static constexpr size_t UNION_ID = (1U << 14U);
         static constexpr size_t STATEMENT_ID = (1U << 15U);
+        static constexpr size_t LITERAL_ID = (1U << 16U);
         static constexpr size_t COMPOSITION_ID = CLASS_ID + STRUCT_ID + UNION_ID;
         static constexpr size_t COMMENTS_ID = C_COMMENTS_ID + CPP_COMMENTS_ID;
         static constexpr size_t NO_CODE_ID = COMMENTS_ID + STRINGS_ID;
@@ -305,6 +315,8 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > getContent() const;
 
         boost::shared_ptr< Base<EncodingT> > getSourceCode() const;
+
+        boost::shared_ptr< Base<EncodingT> > literalId() const;
 
         boost::shared_ptr< Base<EncodingT> > linesId() const;
 
@@ -387,6 +399,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parse, no_const_t, UCS("CPPParser::Parse") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getContent, const_t, UCS("CPPParser::Content") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getSourceCode, const_t, UCS("CPPParser::SourceCode") );
+            METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, literalId, const_t, UCS("CPPParser::Literal") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, linesId, const_t, UCS("CPPParser::Lines") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, stringsId, const_t, UCS("CPPParser::Strings") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, CCommentsId, const_t, UCS("CPPParser::CComments") );
@@ -427,6 +440,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_UNREGISTER1( UCS("CPPParser::Parse") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::Content") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::SourceCode") );
+            METHOD_KEY_UNREGISTER ( UCS("CPPParser::Literal") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::Lines") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::Strings") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::CComments") );
