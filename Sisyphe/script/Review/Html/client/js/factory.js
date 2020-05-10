@@ -49,7 +49,7 @@
         // return Json structure {name, list}
         fileEntities: $resource('json/:filterName:sep:fileId.json', {fileId: '@fileId', filterName: '@filterName', sep:'_'}, {
           query: {method: 'get', isArray: false}
-        }),
+        })
 
       };
   }]);
