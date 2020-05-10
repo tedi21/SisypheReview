@@ -11,9 +11,9 @@
 #include <algorithm>
 #include <type_traits>
 #include <cctype>
-#include "utf8_codecvt.hpp"
 #include "utf16BE_codecvt.hpp"
 #include "utf16LE_codecvt.hpp"
+#include "utf8_codecvt.hpp"
 #include "iso_8859_15_codecvt.hpp"
 #include "Numeric.hpp"
 #include "String.hpp"
@@ -31,9 +31,9 @@ bool CPPParserInterpreter<EncodingT>::IN_CODE(const FlagSet& flags)
 
 template <class EncodingT>
 template <typename... T>
-constexpr Block CPPParserInterpreter<EncodingT>::InfoBlock(size_t start, size_t end, T&&... args)
+ParserBlock CPPParserInterpreter<EncodingT>::InfoBlock(size_t start, size_t end, T&&... args)
 {
-    return Block(start, end, Information<EncodingT>(std::forward<T>(args)...));
+    return ParserBlock(start, end, ParserInformation<EncodingT>(std::forward<T>(args)...));
 }
 
 template <class EncodingT>
@@ -80,7 +80,7 @@ typename EncodingT::string_t CPPParserInterpreter<EncodingT>::getNativeContent(c
             file.imbue(new_locale);
             // get length of file:
             file.seekg (0, ios::end);
-            size_t length = file.tellg() - offset_bom;
+            size_t length = static_cast<size_t>(file.tellg()) - offset_bom;
             file.clear();
             file.seekg(0, ios::beg);
             file.seekg(offset_bom);
@@ -199,13 +199,13 @@ void CPPParserInterpreter<EncodingT>::parseLine(size_t i, FlagSet&)
 {
     if (i >= mContent.size())
     {
-        mLines.push_back(Block(mLineStart, i));
+        mLines.push_back(ParserBlock(mLineStart, i));
     }
     else
     {
         if ((i > 0U) && (mContent[i - 1] == '\n'))
         {
-            mLines.push_back(Block(mLineStart, i));
+            mLines.push_back(ParserBlock(mLineStart, i));
             mLineStart = i;
         }
     }
@@ -222,8 +222,8 @@ void CPPParserInterpreter<EncodingT>::parseDblString(size_t i, FlagSet& flags)
             {
                 if (mContent[i - 1] == '"')
                 {
-                    mStrings.push_back(Block(mStringStart, i));
-                    mNoCode.push_back(Block(mStringStart, i));
+                    mStrings.push_back(ParserBlock(mStringStart, i));
+                    mNoCode.push_back(ParserBlock(mStringStart, i));
                     flags_reset(flags, FLAGS::IN_DBL_STRING);
                     flags_reset(flags, FLAGS::IN_STRING);
                     flags_reset(flags, FLAGS::IN_NO_CODE);
@@ -263,8 +263,8 @@ void CPPParserInterpreter<EncodingT>::parseSplString(size_t i, FlagSet& flags)
             {
                 if (mContent[i - 1] == '\'')
                 {
-                    mStrings.push_back(Block(mStringStart, i));
-                    mNoCode.push_back(Block(mStringStart, i));
+                    mStrings.push_back(ParserBlock(mStringStart, i));
+                    mNoCode.push_back(ParserBlock(mStringStart, i));
                     flags_reset(flags, FLAGS::IN_SMPL_STRING);
                     flags_reset(flags, FLAGS::IN_STRING);
                     flags_reset(flags, FLAGS::IN_NO_CODE);
@@ -301,9 +301,9 @@ void CPPParserInterpreter<EncodingT>::parseCppComment(size_t i, FlagSet& flags)
         if (((i > 0U) && (mContent[i - 1] == '\n')) ||
                 (i >= mContent.size()))
         {
-            mCppComments.push_back(Block(mCppCommentStart, i));
-            mComments.push_back(Block(mCppCommentStart, i));
-            mNoCode.push_back(Block(mCppCommentStart, i));
+            mCppComments.push_back(ParserBlock(mCppCommentStart, i));
+            mComments.push_back(ParserBlock(mCppCommentStart, i));
+            mNoCode.push_back(ParserBlock(mCppCommentStart, i));
             flags_reset(flags, FLAGS::IN_CPP_COMMENT);
             flags_reset(flags, FLAGS::IN_COMMENT);
             flags_reset(flags, FLAGS::IN_NO_CODE);
@@ -329,9 +329,9 @@ void CPPParserInterpreter<EncodingT>::parseCComment(size_t i, FlagSet& flags)
     {
         if ((i > 1U) && (mContent[i - 2] == '*') && (mContent[i - 1] == '/'))
         {
-            mCComments.push_back(Block(mCCommentStart, i));
-            mComments.push_back(Block(mCCommentStart, i));
-            mNoCode.push_back(Block(mCCommentStart, i));
+            mCComments.push_back(ParserBlock(mCCommentStart, i));
+            mComments.push_back(ParserBlock(mCCommentStart, i));
+            mNoCode.push_back(ParserBlock(mCCommentStart, i));
             flags_reset(flags, FLAGS::IN_C_COMMENT);
             flags_reset(flags, FLAGS::IN_COMMENT);
             flags_reset(flags, FLAGS::IN_NO_CODE);
@@ -359,7 +359,7 @@ void CPPParserInterpreter<EncodingT>::parseLiteral(size_t i, FlagSet& flags)
             (mContent[i] != '.') && (((i > 0U) && (mContent[i-1] != 'e') && (mContent[i-1] != 'E')) || ((mContent[i] != '+') && (mContent[i] != '-')))) ||
             (i >= mContent.size()))
         {
-            mLiterals.push_back(Block(mLiteralStart, i));
+            mLiterals.push_back(ParserBlock(mLiteralStart, i));
             flags_reset(flags, FLAGS::IN_LITERAL);
         }
     }
@@ -426,7 +426,7 @@ void CPPParserInterpreter<EncodingT>::parseCodeBlock(size_t i, FlagSet& flags)
         {
             if ((i > 0U) && (mContent[i - 1] == '}'))
             {
-                mCodeBlocks.push_back(Block(mCodeBlockStart.back(), i));
+                mCodeBlocks.push_back(ParserBlock(mCodeBlockStart.back(), i));
                 mCodeBlockStart.pop_back();
                 if (mCodeBlockStart.empty())
                 {
@@ -1073,7 +1073,7 @@ void CPPParserInterpreter<EncodingT>::parseStatement(size_t i, FlagSet& flags)
                 (mContent[i] == '}') ||
                 (i >= mContent.size()))
             {
-                mStatements.push_back(Block(mStatementStart, i));
+                mStatements.push_back(ParserBlock(mStatementStart, i));
                 flags_reset(flags, FLAGS::IN_STATEMENT);
             }
         }
@@ -1129,7 +1129,7 @@ void CPPParserInterpreter<EncodingT>::parseWord(size_t i, FlagSet& flags)
 }
 
 template <class EncodingT>
-bool CPPParserInterpreter<EncodingT>::iterators(size_t blockId, std::vector<Block>::const_iterator& first, std::vector<Block>::const_iterator& last) const
+bool CPPParserInterpreter<EncodingT>::iterators(size_t blockId, std::vector<ParserBlock>::const_iterator& first, std::vector<ParserBlock>::const_iterator& last) const
 {
     bool initIt = false;
     switch (blockId)
@@ -1237,13 +1237,13 @@ bool CPPParserInterpreter<EncodingT>::iterators(size_t blockId, std::vector<Bloc
 }
 
 template <class EncodingT>
-long long CPPParserInterpreter<EncodingT>::find(size_t val, size_t blockId, Block& block) const
+long long CPPParserInterpreter<EncodingT>::find(size_t val, size_t blockId, ParserBlock& block) const
 {
     long long index = NO_POS;
-    std::vector<Block>::const_iterator first, last;
+    std::vector<ParserBlock>::const_iterator first, last;
     if (iterators(blockId, first, last))
     {
-        auto it = std::upper_bound(first, last, Block(val), Block::compareEnd);
+        auto it = std::upper_bound(first, last, ParserBlock(val), ParserBlock::compareEnd);
         while ((it != last) && !it->inRange(val)) ++it;
         if (it != last)
         {
@@ -1513,7 +1513,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::indexOf(co
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
     {
-        Block block;
+        ParserBlock block;
         index = boost::make_shared< Numeric<EncodingT> >(find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block));
     }
     else
@@ -1532,7 +1532,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::inRange(co
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
     {
-        Block block;
+        ParserBlock block;
         res = boost::make_shared< Bool<EncodingT> >(find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block) != NO_POS);
     }
     else
@@ -1551,7 +1551,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::range(cons
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
     {
-        Block block;
+        ParserBlock block;
         if (find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block) != NO_POS)
         {
             arr->addValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(block.Start())));
@@ -1574,10 +1574,10 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::previous(c
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
     {
-        std::vector<Block>::const_iterator first, last;
+        std::vector<ParserBlock>::const_iterator first, last;
         if (iterators(nativeBlock->LLvalue(), first, last))
         {
-            auto it = std::upper_bound(first, last, Block(nativeVal->LLvalue()), Block::compareEnd);
+            auto it = std::upper_bound(first, last, ParserBlock(nativeVal->LLvalue()), ParserBlock::compareEnd);
             if (it != first)
             {
                 index = boost::make_shared< Numeric<EncodingT> >((it - 1) - first);
@@ -1599,10 +1599,10 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::array(cons
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeBlock != nullptr)
     {
-        std::vector<Block>::const_iterator first, last;
+        std::vector<ParserBlock>::const_iterator first, last;
         if (iterators(nativeBlock->LLvalue(), first, last))
         {
-            for (std::vector<Block>::const_iterator it = first; it != last; ++it)
+            for (std::vector<ParserBlock>::const_iterator it = first; it != last; ++it)
             {
                 boost::shared_ptr< Array<EncodingT> > r = boost::make_shared< Array<EncodingT> >();
                 r->addValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(it->Start())));
@@ -1626,7 +1626,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::size(const
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeBlock != nullptr)
     {
-        std::vector<Block>::const_iterator first, last;
+        std::vector<ParserBlock>::const_iterator first, last;
         if (iterators(nativeBlock->LLvalue(), first, last))
         {
             s = boost::make_shared< Numeric<EncodingT> >(last - first);
@@ -1648,11 +1648,11 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::extract(co
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeIndex != nullptr && nativeBlock != nullptr)
     {
-        std::vector<Block>::const_iterator first, last;
+        std::vector<ParserBlock>::const_iterator first, last;
         if ((nativeIndex->LLvalue() >= 0) &&
                 iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
         {
-            const Block& block = *(first + nativeIndex->LLvalue());
+            const ParserBlock& block = *(first + nativeIndex->LLvalue());
             str = boost::make_shared< String<EncodingT> >(mContent.substr(block.Start(), (block.End() - block.Start())));
         }
     }
@@ -1672,11 +1672,11 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::extractCod
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeIndex != nullptr && nativeBlock != nullptr)
     {
-        std::vector<Block>::const_iterator first, last;
+        std::vector<ParserBlock>::const_iterator first, last;
         if ((nativeIndex->LLvalue() >= 0) &&
                 iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
         {
-            const Block& block = *(first + nativeIndex->LLvalue());
+            const ParserBlock& block = *(first + nativeIndex->LLvalue());
             str = boost::make_shared< String<EncodingT> >(mCode.substr(block.Start(), (block.End() - block.Start())));
         }
     }
@@ -1696,11 +1696,11 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::at(const b
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeIndex != nullptr && nativeBlock != nullptr)
     {
-        std::vector<Block>::const_iterator first, last;
+        std::vector<ParserBlock>::const_iterator first, last;
         if ((nativeIndex->LLvalue() >= 0) &&
                 iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
         {
-            const Block& block = *(first + nativeIndex->LLvalue());
+            const ParserBlock& block = *(first + nativeIndex->LLvalue());
             arr->addValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(block.Start())));
             arr->addValue(boost::shared_ptr< Base<EncodingT> >(new Numeric<EncodingT>(block.End())));
         }
@@ -1732,14 +1732,14 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::name(const
             (FUNCTION_ID == nativeBlock->LLvalue()) ||
             (ATTRIBUTE_ID == nativeBlock->LLvalue()))
         {
-            std::vector<Block>::const_iterator first, last;
+            std::vector<ParserBlock>::const_iterator first, last;
             if ((nativeIndex->LLvalue() >= 0) &&
                     iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
             {
-                const Block& block = *(first + nativeIndex->LLvalue());
+                const ParserBlock& block = *(first + nativeIndex->LLvalue());
                 try
                 {
-                    const Information<EncodingT>& data = block.data< Information<EncodingT> >();
+                    const ParserInformation<EncodingT>& data = block.data< ParserInformation<EncodingT> >();
                     if (data.hasName())
                     {
                         str = boost::make_shared< String<EncodingT> >(data.getName());
@@ -1755,7 +1755,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::name(const
         else
         {
             Category * logger = &Category::getInstance(LOGNAME);
-            logger->errorStream() << "Block has no name";
+            logger->errorStream() << "ParserBlock has no name";
         }
     }
     else
@@ -1776,14 +1776,14 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::type(const
     {
         if (COMPOSITION_ID == nativeBlock->LLvalue())
         {
-            std::vector<Block>::const_iterator first, last;
+            std::vector<ParserBlock>::const_iterator first, last;
             if ((nativeIndex->LLvalue() >= 0) &&
                     iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
             {
-                const Block& block = *(first + nativeIndex->LLvalue());
+                const ParserBlock& block = *(first + nativeIndex->LLvalue());
                 try
                 {
-                    const Information<EncodingT>& data = block.data< Information<EncodingT> >();
+                    const ParserInformation<EncodingT>& data = block.data< ParserInformation<EncodingT> >();
                     if (data.hasType())
                     {
                         type = boost::make_shared< Numeric<EncodingT> >(data.getType());
@@ -1799,7 +1799,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::type(const
         else
         {
             Category * logger = &Category::getInstance(LOGNAME);
-            logger->errorStream() << "Block has no type";
+            logger->errorStream() << "ParserBlock has no type";
         }
     }
     else
@@ -1820,7 +1820,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::include(co
     boost::shared_ptr< Numeric<EncodingT> > nativeBlockId = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeOrigin != nullptr && nativeIndex != nullptr && nativeBlockOrig != nullptr && nativeBlockId != nullptr)
     {
-        std::vector<Block>::const_iterator firstI, lastI, firstO, lastO;
+        std::vector<ParserBlock>::const_iterator firstI, lastI, firstO, lastO;
         if ((nativeIndex->LLvalue() >= 0) &&
                 (nativeOrigin->LLvalue() >= 0) &&
                 iterators(nativeBlockId->LLvalue(), firstI, lastI) &&
@@ -1828,8 +1828,8 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::include(co
                 (firstI + nativeIndex->LLvalue()) < lastI &&
                 (firstO + nativeOrigin->LLvalue()) < lastO)
         {
-            const Block& blockI = *(firstI + nativeIndex->LLvalue());
-            const Block& blockO = *(firstO + nativeOrigin->LLvalue());
+            const ParserBlock& blockI = *(firstI + nativeIndex->LLvalue());
+            const ParserBlock& blockO = *(firstO + nativeOrigin->LLvalue());
             inc = boost::make_shared< Bool<EncodingT> >(blockO.Start() <= blockI.Start() && blockI.End() <= blockO.End());
         }
     }

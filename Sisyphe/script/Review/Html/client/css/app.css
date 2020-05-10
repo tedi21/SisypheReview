@@ -276,3 +276,39 @@ pre  {
   padding:0;
   margin:0;
 }
+
+.loading-container {
+  position: relative;
+  height: 145px;
+}
+
+#loading-img {
+  display: block;
+  position: absolute;
+  left: 30%;
+  width: 200px;
+  height: 145px;
+  background: url("../imgs/canard.png") 0 0 no-repeat;
+  -webkit-animation: fly 800ms steps(3) infinite;
+  animation: fly 800ms steps(3) infinite;
+}
+
+#console {
+  font-family: monospace; 
+  resize: none;
+  height:192px;
+  width: 100%;
+}
+
+.command-group {
+  display:table;
+  margin: 5px 20px;
+}
+
+.code-area {
+  flex:1;
+  margin:0px;
+  padding:0px;
+  overflow:auto;
+  width: 100%;
+}

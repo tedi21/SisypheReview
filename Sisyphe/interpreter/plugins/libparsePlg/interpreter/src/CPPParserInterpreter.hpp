@@ -28,18 +28,18 @@ NAMESPACE_BEGIN(interp)
     using FlagSet = uint64_t;
 
     template <class EncodingT>
-    class Information
+    class ParserInformation
     {
     private:
         std::optional<typename EncodingT::string_t> mName;
         std::optional<size_t> mType;
 
     public:
-        Information(typename EncodingT::string_t& name, size_t type)
+        ParserInformation(typename EncodingT::string_t& name, size_t type)
         : mName(name), mType(type)
         {}
 
-        Information(typename EncodingT::string_t& name)
+        ParserInformation(typename EncodingT::string_t& name)
         : mName(name)
         {}
 
@@ -64,36 +64,36 @@ NAMESPACE_BEGIN(interp)
         }
     };
 
-    class Block
+    class ParserBlock
     {
     private:
         size_t mStart, mEnd;
         std::any mData;
 
     public:
-        Block()
+        ParserBlock()
         : mStart(-1), mEnd(-1)
         {}
 
-        Block(size_t start, size_t end)
+        ParserBlock(size_t start, size_t end)
         : mStart(start), mEnd(end)
         {}
 
-        Block(size_t val)
+        ParserBlock(size_t val)
         : mStart(val), mEnd(val)
         {}
 
         template <class T>
-        Block(size_t start, size_t end, T data)
+        ParserBlock(size_t start, size_t end, T data)
         : mStart(start), mEnd(end), mData(data)
         {}
 
-        static bool compareStart(const Block& me, const Block& o)
+        static bool compareStart(const ParserBlock& me, const ParserBlock& o)
         {
             return me.mStart <= o.mStart;
         }
 
-        static bool compareEnd(const Block& me, const Block& o)
+        static bool compareEnd(const ParserBlock& me, const ParserBlock& o)
         {
             return me.mEnd < o.mEnd;
         }
@@ -175,7 +175,7 @@ NAMESPACE_BEGIN(interp)
         static bool IN_CODE(const FlagSet& flags);
 
         template <typename... T>
-        static constexpr Block InfoBlock(size_t start, size_t end, T&&... args);
+        static ParserBlock InfoBlock(size_t start, size_t end, T&&... args);
 
         void parse();
 
@@ -185,42 +185,42 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > mCodePtr;
         typename EncodingT::string_t mCode;
 
-        std::vector<Block> mNoCode;     // String + Comment
-        std::vector<Block> mComments;   // CppComment + CComment
+        std::vector<ParserBlock> mNoCode;     // String + Comment
+        std::vector<ParserBlock> mComments;   // CppComment + CComment
 
-        std::vector<Block> mLines;
+        std::vector<ParserBlock> mLines;
         size_t mLineStart;
         void parseLine(size_t i, FlagSet& flags);
 
-        std::vector<Block> mStrings;
+        std::vector<ParserBlock> mStrings;
         size_t mStringStart;
         void parseDblString(size_t i, FlagSet& flags);
         void parseSplString(size_t i, FlagSet& flags);
 
-        std::vector<Block> mCppComments;
+        std::vector<ParserBlock> mCppComments;
         size_t mCppCommentStart;
         void parseCppComment(size_t i, FlagSet& flags);
 
-        std::vector<Block> mCComments;
+        std::vector<ParserBlock> mCComments;
         size_t mCCommentStart;
         void parseCComment(size_t i, FlagSet& flags);
 
-        std::vector<Block> mPreprocessors;
+        std::vector<ParserBlock> mPreprocessors;
         size_t mPreprocessorStart;
         typename EncodingT::string_t mPreprocessorName;
         void parsePreprocessor(size_t i, FlagSet& flags);
 
-        std::vector<Block> mCodeBlocks;
+        std::vector<ParserBlock> mCodeBlocks;
         std::vector<size_t> mCodeBlockStart;
         void parseCodeBlock(size_t i, FlagSet& flags);
 
         void parseType(size_t i, FlagSet& flags);
 
-        std::vector<Block> mComposition;
-        std::vector<Block> mClass;
-        std::vector<Block> mSpecifier;
-        std::vector<Block> mStruct;
-        std::vector<Block> mUnion;
+        std::vector<ParserBlock> mComposition;
+        std::vector<ParserBlock> mClass;
+        std::vector<ParserBlock> mSpecifier;
+        std::vector<ParserBlock> mStruct;
+        std::vector<ParserBlock> mUnion;
         std::vector<size_t> mClassStart;
         std::vector<size_t> mSpecifierStart;
         std::vector<typename EncodingT::string_t> mClassName;
@@ -229,18 +229,18 @@ NAMESPACE_BEGIN(interp)
         std::vector<typename EncodingT::string_t> mSpecifierName;
         void parseClass(size_t i, FlagSet& flags);
 
-        std::vector<Block> mNamespace;
+        std::vector<ParserBlock> mNamespace;
         std::vector<size_t> mNamespaceStart;
         std::vector<typename EncodingT::string_t> mNamespaceName;
         std::vector<size_t> mNamespaceBlock;
         void parseNamespace(size_t i, FlagSet& flags);
 
-        std::vector<Block> mEnum;
+        std::vector<ParserBlock> mEnum;
         size_t mEnumStart;
         typename EncodingT::string_t mEnumName;
         void parseEnum(size_t i, FlagSet& flags);
 
-        std::vector<Block> mStatements;
+        std::vector<ParserBlock> mStatements;
         size_t mStatementStart;
         void parseStatement(size_t i, FlagSet& flags);
 
@@ -252,12 +252,12 @@ NAMESPACE_BEGIN(interp)
         std::vector<size_t> mTemplateStart;
         void parseTemplate(size_t i, FlagSet& flags);
         
-        std::vector<Block> mLiterals;
+        std::vector<ParserBlock> mLiterals;
         size_t mLiteralStart;
         void parseLiteral(size_t i, FlagSet& flags);
 
-        std::vector<Block> mFunctions;
-        std::vector<Block> mAttributes;
+        std::vector<ParserBlock> mFunctions;
+        std::vector<ParserBlock> mAttributes;
         std::vector<size_t> mMemberStart;
         std::vector<bool> mIsFunction;
         std::vector<typename EncodingT::string_t> mMemberName;
@@ -286,9 +286,9 @@ NAMESPACE_BEGIN(interp)
         static constexpr size_t NO_CODE_ID = COMMENTS_ID + STRINGS_ID;
         static constexpr int NO_POS = -1;
 
-        bool iterators(size_t blockId, std::vector<Block>::const_iterator& first, std::vector<Block>::const_iterator& last) const;
+        bool iterators(size_t blockId, std::vector<ParserBlock>::const_iterator& first, std::vector<ParserBlock>::const_iterator& last) const;
 
-        long long find(size_t val, size_t blockId, Block& block) const;
+        long long find(size_t val, size_t blockId, ParserBlock& block) const;
 
         static typename EncodingT::string_t getNativeContent(const typename EncodingT::string_t& path);
 

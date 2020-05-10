@@ -415,7 +415,7 @@ NAMESPACE_BEGIN(interp)
         return (value != NULL);
     }
 
-    template <class EncodingT, class T, class = typename std::enable_if<std::is_integral<T>::value||std::is_enum<T>::value>::type>
+    template <class EncodingT, class T, class>
     bool check_numeric_i(boost::shared_ptr< Base<EncodingT> > const& val, T& n)
     {
         boost::shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);
@@ -431,7 +431,7 @@ NAMESPACE_BEGIN(interp)
         return (value != NULL);
     }
 
-    template <class EncodingT, class T, class = typename std::enable_if<std::is_integral<T>::value||std::is_enum<T>::value>::type>
+    template <class EncodingT, class T, class>
     bool reset_numeric_i(boost::shared_ptr< Base<EncodingT> >& val, T n)
     {
         boost::shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);
@@ -447,7 +447,7 @@ NAMESPACE_BEGIN(interp)
         return (value != NULL);
     }
 
-    template <class EncodingT, class T, class = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    template <class EncodingT, class T, class>
     bool check_numeric_d(boost::shared_ptr< Base<EncodingT> > const& val, T& n)
     {
         boost::shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);
@@ -463,7 +463,7 @@ NAMESPACE_BEGIN(interp)
         return (value != NULL);
     }
     
-    template <class EncodingT, class T, class = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    template <class EncodingT, class T, class>
     bool reset_numeric_d(boost::shared_ptr< Base<EncodingT> >& val, T n)
     {
         boost::shared_ptr< Numeric<EncodingT> > value  = dynamic_pointer_cast< Numeric<EncodingT> >(val);

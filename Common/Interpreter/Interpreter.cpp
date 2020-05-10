@@ -64,7 +64,7 @@ bool readFile(string const& filename, ucs::string_t & buf)
 
             // get length of file:
             file.seekg (0, ios::end);
-            size_t length = file.tellg() - offset_bom;
+            size_t length = static_cast<size_t>(file.tellg()) - offset_bom;
             file.clear();
             file.seekg(0, ios::beg);
             file.seekg(offset_bom);

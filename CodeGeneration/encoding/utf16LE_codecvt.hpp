@@ -4,6 +4,6 @@
 #include "utf16_codecvt.hpp"
 #include "endianness.hpp"
 
-typedef utf16_codecvt_facet<little_endian> utf16LE_codecvt_facet;
+typedef utf16_codecvt_facet<struct little_endian> utf16LE_codecvt_facet;
 
 #endif // _UTF16LE_CODECVT_H_

@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document */
+
+.popover{
+  max-width: 100%; /* Max Width of the popover (depending on the container!) */
+}
+
+.filebrowser {
+  width: 100%;
+}
+
+.filebrowser-header {
+  display: table;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.filebrowser-title {
+  display: table-cell;
+  font-weight: bold;
+  font-size: large;
+}
+
+.filebrowser-btn-close {
+  display: table-cell;
+  text-align: right;
+}
+
+.filebrowser-path {
+  font-style: italic;
+  font-size: x-small;
+  margin-bottom: 5px;
+}
+
+.filebrowser-bar {
+  display: table;
+}
+
+.filebrowser-btn {
+  display: table-cell;
+  vertical-align: middle;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  width: 70px;
+}
+
+.filebrowser-btn-label {
+  font-weight: bold;
+}
+
+.filebrowser-btn-label-small {
+  font-weight: bold;
+  font-size: small;
+}
+
+.filebrowser-btn:focus {
+  outline: none;
+}
+
+.filebrowser-view {
+  max-height: 250px;
+  overflow: auto;
+}
+
+.filebrowser-icon {
+  width:15px;
+}
+
+.filebrowser-row {
+}
+
+.filebrowser-icon:active,
+.filebrowser-icon:hover,
+.filebrowser-row:active,
+.filebrowser-row:hover {
+  cursor: pointer;
+}

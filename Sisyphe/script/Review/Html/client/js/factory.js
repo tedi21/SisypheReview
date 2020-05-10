@@ -19,6 +19,13 @@
         helpHtml: $http(
           {method: 'get', url: 'partials/help.html'}
         ),
+
+        // Return load page
+        // No parameter
+        // Return load html page
+        loadHtml: $http(
+          {method: 'get', url: 'partials/load.html'}
+        ),
         
         // Return the list of analyzed files
         // No parameter
@@ -42,7 +49,7 @@
         // return Json structure {name, list}
         fileEntities: $resource('json/:filterName:sep:fileId.json', {fileId: '@fileId', filterName: '@filterName', sep:'_'}, {
           query: {method: 'get', isArray: false}
-        })
+        }),
 
       };
   }]);

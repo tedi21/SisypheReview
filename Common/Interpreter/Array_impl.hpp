@@ -374,7 +374,7 @@ NAMESPACE_BEGIN(interp)
 		return arr;
 	}
 
-    template <class EncodingT, class T, class = typename std::enable_if<std::is_integral<T>::value>::type>
+    template <class EncodingT, class T, class>
     bool check_numeric_i_array(boost::shared_ptr< Base<EncodingT> > const& val, bc::vector<T>& v)
     {
       boost::shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);
@@ -399,7 +399,7 @@ NAMESPACE_BEGIN(interp)
       return (value != NULL);
     }
 
-    template <class EncodingT, class T, class = typename std::enable_if<std::is_floating_point<T>::value>::type>
+    template <class EncodingT, class T, class>
     bool check_numeric_d_array(boost::shared_ptr< Base<EncodingT> > const& val, bc::vector<T>& v)
     {
       boost::shared_ptr< Array<EncodingT> > value  = dynamic_pointer_cast< Array<EncodingT> >(val);

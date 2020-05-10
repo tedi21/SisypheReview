@@ -1,0 +1,93 @@
+<!-- Page content -->
+<div id="wrapper">
+  <header class="header header-fixed">
+    <!-- Bootstrap Navigation bar : grey bar -->
+    <nav class="navbar navbar-default navbar-fixed-top" >
+      <div class="container-fluid">
+        <!-- Navigation bar title -->  
+        <div class="navbar-header">
+          <!-- three bars button for small screen -->
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#appNavBar" ng-init="isNavBarCollased = true" ng-click="isNavBarCollased = !isNavBarCollased">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- brand logo -->
+          <div class="brand navbar-brand">
+            <img src="imgs/logo.png" class="logo" alt="Sisyphe logo" height="30" width="72" ng-click="logoClicked()"/>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div id="view">
+    <div id="main-panel">
+      <div class="code-area" ng-model="content" ui-codemirror="{
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: 'text/x-c++src',
+        onLoad : codemirrorLoaded
+      }" ></div>
+      <div class="command-group">
+        <button type="button" class="btn btn-success" ng-click="checkClicked()" ng-disabled="checking">
+          Check
+          <div ng-show="checking" class="glyphicon glyphicon-refresh glyphicon-spin"></div>
+        </button>
+      </div>
+      <div id="bottom-panel">
+        <div class="collapse-group">
+          <div class="collapse" uib-collapse="isCollapsed" id="viewdetails">
+            <uib-tabset active="active" >
+              <uib-tab index="0" heading="Console">
+                <textarea id="console" ng-model='console.text'
+                nowrap="nowrap" wrap="off"
+                autocomplete="off" autocorrect="off" 
+                autocapitalize="off" spellcheck="false"></textarea>
+              </uib-tab>
+              <uib-tab index="1" heading="Errors">
+                <div id="bottom-bar">
+                  <div class="filter-input stretch">
+                    <input type="text" class="form-control" placeholder="Filter rules" ng-model="filterInput"/>
+                    <span class="glyphicon glyphicon-question-sign filter-icon" ng-click="filterIconClicked()"></span>
+                  </div>
+                </div>
+                <div id="list-panel">
+                  <table class="table table-hover">
+                    <tbody>
+                    <!-- -->
+                      <tr class="list-cursor" ng-repeat="item in currentFilter.list | ruleFilter:{'query': filterInput, 'enabled': true}" ng-class="{'info':item.clicked}" data-ng-click="listClicked(item)" id="row-list-{{item.start}}">
+                        <td class="columnIcon">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </td>
+                        <td class="columnLine">l.{{item.lineNumber}}</td>
+                        <td class="columnDescription">
+                          <div ng-switch on="item.description">
+                            <div ng-switch-when="">{{item.category}}</div>
+                            <div ng-switch-default>{{item.category}}: {{item.description}}</div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </uib-tab>
+            </uib-tabset>
+          </div>
+          <div class="center">
+            <script type='text/ng-template' id='unfolded'>
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            </script>
+            <script type='text/ng-template' id='folded'>
+              <span class="glyphicon glyphicon-chevron-up"></span>
+            </script>
+            <button class="btn" id="btndetails" data-toggle="collapse" data-target="#viewdetails" ng-click="changeViewDetails()"> 
+              <div ng-include='btnViewDetailsIcon'></div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

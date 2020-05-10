@@ -1,0 +1,79 @@
+<div class="filebrowser">
+  <div class="col-xs-12 col-sm-12">
+    <div class="filebrowser-header">
+      <div class="filebrowser-title">File Browser</div>
+      <div class="filebrowser-btn-close">
+        <button class="btn" ng-click="close()"> 
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12">
+    <div class="filebrowser-path">
+      {{currentPath}}
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-2">
+    <div class="filebrowser-bar">
+      <div class="dropdown" uib-dropdown>
+        <button class="btn filebrowser-btn dropdown-toggle" uib-dropdown-toggle>
+        <span class="glyphicon glyphicon-hdd"></span>
+        <br><div class="filebrowser-btn-label">HDD <span class="caret"></span></div></button>
+        <ul class="dropdown-menu uib-dropdown-menu">
+          <li ng-repeat="drive in drives"><a ng-click="driveClicked(drive)">{{drive}}</a></li>
+        </ul>
+      </div>
+      <button class="btn filebrowser-btn" ng-click="homeClicked()"> 
+        <span class="glyphicon glyphicon-home"></span>
+        <br><div class="filebrowser-btn-label">Home</div>
+      </button>
+      <button class="btn filebrowser-btn" ng-click="parentClicked()"> 
+        <span class="glyphicon glyphicon-level-up"></span>
+        <br><div class="filebrowser-btn-label">Parent</div>
+      </button>
+      <div ng-show="fileSettings.canCreateDirectory">
+        <button class="btn filebrowser-btn" ng-click="newFolderClicked()"> 
+          <span class="glyphicon glyphicon-folder-open"></span>
+          <br><div class="filebrowser-btn-label-small">New<br>folder</div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-10">
+    <div class="filebrowser-view">
+      <table class="table table-hover">
+        <tbody>
+          <tr ng-show="newFolderLine">
+            <td class="filebrowser-icon">
+              <span class="glyphicon glyphicon-folder-open"></span>
+            </td>
+            <td class="filebrowser-row">
+              <div class="input-group">
+                <input type="text" class="form-control" ng-model="folderInput"/>
+                <div class="input-group-btn">
+                  <button class="btn btn-default" ng-click="createFolderClicked(folderInput)">OK</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr ng-repeat="file in files | fileBrowserFilter:fileSettings.filter" ng-class="{'info':file.clicked}" data-ng-click="fileClicked(file)">
+            <td class="filebrowser-icon">
+              <div ng-switch on="file.isDirectory">
+                <div ng-switch-when="true">
+                  <span class="glyphicon glyphicon-folder-open"></span>
+                </div>
+                <div ng-switch-default>
+                   <span class="glyphicon glyphicon-file"></span>
+                </div>
+              </div>
+            </td>
+            <td class="filebrowser-row">
+              {{file.name}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
