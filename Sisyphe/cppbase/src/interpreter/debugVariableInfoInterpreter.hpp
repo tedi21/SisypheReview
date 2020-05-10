@@ -12,7 +12,7 @@
 #define _DEBUGVARIABLEINFO_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -114,51 +114,51 @@ public:
 	boost::shared_ptr< Base<EncodingT> > debugValueInfosCount() const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( DebugVariableInfoInterpreter, C("DebugVariableInfo") );
-		CLASS_KEY_REGISTER2( DebugVariableInfoInterpreter, C("DebugVariableInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("DebugVariableInfo::Identifier") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getCategory, const_t, C("DebugVariableInfo::Category") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setCategory, no_const_t, C("DebugVariableInfo::Category") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, C("DebugVariableInfo::Name") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setName, no_const_t, C("DebugVariableInfo::Name") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setDebugTypeInfo, no_const_t, C("DebugVariableInfo::DebugTypeInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getDebugTypeInfo, no_const_t, C("DebugVariableInfo::DebugTypeInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDebugTypeInfo, const_t, C("DebugVariableInfo::HasDebugTypeInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, void, removeDebugTypeInfo, no_const_t, C("DebugVariableInfo::removeDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setDebugFunctionInfo, no_const_t, C("DebugVariableInfo::DebugFunctionInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getDebugFunctionInfo, no_const_t, C("DebugVariableInfo::DebugFunctionInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDebugFunctionInfo, const_t, C("DebugVariableInfo::HasDebugFunctionInfo") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, void, removeDebugFunctionInfo, no_const_t, C("DebugVariableInfo::removeDebugFunctionInfo") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, removeDebugValueInfo, no_const_t, C("DebugVariableInfo::removeDebugValueInfos") );
-		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreter, void, insertDebugValueInfo, no_const_t, C("DebugVariableInfo::DebugValueInfos") );
-		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getDebugValueInfo, no_const_t, C("DebugVariableInfo::DebugValueInfos") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, void, clearDebugValueInfos, no_const_t, C("DebugVariableInfo::ClearDebugValueInfos") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDebugValueInfos, const_t, C("DebugVariableInfo::HasDebugValueInfos") );
-		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, debugValueInfosCount, const_t, C("DebugVariableInfo::DebugValueInfosCount") );
+		CLASS_KEY_REGISTER ( DebugVariableInfoInterpreter, UCS("DebugVariableInfo") );
+		CLASS_KEY_REGISTER2( DebugVariableInfoInterpreter, UCS("DebugVariableInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("DebugVariableInfo::Identifier") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getCategory, const_t, UCS("DebugVariableInfo::Category") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setCategory, no_const_t, UCS("DebugVariableInfo::Category") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, UCS("DebugVariableInfo::Name") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setName, no_const_t, UCS("DebugVariableInfo::Name") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setDebugTypeInfo, no_const_t, UCS("DebugVariableInfo::DebugTypeInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getDebugTypeInfo, no_const_t, UCS("DebugVariableInfo::DebugTypeInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDebugTypeInfo, const_t, UCS("DebugVariableInfo::HasDebugTypeInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, void, removeDebugTypeInfo, no_const_t, UCS("DebugVariableInfo::removeDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, setDebugFunctionInfo, no_const_t, UCS("DebugVariableInfo::DebugFunctionInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getDebugFunctionInfo, no_const_t, UCS("DebugVariableInfo::DebugFunctionInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDebugFunctionInfo, const_t, UCS("DebugVariableInfo::HasDebugFunctionInfo") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, void, removeDebugFunctionInfo, no_const_t, UCS("DebugVariableInfo::removeDebugFunctionInfo") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, void, removeDebugValueInfo, no_const_t, UCS("DebugVariableInfo::removeDebugValueInfos") );
+		METHOD_KEY_REGISTER2( DebugVariableInfoInterpreter, void, insertDebugValueInfo, no_const_t, UCS("DebugVariableInfo::DebugValueInfos") );
+		METHOD_KEY_REGISTER1( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, getDebugValueInfo, no_const_t, UCS("DebugVariableInfo::DebugValueInfos") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, void, clearDebugValueInfos, no_const_t, UCS("DebugVariableInfo::ClearDebugValueInfos") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, hasDebugValueInfos, const_t, UCS("DebugVariableInfo::HasDebugValueInfos") );
+		METHOD_KEY_REGISTER ( DebugVariableInfoInterpreter, boost::shared_ptr< Base<EncodingT> >, debugValueInfosCount, const_t, UCS("DebugVariableInfo::DebugValueInfosCount") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("DebugVariableInfo") );
-		CLASS_KEY_UNREGISTER2( C("DebugVariableInfo") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::Category") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfo::Category") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::Name") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfo::Name") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::DebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfo::DebugTypeInfo") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::HasDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::removeDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::DebugFunctionInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfo::DebugFunctionInfo") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::HasDebugFunctionInfo") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::removeDebugFunctionInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfo::removeDebugValueInfos") );
-		METHOD_KEY_UNREGISTER2( C("DebugVariableInfo::DebugValueInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugVariableInfo::DebugValueInfos") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::ClearDebugValueInfos") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::HasDebugValueInfos") );
-		METHOD_KEY_UNREGISTER ( C("DebugVariableInfo::DebugValueInfosCount") );
+		CLASS_KEY_UNREGISTER ( UCS("DebugVariableInfo") );
+		CLASS_KEY_UNREGISTER2( UCS("DebugVariableInfo") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::Category") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfo::Category") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::Name") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfo::Name") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::DebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfo::DebugTypeInfo") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::HasDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::removeDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::DebugFunctionInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfo::DebugFunctionInfo") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::HasDebugFunctionInfo") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::removeDebugFunctionInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfo::removeDebugValueInfos") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugVariableInfo::DebugValueInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugVariableInfo::DebugValueInfos") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::ClearDebugValueInfos") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::HasDebugValueInfos") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugVariableInfo::DebugValueInfosCount") );
 	FACTORY_END_UNREGISTER
 };
 

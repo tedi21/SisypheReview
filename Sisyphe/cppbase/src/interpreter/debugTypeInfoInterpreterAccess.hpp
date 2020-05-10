@@ -12,7 +12,7 @@
 #define _DEBUGTYPEINFO_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -136,55 +136,55 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( DebugTypeInfoInterpreterAccess, C("DebugTypeInfoAccess") );
-		METHOD_KEY_REGISTER ( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllDebugTypeInfos, no_const_t, C("DebugTypeInfoAccess::GetAllDebugTypeInfos") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyDebugTypeInfos, no_const_t, C("DebugTypeInfoAccess::GetManyDebugTypeInfos") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::GetOneDebugTypeInfo") );
-		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::SelectOneDebugTypeInfo") );
-		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyDebugTypeInfos, no_const_t, C("DebugTypeInfoAccess::SelectManyDebugTypeInfos") );
-		METHOD_KEY_REGISTER ( DebugTypeInfoInterpreterAccess, void, cancelSelection, no_const_t, C("DebugTypeInfoAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::IsSelectedDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, fillPrimitiveType, no_const_t, C("DebugTypeInfoAccess::FillPrimitiveType") );
-		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, void, fillAllRichTypes, no_const_t, C("DebugTypeInfoAccess::FillAllRichTypes") );
-		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillOneRichType, no_const_t, C("DebugTypeInfoAccess::FillOneRichType") );
-		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillManyRichTypes, no_const_t, C("DebugTypeInfoAccess::FillManyRichTypes") );
-		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, void, fillAllDebugFunctionInfos, no_const_t, C("DebugTypeInfoAccess::FillAllDebugFunctionInfos") );
-		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillOneDebugFunctionInfo, no_const_t, C("DebugTypeInfoAccess::FillOneDebugFunctionInfo") );
-		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillManyDebugFunctionInfos, no_const_t, C("DebugTypeInfoAccess::FillManyDebugFunctionInfos") );
-		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, void, fillAllDebugVariableInfos, no_const_t, C("DebugTypeInfoAccess::FillAllDebugVariableInfos") );
-		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillOneDebugVariableInfo, no_const_t, C("DebugTypeInfoAccess::FillOneDebugVariableInfo") );
-		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillManyDebugVariableInfos, no_const_t, C("DebugTypeInfoAccess::FillManyDebugVariableInfos") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::IsModifiedDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, updateDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::UpdateDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, insertDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::InsertDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, deleteDebugTypeInfo, no_const_t, C("DebugTypeInfoAccess::DeleteDebugTypeInfo") );
-		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("DebugTypeInfoAccess::GetError") );
+		CLASS_KEY_REGISTER ( DebugTypeInfoInterpreterAccess, UCS("DebugTypeInfoAccess") );
+		METHOD_KEY_REGISTER ( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllDebugTypeInfos, no_const_t, UCS("DebugTypeInfoAccess::GetAllDebugTypeInfos") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyDebugTypeInfos, no_const_t, UCS("DebugTypeInfoAccess::GetManyDebugTypeInfos") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::GetOneDebugTypeInfo") );
+		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::SelectOneDebugTypeInfo") );
+		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectManyDebugTypeInfos, no_const_t, UCS("DebugTypeInfoAccess::SelectManyDebugTypeInfos") );
+		METHOD_KEY_REGISTER ( DebugTypeInfoInterpreterAccess, void, cancelSelection, no_const_t, UCS("DebugTypeInfoAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::IsSelectedDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, fillPrimitiveType, no_const_t, UCS("DebugTypeInfoAccess::FillPrimitiveType") );
+		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, void, fillAllRichTypes, no_const_t, UCS("DebugTypeInfoAccess::FillAllRichTypes") );
+		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillOneRichType, no_const_t, UCS("DebugTypeInfoAccess::FillOneRichType") );
+		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillManyRichTypes, no_const_t, UCS("DebugTypeInfoAccess::FillManyRichTypes") );
+		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, void, fillAllDebugFunctionInfos, no_const_t, UCS("DebugTypeInfoAccess::FillAllDebugFunctionInfos") );
+		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillOneDebugFunctionInfo, no_const_t, UCS("DebugTypeInfoAccess::FillOneDebugFunctionInfo") );
+		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillManyDebugFunctionInfos, no_const_t, UCS("DebugTypeInfoAccess::FillManyDebugFunctionInfos") );
+		METHOD_KEY_REGISTER2( DebugTypeInfoInterpreterAccess, void, fillAllDebugVariableInfos, no_const_t, UCS("DebugTypeInfoAccess::FillAllDebugVariableInfos") );
+		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillOneDebugVariableInfo, no_const_t, UCS("DebugTypeInfoAccess::FillOneDebugVariableInfo") );
+		METHOD_KEY_REGISTER3( DebugTypeInfoInterpreterAccess, void, fillManyDebugVariableInfos, no_const_t, UCS("DebugTypeInfoAccess::FillManyDebugVariableInfos") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::IsModifiedDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, updateDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::UpdateDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, insertDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::InsertDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, void, deleteDebugTypeInfo, no_const_t, UCS("DebugTypeInfoAccess::DeleteDebugTypeInfo") );
+		METHOD_KEY_REGISTER1( DebugTypeInfoInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("DebugTypeInfoAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("DebugTypeInfoAccess") );
-		METHOD_KEY_UNREGISTER ( C("DebugTypeInfoAccess::GetAllDebugTypeInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::GetManyDebugTypeInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::GetOneDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER2( C("DebugTypeInfoAccess::SelectOneDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER2( C("DebugTypeInfoAccess::SelectManyDebugTypeInfos") );
-		METHOD_KEY_UNREGISTER ( C("DebugTypeInfoAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::IsSelectedDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::FillPrimitiveType") );
-		METHOD_KEY_UNREGISTER2( C("DebugTypeInfoAccess::FillAllRichTypes") );
-		METHOD_KEY_UNREGISTER3( C("DebugTypeInfoAccess::FillOneRichType") );
-		METHOD_KEY_UNREGISTER3( C("DebugTypeInfoAccess::FillManyRichTypes") );
-		METHOD_KEY_UNREGISTER2( C("DebugTypeInfoAccess::FillAllDebugFunctionInfos") );
-		METHOD_KEY_UNREGISTER3( C("DebugTypeInfoAccess::FillOneDebugFunctionInfo") );
-		METHOD_KEY_UNREGISTER3( C("DebugTypeInfoAccess::FillManyDebugFunctionInfos") );
-		METHOD_KEY_UNREGISTER2( C("DebugTypeInfoAccess::FillAllDebugVariableInfos") );
-		METHOD_KEY_UNREGISTER3( C("DebugTypeInfoAccess::FillOneDebugVariableInfo") );
-		METHOD_KEY_UNREGISTER3( C("DebugTypeInfoAccess::FillManyDebugVariableInfos") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::IsModifiedDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::UpdateDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::InsertDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::DeleteDebugTypeInfo") );
-		METHOD_KEY_UNREGISTER1( C("DebugTypeInfoAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("DebugTypeInfoAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugTypeInfoAccess::GetAllDebugTypeInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::GetManyDebugTypeInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::GetOneDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugTypeInfoAccess::SelectOneDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugTypeInfoAccess::SelectManyDebugTypeInfos") );
+		METHOD_KEY_UNREGISTER ( UCS("DebugTypeInfoAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::IsSelectedDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::FillPrimitiveType") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugTypeInfoAccess::FillAllRichTypes") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugTypeInfoAccess::FillOneRichType") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugTypeInfoAccess::FillManyRichTypes") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugTypeInfoAccess::FillAllDebugFunctionInfos") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugTypeInfoAccess::FillOneDebugFunctionInfo") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugTypeInfoAccess::FillManyDebugFunctionInfos") );
+		METHOD_KEY_UNREGISTER2( UCS("DebugTypeInfoAccess::FillAllDebugVariableInfos") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugTypeInfoAccess::FillOneDebugVariableInfo") );
+		METHOD_KEY_UNREGISTER3( UCS("DebugTypeInfoAccess::FillManyDebugVariableInfos") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::IsModifiedDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::UpdateDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::InsertDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::DeleteDebugTypeInfo") );
+		METHOD_KEY_UNREGISTER1( UCS("DebugTypeInfoAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _DebugTypeInfo<EncodingT> > >& value) const;

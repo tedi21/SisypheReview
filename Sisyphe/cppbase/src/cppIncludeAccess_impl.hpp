@@ -1,6 +1,6 @@
-#include "DataConnection.hpp"
-#include "DataParameters.hpp"
-#include "DataStatement.hpp"
+#include "dataconnection.hpp"
+#include "dataparameters.hpp"
+#include "datastatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,10 +56,10 @@ _CppIncludeAccess<EncodingT>::getManyCppIncludes(typename EncodingT::string_t co
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("fileName"));
-	columns.push_back(C("lineNumber"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppInclude")), filter) );
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("fileName"));
+	columns.push_back(UCS("lineNumber"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppInclude")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t fileName;
@@ -92,7 +92,7 @@ _CppIncludeAccess<EncodingT>::getOneCppInclude(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > result = getManyCppIncludes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > result = getManyCppIncludes(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -112,9 +112,9 @@ _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("fileName"));
-	columns.push_back(C("lineNumber"));
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("fileName"));
+	columns.push_back(UCS("lineNumber"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -123,7 +123,7 @@ _CppIncludeAccess<EncodingT>::selectManyCppIncludes(typename EncodingT::string_t
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppInclude")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppInclude")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t fileName;
@@ -158,7 +158,7 @@ _CppIncludeAccess<EncodingT>::selectOneCppInclude(long long identifier, bool now
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > result = selectManyCppIncludes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppInclude<EncodingT> > > result = selectManyCppIncludes(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -225,7 +225,7 @@ _CppIncludeAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppInclude<Encodin
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppInclude")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppInclude")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppInclude<EncodingT>::CppIncludeIDEquality cppIncludeIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
@@ -297,11 +297,11 @@ _CppIncludeAccess<EncodingT>::updateCppInclude(boost::shared_ptr< _CppInclude<En
 	try {
 		if ( (*save)->getFileName() != o->getFileName() ) {
 			values.addText( o->getFileName() );
-			fields.push_back( C("fileName") );
+			fields.push_back( UCS("fileName") );
 		}
 		if ( (*save)->getLineNumber() != o->getLineNumber() ) {
 			values.addInt64( o->getLineNumber() );
-			fields.push_back( C("lineNumber") );
+			fields.push_back( UCS("lineNumber") );
 		}
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
@@ -309,19 +309,19 @@ _CppIncludeAccess<EncodingT>::updateCppInclude(boost::shared_ptr< _CppInclude<En
 		}
 		else if ( !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
 			values.addInt64( o->getCppFile()->getIdentifier() );
-			fields.push_back( C("idFile") );
+			fields.push_back( UCS("idFile") );
 		}
 		else if ( o->isNullCppFile() && !(*save)->isNullCppFile() ) {
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
 			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("cppInclude"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+			statement.swap( connection->update(UCS("cppInclude"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppInclude"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppInclude"), o);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -359,32 +359,32 @@ _CppIncludeAccess<EncodingT>::insertCppInclude(boost::shared_ptr< _CppInclude<En
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(C("identifier"), C("cppInclude"))+1;
+		int id = connection->selectMaxID(UCS("identifier"), UCS("cppInclude"))+1;
 		values.addInt( id );
-		fields.push_back( C("identifier") );
+		fields.push_back( UCS("identifier") );
 		values.addText( o->getFileName() );
-		fields.push_back( C("fileName") );
+		fields.push_back( UCS("fileName") );
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
 		}
 		else if ( !o->isNullCppFile() ) {
 			values.addInt64( o->getCppFile()->getIdentifier() );
-			fields.push_back( C("idFile") );
+			fields.push_back( UCS("idFile") );
 		}
 		else {
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
 			throw InvalidQueryException("idFile : null reference is forbidden.");
 		}
 		values.addInt64( o->getLineNumber() );
-		fields.push_back( C("lineNumber") );
-		statement.swap( connection->insert(C("cppInclude"), fields) );
+		fields.push_back( UCS("lineNumber") );
+		statement.swap( connection->insert(UCS("cppInclude"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppInclude"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppInclude"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
@@ -425,12 +425,12 @@ _CppIncludeAccess<EncodingT>::deleteCppInclude(boost::shared_ptr< _CppInclude<En
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
-		statement.swap( connection->deleteFrom(C("cppInclude"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(UCS("cppInclude"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppInclude"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppInclude"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

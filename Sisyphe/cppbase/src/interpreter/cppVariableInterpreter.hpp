@@ -12,7 +12,7 @@
 #define _CPPVARIABLE_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -138,63 +138,63 @@ public:
 	void removeCppFile();
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppVariableInterpreter, C("CppVariable") );
-		CLASS_KEY_REGISTER8( CppVariableInterpreter, C("CppVariable") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("CppVariable::Identifier") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getVarType, const_t, C("CppVariable::VarType") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setVarType, no_const_t, C("CppVariable::VarType") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, C("CppVariable::Name") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setName, no_const_t, C("CppVariable::Name") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsStatic, const_t, C("CppVariable::IsStatic") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setIsStatic, no_const_t, C("CppVariable::IsStatic") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConst, const_t, C("CppVariable::IsConst") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setIsConst, no_const_t, C("CppVariable::IsConst") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConstexpr, const_t, C("CppVariable::IsConstexpr") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setIsConstexpr, no_const_t, C("CppVariable::IsConstexpr") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setCppFunction, no_const_t, C("CppVariable::CppFunction") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFunction, no_const_t, C("CppVariable::CppFunction") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFunction, const_t, C("CppVariable::HasCppFunction") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, void, removeCppFunction, no_const_t, C("CppVariable::removeCppFunction") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, C("CppVariable::LineNumber") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setLineNumber, no_const_t, C("CppVariable::LineNumber") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getStartBlock, const_t, C("CppVariable::StartBlock") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setStartBlock, no_const_t, C("CppVariable::StartBlock") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getLengthBlock, const_t, C("CppVariable::LengthBlock") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setLengthBlock, no_const_t, C("CppVariable::LengthBlock") );
-		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setCppFile, no_const_t, C("CppVariable::CppFile") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, C("CppVariable::CppFile") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFile, const_t, C("CppVariable::HasCppFile") );
-		METHOD_KEY_REGISTER ( CppVariableInterpreter, void, removeCppFile, no_const_t, C("CppVariable::removeCppFile") );
+		CLASS_KEY_REGISTER ( CppVariableInterpreter, UCS("CppVariable") );
+		CLASS_KEY_REGISTER8( CppVariableInterpreter, UCS("CppVariable") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("CppVariable::Identifier") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getVarType, const_t, UCS("CppVariable::VarType") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setVarType, no_const_t, UCS("CppVariable::VarType") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, UCS("CppVariable::Name") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setName, no_const_t, UCS("CppVariable::Name") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsStatic, const_t, UCS("CppVariable::IsStatic") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setIsStatic, no_const_t, UCS("CppVariable::IsStatic") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConst, const_t, UCS("CppVariable::IsConst") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setIsConst, no_const_t, UCS("CppVariable::IsConst") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConstexpr, const_t, UCS("CppVariable::IsConstexpr") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setIsConstexpr, no_const_t, UCS("CppVariable::IsConstexpr") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setCppFunction, no_const_t, UCS("CppVariable::CppFunction") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFunction, no_const_t, UCS("CppVariable::CppFunction") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFunction, const_t, UCS("CppVariable::HasCppFunction") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, void, removeCppFunction, no_const_t, UCS("CppVariable::removeCppFunction") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, UCS("CppVariable::LineNumber") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setLineNumber, no_const_t, UCS("CppVariable::LineNumber") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getStartBlock, const_t, UCS("CppVariable::StartBlock") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setStartBlock, no_const_t, UCS("CppVariable::StartBlock") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getLengthBlock, const_t, UCS("CppVariable::LengthBlock") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setLengthBlock, no_const_t, UCS("CppVariable::LengthBlock") );
+		METHOD_KEY_REGISTER1( CppVariableInterpreter, void, setCppFile, no_const_t, UCS("CppVariable::CppFile") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, UCS("CppVariable::CppFile") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFile, const_t, UCS("CppVariable::HasCppFile") );
+		METHOD_KEY_REGISTER ( CppVariableInterpreter, void, removeCppFile, no_const_t, UCS("CppVariable::removeCppFile") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppVariable") );
-		CLASS_KEY_UNREGISTER8( C("CppVariable") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::VarType") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::VarType") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::Name") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::Name") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::IsStatic") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::IsStatic") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::IsConst") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::IsConst") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::IsConstexpr") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::IsConstexpr") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::CppFunction") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::CppFunction") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::HasCppFunction") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::removeCppFunction") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::LineNumber") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::LineNumber") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::StartBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::StartBlock") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::LengthBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::LengthBlock") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::CppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppVariable::CppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::HasCppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppVariable::removeCppFile") );
+		CLASS_KEY_UNREGISTER ( UCS("CppVariable") );
+		CLASS_KEY_UNREGISTER8( UCS("CppVariable") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::VarType") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::VarType") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::Name") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::Name") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::IsStatic") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::IsStatic") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::IsConst") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::IsConst") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::IsConstexpr") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::IsConstexpr") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::CppFunction") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::CppFunction") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::HasCppFunction") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::removeCppFunction") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::LineNumber") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::LineNumber") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::StartBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::StartBlock") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::LengthBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::LengthBlock") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::CppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppVariable::CppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::HasCppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppVariable::removeCppFile") );
 	FACTORY_END_UNREGISTER
 };
 

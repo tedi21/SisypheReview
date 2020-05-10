@@ -137,7 +137,7 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreter<EncodingT>::clone() 
 template <class EncodingT>
 typename EncodingT::string_t CppFileTypeInterpreter<EncodingT>::getClassName() const
 {
-	return C("CppFileType");
+	return UCS("CppFileType");
 }
 
 template <class EncodingT>
@@ -148,8 +148,8 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreter<EncodingT>::invoke(c
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppFileType"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("CppFileType"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

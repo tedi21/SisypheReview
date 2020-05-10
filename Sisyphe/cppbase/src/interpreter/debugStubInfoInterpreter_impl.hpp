@@ -191,7 +191,7 @@ boost::shared_ptr< Base<EncodingT> > DebugStubInfoInterpreter<EncodingT>::clone(
 template <class EncodingT>
 typename EncodingT::string_t DebugStubInfoInterpreter<EncodingT>::getClassName() const
 {
-	return C("DebugStubInfo");
+	return UCS("DebugStubInfo");
 }
 
 template <class EncodingT>
@@ -202,8 +202,8 @@ boost::shared_ptr< Base<EncodingT> > DebugStubInfoInterpreter<EncodingT>::invoke
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("DebugStubInfo"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("DebugStubInfo"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

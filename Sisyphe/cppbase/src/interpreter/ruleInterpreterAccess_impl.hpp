@@ -25,7 +25,7 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::clone() c
 template <class EncodingT>
 typename EncodingT::string_t RuleInterpreterAccess<EncodingT>::getClassName() const
 {
-	return C("RuleAccess");
+	return UCS("RuleAccess");
 }
 
 template <class EncodingT>
@@ -36,8 +36,8 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::invoke(co
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("RuleAccess"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("RuleAccess"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

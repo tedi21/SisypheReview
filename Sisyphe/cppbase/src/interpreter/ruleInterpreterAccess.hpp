@@ -12,7 +12,7 @@
 #define _RULE_INTERPRETER_ACCESS_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "String.hpp"
 
 #include "cppBaseExport.hpp"
@@ -88,33 +88,33 @@ public:
 	boost::shared_ptr< Base<EncodingT> > getError(boost::shared_ptr< Base<EncodingT> >& text) const;
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( RuleInterpreterAccess, C("RuleAccess") );
-		METHOD_KEY_REGISTER ( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllRules, no_const_t, C("RuleAccess::GetAllRules") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyRules, no_const_t, C("RuleAccess::GetManyRules") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneRule, no_const_t, C("RuleAccess::GetOneRule") );
-		METHOD_KEY_REGISTER2( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneRule, no_const_t, C("RuleAccess::SelectOneRule") );
-		METHOD_KEY_REGISTER ( RuleInterpreterAccess, void, cancelSelection, no_const_t, C("RuleAccess::CancelSelection") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedRule, no_const_t, C("RuleAccess::IsSelectedRule") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedRule, no_const_t, C("RuleAccess::IsModifiedRule") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, void, updateRule, no_const_t, C("RuleAccess::UpdateRule") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, void, insertRule, no_const_t, C("RuleAccess::InsertRule") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, void, deleteRule, no_const_t, C("RuleAccess::DeleteRule") );
-		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, C("RuleAccess::GetError") );
+		CLASS_KEY_REGISTER ( RuleInterpreterAccess, UCS("RuleAccess") );
+		METHOD_KEY_REGISTER ( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getAllRules, no_const_t, UCS("RuleAccess::GetAllRules") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getManyRules, no_const_t, UCS("RuleAccess::GetManyRules") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getOneRule, no_const_t, UCS("RuleAccess::GetOneRule") );
+		METHOD_KEY_REGISTER2( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, selectOneRule, no_const_t, UCS("RuleAccess::SelectOneRule") );
+		METHOD_KEY_REGISTER ( RuleInterpreterAccess, void, cancelSelection, no_const_t, UCS("RuleAccess::CancelSelection") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isSelectedRule, no_const_t, UCS("RuleAccess::IsSelectedRule") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, isModifiedRule, no_const_t, UCS("RuleAccess::IsModifiedRule") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, void, updateRule, no_const_t, UCS("RuleAccess::UpdateRule") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, void, insertRule, no_const_t, UCS("RuleAccess::InsertRule") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, void, deleteRule, no_const_t, UCS("RuleAccess::DeleteRule") );
+		METHOD_KEY_REGISTER1( RuleInterpreterAccess, boost::shared_ptr< Base<EncodingT> >, getError, const_t, UCS("RuleAccess::GetError") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("RuleAccess") );
-		METHOD_KEY_UNREGISTER ( C("RuleAccess::GetAllRules") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::GetManyRules") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::GetOneRule") );
-		METHOD_KEY_UNREGISTER2( C("RuleAccess::SelectOneRule") );
-		METHOD_KEY_UNREGISTER ( C("RuleAccess::CancelSelection") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::IsSelectedRule") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::IsModifiedRule") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::UpdateRule") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::InsertRule") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::DeleteRule") );
-		METHOD_KEY_UNREGISTER1( C("RuleAccess::GetError") );
+		CLASS_KEY_UNREGISTER ( UCS("RuleAccess") );
+		METHOD_KEY_UNREGISTER ( UCS("RuleAccess::GetAllRules") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::GetManyRules") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::GetOneRule") );
+		METHOD_KEY_UNREGISTER2( UCS("RuleAccess::SelectOneRule") );
+		METHOD_KEY_UNREGISTER ( UCS("RuleAccess::CancelSelection") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::IsSelectedRule") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::IsModifiedRule") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::UpdateRule") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::InsertRule") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::DeleteRule") );
+		METHOD_KEY_UNREGISTER1( UCS("RuleAccess::GetError") );
 	FACTORY_END_UNREGISTER
 
 	boost::shared_ptr< Base<EncodingT> > convert_array(const std::vector< boost::shared_ptr< _Rule<EncodingT> > >& value) const;

@@ -123,7 +123,7 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreter<EncodingT>::clone() const
 template <class EncodingT>
 typename EncodingT::string_t RuleInterpreter<EncodingT>::getClassName() const
 {
-	return C("Rule");
+	return UCS("Rule");
 }
 
 template <class EncodingT>
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreter<EncodingT>::invoke(const ty
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("Rule"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("Rule"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

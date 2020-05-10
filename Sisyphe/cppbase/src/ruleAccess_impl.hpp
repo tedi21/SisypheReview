@@ -1,6 +1,6 @@
-#include "DataConnection.hpp"
-#include "DataParameters.hpp"
-#include "DataStatement.hpp"
+#include "dataconnection.hpp"
+#include "dataparameters.hpp"
+#include "datastatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,11 +56,11 @@ _RuleAccess<EncodingT>::getManyRules(typename EncodingT::string_t const&  filter
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("number"));
-	columns.push_back(C("description"));
-	columns.push_back(C("enabled"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("rule")), filter) );
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("number"));
+	columns.push_back(UCS("description"));
+	columns.push_back(UCS("enabled"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("rule")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		long long number;
@@ -96,7 +96,7 @@ _RuleAccess<EncodingT>::getOneRule(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _Rule<EncodingT> > > result = getManyRules(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _Rule<EncodingT> > > result = getManyRules(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -116,10 +116,10 @@ _RuleAccess<EncodingT>::selectManyRules(typename EncodingT::string_t const&  fil
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("number"));
-	columns.push_back(C("description"));
-	columns.push_back(C("enabled"));
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("number"));
+	columns.push_back(UCS("description"));
+	columns.push_back(UCS("enabled"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -128,7 +128,7 @@ _RuleAccess<EncodingT>::selectManyRules(typename EncodingT::string_t const&  fil
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("rule")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("rule")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		long long number;
@@ -166,7 +166,7 @@ _RuleAccess<EncodingT>::selectOneRule(long long identifier, bool nowait, bool ad
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _Rule<EncodingT> > > result = selectManyRules(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _Rule<EncodingT> > > result = selectManyRules(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -263,23 +263,23 @@ _RuleAccess<EncodingT>::updateRule(boost::shared_ptr< _Rule<EncodingT> > o)
 	try {
 		if ( (*save)->getNumber() != o->getNumber() ) {
 			values.addInt64( o->getNumber() );
-			fields.push_back( C("number") );
+			fields.push_back( UCS("number") );
 		}
 		if ( (*save)->getDescription() != o->getDescription() ) {
 			values.addText( o->getDescription() );
-			fields.push_back( C("description") );
+			fields.push_back( UCS("description") );
 		}
 		if ( (*save)->getEnabled() != o->getEnabled() ) {
 			values.addInt64( o->getEnabled() );
-			fields.push_back( C("enabled") );
+			fields.push_back( UCS("enabled") );
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("rule"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+			statement.swap( connection->update(UCS("rule"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, C("rule"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("rule"), o);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -317,22 +317,22 @@ _RuleAccess<EncodingT>::insertRule(boost::shared_ptr< _Rule<EncodingT> > o)
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(C("identifier"), C("rule"))+1;
+		int id = connection->selectMaxID(UCS("identifier"), UCS("rule"))+1;
 		values.addInt( id );
-		fields.push_back( C("identifier") );
+		fields.push_back( UCS("identifier") );
 		values.addInt64( o->getNumber() );
-		fields.push_back( C("number") );
+		fields.push_back( UCS("number") );
 		values.addText( o->getDescription() );
-		fields.push_back( C("description") );
+		fields.push_back( UCS("description") );
 		values.addInt64( o->getEnabled() );
-		fields.push_back( C("enabled") );
-		statement.swap( connection->insert(C("rule"), fields) );
+		fields.push_back( UCS("enabled") );
+		statement.swap( connection->insert(UCS("rule"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, C("rule"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("rule"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
@@ -373,12 +373,12 @@ _RuleAccess<EncodingT>::deleteRule(boost::shared_ptr< _Rule<EncodingT> > o)
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
-		statement.swap( connection->deleteFrom(C("rule"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(UCS("rule"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, C("rule"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("rule"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

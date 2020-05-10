@@ -12,7 +12,7 @@
 #define _CPPATTRIBUTE_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -140,63 +140,63 @@ public:
 	void removeCppClass();
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppAttributeInterpreter, C("CppAttribute") );
-		CLASS_KEY_REGISTER10( CppAttributeInterpreter, C("CppAttribute") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("CppAttribute::Identifier") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getAttrType, const_t, C("CppAttribute::AttrType") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setAttrType, no_const_t, C("CppAttribute::AttrType") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, C("CppAttribute::Name") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setName, no_const_t, C("CppAttribute::Name") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getAccessSpecifier, const_t, C("CppAttribute::AccessSpecifier") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setAccessSpecifier, no_const_t, C("CppAttribute::AccessSpecifier") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsStatic, const_t, C("CppAttribute::IsStatic") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setIsStatic, no_const_t, C("CppAttribute::IsStatic") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConst, const_t, C("CppAttribute::IsConst") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setIsConst, no_const_t, C("CppAttribute::IsConst") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConstexpr, const_t, C("CppAttribute::IsConstexpr") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setIsConstexpr, no_const_t, C("CppAttribute::IsConstexpr") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getConstValue, const_t, C("CppAttribute::ConstValue") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setConstValue, no_const_t, C("CppAttribute::ConstValue") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setCppClass, no_const_t, C("CppAttribute::CppClass") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppClass, no_const_t, C("CppAttribute::CppClass") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppClass, const_t, C("CppAttribute::HasCppClass") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, void, removeCppClass, no_const_t, C("CppAttribute::removeCppClass") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, C("CppAttribute::LineNumber") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setLineNumber, no_const_t, C("CppAttribute::LineNumber") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getStartBlock, const_t, C("CppAttribute::StartBlock") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setStartBlock, no_const_t, C("CppAttribute::StartBlock") );
-		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getLengthBlock, const_t, C("CppAttribute::LengthBlock") );
-		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setLengthBlock, no_const_t, C("CppAttribute::LengthBlock") );
+		CLASS_KEY_REGISTER ( CppAttributeInterpreter, UCS("CppAttribute") );
+		CLASS_KEY_REGISTER10( CppAttributeInterpreter, UCS("CppAttribute") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("CppAttribute::Identifier") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getAttrType, const_t, UCS("CppAttribute::AttrType") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setAttrType, no_const_t, UCS("CppAttribute::AttrType") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getName, const_t, UCS("CppAttribute::Name") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setName, no_const_t, UCS("CppAttribute::Name") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getAccessSpecifier, const_t, UCS("CppAttribute::AccessSpecifier") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setAccessSpecifier, no_const_t, UCS("CppAttribute::AccessSpecifier") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsStatic, const_t, UCS("CppAttribute::IsStatic") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setIsStatic, no_const_t, UCS("CppAttribute::IsStatic") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConst, const_t, UCS("CppAttribute::IsConst") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setIsConst, no_const_t, UCS("CppAttribute::IsConst") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIsConstexpr, const_t, UCS("CppAttribute::IsConstexpr") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setIsConstexpr, no_const_t, UCS("CppAttribute::IsConstexpr") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getConstValue, const_t, UCS("CppAttribute::ConstValue") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setConstValue, no_const_t, UCS("CppAttribute::ConstValue") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setCppClass, no_const_t, UCS("CppAttribute::CppClass") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppClass, no_const_t, UCS("CppAttribute::CppClass") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppClass, const_t, UCS("CppAttribute::HasCppClass") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, void, removeCppClass, no_const_t, UCS("CppAttribute::removeCppClass") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, UCS("CppAttribute::LineNumber") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setLineNumber, no_const_t, UCS("CppAttribute::LineNumber") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getStartBlock, const_t, UCS("CppAttribute::StartBlock") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setStartBlock, no_const_t, UCS("CppAttribute::StartBlock") );
+		METHOD_KEY_REGISTER ( CppAttributeInterpreter, boost::shared_ptr< Base<EncodingT> >, getLengthBlock, const_t, UCS("CppAttribute::LengthBlock") );
+		METHOD_KEY_REGISTER1( CppAttributeInterpreter, void, setLengthBlock, no_const_t, UCS("CppAttribute::LengthBlock") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppAttribute") );
-		CLASS_KEY_UNREGISTER10( C("CppAttribute") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::AttrType") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::AttrType") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::Name") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::Name") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::AccessSpecifier") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::AccessSpecifier") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::IsStatic") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::IsStatic") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::IsConst") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::IsConst") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::IsConstexpr") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::IsConstexpr") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::ConstValue") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::ConstValue") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::CppClass") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::CppClass") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::HasCppClass") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::removeCppClass") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::LineNumber") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::LineNumber") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::StartBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::StartBlock") );
-		METHOD_KEY_UNREGISTER ( C("CppAttribute::LengthBlock") );
-		METHOD_KEY_UNREGISTER1( C("CppAttribute::LengthBlock") );
+		CLASS_KEY_UNREGISTER ( UCS("CppAttribute") );
+		CLASS_KEY_UNREGISTER10( UCS("CppAttribute") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::AttrType") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::AttrType") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::Name") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::Name") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::AccessSpecifier") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::AccessSpecifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::IsStatic") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::IsStatic") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::IsConst") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::IsConst") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::IsConstexpr") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::IsConstexpr") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::ConstValue") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::ConstValue") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::CppClass") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::CppClass") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::HasCppClass") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::removeCppClass") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::LineNumber") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::LineNumber") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::StartBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::StartBlock") );
+		METHOD_KEY_UNREGISTER ( UCS("CppAttribute::LengthBlock") );
+		METHOD_KEY_UNREGISTER1( UCS("CppAttribute::LengthBlock") );
 	FACTORY_END_UNREGISTER
 };
 

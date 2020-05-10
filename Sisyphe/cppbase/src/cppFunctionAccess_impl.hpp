@@ -1,6 +1,6 @@
-#include "DataConnection.hpp"
-#include "DataParameters.hpp"
-#include "DataStatement.hpp"
+#include "dataconnection.hpp"
+#include "dataparameters.hpp"
+#include "datastatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,34 +56,34 @@ _CppFunctionAccess<EncodingT>::getManyCppFunctions(typename EncodingT::string_t 
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("name"));
-	columns.push_back(C("accessSpecifier"));
-	columns.push_back(C("returnType"));
-	columns.push_back(C("isConst"));
-	columns.push_back(C("isVirtual"));
-	columns.push_back(C("isVirtualPure"));
-	columns.push_back(C("isStatic"));
-	columns.push_back(C("isOperator"));
-	columns.push_back(C("isDestructor"));
-	columns.push_back(C("isConstructor"));
-	columns.push_back(C("isVariadic"));
-	columns.push_back(C("isTemplate"));
-	columns.push_back(C("isInline"));
-	columns.push_back(C("isConstexpr"));
-	columns.push_back(C("isOverride"));
-	columns.push_back(C("isFinal"));
-	columns.push_back(C("isNoexcept"));
-	columns.push_back(C("signature"));
-	columns.push_back(C("decLineNumber"));
-	columns.push_back(C("startDecBlock"));
-	columns.push_back(C("lengthDecBlock"));
-	columns.push_back(C("linesCount"));
-	columns.push_back(C("complexity"));
-	columns.push_back(C("defLineNumber"));
-	columns.push_back(C("startDefBlock"));
-	columns.push_back(C("lengthDefBlock"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppFunction")), filter) );
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("name"));
+	columns.push_back(UCS("accessSpecifier"));
+	columns.push_back(UCS("returnType"));
+	columns.push_back(UCS("isConst"));
+	columns.push_back(UCS("isVirtual"));
+	columns.push_back(UCS("isVirtualPure"));
+	columns.push_back(UCS("isStatic"));
+	columns.push_back(UCS("isOperator"));
+	columns.push_back(UCS("isDestructor"));
+	columns.push_back(UCS("isConstructor"));
+	columns.push_back(UCS("isVariadic"));
+	columns.push_back(UCS("isTemplate"));
+	columns.push_back(UCS("isInline"));
+	columns.push_back(UCS("isConstexpr"));
+	columns.push_back(UCS("isOverride"));
+	columns.push_back(UCS("isFinal"));
+	columns.push_back(UCS("isNoexcept"));
+	columns.push_back(UCS("signature"));
+	columns.push_back(UCS("decLineNumber"));
+	columns.push_back(UCS("startDecBlock"));
+	columns.push_back(UCS("lengthDecBlock"));
+	columns.push_back(UCS("linesCount"));
+	columns.push_back(UCS("complexity"));
+	columns.push_back(UCS("defLineNumber"));
+	columns.push_back(UCS("startDefBlock"));
+	columns.push_back(UCS("lengthDefBlock"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t name;
@@ -188,7 +188,7 @@ _CppFunctionAccess<EncodingT>::getOneCppFunction(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > result = getManyCppFunctions(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > result = getManyCppFunctions(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -208,33 +208,33 @@ _CppFunctionAccess<EncodingT>::selectManyCppFunctions(typename EncodingT::string
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(C("identifier"));
-	columns.push_back(C("name"));
-	columns.push_back(C("accessSpecifier"));
-	columns.push_back(C("returnType"));
-	columns.push_back(C("isConst"));
-	columns.push_back(C("isVirtual"));
-	columns.push_back(C("isVirtualPure"));
-	columns.push_back(C("isStatic"));
-	columns.push_back(C("isOperator"));
-	columns.push_back(C("isDestructor"));
-	columns.push_back(C("isConstructor"));
-	columns.push_back(C("isVariadic"));
-	columns.push_back(C("isTemplate"));
-	columns.push_back(C("isInline"));
-	columns.push_back(C("isConstexpr"));
-	columns.push_back(C("isOverride"));
-	columns.push_back(C("isFinal"));
-	columns.push_back(C("isNoexcept"));
-	columns.push_back(C("signature"));
-	columns.push_back(C("decLineNumber"));
-	columns.push_back(C("startDecBlock"));
-	columns.push_back(C("lengthDecBlock"));
-	columns.push_back(C("linesCount"));
-	columns.push_back(C("complexity"));
-	columns.push_back(C("defLineNumber"));
-	columns.push_back(C("startDefBlock"));
-	columns.push_back(C("lengthDefBlock"));
+	columns.push_back(UCS("identifier"));
+	columns.push_back(UCS("name"));
+	columns.push_back(UCS("accessSpecifier"));
+	columns.push_back(UCS("returnType"));
+	columns.push_back(UCS("isConst"));
+	columns.push_back(UCS("isVirtual"));
+	columns.push_back(UCS("isVirtualPure"));
+	columns.push_back(UCS("isStatic"));
+	columns.push_back(UCS("isOperator"));
+	columns.push_back(UCS("isDestructor"));
+	columns.push_back(UCS("isConstructor"));
+	columns.push_back(UCS("isVariadic"));
+	columns.push_back(UCS("isTemplate"));
+	columns.push_back(UCS("isInline"));
+	columns.push_back(UCS("isConstexpr"));
+	columns.push_back(UCS("isOverride"));
+	columns.push_back(UCS("isFinal"));
+	columns.push_back(UCS("isNoexcept"));
+	columns.push_back(UCS("signature"));
+	columns.push_back(UCS("decLineNumber"));
+	columns.push_back(UCS("startDecBlock"));
+	columns.push_back(UCS("lengthDecBlock"));
+	columns.push_back(UCS("linesCount"));
+	columns.push_back(UCS("complexity"));
+	columns.push_back(UCS("defLineNumber"));
+	columns.push_back(UCS("startDefBlock"));
+	columns.push_back(UCS("lengthDefBlock"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -243,7 +243,7 @@ _CppFunctionAccess<EncodingT>::selectManyCppFunctions(typename EncodingT::string
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppFunction")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t name;
@@ -350,7 +350,7 @@ _CppFunctionAccess<EncodingT>::selectOneCppFunction(long long identifier, bool n
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > result = selectManyCppFunctions(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppFunction<EncodingT> > > result = selectManyCppFunctions(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -429,7 +429,7 @@ _CppFunctionAccess<EncodingT>::fillCppDeclarationFile(boost::shared_ptr< _CppFun
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDecFile")), std::vector<typename EncodingT::string_t>(1,C("cppFunction")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDecFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppDeclarationFileAccess->getOneCppFile(id);
@@ -468,7 +468,7 @@ _CppFunctionAccess<EncodingT>::fillCppDefinitionFile(boost::shared_ptr< _CppFunc
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDefFile")), std::vector<typename EncodingT::string_t>(1,C("cppFunction")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDefFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppDefinitionFileAccess->getOneCppFile(id);
@@ -507,7 +507,7 @@ _CppFunctionAccess<EncodingT>::fillCppClass(boost::shared_ptr< _CppFunction<Enco
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idClass")), std::vector<typename EncodingT::string_t>(1,C("cppFunction")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idClass")), std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
@@ -533,7 +533,7 @@ template<class EncodingT>
 void
 _CppFunctionAccess<EncodingT>::fillOneCppParameter(boost::shared_ptr< _CppFunction<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppParameters(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppParameters(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -554,9 +554,9 @@ _CppFunctionAccess<EncodingT>::fillManyCppParameters(boost::shared_ptr< _CppFunc
 		throw NullPointerException("CppParameterAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > tab;
-	typename EncodingT::string_t cppParameterFilter = C("idFunction = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppParameterFilter = UCS("idFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppParameterFilter += C(" AND ") + filter;
+		cppParameterFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
@@ -585,7 +585,7 @@ template<class EncodingT>
 void
 _CppFunctionAccess<EncodingT>::fillOneCppVariable(boost::shared_ptr< _CppFunction<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppVariables(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
+	fillManyCppVariables(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -606,9 +606,9 @@ _CppFunctionAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< _CppFunct
 		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppVariable<EncodingT> > > tab;
-	typename EncodingT::string_t cppVariableFilter = C("idFunction = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppVariableFilter = UCS("idFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppVariableFilter += C(" AND ") + filter;
+		cppVariableFilter += UCS(" AND ") + filter;
 	}
 	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
@@ -768,107 +768,107 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 	try {
 		if ( (*save)->getName() != o->getName() ) {
 			values.addText( o->getName() );
-			fields.push_back( C("name") );
+			fields.push_back( UCS("name") );
 		}
 		if ( (*save)->getAccessSpecifier() != o->getAccessSpecifier() ) {
 			values.addText( o->getAccessSpecifier() );
-			fields.push_back( C("accessSpecifier") );
+			fields.push_back( UCS("accessSpecifier") );
 		}
 		if ( (*save)->getReturnType() != o->getReturnType() ) {
 			values.addText( o->getReturnType() );
-			fields.push_back( C("returnType") );
+			fields.push_back( UCS("returnType") );
 		}
 		if ( (*save)->getIsConst() != o->getIsConst() ) {
 			values.addInt64( o->getIsConst() );
-			fields.push_back( C("isConst") );
+			fields.push_back( UCS("isConst") );
 		}
 		if ( (*save)->getIsVirtual() != o->getIsVirtual() ) {
 			values.addInt64( o->getIsVirtual() );
-			fields.push_back( C("isVirtual") );
+			fields.push_back( UCS("isVirtual") );
 		}
 		if ( (*save)->getIsVirtualPure() != o->getIsVirtualPure() ) {
 			values.addInt64( o->getIsVirtualPure() );
-			fields.push_back( C("isVirtualPure") );
+			fields.push_back( UCS("isVirtualPure") );
 		}
 		if ( (*save)->getIsStatic() != o->getIsStatic() ) {
 			values.addInt64( o->getIsStatic() );
-			fields.push_back( C("isStatic") );
+			fields.push_back( UCS("isStatic") );
 		}
 		if ( (*save)->getIsOperator() != o->getIsOperator() ) {
 			values.addInt64( o->getIsOperator() );
-			fields.push_back( C("isOperator") );
+			fields.push_back( UCS("isOperator") );
 		}
 		if ( (*save)->getIsDestructor() != o->getIsDestructor() ) {
 			values.addInt64( o->getIsDestructor() );
-			fields.push_back( C("isDestructor") );
+			fields.push_back( UCS("isDestructor") );
 		}
 		if ( (*save)->getIsConstructor() != o->getIsConstructor() ) {
 			values.addInt64( o->getIsConstructor() );
-			fields.push_back( C("isConstructor") );
+			fields.push_back( UCS("isConstructor") );
 		}
 		if ( (*save)->getIsVariadic() != o->getIsVariadic() ) {
 			values.addInt64( o->getIsVariadic() );
-			fields.push_back( C("isVariadic") );
+			fields.push_back( UCS("isVariadic") );
 		}
 		if ( (*save)->getIsTemplate() != o->getIsTemplate() ) {
 			values.addInt64( o->getIsTemplate() );
-			fields.push_back( C("isTemplate") );
+			fields.push_back( UCS("isTemplate") );
 		}
 		if ( (*save)->getIsInline() != o->getIsInline() ) {
 			values.addInt64( o->getIsInline() );
-			fields.push_back( C("isInline") );
+			fields.push_back( UCS("isInline") );
 		}
 		if ( (*save)->getIsConstexpr() != o->getIsConstexpr() ) {
 			values.addInt64( o->getIsConstexpr() );
-			fields.push_back( C("isConstexpr") );
+			fields.push_back( UCS("isConstexpr") );
 		}
 		if ( (*save)->getIsOverride() != o->getIsOverride() ) {
 			values.addInt64( o->getIsOverride() );
-			fields.push_back( C("isOverride") );
+			fields.push_back( UCS("isOverride") );
 		}
 		if ( (*save)->getIsFinal() != o->getIsFinal() ) {
 			values.addInt64( o->getIsFinal() );
-			fields.push_back( C("isFinal") );
+			fields.push_back( UCS("isFinal") );
 		}
 		if ( (*save)->getIsNoexcept() != o->getIsNoexcept() ) {
 			values.addInt64( o->getIsNoexcept() );
-			fields.push_back( C("isNoexcept") );
+			fields.push_back( UCS("isNoexcept") );
 		}
 		if ( (*save)->getSignature() != o->getSignature() ) {
 			values.addText( o->getSignature() );
-			fields.push_back( C("signature") );
+			fields.push_back( UCS("signature") );
 		}
 		if ( (*save)->getDecLineNumber() != o->getDecLineNumber() ) {
 			values.addInt64( o->getDecLineNumber() );
-			fields.push_back( C("decLineNumber") );
+			fields.push_back( UCS("decLineNumber") );
 		}
 		if ( (*save)->getStartDecBlock() != o->getStartDecBlock() ) {
 			values.addInt64( o->getStartDecBlock() );
-			fields.push_back( C("startDecBlock") );
+			fields.push_back( UCS("startDecBlock") );
 		}
 		if ( (*save)->getLengthDecBlock() != o->getLengthDecBlock() ) {
 			values.addInt64( o->getLengthDecBlock() );
-			fields.push_back( C("lengthDecBlock") );
+			fields.push_back( UCS("lengthDecBlock") );
 		}
 		if ( (*save)->getLinesCount() != o->getLinesCount() ) {
 			values.addInt64( o->getLinesCount() );
-			fields.push_back( C("linesCount") );
+			fields.push_back( UCS("linesCount") );
 		}
 		if ( (*save)->getComplexity() != o->getComplexity() ) {
 			values.addInt64( o->getComplexity() );
-			fields.push_back( C("complexity") );
+			fields.push_back( UCS("complexity") );
 		}
 		if ( (*save)->getDefLineNumber() != o->getDefLineNumber() ) {
 			values.addInt64( o->getDefLineNumber() );
-			fields.push_back( C("defLineNumber") );
+			fields.push_back( UCS("defLineNumber") );
 		}
 		if ( (*save)->getStartDefBlock() != o->getStartDefBlock() ) {
 			values.addInt64( o->getStartDefBlock() );
-			fields.push_back( C("startDefBlock") );
+			fields.push_back( UCS("startDefBlock") );
 		}
 		if ( (*save)->getLengthDefBlock() != o->getLengthDefBlock() ) {
 			values.addInt64( o->getLengthDefBlock() );
-			fields.push_back( C("lengthDefBlock") );
+			fields.push_back( UCS("lengthDefBlock") );
 		}
 		if ( !o->isNullCppDeclarationFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppDeclarationFile()) ) {
 			m_logger->errorStream() << "idDecFile : Identifier is null.";
@@ -876,11 +876,11 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 		}
 		else if ( !o->isNullCppDeclarationFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppDeclarationFile()))((*save)->getCppDeclarationFile()) ) {
 			values.addInt64( o->getCppDeclarationFile()->getIdentifier() );
-			fields.push_back( C("idDecFile") );
+			fields.push_back( UCS("idDecFile") );
 		}
 		else if ( o->isNullCppDeclarationFile() && !(*save)->isNullCppDeclarationFile() ) {
 			values.addNull();
-			fields.push_back( C("idDecFile") );
+			fields.push_back( UCS("idDecFile") );
 		}
 		if ( !o->isNullCppDefinitionFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppDefinitionFile()) ) {
 			m_logger->errorStream() << "idDefFile : Identifier is null.";
@@ -888,11 +888,11 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 		}
 		else if ( !o->isNullCppDefinitionFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppDefinitionFile()))((*save)->getCppDefinitionFile()) ) {
 			values.addInt64( o->getCppDefinitionFile()->getIdentifier() );
-			fields.push_back( C("idDefFile") );
+			fields.push_back( UCS("idDefFile") );
 		}
 		else if ( o->isNullCppDefinitionFile() && !(*save)->isNullCppDefinitionFile() ) {
 			values.addNull();
-			fields.push_back( C("idDefFile") );
+			fields.push_back( UCS("idDefFile") );
 		}
 		if ( !o->isNullCppClass() && typename _CppClass<EncodingT>::CppClassIDEquality(-1)(o->getCppClass()) ) {
 			m_logger->errorStream() << "idClass : Identifier is null.";
@@ -900,11 +900,11 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 		}
 		else if ( !o->isNullCppClass() && !typename _CppClass<EncodingT>::CppClassIDEquality(*(o->getCppClass()))((*save)->getCppClass()) ) {
 			values.addInt64( o->getCppClass()->getIdentifier() );
-			fields.push_back( C("idClass") );
+			fields.push_back( UCS("idClass") );
 		}
 		else if ( o->isNullCppClass() && !(*save)->isNullCppClass() ) {
 			values.addNull();
-			fields.push_back( C("idClass") );
+			fields.push_back( UCS("idClass") );
 		}
 		std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToAdd;
 		std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > listOfCppParameterToUpdate;
@@ -965,12 +965,12 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(C("cppFunction"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+			statement.swap( connection->update(UCS("cppFunction"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppFunction"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppFunction"), o);
 		}
 		for ( cppParameter=listOfCppParameterToAdd.begin(); cppParameter!=listOfCppParameterToAdd.end() ; ++cppParameter ) {
 			cppParameterAccess->insertCppParameter(*cppParameter);
@@ -1044,11 +1044,11 @@ _CppFunctionAccess<EncodingT>::insertCppFunction(boost::shared_ptr< _CppFunction
 		}
 		else if ( !o->isNullCppDeclarationFile() ) {
 			values.addInt64( o->getCppDeclarationFile()->getIdentifier() );
-			fields.push_back( C("idDecFile") );
+			fields.push_back( UCS("idDecFile") );
 		}
 		else {
 			values.addNull();
-			fields.push_back( C("idDecFile") );
+			fields.push_back( UCS("idDecFile") );
 		}
 		if ( !o->isNullCppDefinitionFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppDefinitionFile()) ) {
 			m_logger->errorStream() << "idDefFile : Identifier is null.";
@@ -1056,86 +1056,86 @@ _CppFunctionAccess<EncodingT>::insertCppFunction(boost::shared_ptr< _CppFunction
 		}
 		else if ( !o->isNullCppDefinitionFile() ) {
 			values.addInt64( o->getCppDefinitionFile()->getIdentifier() );
-			fields.push_back( C("idDefFile") );
+			fields.push_back( UCS("idDefFile") );
 		}
 		else {
 			values.addNull();
-			fields.push_back( C("idDefFile") );
+			fields.push_back( UCS("idDefFile") );
 		}
-		int id = connection->selectMaxID(C("identifier"), C("cppFunction"))+1;
+		int id = connection->selectMaxID(UCS("identifier"), UCS("cppFunction"))+1;
 		values.addInt( id );
-		fields.push_back( C("identifier") );
+		fields.push_back( UCS("identifier") );
 		values.addText( o->getName() );
-		fields.push_back( C("name") );
+		fields.push_back( UCS("name") );
 		if ( !o->isNullCppClass() && typename _CppClass<EncodingT>::CppClassIDEquality(-1)(o->getCppClass()) ) {
 			m_logger->errorStream() << "idClass : Identifier is null.";
 			throw InvalidQueryException("idClass : Identifier is null.");
 		}
 		else if ( !o->isNullCppClass() ) {
 			values.addInt64( o->getCppClass()->getIdentifier() );
-			fields.push_back( C("idClass") );
+			fields.push_back( UCS("idClass") );
 		}
 		else {
 			values.addNull();
-			fields.push_back( C("idClass") );
+			fields.push_back( UCS("idClass") );
 		}
 		values.addText( o->getAccessSpecifier() );
-		fields.push_back( C("accessSpecifier") );
+		fields.push_back( UCS("accessSpecifier") );
 		values.addText( o->getReturnType() );
-		fields.push_back( C("returnType") );
+		fields.push_back( UCS("returnType") );
 		values.addInt64( o->getIsConst() );
-		fields.push_back( C("isConst") );
+		fields.push_back( UCS("isConst") );
 		values.addInt64( o->getIsVirtual() );
-		fields.push_back( C("isVirtual") );
+		fields.push_back( UCS("isVirtual") );
 		values.addInt64( o->getIsVirtualPure() );
-		fields.push_back( C("isVirtualPure") );
+		fields.push_back( UCS("isVirtualPure") );
 		values.addInt64( o->getIsStatic() );
-		fields.push_back( C("isStatic") );
+		fields.push_back( UCS("isStatic") );
 		values.addInt64( o->getIsOperator() );
-		fields.push_back( C("isOperator") );
+		fields.push_back( UCS("isOperator") );
 		values.addInt64( o->getIsDestructor() );
-		fields.push_back( C("isDestructor") );
+		fields.push_back( UCS("isDestructor") );
 		values.addInt64( o->getIsConstructor() );
-		fields.push_back( C("isConstructor") );
+		fields.push_back( UCS("isConstructor") );
 		values.addInt64( o->getIsVariadic() );
-		fields.push_back( C("isVariadic") );
+		fields.push_back( UCS("isVariadic") );
 		values.addInt64( o->getIsTemplate() );
-		fields.push_back( C("isTemplate") );
+		fields.push_back( UCS("isTemplate") );
 		values.addInt64( o->getIsInline() );
-		fields.push_back( C("isInline") );
+		fields.push_back( UCS("isInline") );
 		values.addInt64( o->getIsConstexpr() );
-		fields.push_back( C("isConstexpr") );
+		fields.push_back( UCS("isConstexpr") );
 		values.addInt64( o->getIsOverride() );
-		fields.push_back( C("isOverride") );
+		fields.push_back( UCS("isOverride") );
 		values.addInt64( o->getIsFinal() );
-		fields.push_back( C("isFinal") );
+		fields.push_back( UCS("isFinal") );
 		values.addInt64( o->getIsNoexcept() );
-		fields.push_back( C("isNoexcept") );
+		fields.push_back( UCS("isNoexcept") );
 		values.addText( o->getSignature() );
-		fields.push_back( C("signature") );
+		fields.push_back( UCS("signature") );
 		values.addInt64( o->getDecLineNumber() );
-		fields.push_back( C("decLineNumber") );
+		fields.push_back( UCS("decLineNumber") );
 		values.addInt64( o->getStartDecBlock() );
-		fields.push_back( C("startDecBlock") );
+		fields.push_back( UCS("startDecBlock") );
 		values.addInt64( o->getLengthDecBlock() );
-		fields.push_back( C("lengthDecBlock") );
+		fields.push_back( UCS("lengthDecBlock") );
 		values.addInt64( o->getLinesCount() );
-		fields.push_back( C("linesCount") );
+		fields.push_back( UCS("linesCount") );
 		values.addInt64( o->getComplexity() );
-		fields.push_back( C("complexity") );
+		fields.push_back( UCS("complexity") );
 		values.addInt64( o->getDefLineNumber() );
-		fields.push_back( C("defLineNumber") );
+		fields.push_back( UCS("defLineNumber") );
 		values.addInt64( o->getStartDefBlock() );
-		fields.push_back( C("startDefBlock") );
+		fields.push_back( UCS("startDefBlock") );
 		values.addInt64( o->getLengthDefBlock() );
-		fields.push_back( C("lengthDefBlock") );
-		statement.swap( connection->insert(C("cppFunction"), fields) );
+		fields.push_back( UCS("lengthDefBlock") );
+		statement.swap( connection->insert(UCS("cppFunction"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppFunction"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppFunction"), o);
 		typename _CppFunction<EncodingT>::CppParameterIterator cppParameter;
 		for ( cppParameter=o->getCppParametersBeginning(); cppParameter!=o->getCppParametersEnd(); ++cppParameter ) {
 			(*cppParameter)->setCppFunction(o);
@@ -1208,12 +1208,12 @@ _CppFunctionAccess<EncodingT>::deleteCppFunction(boost::shared_ptr< _CppFunction
 			(*cppVariable)->eraseCppFunction();
 			cppVariableAccess->updateCppVariable(*cppVariable);
 		}
-		statement.swap( connection->deleteFrom(C("cppFunction"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
+		statement.swap( connection->deleteFrom(UCS("cppFunction"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppFunction"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppFunction"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

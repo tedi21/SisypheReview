@@ -25,7 +25,7 @@ boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::cl
 template <class EncodingT>
 typename EncodingT::string_t CppFunctionInterpreterAccess<EncodingT>::getClassName() const
 {
-	return C("CppFunctionAccess");
+	return UCS("CppFunctionAccess");
 }
 
 template <class EncodingT>
@@ -36,8 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreterAccess<EncodingT>::in
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppFunctionAccess"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("CppFunctionAccess"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

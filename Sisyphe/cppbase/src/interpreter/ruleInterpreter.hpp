@@ -12,7 +12,7 @@
 #define _RULE_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -79,27 +79,27 @@ public:
 	void setEnabled(boost::shared_ptr< Base<EncodingT> > const& enabled);
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( RuleInterpreter, C("Rule") );
-		CLASS_KEY_REGISTER3( RuleInterpreter, C("Rule") );
-		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("Rule::Identifier") );
-		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getNumber, const_t, C("Rule::Number") );
-		METHOD_KEY_REGISTER1( RuleInterpreter, void, setNumber, no_const_t, C("Rule::Number") );
-		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getDescription, const_t, C("Rule::Description") );
-		METHOD_KEY_REGISTER1( RuleInterpreter, void, setDescription, no_const_t, C("Rule::Description") );
-		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getEnabled, const_t, C("Rule::Enabled") );
-		METHOD_KEY_REGISTER1( RuleInterpreter, void, setEnabled, no_const_t, C("Rule::Enabled") );
+		CLASS_KEY_REGISTER ( RuleInterpreter, UCS("Rule") );
+		CLASS_KEY_REGISTER3( RuleInterpreter, UCS("Rule") );
+		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("Rule::Identifier") );
+		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getNumber, const_t, UCS("Rule::Number") );
+		METHOD_KEY_REGISTER1( RuleInterpreter, void, setNumber, no_const_t, UCS("Rule::Number") );
+		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getDescription, const_t, UCS("Rule::Description") );
+		METHOD_KEY_REGISTER1( RuleInterpreter, void, setDescription, no_const_t, UCS("Rule::Description") );
+		METHOD_KEY_REGISTER ( RuleInterpreter, boost::shared_ptr< Base<EncodingT> >, getEnabled, const_t, UCS("Rule::Enabled") );
+		METHOD_KEY_REGISTER1( RuleInterpreter, void, setEnabled, no_const_t, UCS("Rule::Enabled") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("Rule") );
-		CLASS_KEY_UNREGISTER3( C("Rule") );
-		METHOD_KEY_UNREGISTER ( C("Rule::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("Rule::Number") );
-		METHOD_KEY_UNREGISTER1( C("Rule::Number") );
-		METHOD_KEY_UNREGISTER ( C("Rule::Description") );
-		METHOD_KEY_UNREGISTER1( C("Rule::Description") );
-		METHOD_KEY_UNREGISTER ( C("Rule::Enabled") );
-		METHOD_KEY_UNREGISTER1( C("Rule::Enabled") );
+		CLASS_KEY_UNREGISTER ( UCS("Rule") );
+		CLASS_KEY_UNREGISTER3( UCS("Rule") );
+		METHOD_KEY_UNREGISTER ( UCS("Rule::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("Rule::Number") );
+		METHOD_KEY_UNREGISTER1( UCS("Rule::Number") );
+		METHOD_KEY_UNREGISTER ( UCS("Rule::Description") );
+		METHOD_KEY_UNREGISTER1( UCS("Rule::Description") );
+		METHOD_KEY_UNREGISTER ( UCS("Rule::Enabled") );
+		METHOD_KEY_UNREGISTER1( UCS("Rule::Enabled") );
 	FACTORY_END_UNREGISTER
 };
 

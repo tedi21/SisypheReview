@@ -297,7 +297,7 @@ boost::shared_ptr< Base<EncodingT> > CppVariableInterpreter<EncodingT>::clone() 
 template <class EncodingT>
 typename EncodingT::string_t CppVariableInterpreter<EncodingT>::getClassName() const
 {
-	return C("CppVariable");
+	return UCS("CppVariable");
 }
 
 template <class EncodingT>
@@ -308,8 +308,8 @@ boost::shared_ptr< Base<EncodingT> > CppVariableInterpreter<EncodingT>::invoke(c
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, C("CppVariable"), method, args, ret) ||
-			tryInvoke(this, C("Base"), method, args, ret))
+		if (tryInvoke(this, UCS("CppVariable"), method, args, ret) ||
+			tryInvoke(this, UCS("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

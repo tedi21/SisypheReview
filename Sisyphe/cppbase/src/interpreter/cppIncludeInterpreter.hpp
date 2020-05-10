@@ -12,7 +12,7 @@
 #define _CPPINCLUDE_INTERPRETER_HPP_
 
 #include "config.hpp"
-#include "macros.hpp"
+#include "Macros.hpp"
 #include "Base.hpp"
 #include "Array.hpp"
 
@@ -84,31 +84,31 @@ public:
 	void removeCppFile();
 
 	FACTORY_BEGIN_REGISTER
-		CLASS_KEY_REGISTER ( CppIncludeInterpreter, C("CppInclude") );
-		CLASS_KEY_REGISTER2( CppIncludeInterpreter, C("CppInclude") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, C("CppInclude::Identifier") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getFileName, const_t, C("CppInclude::FileName") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreter, void, setFileName, no_const_t, C("CppInclude::FileName") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreter, void, setCppFile, no_const_t, C("CppInclude::CppFile") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, C("CppInclude::CppFile") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFile, const_t, C("CppInclude::HasCppFile") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreter, void, removeCppFile, no_const_t, C("CppInclude::removeCppFile") );
-		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, C("CppInclude::LineNumber") );
-		METHOD_KEY_REGISTER1( CppIncludeInterpreter, void, setLineNumber, no_const_t, C("CppInclude::LineNumber") );
+		CLASS_KEY_REGISTER ( CppIncludeInterpreter, UCS("CppInclude") );
+		CLASS_KEY_REGISTER2( CppIncludeInterpreter, UCS("CppInclude") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getIdentifier, const_t, UCS("CppInclude::Identifier") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getFileName, const_t, UCS("CppInclude::FileName") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreter, void, setFileName, no_const_t, UCS("CppInclude::FileName") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreter, void, setCppFile, no_const_t, UCS("CppInclude::CppFile") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getCppFile, no_const_t, UCS("CppInclude::CppFile") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, hasCppFile, const_t, UCS("CppInclude::HasCppFile") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreter, void, removeCppFile, no_const_t, UCS("CppInclude::removeCppFile") );
+		METHOD_KEY_REGISTER ( CppIncludeInterpreter, boost::shared_ptr< Base<EncodingT> >, getLineNumber, const_t, UCS("CppInclude::LineNumber") );
+		METHOD_KEY_REGISTER1( CppIncludeInterpreter, void, setLineNumber, no_const_t, UCS("CppInclude::LineNumber") );
 	FACTORY_END_REGISTER
 
 	FACTORY_BEGIN_UNREGISTER
-		CLASS_KEY_UNREGISTER ( C("CppInclude") );
-		CLASS_KEY_UNREGISTER2( C("CppInclude") );
-		METHOD_KEY_UNREGISTER ( C("CppInclude::Identifier") );
-		METHOD_KEY_UNREGISTER ( C("CppInclude::FileName") );
-		METHOD_KEY_UNREGISTER1( C("CppInclude::FileName") );
-		METHOD_KEY_UNREGISTER ( C("CppInclude::CppFile") );
-		METHOD_KEY_UNREGISTER1( C("CppInclude::CppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppInclude::HasCppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppInclude::removeCppFile") );
-		METHOD_KEY_UNREGISTER ( C("CppInclude::LineNumber") );
-		METHOD_KEY_UNREGISTER1( C("CppInclude::LineNumber") );
+		CLASS_KEY_UNREGISTER ( UCS("CppInclude") );
+		CLASS_KEY_UNREGISTER2( UCS("CppInclude") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInclude::Identifier") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInclude::FileName") );
+		METHOD_KEY_UNREGISTER1( UCS("CppInclude::FileName") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInclude::CppFile") );
+		METHOD_KEY_UNREGISTER1( UCS("CppInclude::CppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInclude::HasCppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInclude::removeCppFile") );
+		METHOD_KEY_UNREGISTER ( UCS("CppInclude::LineNumber") );
+		METHOD_KEY_UNREGISTER1( UCS("CppInclude::LineNumber") );
 	FACTORY_END_UNREGISTER
 };
 
