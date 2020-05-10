@@ -25,7 +25,7 @@ boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::clone(
 template <class EncodingT>
 typename EncodingT::string_t CppEnumInterpreterAccess<EncodingT>::getClassName() const
 {
-	return UCS("CppEnumAccess");
+	return C("CppEnumAccess");
 }
 
 template <class EncodingT>
@@ -36,8 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppEnumInterpreterAccess<EncodingT>::invoke
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("CppEnumAccess"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("CppEnumAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

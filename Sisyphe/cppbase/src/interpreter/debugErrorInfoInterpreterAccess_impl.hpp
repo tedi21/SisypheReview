@@ -25,7 +25,7 @@ boost::shared_ptr< Base<EncodingT> > DebugErrorInfoInterpreterAccess<EncodingT>:
 template <class EncodingT>
 typename EncodingT::string_t DebugErrorInfoInterpreterAccess<EncodingT>::getClassName() const
 {
-	return UCS("DebugErrorInfoAccess");
+	return C("DebugErrorInfoAccess");
 }
 
 template <class EncodingT>
@@ -36,8 +36,8 @@ boost::shared_ptr< Base<EncodingT> > DebugErrorInfoInterpreterAccess<EncodingT>:
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("DebugErrorInfoAccess"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("DebugErrorInfoAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

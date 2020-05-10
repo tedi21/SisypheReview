@@ -9,6 +9,8 @@
 #include "debugTypeInfoInterpreterAccess.hpp"
 #include "textFileInterpreter.hpp"
 #include "textFileInterpreterAccess.hpp"
+#include "ruleInterpreter.hpp"
+#include "ruleInterpreterAccess.hpp"
 #include "cppFileTypeInterpreter.hpp"
 #include "cppFileTypeInterpreterAccess.hpp"
 #include "cppFileInterpreter.hpp"
@@ -59,6 +61,8 @@ FACTORY_EXPORT(DebugTypeInfoInterpreter<ucs>)
 FACTORY_EXPORT(DebugTypeInfoInterpreterAccess<ucs>)
 FACTORY_EXPORT(TextFileInterpreter<ucs>)
 FACTORY_EXPORT(TextFileInterpreterAccess<ucs>)
+FACTORY_EXPORT(RuleInterpreter<ucs>)
+FACTORY_EXPORT(RuleInterpreterAccess<ucs>)
 FACTORY_EXPORT(CppFileTypeInterpreter<ucs>)
 FACTORY_EXPORT(CppFileTypeInterpreterAccess<ucs>)
 FACTORY_EXPORT(CppFileInterpreter<ucs>)

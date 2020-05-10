@@ -1,6 +1,6 @@
-#include "dataconnection.hpp"
-#include "dataparameters.hpp"
-#include "datastatement.hpp"
+#include "DataConnection.hpp"
+#include "DataParameters.hpp"
+#include "DataStatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,13 +56,13 @@ _CppEnumAccess<EncodingT>::getManyCppEnums(typename EncodingT::string_t const&  
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("name"));
-	columns.push_back(UCS("accessSpecifier"));
-	columns.push_back(UCS("lineNumber"));
-	columns.push_back(UCS("startBlock"));
-	columns.push_back(UCS("lengthBlock"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppEnum")), filter) );
+	columns.push_back(C("identifier"));
+	columns.push_back(C("name"));
+	columns.push_back(C("accessSpecifier"));
+	columns.push_back(C("lineNumber"));
+	columns.push_back(C("startBlock"));
+	columns.push_back(C("lengthBlock"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppEnum")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t name;
@@ -104,7 +104,7 @@ _CppEnumAccess<EncodingT>::getOneCppEnum(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > result = getManyCppEnums(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
+	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > result = getManyCppEnums(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -124,12 +124,12 @@ _CppEnumAccess<EncodingT>::selectManyCppEnums(typename EncodingT::string_t const
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("name"));
-	columns.push_back(UCS("accessSpecifier"));
-	columns.push_back(UCS("lineNumber"));
-	columns.push_back(UCS("startBlock"));
-	columns.push_back(UCS("lengthBlock"));
+	columns.push_back(C("identifier"));
+	columns.push_back(C("name"));
+	columns.push_back(C("accessSpecifier"));
+	columns.push_back(C("lineNumber"));
+	columns.push_back(C("startBlock"));
+	columns.push_back(C("lengthBlock"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -138,7 +138,7 @@ _CppEnumAccess<EncodingT>::selectManyCppEnums(typename EncodingT::string_t const
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppEnum")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppEnum")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t name;
@@ -182,7 +182,7 @@ _CppEnumAccess<EncodingT>::selectOneCppEnum(long long identifier, bool nowait, b
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > result = selectManyCppEnums(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppEnum<EncodingT> > > result = selectManyCppEnums(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -255,7 +255,7 @@ _CppEnumAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppEnum<EncodingT> > 
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppEnum")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFile")), std::vector<typename EncodingT::string_t>(1,C("cppEnum")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
@@ -295,7 +295,7 @@ _CppEnumAccess<EncodingT>::fillCppClass(boost::shared_ptr< _CppEnum<EncodingT> >
 		throw NullPointerException("CppClassAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idClass")), std::vector<typename EncodingT::string_t>(1,UCS("cppEnum")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idClass")), std::vector<typename EncodingT::string_t>(1,C("cppEnum")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
@@ -321,7 +321,7 @@ template<class EncodingT>
 void
 _CppEnumAccess<EncodingT>::fillOneCppEnumConstant(boost::shared_ptr< _CppEnum<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppEnumConstants(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
+	fillManyCppEnumConstants(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -342,9 +342,9 @@ _CppEnumAccess<EncodingT>::fillManyCppEnumConstants(boost::shared_ptr< _CppEnum<
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > tab;
-	typename EncodingT::string_t cppEnumConstantFilter = UCS("idEnum = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppEnumConstantFilter = C("idEnum = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppEnumConstantFilter += UCS(" AND ") + filter;
+		cppEnumConstantFilter += C(" AND ") + filter;
 	}
 	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
@@ -452,23 +452,23 @@ _CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 	try {
 		if ( (*save)->getName() != o->getName() ) {
 			values.addText( o->getName() );
-			fields.push_back( UCS("name") );
+			fields.push_back( C("name") );
 		}
 		if ( (*save)->getAccessSpecifier() != o->getAccessSpecifier() ) {
 			values.addText( o->getAccessSpecifier() );
-			fields.push_back( UCS("accessSpecifier") );
+			fields.push_back( C("accessSpecifier") );
 		}
 		if ( (*save)->getLineNumber() != o->getLineNumber() ) {
 			values.addInt64( o->getLineNumber() );
-			fields.push_back( UCS("lineNumber") );
+			fields.push_back( C("lineNumber") );
 		}
 		if ( (*save)->getStartBlock() != o->getStartBlock() ) {
 			values.addInt64( o->getStartBlock() );
-			fields.push_back( UCS("startBlock") );
+			fields.push_back( C("startBlock") );
 		}
 		if ( (*save)->getLengthBlock() != o->getLengthBlock() ) {
 			values.addInt64( o->getLengthBlock() );
-			fields.push_back( UCS("lengthBlock") );
+			fields.push_back( C("lengthBlock") );
 		}
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
@@ -476,7 +476,7 @@ _CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		}
 		else if ( !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(o->getCppFile()))((*save)->getCppFile()) ) {
 			values.addInt64( o->getCppFile()->getIdentifier() );
-			fields.push_back( UCS("idFile") );
+			fields.push_back( C("idFile") );
 		}
 		else if ( o->isNullCppFile() && !(*save)->isNullCppFile() ) {
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
@@ -488,11 +488,11 @@ _CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		}
 		else if ( !o->isNullCppClass() && !typename _CppClass<EncodingT>::CppClassIDEquality(*(o->getCppClass()))((*save)->getCppClass()) ) {
 			values.addInt64( o->getCppClass()->getIdentifier() );
-			fields.push_back( UCS("idClass") );
+			fields.push_back( C("idClass") );
 		}
 		else if ( o->isNullCppClass() && !(*save)->isNullCppClass() ) {
 			values.addNull();
-			fields.push_back( UCS("idClass") );
+			fields.push_back( C("idClass") );
 		}
 		std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToAdd;
 		std::vector< boost::shared_ptr< _CppEnumConstant<EncodingT> > > listOfCppEnumConstantToUpdate;
@@ -524,12 +524,12 @@ _CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(UCS("cppEnum"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+			statement.swap( connection->update(C("cppEnum"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppEnum"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppEnum"), o);
 		}
 		for ( cppEnumConstant=listOfCppEnumConstantToAdd.begin(); cppEnumConstant!=listOfCppEnumConstantToAdd.end() ; ++cppEnumConstant ) {
 			cppEnumConstantAccess->insertCppEnumConstant(*cppEnumConstant);
@@ -581,18 +581,18 @@ _CppEnumAccess<EncodingT>::insertCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(UCS("identifier"), UCS("cppEnum"))+1;
+		int id = connection->selectMaxID(C("identifier"), C("cppEnum"))+1;
 		values.addInt( id );
-		fields.push_back( UCS("identifier") );
+		fields.push_back( C("identifier") );
 		values.addText( o->getName() );
-		fields.push_back( UCS("name") );
+		fields.push_back( C("name") );
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
 		}
 		else if ( !o->isNullCppFile() ) {
 			values.addInt64( o->getCppFile()->getIdentifier() );
-			fields.push_back( UCS("idFile") );
+			fields.push_back( C("idFile") );
 		}
 		else {
 			m_logger->errorStream() << "idFile : null reference is forbidden.";
@@ -604,27 +604,27 @@ _CppEnumAccess<EncodingT>::insertCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		}
 		else if ( !o->isNullCppClass() ) {
 			values.addInt64( o->getCppClass()->getIdentifier() );
-			fields.push_back( UCS("idClass") );
+			fields.push_back( C("idClass") );
 		}
 		else {
 			values.addNull();
-			fields.push_back( UCS("idClass") );
+			fields.push_back( C("idClass") );
 		}
 		values.addText( o->getAccessSpecifier() );
-		fields.push_back( UCS("accessSpecifier") );
+		fields.push_back( C("accessSpecifier") );
 		values.addInt64( o->getLineNumber() );
-		fields.push_back( UCS("lineNumber") );
+		fields.push_back( C("lineNumber") );
 		values.addInt64( o->getStartBlock() );
-		fields.push_back( UCS("startBlock") );
+		fields.push_back( C("startBlock") );
 		values.addInt64( o->getLengthBlock() );
-		fields.push_back( UCS("lengthBlock") );
-		statement.swap( connection->insert(UCS("cppEnum"), fields) );
+		fields.push_back( C("lengthBlock") );
+		statement.swap( connection->insert(C("cppEnum"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppEnum"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppEnum"), o);
 		typename _CppEnum<EncodingT>::CppEnumConstantIterator cppEnumConstant;
 		for ( cppEnumConstant=o->getCppEnumConstantsBeginning(); cppEnumConstant!=o->getCppEnumConstantsEnd(); ++cppEnumConstant ) {
 			(*cppEnumConstant)->setCppEnum(o);
@@ -680,12 +680,12 @@ _CppEnumAccess<EncodingT>::deleteCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		for ( cppEnumConstant=o->getCppEnumConstantsBeginning(); cppEnumConstant!=o->getCppEnumConstantsEnd(); ++cppEnumConstant ) {
 			cppEnumConstantAccess->deleteCppEnumConstant(*cppEnumConstant);
 		}
-		statement.swap( connection->deleteFrom(UCS("cppEnum"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+		statement.swap( connection->deleteFrom(C("cppEnum"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppEnum"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppEnum"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

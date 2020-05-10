@@ -16,6 +16,8 @@ template class _DebugTypeInfo<ucs>;
 template class _DebugTypeInfoAccess<ucs>;
 template class _TextFile<ucs>;
 template class _TextFileAccess<ucs>;
+template class _Rule<ucs>;
+template class _RuleAccess<ucs>;
 template class _CppFileType<ucs>;
 template class _CppFileTypeAccess<ucs>;
 template class _CppFile<ucs>;

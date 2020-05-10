@@ -1,6 +1,6 @@
-#include "dataconnection.hpp"
-#include "dataparameters.hpp"
-#include "datastatement.hpp"
+#include "DataConnection.hpp"
+#include "DataParameters.hpp"
+#include "DataStatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,9 +56,9 @@ _CppFileTypeAccess<EncodingT>::getManyCppFileTypes(typename EncodingT::string_t 
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("string"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFileType")), filter) );
+	columns.push_back(C("identifier"));
+	columns.push_back(C("string"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppFileType")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t string;
@@ -88,7 +88,7 @@ _CppFileTypeAccess<EncodingT>::getOneCppFileType(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > result = getManyCppFileTypes(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
+	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > result = getManyCppFileTypes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -108,8 +108,8 @@ _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("string"));
+	columns.push_back(C("identifier"));
+	columns.push_back(C("string"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -118,7 +118,7 @@ _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFileType")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppFileType")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t string;
@@ -150,7 +150,7 @@ _CppFileTypeAccess<EncodingT>::selectOneCppFileType(long long identifier, bool n
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > result = selectManyCppFileTypes(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppFileType<EncodingT> > > result = selectManyCppFileTypes(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -210,7 +210,7 @@ template<class EncodingT>
 void
 _CppFileTypeAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< _CppFileType<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppFiles(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
+	fillManyCppFiles(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -231,9 +231,9 @@ _CppFileTypeAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _CppFileType<
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > tab;
-	typename EncodingT::string_t cppFileFilter = UCS("idType = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t cppFileFilter = C("idType = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		cppFileFilter += UCS(" AND ") + filter;
+		cppFileFilter += C(" AND ") + filter;
 	}
 	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
@@ -331,7 +331,7 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(boost::shared_ptr< _CppFileType
 	try {
 		if ( (*save)->getString() != o->getString() ) {
 			values.addText( o->getString() );
-			fields.push_back( UCS("string") );
+			fields.push_back( C("string") );
 		}
 		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToAdd;
 		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToUpdate;
@@ -363,12 +363,12 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(boost::shared_ptr< _CppFileType
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(UCS("cppFileType"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+			statement.swap( connection->update(C("cppFileType"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppFileType"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppFileType"), o);
 		}
 		for ( cppFile=listOfCppFileToAdd.begin(); cppFile!=listOfCppFileToAdd.end() ; ++cppFile ) {
 			cppFileAccess->insertCppFile(*cppFile);
@@ -420,18 +420,18 @@ _CppFileTypeAccess<EncodingT>::insertCppFileType(boost::shared_ptr< _CppFileType
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(UCS("identifier"), UCS("cppFileType"))+1;
+		int id = connection->selectMaxID(C("identifier"), C("cppFileType"))+1;
 		values.addInt( id );
-		fields.push_back( UCS("identifier") );
+		fields.push_back( C("identifier") );
 		values.addText( o->getString() );
-		fields.push_back( UCS("string") );
-		statement.swap( connection->insert(UCS("cppFileType"), fields) );
+		fields.push_back( C("string") );
+		statement.swap( connection->insert(C("cppFileType"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppFileType"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppFileType"), o);
 		typename _CppFileType<EncodingT>::CppFileIterator cppFile;
 		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
 			(*cppFile)->setCppFileType(o);
@@ -487,12 +487,12 @@ _CppFileTypeAccess<EncodingT>::deleteCppFileType(boost::shared_ptr< _CppFileType
 		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
 			cppFileAccess->deleteCppFile(*cppFile);
 		}
-		statement.swap( connection->deleteFrom(UCS("cppFileType"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+		statement.swap( connection->deleteFrom(C("cppFileType"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppFileType"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppFileType"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

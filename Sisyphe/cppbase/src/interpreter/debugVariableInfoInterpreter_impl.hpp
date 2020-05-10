@@ -223,7 +223,7 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreter<EncodingT>::cl
 template <class EncodingT>
 typename EncodingT::string_t DebugVariableInfoInterpreter<EncodingT>::getClassName() const
 {
-	return UCS("DebugVariableInfo");
+	return C("DebugVariableInfo");
 }
 
 template <class EncodingT>
@@ -234,8 +234,8 @@ boost::shared_ptr< Base<EncodingT> > DebugVariableInfoInterpreter<EncodingT>::in
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("DebugVariableInfo"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("DebugVariableInfo"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

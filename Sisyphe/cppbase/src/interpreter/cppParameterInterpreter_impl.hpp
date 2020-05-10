@@ -353,7 +353,7 @@ boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::clone()
 template <class EncodingT>
 typename EncodingT::string_t CppParameterInterpreter<EncodingT>::getClassName() const
 {
-	return UCS("CppParameter");
+	return C("CppParameter");
 }
 
 template <class EncodingT>
@@ -364,8 +364,8 @@ boost::shared_ptr< Base<EncodingT> > CppParameterInterpreter<EncodingT>::invoke(
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("CppParameter"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("CppParameter"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

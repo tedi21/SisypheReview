@@ -133,7 +133,7 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::clone() c
 template <class EncodingT>
 typename EncodingT::string_t CppIncludeInterpreter<EncodingT>::getClassName() const
 {
-	return UCS("CppInclude");
+	return C("CppInclude");
 }
 
 template <class EncodingT>
@@ -144,8 +144,8 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreter<EncodingT>::invoke(co
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("CppInclude"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("CppInclude"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

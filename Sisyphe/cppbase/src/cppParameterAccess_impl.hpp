@@ -1,6 +1,6 @@
-#include "dataconnection.hpp"
-#include "dataparameters.hpp"
-#include "datastatement.hpp"
+#include "DataConnection.hpp"
+#include "DataParameters.hpp"
+#include "DataStatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,20 +56,20 @@ _CppParameterAccess<EncodingT>::getManyCppParameters(typename EncodingT::string_
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("paramOrder"));
-	columns.push_back(UCS("paramType"));
-	columns.push_back(UCS("isConst"));
-	columns.push_back(UCS("defaultValue"));
-	columns.push_back(UCS("decName"));
-	columns.push_back(UCS("decLineNumber"));
-	columns.push_back(UCS("startDecBlock"));
-	columns.push_back(UCS("lengthDecBlock"));
-	columns.push_back(UCS("defName"));
-	columns.push_back(UCS("defLineNumber"));
-	columns.push_back(UCS("startDefBlock"));
-	columns.push_back(UCS("lengthDefBlock"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppParameter")), filter) );
+	columns.push_back(C("identifier"));
+	columns.push_back(C("paramOrder"));
+	columns.push_back(C("paramType"));
+	columns.push_back(C("isConst"));
+	columns.push_back(C("defaultValue"));
+	columns.push_back(C("decName"));
+	columns.push_back(C("decLineNumber"));
+	columns.push_back(C("startDecBlock"));
+	columns.push_back(C("lengthDecBlock"));
+	columns.push_back(C("defName"));
+	columns.push_back(C("defLineNumber"));
+	columns.push_back(C("startDefBlock"));
+	columns.push_back(C("lengthDefBlock"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("cppParameter")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		long long paramOrder;
@@ -132,7 +132,7 @@ _CppParameterAccess<EncodingT>::getOneCppParameter(long long identifier) const
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > result = getManyCppParameters(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
+	std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > result = getManyCppParameters(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -152,19 +152,19 @@ _CppParameterAccess<EncodingT>::selectManyCppParameters(typename EncodingT::stri
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("paramOrder"));
-	columns.push_back(UCS("paramType"));
-	columns.push_back(UCS("isConst"));
-	columns.push_back(UCS("defaultValue"));
-	columns.push_back(UCS("decName"));
-	columns.push_back(UCS("decLineNumber"));
-	columns.push_back(UCS("startDecBlock"));
-	columns.push_back(UCS("lengthDecBlock"));
-	columns.push_back(UCS("defName"));
-	columns.push_back(UCS("defLineNumber"));
-	columns.push_back(UCS("startDefBlock"));
-	columns.push_back(UCS("lengthDefBlock"));
+	columns.push_back(C("identifier"));
+	columns.push_back(C("paramOrder"));
+	columns.push_back(C("paramType"));
+	columns.push_back(C("isConst"));
+	columns.push_back(C("defaultValue"));
+	columns.push_back(C("decName"));
+	columns.push_back(C("decLineNumber"));
+	columns.push_back(C("startDecBlock"));
+	columns.push_back(C("lengthDecBlock"));
+	columns.push_back(C("defName"));
+	columns.push_back(C("defLineNumber"));
+	columns.push_back(C("startDefBlock"));
+	columns.push_back(C("lengthDefBlock"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -173,7 +173,7 @@ _CppParameterAccess<EncodingT>::selectManyCppParameters(typename EncodingT::stri
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppParameter")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("cppParameter")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		long long paramOrder;
@@ -238,7 +238,7 @@ _CppParameterAccess<EncodingT>::selectOneCppParameter(long long identifier, bool
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > result = selectManyCppParameters(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _CppParameter<EncodingT> > > result = selectManyCppParameters(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -305,7 +305,7 @@ _CppParameterAccess<EncodingT>::fillCppFunction(boost::shared_ptr< _CppParameter
 		throw NullPointerException("CppFunctionAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFunction")), std::vector<typename EncodingT::string_t>(1,UCS("cppParameter")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idFunction")), std::vector<typename EncodingT::string_t>(1,C("cppParameter")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
@@ -387,51 +387,51 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 	try {
 		if ( (*save)->getParamOrder() != o->getParamOrder() ) {
 			values.addInt64( o->getParamOrder() );
-			fields.push_back( UCS("paramOrder") );
+			fields.push_back( C("paramOrder") );
 		}
 		if ( (*save)->getParamType() != o->getParamType() ) {
 			values.addText( o->getParamType() );
-			fields.push_back( UCS("paramType") );
+			fields.push_back( C("paramType") );
 		}
 		if ( (*save)->getIsConst() != o->getIsConst() ) {
 			values.addInt64( o->getIsConst() );
-			fields.push_back( UCS("isConst") );
+			fields.push_back( C("isConst") );
 		}
 		if ( (*save)->getDefaultValue() != o->getDefaultValue() ) {
 			values.addText( o->getDefaultValue() );
-			fields.push_back( UCS("defaultValue") );
+			fields.push_back( C("defaultValue") );
 		}
 		if ( (*save)->getDecName() != o->getDecName() ) {
 			values.addText( o->getDecName() );
-			fields.push_back( UCS("decName") );
+			fields.push_back( C("decName") );
 		}
 		if ( (*save)->getDecLineNumber() != o->getDecLineNumber() ) {
 			values.addInt64( o->getDecLineNumber() );
-			fields.push_back( UCS("decLineNumber") );
+			fields.push_back( C("decLineNumber") );
 		}
 		if ( (*save)->getStartDecBlock() != o->getStartDecBlock() ) {
 			values.addInt64( o->getStartDecBlock() );
-			fields.push_back( UCS("startDecBlock") );
+			fields.push_back( C("startDecBlock") );
 		}
 		if ( (*save)->getLengthDecBlock() != o->getLengthDecBlock() ) {
 			values.addInt64( o->getLengthDecBlock() );
-			fields.push_back( UCS("lengthDecBlock") );
+			fields.push_back( C("lengthDecBlock") );
 		}
 		if ( (*save)->getDefName() != o->getDefName() ) {
 			values.addText( o->getDefName() );
-			fields.push_back( UCS("defName") );
+			fields.push_back( C("defName") );
 		}
 		if ( (*save)->getDefLineNumber() != o->getDefLineNumber() ) {
 			values.addInt64( o->getDefLineNumber() );
-			fields.push_back( UCS("defLineNumber") );
+			fields.push_back( C("defLineNumber") );
 		}
 		if ( (*save)->getStartDefBlock() != o->getStartDefBlock() ) {
 			values.addInt64( o->getStartDefBlock() );
-			fields.push_back( UCS("startDefBlock") );
+			fields.push_back( C("startDefBlock") );
 		}
 		if ( (*save)->getLengthDefBlock() != o->getLengthDefBlock() ) {
 			values.addInt64( o->getLengthDefBlock() );
-			fields.push_back( UCS("lengthDefBlock") );
+			fields.push_back( C("lengthDefBlock") );
 		}
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
 			m_logger->errorStream() << "idFunction : Identifier is null.";
@@ -439,19 +439,19 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 		}
 		else if ( !o->isNullCppFunction() && !typename _CppFunction<EncodingT>::CppFunctionIDEquality(*(o->getCppFunction()))((*save)->getCppFunction()) ) {
 			values.addInt64( o->getCppFunction()->getIdentifier() );
-			fields.push_back( UCS("idFunction") );
+			fields.push_back( C("idFunction") );
 		}
 		else if ( o->isNullCppFunction() && !(*save)->isNullCppFunction() ) {
 			m_logger->errorStream() << "idFunction : null reference is forbidden.";
 			throw InvalidQueryException("idFunction : null reference is forbidden.");
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(UCS("cppParameter"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+			statement.swap( connection->update(C("cppParameter"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("cppParameter"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, C("cppParameter"), o);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -489,52 +489,52 @@ _CppParameterAccess<EncodingT>::insertCppParameter(boost::shared_ptr< _CppParame
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(UCS("identifier"), UCS("cppParameter"))+1;
+		int id = connection->selectMaxID(C("identifier"), C("cppParameter"))+1;
 		values.addInt( id );
-		fields.push_back( UCS("identifier") );
+		fields.push_back( C("identifier") );
 		values.addInt64( o->getParamOrder() );
-		fields.push_back( UCS("paramOrder") );
+		fields.push_back( C("paramOrder") );
 		values.addText( o->getParamType() );
-		fields.push_back( UCS("paramType") );
+		fields.push_back( C("paramType") );
 		values.addInt64( o->getIsConst() );
-		fields.push_back( UCS("isConst") );
+		fields.push_back( C("isConst") );
 		values.addText( o->getDefaultValue() );
-		fields.push_back( UCS("defaultValue") );
+		fields.push_back( C("defaultValue") );
 		if ( !o->isNullCppFunction() && typename _CppFunction<EncodingT>::CppFunctionIDEquality(-1)(o->getCppFunction()) ) {
 			m_logger->errorStream() << "idFunction : Identifier is null.";
 			throw InvalidQueryException("idFunction : Identifier is null.");
 		}
 		else if ( !o->isNullCppFunction() ) {
 			values.addInt64( o->getCppFunction()->getIdentifier() );
-			fields.push_back( UCS("idFunction") );
+			fields.push_back( C("idFunction") );
 		}
 		else {
 			m_logger->errorStream() << "idFunction : null reference is forbidden.";
 			throw InvalidQueryException("idFunction : null reference is forbidden.");
 		}
 		values.addText( o->getDecName() );
-		fields.push_back( UCS("decName") );
+		fields.push_back( C("decName") );
 		values.addInt64( o->getDecLineNumber() );
-		fields.push_back( UCS("decLineNumber") );
+		fields.push_back( C("decLineNumber") );
 		values.addInt64( o->getStartDecBlock() );
-		fields.push_back( UCS("startDecBlock") );
+		fields.push_back( C("startDecBlock") );
 		values.addInt64( o->getLengthDecBlock() );
-		fields.push_back( UCS("lengthDecBlock") );
+		fields.push_back( C("lengthDecBlock") );
 		values.addText( o->getDefName() );
-		fields.push_back( UCS("defName") );
+		fields.push_back( C("defName") );
 		values.addInt64( o->getDefLineNumber() );
-		fields.push_back( UCS("defLineNumber") );
+		fields.push_back( C("defLineNumber") );
 		values.addInt64( o->getStartDefBlock() );
-		fields.push_back( UCS("startDefBlock") );
+		fields.push_back( C("startDefBlock") );
 		values.addInt64( o->getLengthDefBlock() );
-		fields.push_back( UCS("lengthDefBlock") );
-		statement.swap( connection->insert(UCS("cppParameter"), fields) );
+		fields.push_back( C("lengthDefBlock") );
+		statement.swap( connection->insert(C("cppParameter"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("cppParameter"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, C("cppParameter"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
@@ -575,12 +575,12 @@ _CppParameterAccess<EncodingT>::deleteCppParameter(boost::shared_ptr< _CppParame
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
-		statement.swap( connection->deleteFrom(UCS("cppParameter"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+		statement.swap( connection->deleteFrom(C("cppParameter"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("cppParameter"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, C("cppParameter"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

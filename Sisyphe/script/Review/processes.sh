@@ -14,6 +14,5 @@ echo "include(\"Main.td\");" >> Project.td
 echo "include(\"DBConvert.td\");" >> Project.td
 echo "include(\"DbDiff.td\");" >> Project.td
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../
-../tdscript Project.td -module cppBase cppbase.db -v 6 > log.txt
+LD_LIBRARY_PATH=../ ../tdscript Project.td -module cppBase cppbase.db -v 6 > log.txt
 

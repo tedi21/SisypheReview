@@ -1,5 +1,5 @@
 # CppFileType
-Creation Table________________cppFileType table represents a type of file : header or source.
+cppFileType table represents a type of file : header or source.
 
 # Référence
 ## Constructeur CppFileType

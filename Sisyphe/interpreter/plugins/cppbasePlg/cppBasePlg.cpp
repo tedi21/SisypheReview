@@ -6,6 +6,8 @@
 // Classe d'interface Interpreter
 #include "ProgramInterpreter.hpp"
 
+#include "ruleInterpreter.hpp"
+#include "ruleInterpreterAccess.hpp"
 #include "textFileInterpreter.hpp"
 #include "textFileInterpreterAccess.hpp"
 #include "cppNoticeInterpreter.hpp"
@@ -59,6 +61,8 @@ using namespace interp;
 
 extern "C" CPPBASEPLG_API void PlugInit(va_list vl, void** res)
 {
+    RuleInterpreter<ucs>::register_class();
+    RuleInterpreterAccess<ucs>::register_class();
     TextFileInterpreter<ucs>::register_class();
     TextFileInterpreterAccess<ucs>::register_class();
     CppNoticeInterpreter<ucs>::register_class();
@@ -121,6 +125,8 @@ extern "C" CPPBASEPLG_API void PlugInit(va_list vl, void** res)
 
 extern "C" CPPBASEPLG_API void PlugTerm(void** res)
 {
+    RuleInterpreter<ucs>::unregister_class();
+    RuleInterpreterAccess<ucs>::unregister_class();
     TextFileInterpreter<ucs>::unregister_class();
     TextFileInterpreterAccess<ucs>::unregister_class();
     CppNoticeInterpreter<ucs>::unregister_class();

@@ -271,7 +271,7 @@ boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::clone(
 template <class EncodingT>
 typename EncodingT::string_t DebugFileInfoInterpreter<EncodingT>::getClassName() const
 {
-	return UCS("DebugFileInfo");
+	return C("DebugFileInfo");
 }
 
 template <class EncodingT>
@@ -282,8 +282,8 @@ boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::invoke
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("DebugFileInfo"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("DebugFileInfo"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)

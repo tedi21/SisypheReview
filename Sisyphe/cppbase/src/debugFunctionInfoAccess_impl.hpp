@@ -1,6 +1,6 @@
-#include "dataconnection.hpp"
-#include "dataparameters.hpp"
-#include "datastatement.hpp"
+#include "DataConnection.hpp"
+#include "DataParameters.hpp"
+#include "DataStatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,12 +56,12 @@ _DebugFunctionInfoAccess<EncodingT>::getManyDebugFunctionInfos(typename Encoding
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("name"));
-	columns.push_back(UCS("firstLineNumber"));
-	columns.push_back(UCS("lastLineNumber"));
-	columns.push_back(UCS("address"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("debugFunctionInfo")), filter) );
+	columns.push_back(C("identifier"));
+	columns.push_back(C("name"));
+	columns.push_back(C("firstLineNumber"));
+	columns.push_back(C("lastLineNumber"));
+	columns.push_back(C("address"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("debugFunctionInfo")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t name;
@@ -100,7 +100,7 @@ _DebugFunctionInfoAccess<EncodingT>::getOneDebugFunctionInfo(long long identifie
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > result = getManyDebugFunctionInfos(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > result = getManyDebugFunctionInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -120,11 +120,11 @@ _DebugFunctionInfoAccess<EncodingT>::selectManyDebugFunctionInfos(typename Encod
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("name"));
-	columns.push_back(UCS("firstLineNumber"));
-	columns.push_back(UCS("lastLineNumber"));
-	columns.push_back(UCS("address"));
+	columns.push_back(C("identifier"));
+	columns.push_back(C("name"));
+	columns.push_back(C("firstLineNumber"));
+	columns.push_back(C("lastLineNumber"));
+	columns.push_back(C("address"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -133,7 +133,7 @@ _DebugFunctionInfoAccess<EncodingT>::selectManyDebugFunctionInfos(typename Encod
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("debugFunctionInfo")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("debugFunctionInfo")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t name;
@@ -174,7 +174,7 @@ _DebugFunctionInfoAccess<EncodingT>::selectOneDebugFunctionInfo(long long identi
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > result = selectManyDebugFunctionInfos(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > > result = selectManyDebugFunctionInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -247,7 +247,7 @@ _DebugFunctionInfoAccess<EncodingT>::fillDebugTypeInfo(boost::shared_ptr< _Debug
 		throw NullPointerException("DebugTypeInfoAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idReturnType")), std::vector<typename EncodingT::string_t>(1,UCS("debugFunctionInfo")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idReturnType")), std::vector<typename EncodingT::string_t>(1,C("debugFunctionInfo")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(o->getIdentifier());
 		boost::shared_ptr< _DebugTypeInfo<EncodingT> > val = debugTypeInfoAccess->getOneDebugTypeInfo(id);
@@ -287,7 +287,7 @@ _DebugFunctionInfoAccess<EncodingT>::fillDebugFileInfo(boost::shared_ptr< _Debug
 		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
 	long long id;
-	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDebugFile")), std::vector<typename EncodingT::string_t>(1,UCS("debugFunctionInfo")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,C("idDebugFile")), std::vector<typename EncodingT::string_t>(1,C("debugFunctionInfo")), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
 		typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(o->getIdentifier());
 		boost::shared_ptr< _DebugFileInfo<EncodingT> > val = debugFileInfoAccess->getOneDebugFileInfo(id);
@@ -314,7 +314,7 @@ template<class EncodingT>
 void
 _DebugFunctionInfoAccess<EncodingT>::fillOneDebugVariableInfo(boost::shared_ptr< _DebugFunctionInfo<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyDebugVariableInfos(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
+	fillManyDebugVariableInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -335,9 +335,9 @@ _DebugFunctionInfoAccess<EncodingT>::fillManyDebugVariableInfos(boost::shared_pt
 		throw NullPointerException("DebugVariableInfoAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _DebugVariableInfo<EncodingT> > > tab;
-	typename EncodingT::string_t debugVariableInfoFilter = UCS("idDebugFunction = ") + C(ToString::parse(o->getIdentifier()));
+	typename EncodingT::string_t debugVariableInfoFilter = C("idDebugFunction = ") + C(ToString::parse(o->getIdentifier()));
 	if (!filter.empty()) {
-		debugVariableInfoFilter += UCS(" AND ") + filter;
+		debugVariableInfoFilter += C(" AND ") + filter;
 	}
 	typename _DebugFunctionInfo<EncodingT>::DebugFunctionInfoIDEquality debugFunctionInfoIdEquality(o->getIdentifier());
 	typename std::list< boost::shared_ptr< _DebugFunctionInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFunctionInfoIdEquality);
@@ -444,19 +444,19 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(boost::shared_ptr< 
 	try {
 		if ( (*save)->getName() != o->getName() ) {
 			values.addText( o->getName() );
-			fields.push_back( UCS("name") );
+			fields.push_back( C("name") );
 		}
 		if ( (*save)->getFirstLineNumber() != o->getFirstLineNumber() ) {
 			values.addInt64( o->getFirstLineNumber() );
-			fields.push_back( UCS("firstLineNumber") );
+			fields.push_back( C("firstLineNumber") );
 		}
 		if ( (*save)->getLastLineNumber() != o->getLastLineNumber() ) {
 			values.addInt64( o->getLastLineNumber() );
-			fields.push_back( UCS("lastLineNumber") );
+			fields.push_back( C("lastLineNumber") );
 		}
 		if ( (*save)->getAddress() != o->getAddress() ) {
 			values.addInt64( o->getAddress() );
-			fields.push_back( UCS("address") );
+			fields.push_back( C("address") );
 		}
 		if ( !o->isNullDebugTypeInfo() && typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality(-1)(o->getDebugTypeInfo()) ) {
 			m_logger->errorStream() << "idReturnType : Identifier is null.";
@@ -464,7 +464,7 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(boost::shared_ptr< 
 		}
 		else if ( !o->isNullDebugTypeInfo() && !typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality(*(o->getDebugTypeInfo()))((*save)->getDebugTypeInfo()) ) {
 			values.addInt64( o->getDebugTypeInfo()->getIdentifier() );
-			fields.push_back( UCS("idReturnType") );
+			fields.push_back( C("idReturnType") );
 		}
 		else if ( o->isNullDebugTypeInfo() && !(*save)->isNullDebugTypeInfo() ) {
 			m_logger->errorStream() << "idReturnType : null reference is forbidden.";
@@ -476,7 +476,7 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(boost::shared_ptr< 
 		}
 		else if ( !o->isNullDebugFileInfo() && !typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality(*(o->getDebugFileInfo()))((*save)->getDebugFileInfo()) ) {
 			values.addInt64( o->getDebugFileInfo()->getIdentifier() );
-			fields.push_back( UCS("idDebugFile") );
+			fields.push_back( C("idDebugFile") );
 		}
 		else if ( o->isNullDebugFileInfo() && !(*save)->isNullDebugFileInfo() ) {
 			m_logger->errorStream() << "idDebugFile : null reference is forbidden.";
@@ -512,12 +512,12 @@ _DebugFunctionInfoAccess<EncodingT>::updateDebugFunctionInfo(boost::shared_ptr< 
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(UCS("debugFunctionInfo"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+			statement.swap( connection->update(C("debugFunctionInfo"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("debugFunctionInfo"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, C("debugFunctionInfo"), o);
 		}
 		for ( debugVariableInfo=listOfDebugVariableInfoToAdd.begin(); debugVariableInfo!=listOfDebugVariableInfoToAdd.end() ; ++debugVariableInfo ) {
 			debugVariableInfoAccess->insertDebugVariableInfo(*debugVariableInfo);
@@ -571,24 +571,24 @@ _DebugFunctionInfoAccess<EncodingT>::insertDebugFunctionInfo(boost::shared_ptr< 
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(UCS("identifier"), UCS("debugFunctionInfo"))+1;
+		int id = connection->selectMaxID(C("identifier"), C("debugFunctionInfo"))+1;
 		values.addInt( id );
-		fields.push_back( UCS("identifier") );
+		fields.push_back( C("identifier") );
 		values.addText( o->getName() );
-		fields.push_back( UCS("name") );
+		fields.push_back( C("name") );
 		values.addInt64( o->getFirstLineNumber() );
-		fields.push_back( UCS("firstLineNumber") );
+		fields.push_back( C("firstLineNumber") );
 		values.addInt64( o->getLastLineNumber() );
-		fields.push_back( UCS("lastLineNumber") );
+		fields.push_back( C("lastLineNumber") );
 		values.addInt64( o->getAddress() );
-		fields.push_back( UCS("address") );
+		fields.push_back( C("address") );
 		if ( !o->isNullDebugTypeInfo() && typename _DebugTypeInfo<EncodingT>::DebugTypeInfoIDEquality(-1)(o->getDebugTypeInfo()) ) {
 			m_logger->errorStream() << "idReturnType : Identifier is null.";
 			throw InvalidQueryException("idReturnType : Identifier is null.");
 		}
 		else if ( !o->isNullDebugTypeInfo() ) {
 			values.addInt64( o->getDebugTypeInfo()->getIdentifier() );
-			fields.push_back( UCS("idReturnType") );
+			fields.push_back( C("idReturnType") );
 		}
 		else {
 			m_logger->errorStream() << "idReturnType : null reference is forbidden.";
@@ -600,19 +600,19 @@ _DebugFunctionInfoAccess<EncodingT>::insertDebugFunctionInfo(boost::shared_ptr< 
 		}
 		else if ( !o->isNullDebugFileInfo() ) {
 			values.addInt64( o->getDebugFileInfo()->getIdentifier() );
-			fields.push_back( UCS("idDebugFile") );
+			fields.push_back( C("idDebugFile") );
 		}
 		else {
 			m_logger->errorStream() << "idDebugFile : null reference is forbidden.";
 			throw InvalidQueryException("idDebugFile : null reference is forbidden.");
 		}
-		statement.swap( connection->insert(UCS("debugFunctionInfo"), fields) );
+		statement.swap( connection->insert(C("debugFunctionInfo"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("debugFunctionInfo"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, C("debugFunctionInfo"), o);
 		typename _DebugFunctionInfo<EncodingT>::DebugVariableInfoIterator debugVariableInfo;
 		for ( debugVariableInfo=o->getDebugVariableInfosBeginning(); debugVariableInfo!=o->getDebugVariableInfosEnd(); ++debugVariableInfo ) {
 			(*debugVariableInfo)->setDebugFunctionInfo(o);
@@ -670,12 +670,12 @@ _DebugFunctionInfoAccess<EncodingT>::deleteDebugFunctionInfo(boost::shared_ptr< 
 			(*debugVariableInfo)->eraseDebugFunctionInfo();
 			debugVariableInfoAccess->updateDebugVariableInfo(*debugVariableInfo);
 		}
-		statement.swap( connection->deleteFrom(UCS("debugFunctionInfo"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+		statement.swap( connection->deleteFrom(C("debugFunctionInfo"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("debugFunctionInfo"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, C("debugFunctionInfo"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

@@ -1,3 +1,4 @@
+DROP TABLE rule;
 DROP TABLE cppFile;
 DROP TABLE cppFileType;
 DROP TABLE cppInclude;
@@ -32,6 +33,16 @@ content         TEXT              NOT NULL);
 
 -- Creation Table
 --________________
+
+-- rule table represents a static analysis rule.
+
+CREATE TABLE rule (
+identifier    INTEGER             NOT NULL,
+number        INTEGER             NOT NULL,
+description   VARCHAR(512)        NOT NULL,
+enabled       INTEGER             NOT NULL,
+
+CONSTRAINT PK_RULE          PRIMARY KEY(identifier));
 
 -- cppFileType table represents a type of file : header or source.
 

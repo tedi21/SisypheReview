@@ -1,6 +1,6 @@
-#include "dataconnection.hpp"
-#include "dataparameters.hpp"
-#include "datastatement.hpp"
+#include "DataConnection.hpp"
+#include "DataParameters.hpp"
+#include "DataStatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,9 +56,9 @@ _DebugErrorInfoAccess<EncodingT>::getManyDebugErrorInfos(typename EncodingT::str
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("callStack"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("debugErrorInfo")), filter) );
+	columns.push_back(C("identifier"));
+	columns.push_back(C("callStack"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("debugErrorInfo")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t callStack;
@@ -88,7 +88,7 @@ _DebugErrorInfoAccess<EncodingT>::getOneDebugErrorInfo(long long identifier) con
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _DebugErrorInfo<EncodingT> > > result = getManyDebugErrorInfos(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/);
+	std::vector< boost::shared_ptr< _DebugErrorInfo<EncodingT> > > result = getManyDebugErrorInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -108,8 +108,8 @@ _DebugErrorInfoAccess<EncodingT>::selectManyDebugErrorInfos(typename EncodingT::
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("identifier"));
-	columns.push_back(UCS("callStack"));
+	columns.push_back(C("identifier"));
+	columns.push_back(C("callStack"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -118,7 +118,7 @@ _DebugErrorInfoAccess<EncodingT>::selectManyDebugErrorInfos(typename EncodingT::
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("debugErrorInfo")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("debugErrorInfo")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long identifier;
 		typename EncodingT::string_t callStack;
@@ -150,7 +150,7 @@ _DebugErrorInfoAccess<EncodingT>::selectOneDebugErrorInfo(long long identifier, 
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _DebugErrorInfo<EncodingT> > > result = selectManyDebugErrorInfos(UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _DebugErrorInfo<EncodingT> > > result = selectManyDebugErrorInfos(C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -245,15 +245,15 @@ _DebugErrorInfoAccess<EncodingT>::updateDebugErrorInfo(boost::shared_ptr< _Debug
 	try {
 		if ( (*save)->getCallStack() != o->getCallStack() ) {
 			values.addText( o->getCallStack() );
-			fields.push_back( UCS("callStack") );
+			fields.push_back( C("callStack") );
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(UCS("debugErrorInfo"), fields, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+			statement.swap( connection->update(C("debugErrorInfo"), fields, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("debugErrorInfo"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, C("debugErrorInfo"), o);
 		}
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
@@ -291,18 +291,18 @@ _DebugErrorInfoAccess<EncodingT>::insertDebugErrorInfo(boost::shared_ptr< _Debug
 			connection->startTransaction();
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
-		int id = connection->selectMaxID(UCS("identifier"), UCS("debugErrorInfo"))+1;
+		int id = connection->selectMaxID(C("identifier"), C("debugErrorInfo"))+1;
 		values.addInt( id );
-		fields.push_back( UCS("identifier") );
+		fields.push_back( C("identifier") );
 		values.addText( o->getCallStack() );
-		fields.push_back( UCS("callStack") );
-		statement.swap( connection->insert(UCS("debugErrorInfo"), fields) );
+		fields.push_back( C("callStack") );
+		statement.swap( connection->insert(C("debugErrorInfo"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		o->setIdentifier(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("debugErrorInfo"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, C("debugErrorInfo"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
@@ -343,12 +343,12 @@ _DebugErrorInfoAccess<EncodingT>::deleteDebugErrorInfo(boost::shared_ptr< _Debug
 		throw UnSelectedObjectException("You must select object before deletion.");
 	}
 	try {
-		statement.swap( connection->deleteFrom(UCS("debugErrorInfo"), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
+		statement.swap( connection->deleteFrom(C("debugErrorInfo"), C("identifier = ") /*+ C("\'") */+ C(ToString::parse(o->getIdentifier()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("debugErrorInfo"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, C("debugErrorInfo"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

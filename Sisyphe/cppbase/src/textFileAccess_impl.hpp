@@ -1,6 +1,6 @@
-#include "dataconnection.hpp"
-#include "dataparameters.hpp"
-#include "datastatement.hpp"
+#include "DataConnection.hpp"
+#include "DataParameters.hpp"
+#include "DataStatement.hpp"
 #include "NullPointerException.hpp"
 #include "NoSqlRowException.hpp"
 #include "UnIdentifiedObjectException.hpp"
@@ -56,9 +56,9 @@ _TextFileAccess<EncodingT>::getManyTextFiles(typename EncodingT::string_t const&
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("rowid"));
-	columns.push_back(UCS("content"));
-	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("textFile")), filter) );
+	columns.push_back(C("rowid"));
+	columns.push_back(C("content"));
+	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,C("textFile")), filter) );
 	while( statement.executeStep() ) {
 		long long rowid;
 		typename EncodingT::string_t content;
@@ -88,7 +88,7 @@ _TextFileAccess<EncodingT>::getOneTextFile(long long rowid) const
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > result = getManyTextFiles(UCS("rowid = ") /*+ UCS("\'") */+ C(ToString::parse(rowid))/* + UCS("\'")*/);
+	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > result = getManyTextFiles(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -108,8 +108,8 @@ _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t con
 		throw NullPointerException("DB connection is not initialized.");   
 	}
 	std::vector<typename EncodingT::string_t> columns;                   
-	columns.push_back(UCS("rowid"));
-	columns.push_back(UCS("content"));
+	columns.push_back(C("rowid"));
+	columns.push_back(C("content"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -118,7 +118,7 @@ _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t con
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 	}
-	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,UCS("textFile")), filter, nowait) );
+	statement.swap( connection->selectForUpdate(columns, std::vector<typename EncodingT::string_t>(1,C("textFile")), filter, nowait) );
 	while( statement.executeStep() ) {
 		long long rowid;
 		typename EncodingT::string_t content;
@@ -150,7 +150,7 @@ _TextFileAccess<EncodingT>::selectOneTextFile(long long rowid, bool nowait, bool
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > result = selectManyTextFiles(UCS("rowid = ") /*+ UCS("\'") */+ C(ToString::parse(rowid))/* + UCS("\'")*/, nowait, addition);
+	std::vector< boost::shared_ptr< _TextFile<EncodingT> > > result = selectManyTextFiles(C("rowid = ") /*+ C("\'") */+ C(ToString::parse(rowid))/* + C("\'")*/, nowait, addition);
 	if (result.size()==0) {
 		m_logger->errorStream() << "identifier not found.";
 		throw NoSqlRowException("identifier not found.");
@@ -216,7 +216,7 @@ template<class EncodingT>
 void
 _TextFileAccess<EncodingT>::fillOneCppFile(boost::shared_ptr< _TextFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyCppFiles(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
+	fillManyCppFiles(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -237,9 +237,9 @@ _TextFileAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _TextFile<Encodi
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _CppFile<EncodingT> > > tab;
-	typename EncodingT::string_t cppFileFilter = UCS("idText = ") + C(ToString::parse(o->getRowid()));
+	typename EncodingT::string_t cppFileFilter = C("idText = ") + C(ToString::parse(o->getRowid()));
 	if (!filter.empty()) {
-		cppFileFilter += UCS(" AND ") + filter;
+		cppFileFilter += C(" AND ") + filter;
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
 	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
@@ -268,7 +268,7 @@ template<class EncodingT>
 void
 _TextFileAccess<EncodingT>::fillOneDebugFileInfo(boost::shared_ptr< _TextFile<EncodingT> > o, long long identifier, bool nowait)  
 {
-	fillManyDebugFileInfos(o, UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(identifier))/* + UCS("\'")*/, nowait);
+	fillManyDebugFileInfos(o, C("identifier = ") /*+ C("\'") */+ C(ToString::parse(identifier))/* + C("\'")*/, nowait);
 }
 
 template<class EncodingT>
@@ -289,9 +289,9 @@ _TextFileAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_ptr< _TextFile<
 		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
 	std::vector< boost::shared_ptr< _DebugFileInfo<EncodingT> > > tab;
-	typename EncodingT::string_t debugFileInfoFilter = UCS("idText = ") + C(ToString::parse(o->getRowid()));
+	typename EncodingT::string_t debugFileInfoFilter = C("idText = ") + C(ToString::parse(o->getRowid()));
 	if (!filter.empty()) {
-		debugFileInfoFilter += UCS(" AND ") + filter;
+		debugFileInfoFilter += C(" AND ") + filter;
 	}
 	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
 	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
@@ -417,7 +417,7 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 	try {
 		if ( (*save)->getContent() != o->getContent() ) {
 			values.addText( o->getContent() );
-			fields.push_back( UCS("content") );
+			fields.push_back( C("content") );
 		}
 		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToAdd;
 		std::vector< boost::shared_ptr< _CppFile<EncodingT> > > listOfCppFileToUpdate;
@@ -478,12 +478,12 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 			}
 		}
 		if (!fields.empty()) {
-			statement.swap( connection->update(UCS("textFile"), fields, UCS("rowid = ") /*+ UCS("\'") */+ C(ToString::parse(o->getRowid()))/* + UCS("\'")*/) );
+			statement.swap( connection->update(C("textFile"), fields, C("rowid = ") /*+ C("\'") */+ C(ToString::parse(o->getRowid()))/* + C("\'")*/) );
 			if ( !values.fill(statement) || !statement.executeQuery() ) {
 				m_logger->fatalStream() << "invalid query.";
 				throw InvalidQueryException("invalid query.");
 			}
-			m_updateSignal(OPERATION_ACCESS_UPDATE, UCS("textFile"), o);
+			m_updateSignal(OPERATION_ACCESS_UPDATE, C("textFile"), o);
 		}
 		for ( cppFile=listOfCppFileToAdd.begin(); cppFile!=listOfCppFileToAdd.end() ; ++cppFile ) {
 			cppFileAccess->insertCppFile(*cppFile);
@@ -550,15 +550,15 @@ _TextFileAccess<EncodingT>::insertTextFile(boost::shared_ptr< _TextFile<Encoding
 			m_transactionSignal(OPERATION_ACCESS_START);
 		}
 		values.addText( o->getContent() );
-		fields.push_back( UCS("content") );
-		statement.swap( connection->insert(UCS("textFile"), fields) );
+		fields.push_back( C("content") );
+		statement.swap( connection->insert(C("textFile"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
 		int id = connection->getLastInsertID();
 		o->setRowid(id);
-		m_insertSignal(OPERATION_ACCESS_INSERT, UCS("textFile"), o);
+		m_insertSignal(OPERATION_ACCESS_INSERT, C("textFile"), o);
 		typename _TextFile<EncodingT>::CppFileIterator cppFile;
 		for ( cppFile=o->getCppFilesBeginning(); cppFile!=o->getCppFilesEnd(); ++cppFile ) {
 			(*cppFile)->setTextFile(o);
@@ -629,12 +629,12 @@ _TextFileAccess<EncodingT>::deleteTextFile(boost::shared_ptr< _TextFile<Encoding
 		for ( debugFileInfo=o->getDebugFileInfosBeginning(); debugFileInfo!=o->getDebugFileInfosEnd(); ++debugFileInfo ) {
 			debugFileInfoAccess->deleteDebugFileInfo(*debugFileInfo);
 		}
-		statement.swap( connection->deleteFrom(UCS("textFile"), UCS("rowid = ") /*+ UCS("\'") */+ C(ToString::parse(o->getRowid()))/* + UCS("\'")*/) );
+		statement.swap( connection->deleteFrom(C("textFile"), C("rowid = ") /*+ C("\'") */+ C(ToString::parse(o->getRowid()))/* + C("\'")*/) );
 		if ( !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
 			throw InvalidQueryException("invalid query.");
 		}
-		m_deleteSignal(OPERATION_ACCESS_DELETE, UCS("textFile"), o);
+		m_deleteSignal(OPERATION_ACCESS_DELETE, C("textFile"), o);
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;

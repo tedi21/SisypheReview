@@ -25,7 +25,7 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::clo
 template <class EncodingT>
 typename EncodingT::string_t CppIncludeInterpreterAccess<EncodingT>::getClassName() const
 {
-	return UCS("CppIncludeAccess");
+	return C("CppIncludeAccess");
 }
 
 template <class EncodingT>
@@ -36,8 +36,8 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::inv
 	ParameterArray args, ret;
 	if (check_parameters_array(params, args))
 	{
-		if (tryInvoke(this, UCS("CppIncludeAccess"), method, args, ret) ||
-			tryInvoke(this, UCS("Base"), method, args, ret))
+		if (tryInvoke(this, C("CppIncludeAccess"), method, args, ret) ||
+			tryInvoke(this, C("Base"), method, args, ret))
 		{
 			find_parameter(ret, FACTORY_RETURN_PARAMETER, obj);
 			for (size_t i = 0; i < params.size(); ++i)
