@@ -8,7 +8,7 @@
     $scope.console = { text : ''};
     var sourceText = '// Paste your source code and click button Check';
     var headerText = '// Paste your header code and click button Check';
-    $scope.content0 = headerText;
+    $scope.content0 = sourceText;
     $scope.content1 = sourceText;
     $scope.checking = false;
 
