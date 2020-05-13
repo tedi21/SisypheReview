@@ -69,7 +69,13 @@ Category* initialize_log(const char* name, int verbose)
     return main_cat;
 }
 
-std::wstring tdscript(const std::wstring& text)
+
+struct Content {
+    std::wstring text;
+    unsigned int type;
+};
+
+std::wstring tdscript(const std::vector<Content>& contents)
 { 
     std::wstring result;  
     Category* logger = Category::exists(LOGNAME);
@@ -96,7 +102,15 @@ std::wstring tdscript(const std::wstring& text)
     {
         logger->infoStream() << "Script parsed";
         Context<ucs> c;
-        c.add(L"TEXT", boost::shared_ptr<Base<ucs>>(new String<ucs>(text)));
+        boost::shared_ptr<Array<ucs>> arr(new Array<ucs>());
+        for (auto it = contents.begin(); it != contents.end(); ++it)
+        {
+            boost::shared_ptr<Structure<ucs>> str(new Structure<ucs>());
+            str->insertField(L"Text", boost::shared_ptr<Base<ucs>>(new String<ucs>(it->text)));
+            str->insertField(L"Type", boost::shared_ptr<Base<ucs>>(new Numeric<ucs>(it->type)));
+            arr->addValue(str);
+        }
+        c.add(L"FILES", arr);
         a->interpret(c);
         for (Context<ucs>::iterator_t i = c.begin(); i != c.end(); ++i)
         {
@@ -115,5 +129,11 @@ std::wstring tdscript(const std::wstring& text)
 
 
 EMSCRIPTEN_BINDINGS(module) {
-  emscripten::function("tdscript", &tdscript);
+    emscripten::value_object<Content>("Content")
+        .field("Text", &Content::text)
+        .field("Type", &Content::type);
+
+    emscripten::register_vector<Content>("VectorContent");
+
+    emscripten::function("tdscript", &tdscript);
 }

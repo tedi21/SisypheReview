@@ -6,8 +6,14 @@
   sisypheApp.controller('testerCtrl', ['$q', '$window', '$scope', '$timeout', '$uibModal', 'sisypheFactory', function ($q, $window, $scope, $timeout, $uibModal, sisypheFactory) {
 
     $scope.console = { text : ''};
-    $scope.content = '// Paste your code and click button Check';
+    var sourceText = '// Paste your source code and click button Check';
+    var headerText = '// Paste your header code and click button Check';
+    $scope.content0 = headerText;
+    $scope.content1 = sourceText;
     $scope.checking = false;
+
+    $scope.types = ['source', 'header', 'header+source'];
+    $scope.type = 'source';
 
     // init btn view details : unfolded by default
     $scope.btnViewDetailsIcon = 'unfolded';
@@ -43,6 +49,19 @@
       });
     };
 
+    $scope.typeClicked = function (text) {
+      $scope.type = text;
+      if ($scope.type == 'source' && 
+          $scope.content0 == headerText) {
+        $scope.content0 = sourceText;
+      }
+      if (($scope.type == 'header+source' ||
+           $scope.type == 'header') && 
+          $scope.content0 == sourceText) {
+        $scope.content0 = headerText;
+      }
+    };
+
     $scope.filterIconClicked = function () {
       sisypheFactory.helpHtml.then(function(html){
         var modalInstance = $uibModal.open({
@@ -73,16 +92,22 @@
       if (item.clicked === true) {
         var lineNumber = item.lineNumber;
         // set scrollbar position (- 5 lines to see previous content)
-        var lines = lineNumber - 1 - 5;
-        var pos = Math.floor(5 + 20 * lines);
-        $scope.editor.scrollTo(null, pos);
+        //var lines = lineNumber - 1 - 5;
+        //var pos = Math.floor(5 + 20 * lines);
+        //$scope.editor.scrollTo(null, pos);
+        var a1 = {line: lineNumber-1, ch: 0 };
+        var a2 = {line: lineNumber-1, ch: Number.MAX_VALUE };
+        if (item.icontent == 0)
+          $scope.editor0.setSelection(a1, a2);
+        else
+          $scope.editor1.setSelection(a1, a2);
       }
     };
 
-    var reviewCode = function(text) {
+    var reviewCode = function(vec) {
       var deferred = $q.defer();
       $timeout(function () {
-        var out = $window.Module.tdscript(text); 
+        var out = $window.Module.tdscript(vec); 
         deferred.resolve(out);
       }, 100);
       return deferred.promise;
@@ -90,7 +115,17 @@
 
     $scope.checkClicked = function() {
       $scope.checking = true;
-      reviewCode($scope.content)
+      var vec = new $window.Module.VectorContent();
+      if ($scope.type != 'header+source') {
+        var nType = 2;
+        if ($scope.type == 'header') nType = 1;
+        vec.push_back({Text: $scope.content0, Type: nType});
+      }
+      else {
+        vec.push_back({Text: $scope.content0, Type: 1});
+        vec.push_back({Text: $scope.content1, Type: 2});
+      }
+      reviewCode(vec)
         .then(function(errors){
           var filter = {'list': []};
           //console.log(errors);
@@ -100,16 +135,19 @@
             if (error[0].length > 0) {
               filter.list.push(
                 {
-                  start : error[0],
-                  lineNumber : error[1],
-                  category : error[2],
-                  description : error[3]
+                  icontent: error[0],
+                  start : error[1],
+                  lineNumber : error[2],
+                  category : error[3],
+                  description : error[4]
                 }
               );
             }
           }
           filter.list.sort(function(a, b){
-            return a.start - b.start;
+            var d = a.icontent - b.icontent;
+            if (d == 0) d = a.start - b.start
+            return d;
           });
           $scope.currentFilter = filter;
           $scope.active = 1;
@@ -117,8 +155,12 @@
         });
     };
 
-    $scope.codemirrorLoaded = function(_editor){
-      $scope.editor = _editor;
+    $scope.codemirror0Loaded = function(_editor){
+      $scope.editor0 = _editor;
+    };
+
+    $scope.codemirror1Loaded = function(_editor){
+      $scope.editor1 = _editor;
     };
 
     var loadScript = function(url, type, charset, async) {

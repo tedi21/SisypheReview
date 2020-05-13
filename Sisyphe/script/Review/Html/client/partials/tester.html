@@ -23,16 +23,31 @@
 
   <div id="view">
     <div id="main-panel">
-      <div class="code-area" ng-model="content" ui-codemirror="{
-        lineNumbers: true,
-        matchBrackets: true,
-        mode: 'text/x-c++src',
-        onLoad : codemirrorLoaded
-      }" ></div>
+      <div class="code-area">
+        <div class="code-content" ng-model="content0" ui-codemirror="{
+          lineNumbers: true,
+          matchBrackets: true,
+          mode: 'text/x-c++src',
+          onLoad : codemirror0Loaded
+        }" ></div>
+        <div class="code-content" ng-model="content1" ng-show="type=='header+source'" ui-codemirror="{
+          lineNumbers: true,
+          matchBrackets: true,
+          mode: 'text/x-c++src',
+          onLoad : codemirror1Loaded
+        }" ></div>
+      </div>
       <div class="command-group">
-        <button type="button" class="btn btn-success" ng-click="checkClicked()" ng-disabled="checking">
-          Check
-          <div ng-show="checking" class="glyphicon glyphicon-refresh glyphicon-spin"></div>
+        <div class="command dropdown" uib-dropdown>
+          <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown" uib-dropdown-toggle>
+            <div class="glyphicon glyphicon-th-list"></div> Type: {{type}} <div class="caret"></div>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu>
+            <li class="list-cursor" ng-repeat="typeName in types"><a ng-click="typeClicked(typeName)">{{typeName}}</a></li>
+          </ul>
+        </div>
+        <button type="button" class="command btn btn-success" ng-click="checkClicked()" ng-disabled="checking">
+          Check<div ng-show="checking" class="glyphicon glyphicon-refresh glyphicon-spin"></div>
         </button>
       </div>
       <div id="bottom-panel">

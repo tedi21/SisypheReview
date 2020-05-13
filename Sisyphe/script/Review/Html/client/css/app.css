@@ -301,14 +301,24 @@ pre  {
 }
 
 .command-group {
-  display:table;
+  display: flex;
+  flex-direction: row;
+}
+
+.command {
   margin: 5px 20px;
 }
 
 .code-area {
   flex:1;
+  display: flex;
+  flex-direction: row;
+  overflow:auto;
+}
+
+.code-content {
   margin:0px;
   padding:0px;
   overflow:auto;
-  width: 100%;
+  flex:1;
 }
