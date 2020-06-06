@@ -452,7 +452,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
     static const typename EncodingT::string_t PROTECTED_KEYWORD = UCS("protected");
     static const typename EncodingT::string_t PUBLIC_KEYWORD = UCS("public");
     static const std::set<typename EncodingT::string_t> SPEC_KEYWORDS = {
-            UCS("alignas"), UCS("__declspec")
+            UCS("alignas"), UCS("__declspec"), UCS("__attribute__")
     };
     if (flags_test(flags, FLAGS::IN_CLASS_DECL))
     {
@@ -520,7 +520,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
     {
         if (flags_test(flags, FLAGS::IN_CLASS_END))
         {
-            if ((i > 0U) && (mContent[i - 1] == ';'))
+            if ((i > 0U) && (mContent[i - 1] == ';') && (mContent[i] != ')'))
             {
                 flags_reset(flags, FLAGS::IN_CLASS_END);
                 size_t start = mClassStart.back();
