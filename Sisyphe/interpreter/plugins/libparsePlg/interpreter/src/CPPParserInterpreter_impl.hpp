@@ -520,7 +520,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
     {
         if (flags_test(flags, FLAGS::IN_CLASS_END))
         {
-            if ((i > 0U) && (mContent[i - 1] == ';') && (mContent[i] != ')'))
+            if ((i > 0U) && (mContent[i - 1] == ';'))
             {
                 flags_reset(flags, FLAGS::IN_CLASS_END);
                 size_t start = mClassStart.back();
@@ -552,7 +552,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
         {
             if (flags_test(flags, FLAGS::IN_CLASS_DECL_SPEC))
             {
-                if ((i > 0U) && (mContent[i - 1] == ')'))
+                if ((i > 0U) && (mContent[i - 1] == ')') && (mContent[i] != ')'))
                 {
                     flags_reset(flags, FLAGS::IN_CLASS_DECL_SPEC);
                 }
