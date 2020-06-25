@@ -21,7 +21,8 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 				boost::shared_ptr< Base<EncodingT> > const& ruleNumber,
 				boost::shared_ptr< Base<EncodingT> > const& lineNumber,
 				boost::shared_ptr< Base<EncodingT> > const& startBlock,
-				boost::shared_ptr< Base<EncodingT> > const& lengthBlock)
+				boost::shared_ptr< Base<EncodingT> > const& lengthBlock,
+				boost::shared_ptr< Base<EncodingT> > const& isNew)
 {
 	typename EncodingT::string_t nativeDescription;
 	typename EncodingT::string_t nativeCategory;
@@ -29,19 +30,22 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 	long long nativeLineNumber;
 	long long nativeStartBlock;
 	long long nativeLengthBlock;
+	long long nativeIsNew;
 	if (check_string<EncodingT>(description, nativeDescription) &&
 		check_string<EncodingT>(category, nativeCategory) &&
 		check_numeric_i(ruleNumber, nativeRuleNumber) &&
 		check_numeric_i(lineNumber, nativeLineNumber) &&
 		check_numeric_i(startBlock, nativeStartBlock) &&
-		check_numeric_i(lengthBlock, nativeLengthBlock))
+		check_numeric_i(lengthBlock, nativeLengthBlock) &&
+		check_numeric_i(isNew, nativeIsNew))
 	{
 		m_value = boost::make_shared< _CppNotice<EncodingT> >(nativeDescription,
 				nativeCategory,
 				nativeRuleNumber,
 				nativeLineNumber,
 				nativeStartBlock,
-				nativeLengthBlock);
+				nativeLengthBlock,
+				nativeIsNew);
 	}
 }
 
@@ -104,6 +108,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getLengthBlock() const
 {
 	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getLengthBlock()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getIsNew() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIsNew()) );
 }
 
 
@@ -187,6 +198,17 @@ void CppNoticeInterpreter<EncodingT>::setLengthBlock(boost::shared_ptr< Base<Enc
 	if (check_numeric_i(lengthBlock, nativeLengthBlock))
 	{
 		m_value->setLengthBlock(nativeLengthBlock);
+	}
+}
+
+
+template <class EncodingT>
+void CppNoticeInterpreter<EncodingT>::setIsNew(boost::shared_ptr< Base<EncodingT> > const& isNew)
+{
+	long long nativeIsNew;
+	if (check_numeric_i(isNew, nativeIsNew))
+	{
+		m_value->setIsNew(nativeIsNew);
 	}
 }
 

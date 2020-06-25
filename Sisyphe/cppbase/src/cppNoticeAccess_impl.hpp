@@ -63,6 +63,7 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 	columns.push_back(UCS("lineNumber"));
 	columns.push_back(UCS("startBlock"));
 	columns.push_back(UCS("lengthBlock"));
+	columns.push_back(UCS("isNew"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppNotice")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
@@ -72,13 +73,15 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 		long long lineNumber;
 		long long startBlock;
 		long long lengthBlock;
+		long long isNew;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, description ) &&
 			statement.getText( 2, category ) &&
 			statement.getInt64( 3, ruleNumber ) &&
 			statement.getInt64( 4, lineNumber ) &&
 			statement.getInt64( 5, startBlock ) &&
-			statement.getInt64( 6, lengthBlock )) {
+			statement.getInt64( 6, lengthBlock ) &&
+			statement.getInt64( 7, isNew )) {
 			value.reset(new _CppNotice<EncodingT>(
 				identifier,
 				description,
@@ -86,7 +89,8 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 				ruleNumber,
 				lineNumber,
 				startBlock,
-				lengthBlock));
+				lengthBlock,
+				isNew));
 			tab.push_back(value);
 		}
 	}
@@ -135,6 +139,7 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 	columns.push_back(UCS("lineNumber"));
 	columns.push_back(UCS("startBlock"));
 	columns.push_back(UCS("lengthBlock"));
+	columns.push_back(UCS("isNew"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -152,13 +157,15 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 		long long lineNumber;
 		long long startBlock;
 		long long lengthBlock;
+		long long isNew;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, description ) &&
 			statement.getText( 2, category ) &&
 			statement.getInt64( 3, ruleNumber ) &&
 			statement.getInt64( 4, lineNumber ) &&
 			statement.getInt64( 5, startBlock ) &&
-			statement.getInt64( 6, lengthBlock )) {
+			statement.getInt64( 6, lengthBlock ) &&
+			statement.getInt64( 7, isNew )) {
 			tab.push_back(boost::shared_ptr< _CppNotice<EncodingT> >(new _CppNotice<EncodingT>(
 				identifier,
 				description,
@@ -166,7 +173,8 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 				ruleNumber,
 				lineNumber,
 				startBlock,
-				lengthBlock)));
+				lengthBlock,
+				isNew)));
 		}
 	}
 	if (tab.empty()) {
@@ -298,6 +306,7 @@ _CppNoticeAccess<EncodingT>::isModifiedCppNotice(boost::shared_ptr< _CppNotice<E
 	bUpdate = bUpdate || ((*save)->getLineNumber() != o->getLineNumber());
 	bUpdate = bUpdate || ((*save)->getStartBlock() != o->getStartBlock());
 	bUpdate = bUpdate || ((*save)->getLengthBlock() != o->getLengthBlock());
+	bUpdate = bUpdate || ((*save)->getIsNew() != o->getIsNew());
 	bUpdate = bUpdate || (!(*save)->isNullCppFile() && !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(*save)->getCppFile())(o->getCppFile()))
 		|| ((*save)->isNullCppFile() && !o->isNullCppFile()) 
 		|| (!(*save)->isNullCppFile() && o->isNullCppFile());
@@ -354,6 +363,10 @@ _CppNoticeAccess<EncodingT>::updateCppNotice(boost::shared_ptr< _CppNotice<Encod
 		if ( (*save)->getLengthBlock() != o->getLengthBlock() ) {
 			values.addInt64( o->getLengthBlock() );
 			fields.push_back( UCS("lengthBlock") );
+		}
+		if ( (*save)->getIsNew() != o->getIsNew() ) {
+			values.addInt64( o->getIsNew() );
+			fields.push_back( UCS("isNew") );
 		}
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
@@ -438,6 +451,8 @@ _CppNoticeAccess<EncodingT>::insertCppNotice(boost::shared_ptr< _CppNotice<Encod
 		fields.push_back( UCS("startBlock") );
 		values.addInt64( o->getLengthBlock() );
 		fields.push_back( UCS("lengthBlock") );
+		values.addInt64( o->getIsNew() );
+		fields.push_back( UCS("isNew") );
 		statement.swap( connection->insert(UCS("cppNotice"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";

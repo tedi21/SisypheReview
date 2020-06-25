@@ -20,11 +20,12 @@ var = new CppNotice();
 * Numeric : La valeur de la colonne lineNumber.
 * Numeric : La valeur de la colonne startBlock.
 * Numeric : La valeur de la colonne lengthBlock.
+* Numeric : La valeur de la colonne isNew.
 
 *Description*
 * Crée une instance de la classe CppNotice.
 ```
-var = new CppNotice(description, category, ruleNumber, lineNumber, startBlock, lengthBlock);
+var = new CppNotice(description, category, ruleNumber, lineNumber, startBlock, lengthBlock, isNew);
 ```
 
 ## Méthode Identifier
@@ -116,6 +117,19 @@ val = var.StartBlock;
 * Retourne la colonne LengthBlock.
 ```
 val = var.LengthBlock;
+```
+
+## Méthode IsNew
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isNew.
+
+*Description*
+* Retourne la colonne IsNew.
+```
+val = var.IsNew;
 ```
 
 ## Méthode CppFile
@@ -220,6 +234,19 @@ var.StartBlock(startBlock);
 * Définit la colonne lengthBlock.
 ```
 var.LengthBlock(lengthBlock);
+```
+
+## Méthode IsNew
+*Paramètres*
+* Numeric : La valeur de la colonne isNew.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isNew.
+```
+var.IsNew(isNew);
 ```
 
 ## Méthode HasCppFile
