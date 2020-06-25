@@ -174,6 +174,10 @@ pre  {
   margin-left: 5px;
 }
 
+.filter-label {
+  margin: 10px 5px;
+}
+
 .table-fixed  {
   flex:1;
   overflow-y:auto;
@@ -322,3 +326,18 @@ pre  {
   overflow:auto;
   flex:1;
 }
+
+.text-align-center {
+  text-align: center;
+}
+
+.pagination-select {
+  width: auto; 
+  margin: 20px;
+}
+
+.inactiveLink {
+   pointer-events: none;
+   cursor: default;
+}
+

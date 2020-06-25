@@ -14,6 +14,10 @@
         templateUrl: 'partials/tester.html',
         controller: 'testerCtrl'
       }).
+      when('/sqlFilter', {
+        templateUrl: 'partials/sqlFilter.html',
+        controller: 'sqlFilterCtrl'
+      }).
       otherwise({
         redirectTo: '/'
       });

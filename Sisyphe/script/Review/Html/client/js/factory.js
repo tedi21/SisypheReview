@@ -20,6 +20,13 @@
           {method: 'get', url: 'partials/help.html'}
         ),
 
+        // Return help page
+        // No parameter
+        // Return help html page
+        helpSQL: $http(
+          {method: 'get', url: 'partials/sql.html'}
+        ),
+
         // Return load page
         // No parameter
         // Return load html page
@@ -49,7 +56,20 @@
         // return Json structure {name, list}
         fileEntities: $resource('json/:filterName:sep:fileId.json', {fileId: '@fileId', filterName: '@filterName', sep:'_'}, {
           query: {method: 'get', isArray: false}
-        })
+        }),
+
+
+        // Return the db
+        // No parameter
+        // Return List [] of bytes
+		db: $resource('db/cppbase.db', {}, {
+          query: {
+		    responseType: 'arraybuffer',
+            transformResponse: function(data, headersGetter) {
+              return { data : data };
+            }
+          }
+		})
 
       };
   }]);

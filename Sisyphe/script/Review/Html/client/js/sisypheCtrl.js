@@ -14,7 +14,7 @@
     $scope.isCollapsed = false;
     
     // init filters
-    $scope.filters = ['Errors', 'Search', 'Diff', 'Tester'];
+    $scope.filters = ['Errors', 'Search', 'Diff', 'Tester', 'sqlFilter'];
     $scope.currentFilter = {'name': 'Errors', 'list': []};
     
     var filter_diff_files = function (files) {
@@ -115,6 +115,9 @@
       clearSelection();
       if (filter == 'Tester') {
         $location.path("/tester");
+      }
+      else if (filter == 'sqlFilter') {
+        $location.path("/sqlFilter");
       }
       else if (($scope.currentFilter.name == 'Diff' || filter == 'Diff') && 
           ($scope.currentFilter.name != filter)) {
