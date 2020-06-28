@@ -269,6 +269,7 @@ idFile          INTEGER           NOT NULL,
 lineNumber      INTEGER           NOT NULL,
 startBlock      INTEGER,
 lengthBlock     INTEGER,
+isNew           INTEGER,
 
 CONSTRAINT PK_NOTICE       PRIMARY KEY(identifier),
 CONSTRAINT FK_NOTICE_FILE  FOREIGN KEY(idFile) REFERENCES cppFile(identifier));

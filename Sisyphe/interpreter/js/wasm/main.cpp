@@ -156,7 +156,7 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 		data_access::UniDataConnection* connection = data_access::UniDataConnection::getInstance();
 		logger->debugStream() << "prepare sql query ";
 		std::vector<std::wstring> tables { L"cppFile f", L"cppNotice n" };
-		std::vector<std::wstring> columns { L"n.identifier", L"f.path", L"f.name", L"f.idType", L"f.linesCount", L"n.ruleNumber", L"n.category", L"n.description", L"n.lineNumber", L"n.startBlock" };
+		std::vector<std::wstring> columns { L"n.identifier", L"f.path", L"f.name", L"f.idType", L"f.linesCount", L"n.ruleNumber", L"n.category", L"n.description", L"n.lineNumber", L"n.startBlock", L"n.isNew" };
 		std::wstring query = L"f.identifier=n.idFile";
 		if (!expr.empty())
 		{
@@ -178,6 +178,7 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 			std::wstring description;
 			long long lineNumber;
 			long long startBlock;
+			long long isNew;
 			if (statement.getInt64( 0, identifier ) &&
 				statement.getText( 1, path ) &&				
 				statement.getText( 2, name ) &&
@@ -187,8 +188,9 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 				statement.getText( 6, category ) &&
 				statement.getText( 7, description ) &&
 				statement.getInt64( 8, lineNumber ) &&
-				statement.getInt64( 9, startBlock )) {
-				result += std::to_wstring(identifier) + L":|:" + path + L":|:" + name + L":|:" + std::to_wstring(type) + L":|:" + std::to_wstring(linesCount) + L":|:" + std::to_wstring(ruleNumber) + L":|:" +category + L":|:" + description + L":|:" + std::to_wstring(lineNumber) + L":|:" + std::to_wstring(startBlock) + L"\n";
+				statement.getInt64( 9, startBlock ) &&
+				statement.getInt64( 10, isNew )) {
+				result += std::to_wstring(identifier) + L":|:" + path + L":|:" + name + L":|:" + std::to_wstring(type) + L":|:" + std::to_wstring(linesCount) + L":|:" + std::to_wstring(ruleNumber) + L":|:" +category + L":|:" + description + L":|:" + std::to_wstring(lineNumber) + L":|:" + std::to_wstring(startBlock) + L":|:" + std::to_wstring(isNew) + L"\n";
 			}
 		}
 

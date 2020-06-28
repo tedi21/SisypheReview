@@ -72,7 +72,8 @@
 				category: item[6],
 				description: item[7],
 				lineNumber: item[8],
-				startBlock: item[9]
+				startBlock: item[9],
+				isNew: item[10]
 			  });
             }
           }

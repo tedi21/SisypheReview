@@ -62,7 +62,7 @@
         // Return the db
         // No parameter
         // Return List [] of bytes
-		db: $resource('db/cppbase.db', {}, {
+		db: $resource('json/cppbase.db', {}, {
           query: {
 		    responseType: 'arraybuffer',
             transformResponse: function(data, headersGetter) {

@@ -6,6 +6,7 @@ echo "constant docPath = \"./doc/\";" >> Project.td
 echo "constant projectName = \"project\";" >> Project.td
 echo "constant infoReview = \"\";" >> Project.td
 echo "constant jsonPath = \"./Html/client/json/\";" >> Project.td
+echo "constant dbFile = \"cppbase.db\";" >> Project.td
 echo "constant referenceDB = \"./reference/cppbase.db\";" >> Project.td
 echo "constant forceClean = true;" >> Project.td
 
