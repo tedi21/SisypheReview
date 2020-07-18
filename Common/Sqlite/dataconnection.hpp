@@ -134,6 +134,9 @@ public:
 
     void
     setPragma(typename EncodingT::string_t const& pragma);
+    
+    bool 
+    exec(typename EncodingT::string_t const& sql);
 };
 
 typedef _DataConnection<ucs>        UniDataConnection;

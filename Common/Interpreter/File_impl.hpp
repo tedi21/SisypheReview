@@ -245,10 +245,11 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > File<EncodingT>::load(boost::shared_ptr< Base<EncodingT> >& val)
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< String<EncodingT> > valPtr  = dynamic_pointer_cast< String<EncodingT> >(val);
         typename EncodingT::string_t text;
 
-        if (m_stream != nullptr && m_stream->is_open())
+        if (m_stream != nullptr && m_stream->is_open() && valPtr != nullptr)
         {
             std::vector<uint8_t> buffer;
             int start = 0, length = 0;
@@ -295,8 +296,8 @@ NAMESPACE_BEGIN(interp)
                 // Convert to Base64
                 text.assign(base64_text(buffer.begin()), base64_text(buffer.end()));
             }
-            val.reset(new String<EncodingT>(text));
-            res.reset(new Bool<EncodingT>(true));
+            valPtr->value(text);
+            res->value(true);
         }
         return res;
     }
@@ -304,7 +305,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > File<EncodingT>::save(boost::shared_ptr< Base<EncodingT> > const& val)
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         typename EncodingT::string_t text;
         if (check_string<EncodingT>(val, text))
         {
@@ -346,7 +347,7 @@ NAMESPACE_BEGIN(interp)
                 }
 
                 m_stream->write(buffer);
-                res.reset(new Bool<EncodingT>(true));
+                res->value(true);
             }
         }
         return res;
@@ -355,7 +356,7 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > File<EncodingT>::size()
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(0));
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>(0));
 
         if (m_stream != nullptr && m_stream->is_open())
         {
@@ -364,7 +365,7 @@ NAMESPACE_BEGIN(interp)
             m_stream->seekg (0, ios::end);
             length = m_stream->tellg();
             m_stream->seekg (0, ios::beg);
-            res.reset(new Numeric<EncodingT>(length));
+            res->LLvalue(length);
         }
 
         return res;

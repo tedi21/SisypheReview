@@ -21,11 +21,15 @@ var = new CppNotice();
 * Numeric : La valeur de la colonne startBlock.
 * Numeric : La valeur de la colonne lengthBlock.
 * Numeric : La valeur de la colonne isNew.
+* String : La valeur de la colonne commitHash.
+* String : La valeur de la colonne commitDate.
+* String : La valeur de la colonne commitAuthor.
+* Numeric : La valeur de la colonne commitLine.
 
 *Description*
 * Crée une instance de la classe CppNotice.
 ```
-var = new CppNotice(description, category, ruleNumber, lineNumber, startBlock, lengthBlock, isNew);
+var = new CppNotice(description, category, ruleNumber, lineNumber, startBlock, lengthBlock, isNew, commitHash, commitDate, commitAuthor, commitLine);
 ```
 
 ## Méthode Identifier
@@ -130,6 +134,58 @@ val = var.LengthBlock;
 * Retourne la colonne IsNew.
 ```
 val = var.IsNew;
+```
+
+## Méthode CommitHash
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne commitHash.
+
+*Description*
+* Retourne la colonne CommitHash.
+```
+val = var.CommitHash;
+```
+
+## Méthode CommitDate
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne commitDate.
+
+*Description*
+* Retourne la colonne CommitDate.
+```
+val = var.CommitDate;
+```
+
+## Méthode CommitAuthor
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne commitAuthor.
+
+*Description*
+* Retourne la colonne CommitAuthor.
+```
+val = var.CommitAuthor;
+```
+
+## Méthode CommitLine
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne commitLine.
+
+*Description*
+* Retourne la colonne CommitLine.
+```
+val = var.CommitLine;
 ```
 
 ## Méthode CppFile
@@ -247,6 +303,58 @@ var.LengthBlock(lengthBlock);
 * Définit la colonne isNew.
 ```
 var.IsNew(isNew);
+```
+
+## Méthode CommitHash
+*Paramètres*
+* String : La valeur de la colonne commitHash.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne commitHash.
+```
+var.CommitHash(commitHash);
+```
+
+## Méthode CommitDate
+*Paramètres*
+* String : La valeur de la colonne commitDate.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne commitDate.
+```
+var.CommitDate(commitDate);
+```
+
+## Méthode CommitAuthor
+*Paramètres*
+* String : La valeur de la colonne commitAuthor.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne commitAuthor.
+```
+var.CommitAuthor(commitAuthor);
+```
+
+## Méthode CommitLine
+*Paramètres*
+* Numeric : La valeur de la colonne commitLine.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne commitLine.
+```
+var.CommitLine(commitLine);
 ```
 
 ## Méthode HasCppFile

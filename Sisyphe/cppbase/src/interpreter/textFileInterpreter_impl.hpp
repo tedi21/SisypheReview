@@ -114,11 +114,11 @@ void TextFileInterpreter<EncodingT>::insertDebugFileInfo(boost::shared_ptr< Base
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getCppFile(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppFileInterpreter<EncodingT>());
+	boost::shared_ptr< CppFileInterpreter<EncodingT> > res(new CppFileInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppFileInterpreter<EncodingT>(m_value->getCppFileAt(nativePosition)));
+		res->value(m_value->getCppFileAt(nativePosition));
 	}
 	return res;
 }
@@ -127,11 +127,11 @@ boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getCppFile(
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreter<EncodingT>::getDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugFileInfoInterpreter<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugFileInfoInterpreter<EncodingT>(m_value->getDebugFileInfoAt(nativePosition)));
+		res->value(m_value->getDebugFileInfoAt(nativePosition));
 	}
 	return res;
 }

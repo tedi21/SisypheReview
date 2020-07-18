@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > TextFileInterpreterAccess<EncodingT>::getMa
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreterAccess<EncodingT>::getOneTextFile(boost::shared_ptr< Base<EncodingT> > const& rowid)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new TextFileInterpreter<EncodingT>());
+	boost::shared_ptr< TextFileInterpreter<EncodingT> > res(new TextFileInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeRowid;
 		if (check_numeric_i(rowid, nativeRowid))
 		{
-			res.reset(new TextFileInterpreter<EncodingT>(m_object->getOneTextFile(nativeRowid)));
+			res->value(m_object->getOneTextFile(nativeRowid));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreterAccess<EncodingT>::selectOneTextFile(boost::shared_ptr< Base<EncodingT> > const& rowid,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new TextFileInterpreter<EncodingT>());
+	boost::shared_ptr< TextFileInterpreter<EncodingT> > res(new TextFileInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > TextFileInterpreterAccess<EncodingT>::selec
 		if (check_numeric_i(rowid, nativeRowid) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new TextFileInterpreter<EncodingT>(m_object->selectOneTextFile(nativeRowid,
-				nativeNoWait)));
+			res->value(m_object->selectOneTextFile(nativeRowid,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -162,14 +162,14 @@ void TextFileInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreterAccess<EncodingT>::isSelectedTextFile(const boost::shared_ptr< Base<EncodingT> >& textFile)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _TextFile<EncodingT> > nativeTextFile;
 		if (check_textFile(textFile, nativeTextFile))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedTextFile(nativeTextFile)));
+			res->value(m_object->isSelectedTextFile(nativeTextFile));
 		}
 	}
 	catch (std::exception& e)
@@ -324,14 +324,14 @@ void TextFileInterpreterAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > TextFileInterpreterAccess<EncodingT>::isModifiedTextFile(const boost::shared_ptr< Base<EncodingT> >& textFile)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _TextFile<EncodingT> > nativeTextFile;
 		if (check_textFile(textFile, nativeTextFile))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedTextFile(nativeTextFile)));
+			res->value(m_object->isModifiedTextFile(nativeTextFile));
 		}
 	}
 	catch (std::exception& e)

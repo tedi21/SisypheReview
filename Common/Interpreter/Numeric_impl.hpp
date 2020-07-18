@@ -153,12 +153,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::plus(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Numeric<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 + arg2); }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 + arg2); }, m_value, num));
         }
         return res;
     }
@@ -166,12 +166,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::minus(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Numeric<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 - arg2); }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 - arg2); }, m_value, num));
         }
         return res;
     }
@@ -179,12 +179,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::multiply(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Numeric<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 * arg2); }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 * arg2); }, m_value, num));
         }
         return res;
     }
@@ -192,12 +192,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::divide(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>);
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Numeric<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 / arg2); }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return numeric_variant_t(arg1 / arg2); }, m_value, num));
         }
         return res;
     }
@@ -205,12 +205,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::equals(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Bool<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return arg1 == arg2; }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return arg1 == arg2; }, m_value, num));
         }
         return res;
     }
@@ -218,12 +218,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::notEquals(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Bool<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return arg1 != arg2; }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return arg1 != arg2; }, m_value, num));
         }
         return res;
     }
@@ -231,12 +231,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::inferior(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Bool<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return arg1 < arg2; }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return arg1 < arg2; }, m_value, num));
         }
         return res;
     }
@@ -244,12 +244,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::inferiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Bool<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return arg1 <= arg2; }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return arg1 <= arg2; }, m_value, num));
         }
         return res;
     }
@@ -257,12 +257,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::superior(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Bool<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return arg1 > arg2; }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return arg1 > arg2; }, m_value, num));
         }
         return res;
     }
@@ -270,12 +270,12 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Numeric<EncodingT>::superiorOrEqual(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         numeric_variant_t num;
         if (check_numeric(val, num))
         {
-            res.reset(new Bool<EncodingT>(
-              std::visit([](auto&& arg1, auto&& arg2){ return arg1 >= arg2; }, m_value, num)));
+            res->value(
+              std::visit([](auto&& arg1, auto&& arg2){ return arg1 >= arg2; }, m_value, num));
         }
         return res;
     }

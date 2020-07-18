@@ -24,6 +24,13 @@ StatementInterpreter<EncodingT>::getPointer()
 }
 
 template <class EncodingT>
+void 
+StatementInterpreter<EncodingT>::swap(_DataStatement<EncodingT>& stmt)
+{
+     m_object.swap(stmt);
+}
+
+template <class EncodingT>
 typename EncodingT::string_t StatementInterpreter<EncodingT>::toString() const
 {
     return EncodingT::EMPTY;
@@ -73,11 +80,11 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::executeStep()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
-        res.reset(new Bool<EncodingT>(m_object.executeStep()));
+        res->value(m_object.executeStep());
     }
     catch (std::exception& e)
     {
@@ -90,11 +97,11 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::executeQuery()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
-        res.reset(new Bool<EncodingT>(m_object.executeQuery()));
+        res->value(m_object.executeQuery());
     }
     catch (std::exception& e)
     {
@@ -108,7 +115,7 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::setBlob(boost::shared_ptr< Base<EncodingT> > const& index,
                                          boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -117,7 +124,7 @@ StatementInterpreter<EncodingT>::setBlob(boost::shared_ptr< Base<EncodingT> > co
         if (check_numeric_i(index, nativeIndex) &&
             check_numeric_i_array(value, nativeValue))
         {
-            res.reset(new Bool<EncodingT>(m_object.setBlob(nativeIndex, nativeValue)));
+            res->value(m_object.setBlob(nativeIndex, nativeValue));
         }
     }
     catch (std::exception& e)
@@ -132,7 +139,7 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::setDouble(boost::shared_ptr< Base<EncodingT> > const& index,
                                            boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -141,7 +148,7 @@ StatementInterpreter<EncodingT>::setDouble(boost::shared_ptr< Base<EncodingT> > 
         if (check_numeric_i(index, nativeIndex) &&
             check_numeric_d(value, nativeValue))
         {
-            res.reset(new Bool<EncodingT>(m_object.setDouble(nativeIndex, nativeValue)));
+            res->value(m_object.setDouble(nativeIndex, nativeValue));
         }
     }
     catch (std::exception& e)
@@ -156,7 +163,7 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::setInt(boost::shared_ptr< Base<EncodingT> > const& index,
                                         boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -165,7 +172,7 @@ StatementInterpreter<EncodingT>::setInt(boost::shared_ptr< Base<EncodingT> > con
         if (check_numeric_i(index, nativeIndex) &&
             check_numeric_i(value, nativeValue))
         {
-            res.reset(new Bool<EncodingT>(m_object.setInt(nativeIndex, nativeValue)));
+            res->value(m_object.setInt(nativeIndex, nativeValue));
         }
     }
     catch (std::exception& e)
@@ -180,7 +187,7 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::setInt64(boost::shared_ptr< Base<EncodingT> > const& index,
                                         boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -189,7 +196,7 @@ StatementInterpreter<EncodingT>::setInt64(boost::shared_ptr< Base<EncodingT> > c
         if (check_numeric_i(index, nativeIndex) &&
             check_numeric_i(value, nativeValue))
         {
-            res.reset(new Bool<EncodingT>(m_object.setInt64(nativeIndex, nativeValue)));
+            res->value(m_object.setInt64(nativeIndex, nativeValue));
         }
     }
     catch (std::exception& e)
@@ -204,7 +211,7 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::setText(boost::shared_ptr< Base<EncodingT> > const& index,
                                          boost::shared_ptr< Base<EncodingT> > const& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -213,7 +220,7 @@ StatementInterpreter<EncodingT>::setText(boost::shared_ptr< Base<EncodingT> > co
         if (check_numeric_i(index, nativeIndex) &&
             check_string<EncodingT>(value, nativeValue))
         {
-            res.reset(new Bool<EncodingT>(m_object.setText(nativeIndex, nativeValue)));
+            res->value(m_object.setText(nativeIndex, nativeValue));
         }
     }
     catch (std::exception& e)
@@ -228,7 +235,7 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::getBlob(boost::shared_ptr< Base<EncodingT> > const& column,
                                          boost::shared_ptr< Base<EncodingT> >& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     clearError();
     try
     {
@@ -236,7 +243,7 @@ StatementInterpreter<EncodingT>::getBlob(boost::shared_ptr< Base<EncodingT> > co
         boost::container::vector<unsigned char> nativeValue;
         if (check_numeric_i(column, nativeColumn))
         {
-            res.reset(new Bool<EncodingT>(m_object.getBlob(nativeColumn, nativeValue)));
+            res->value(m_object.getBlob(nativeColumn, nativeValue));
             value = convert_numeric_array<EncodingT>(nativeValue);
         }
     }
@@ -252,16 +259,17 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::getDouble(boost::shared_ptr< Base<EncodingT> > const& column,
                                            boost::shared_ptr< Base<EncodingT> >& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Numeric<EncodingT> > ptrValue  = dynamic_pointer_cast< Numeric<EncodingT> >(value);
     clearError();
     try
     {
         int nativeColumn;
         double nativeValue;
-        if (check_numeric_i(column, nativeColumn))
+        if (check_numeric_i(column, nativeColumn) && (ptrValue != nullptr))
         {
-            res.reset(new Bool<EncodingT>(m_object.getDouble(nativeColumn, nativeValue)));
-            value.reset(new Numeric<EncodingT>(nativeValue));
+            res->value(m_object.getDouble(nativeColumn, nativeValue));
+            ptrValue->Dvalue(nativeValue);
         }
     }
     catch (std::exception& e)
@@ -276,16 +284,17 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::getInt(boost::shared_ptr< Base<EncodingT> > const& column,
                                         boost::shared_ptr< Base<EncodingT> >& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Numeric<EncodingT> > ptrValue  = dynamic_pointer_cast< Numeric<EncodingT> >(value);
     clearError();
     try
     {
         int nativeColumn;
         int nativeValue;
-        if (check_numeric_i(column, nativeColumn))
+        if (check_numeric_i(column, nativeColumn) && (ptrValue != nullptr))
         {
-            res.reset(new Bool<EncodingT>(m_object.getInt(nativeColumn, nativeValue)));
-            value.reset(new Numeric<EncodingT>(nativeValue));
+            res->value(m_object.getInt(nativeColumn, nativeValue));
+            ptrValue->LLvalue(nativeValue);
         }
     }
     catch (std::exception& e)
@@ -300,16 +309,17 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::getInt64(boost::shared_ptr< Base<EncodingT> > const& column,
                                         boost::shared_ptr< Base<EncodingT> >& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Numeric<EncodingT> > ptrValue  = dynamic_pointer_cast< Numeric<EncodingT> >(value);
     clearError();
     try
     {
         int nativeColumn;
         long long nativeValue;
-        if (check_numeric_i(column, nativeColumn))
+        if (check_numeric_i(column, nativeColumn) && (ptrValue != nullptr))
         {
-            res.reset(new Bool<EncodingT>(m_object.getInt64(nativeColumn, nativeValue)));
-            value.reset(new Numeric<EncodingT>(nativeValue));
+            res->value(m_object.getInt64(nativeColumn, nativeValue));
+            ptrValue->LLvalue(nativeValue);
         }
     }
     catch (std::exception& e)
@@ -324,16 +334,17 @@ boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::getText(boost::shared_ptr< Base<EncodingT> > const& column,
                                          boost::shared_ptr< Base<EncodingT> >& value)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< String<EncodingT> > ptrValue  = dynamic_pointer_cast< String<EncodingT> >(value);
     clearError();
     try
     {
         int nativeColumn;
         typename EncodingT::string_t nativeValue;
-        if (check_numeric_i(column, nativeColumn))
+        if (check_numeric_i(column, nativeColumn) && (ptrValue != nullptr))
         {
-            res.reset(new Bool<EncodingT>(m_object.getText(nativeColumn, nativeValue)));
-            value.reset(new String<EncodingT>(nativeValue));
+            res->value(m_object.getText(nativeColumn, nativeValue));
+            ptrValue->value(nativeValue);
         }
     }
     catch (std::exception& e)

@@ -19,11 +19,12 @@ var = new CppFile();
 * Numeric : La valeur de la colonne linesCount.
 * Numeric : La valeur de la colonne hash.
 * Numeric : La valeur de la colonne analyzed.
+* Numeric : La valeur de la colonne isTracked.
 
 *Description*
 * Crée une instance de la classe CppFile.
 ```
-var = new CppFile(path, name, linesCount, hash, analyzed);
+var = new CppFile(path, name, linesCount, hash, analyzed, isTracked);
 ```
 
 ## Méthode Identifier
@@ -102,6 +103,19 @@ val = var.Hash;
 * Retourne la colonne Analyzed.
 ```
 val = var.Analyzed;
+```
+
+## Méthode IsTracked
+*Paramètres*
+* None.
+
+*Retour*
+* Numeric : La colonne isTracked.
+
+*Description*
+* Retourne la colonne IsTracked.
+```
+val = var.IsTracked;
 ```
 
 ## Méthode TextFile
@@ -219,6 +233,19 @@ var.Hash(hash);
 * Définit la colonne analyzed.
 ```
 var.Analyzed(analyzed);
+```
+
+## Méthode IsTracked
+*Paramètres*
+* Numeric : La valeur de la colonne isTracked.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne isTracked.
+```
+var.IsTracked(isTracked);
 ```
 
 ## Méthode HasTextFile

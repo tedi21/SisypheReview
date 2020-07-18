@@ -9,6 +9,9 @@ if sourceFolder.Exists && docFolder.Exists then
     Clean();
   endif
 
+  /* Initialise Git */
+  InitGit(constant:sourcePath);
+
   /* Analyse les fichiers sources dans le repértoire passé en paramètre. */
   Parse(constant:sourcePath);
 
@@ -27,6 +30,9 @@ if sourceFolder.Exists && docFolder.Exists then
   Le second paramètre est le nom du projet affiché dans le rapport.
   Le troisième paramètre est le répertoire de sortie du rapport. */
   ReviewCode(constant:sourcePath, "./CodingRules/CppCustom/Models/ModeleRevue_Custom.xml", constant:projectName, constant:docPath, constant:infoReview);
+  
+  /* Libère Git */
+  ReleaseGit();
 
 else
   

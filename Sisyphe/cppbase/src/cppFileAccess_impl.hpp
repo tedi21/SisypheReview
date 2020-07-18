@@ -62,6 +62,7 @@ _CppFileAccess<EncodingT>::getManyCppFiles(typename EncodingT::string_t const&  
 	columns.push_back(UCS("linesCount"));
 	columns.push_back(UCS("hash"));
 	columns.push_back(UCS("analyzed"));
+	columns.push_back(UCS("isTracked"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
@@ -70,19 +71,22 @@ _CppFileAccess<EncodingT>::getManyCppFiles(typename EncodingT::string_t const&  
 		long long linesCount;
 		long long hash;
 		long long analyzed;
+		long long isTracked;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, path ) &&
 			statement.getText( 2, name ) &&
 			statement.getInt64( 3, linesCount ) &&
 			statement.getInt64( 4, hash ) &&
-			statement.getInt64( 5, analyzed )) {
+			statement.getInt64( 5, analyzed ) &&
+			statement.getInt64( 6, isTracked )) {
 			value.reset(new _CppFile<EncodingT>(
 				identifier,
 				path,
 				name,
 				linesCount,
 				hash,
-				analyzed));
+				analyzed,
+				isTracked));
 			tab.push_back(value);
 		}
 	}
@@ -130,6 +134,7 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 	columns.push_back(UCS("linesCount"));
 	columns.push_back(UCS("hash"));
 	columns.push_back(UCS("analyzed"));
+	columns.push_back(UCS("isTracked"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -146,19 +151,22 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 		long long linesCount;
 		long long hash;
 		long long analyzed;
+		long long isTracked;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, path ) &&
 			statement.getText( 2, name ) &&
 			statement.getInt64( 3, linesCount ) &&
 			statement.getInt64( 4, hash ) &&
-			statement.getInt64( 5, analyzed )) {
+			statement.getInt64( 5, analyzed ) &&
+			statement.getInt64( 6, isTracked )) {
 			tab.push_back(boost::shared_ptr< _CppFile<EncodingT> >(new _CppFile<EncodingT>(
 				identifier,
 				path,
 				name,
 				linesCount,
 				hash,
-				analyzed)));
+				analyzed,
+				isTracked)));
 		}
 	}
 	if (tab.empty()) {
@@ -833,6 +841,7 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 	bUpdate = bUpdate || ((*save)->getLinesCount() != o->getLinesCount());
 	bUpdate = bUpdate || ((*save)->getHash() != o->getHash());
 	bUpdate = bUpdate || ((*save)->getAnalyzed() != o->getAnalyzed());
+	bUpdate = bUpdate || ((*save)->getIsTracked() != o->getIsTracked());
 	bUpdate = bUpdate || (!(*save)->isNullTextFile() && !o->isNullTextFile() && !typename _TextFile<EncodingT>::TextFileIDEquality(*(*save)->getTextFile())(o->getTextFile()))
 		|| ((*save)->isNullTextFile() && !o->isNullTextFile()) 
 		|| (!(*save)->isNullTextFile() && o->isNullTextFile());
@@ -1072,6 +1081,10 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		if ( (*save)->getAnalyzed() != o->getAnalyzed() ) {
 			values.addInt64( o->getAnalyzed() );
 			fields.push_back( UCS("analyzed") );
+		}
+		if ( (*save)->getIsTracked() != o->getIsTracked() ) {
+			values.addInt64( o->getIsTracked() );
+			fields.push_back( UCS("isTracked") );
 		}
 		if ( !o->isNullTextFile() && typename _TextFile<EncodingT>::TextFileIDEquality(-1)(o->getTextFile()) ) {
 			m_logger->errorStream() << "idText : Identifier is null.";
@@ -1526,6 +1539,8 @@ _CppFileAccess<EncodingT>::insertCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		fields.push_back( UCS("hash") );
 		values.addInt64( o->getAnalyzed() );
 		fields.push_back( UCS("analyzed") );
+		values.addInt64( o->getIsTracked() );
+		fields.push_back( UCS("isTracked") );
 		statement.swap( connection->insert(UCS("cppFile"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";

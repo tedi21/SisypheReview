@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getMany
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::getOneCMacro(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CMacroInterpreter<EncodingT>());
+	boost::shared_ptr< CMacroInterpreter<EncodingT> > res(new CMacroInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CMacroInterpreter<EncodingT>(m_object->getOneCMacro(nativeIdentifier)));
+			res->value(m_object->getOneCMacro(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectOneCMacro(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CMacroInterpreter<EncodingT>());
+	boost::shared_ptr< CMacroInterpreter<EncodingT> > res(new CMacroInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::selectO
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CMacroInterpreter<EncodingT>(m_object->selectOneCMacro(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCMacro(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void CMacroInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isSelectedCMacro(const boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCMacro(nativeCMacro)));
+			res->value(m_object->isSelectedCMacro(nativeCMacro));
 		}
 	}
 	catch (std::exception& e)
@@ -223,14 +223,14 @@ void CMacroInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<Enc
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CMacroInterpreterAccess<EncodingT>::isModifiedCMacro(const boost::shared_ptr< Base<EncodingT> >& cMacro)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CMacro<EncodingT> > nativeCMacro;
 		if (check_cMacro(cMacro, nativeCMacro))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCMacro(nativeCMacro)));
+			res->value(m_object->isModifiedCMacro(nativeCMacro));
 		}
 	}
 	catch (std::exception& e)

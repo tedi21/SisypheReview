@@ -71,7 +71,7 @@ ConnectionInterpreter<EncodingT>::select(boost::shared_ptr< Base<EncodingT> > co
                                          boost::shared_ptr< Base<EncodingT> > const& tables,
                                          boost::shared_ptr< Base<EncodingT> > const& filter)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< StatementInterpreter<EncodingT> > res(new StatementInterpreter<EncodingT>());
     if (m_object)
     {
        clearError();
@@ -83,7 +83,7 @@ ConnectionInterpreter<EncodingT>::select(boost::shared_ptr< Base<EncodingT> > co
                check_string_array(columns, nativeColumns) &&
                check_string_array(tables, nativeTables))
            {
-               res.reset(new StatementInterpreter<EncodingT>(m_object->select(nativeColumns, nativeTables, nativeFilter)));
+               res->swap(m_object->select(nativeColumns, nativeTables, nativeFilter));
            }
        }
        catch (std::exception& e)
@@ -101,7 +101,7 @@ ConnectionInterpreter<EncodingT>::selectForUpdate(boost::shared_ptr< Base<Encodi
                                                   boost::shared_ptr< Base<EncodingT> > const& filter,
                                                   boost::shared_ptr< Base<EncodingT> > const& nowait)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< StatementInterpreter<EncodingT> > res(new StatementInterpreter<EncodingT>());
     if (m_object)
     {
       clearError();
@@ -115,7 +115,7 @@ ConnectionInterpreter<EncodingT>::selectForUpdate(boost::shared_ptr< Base<Encodi
               check_string_array(tables, nativeTables) &&
               check_bool(nowait, nativeNoWait))
           {
-              res.reset(new StatementInterpreter<EncodingT>(m_object->selectForUpdate(nativeColumns, nativeTables, nativeFilter, nativeNoWait)));
+              res->swap(m_object->selectForUpdate(nativeColumns, nativeTables, nativeFilter, nativeNoWait));
           }
       }
       catch (std::exception& e)
@@ -131,7 +131,7 @@ boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::insert(boost::shared_ptr< Base<EncodingT> > const& table,
                                          boost::shared_ptr< Base<EncodingT> > const& columns)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< StatementInterpreter<EncodingT> > res(new StatementInterpreter<EncodingT>());
     if (m_object)
     {
       clearError();
@@ -142,7 +142,7 @@ ConnectionInterpreter<EncodingT>::insert(boost::shared_ptr< Base<EncodingT> > co
           if (check_string_array(columns, nativeColumns) &&
               check_string<EncodingT>(table, nativeTable))
           {
-              res.reset(new StatementInterpreter<EncodingT>(m_object->insert(nativeTable, nativeColumns)));
+              res->swap(m_object->insert(nativeTable, nativeColumns));
           }
       }
       catch (std::exception& e)
@@ -158,7 +158,7 @@ boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::deleteFrom(boost::shared_ptr< Base<EncodingT> > const& table,
                                              boost::shared_ptr< Base<EncodingT> > const& filter)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< StatementInterpreter<EncodingT> > res(new StatementInterpreter<EncodingT>());
     if (m_object)
     {
       clearError();
@@ -169,7 +169,7 @@ ConnectionInterpreter<EncodingT>::deleteFrom(boost::shared_ptr< Base<EncodingT> 
           if (check_string<EncodingT>(filter, nativeFilter) &&
               check_string<EncodingT>(table, nativeTable))
           {
-              res.reset(new StatementInterpreter<EncodingT>(m_object->deleteFrom(nativeTable, nativeFilter)));
+              res->swap(m_object->deleteFrom(nativeTable, nativeFilter));
           }
       }
       catch (std::exception& e)
@@ -186,7 +186,7 @@ ConnectionInterpreter<EncodingT>::update(boost::shared_ptr< Base<EncodingT> > co
                                          boost::shared_ptr< Base<EncodingT> > const& columns,
                                          boost::shared_ptr< Base<EncodingT> > const& filter)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    boost::shared_ptr< StatementInterpreter<EncodingT> > res(new StatementInterpreter<EncodingT>());
     if (m_object)
     {
       clearError();
@@ -198,7 +198,7 @@ ConnectionInterpreter<EncodingT>::update(boost::shared_ptr< Base<EncodingT> > co
               check_string_array(columns, nativeColumns) &&
               check_string<EncodingT>(table, nativeTable))
           {
-              res.reset(new StatementInterpreter<EncodingT>(m_object->update(nativeTable, nativeColumns, nativeFilter)));
+              res->swap(m_object->update(nativeTable, nativeColumns, nativeFilter));
           }
       }
       catch (std::exception& e)
@@ -213,13 +213,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::getLastInsertID()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>());
+    boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>());
     if (m_object)
     {
       clearError();
       try
       {
-          res.reset(new Numeric<EncodingT>(m_object->getLastInsertID()));
+          res->LLvalue(m_object->getLastInsertID());
       }
       catch (std::exception& e)
       {
@@ -234,7 +234,7 @@ boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::selectMaxID(boost::shared_ptr< Base<EncodingT> > const& columnid,
                                               boost::shared_ptr< Base<EncodingT> > const& table)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>());
+    boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>());
     if (m_object)
     {
       clearError();
@@ -244,7 +244,7 @@ ConnectionInterpreter<EncodingT>::selectMaxID(boost::shared_ptr< Base<EncodingT>
           if (check_string<EncodingT>(columnid, nativeColumnId) &&
               check_string<EncodingT>(table, nativeTable))
           {
-              res.reset(new Numeric<EncodingT>(m_object->selectMaxID(nativeColumnId, nativeTable)));
+              res->LLvalue(m_object->selectMaxID(nativeColumnId, nativeTable));
           }
       }
       catch (std::exception& e)
@@ -259,13 +259,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::commit()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     if (m_object)
     {
       clearError();
       try
       {
-          res.reset(new Bool<EncodingT>(m_object->commit()));
+          res->value(m_object->commit());
       }
       catch (std::exception& e)
       {
@@ -279,13 +279,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::rollback()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     if (m_object)
     {
       clearError();
       try
       {
-          res.reset(new Bool<EncodingT>(m_object->rollback()));
+          res->value(m_object->rollback());
       }
       catch (std::exception& e)
       {
@@ -299,13 +299,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::startTransaction()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     if (m_object)
     {
       clearError();
       try
       {
-          res.reset(new Bool<EncodingT>(m_object->startTransaction()));
+          res->value(m_object->startTransaction());
       }
       catch (std::exception& e)
       {
@@ -319,13 +319,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::isTransactionInProgress()
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     if (m_object)
     {
       clearError();
       try
       {
-          res.reset(new Bool<EncodingT>(m_object->isTransactionInProgress()));
+          res->value(m_object->isTransactionInProgress());
       }
       catch (std::exception& e)
       {
@@ -359,13 +359,37 @@ ConnectionInterpreter<EncodingT>::setPragma(boost::shared_ptr< Base<EncodingT> >
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::exec(boost::shared_ptr< Base<EncodingT> > const& sql)
+{
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+    if (m_object)
+    {
+      clearError();
+      try
+      {
+          typename EncodingT::string_t nativeSql;
+          if (check_string<EncodingT>(sql, nativeSql))
+          {
+              res->value(m_object->exec(nativeSql));
+          }
+      }
+      catch (std::exception& e)
+      {
+          setError(e);
+      }
+    }
+    return res;
+}
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::openConnection(boost::shared_ptr< Base<EncodingT> > const& db)
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
     typename EncodingT::string_t str;
     if (check_string<EncodingT>(db, str))
     {
-        res.reset(new Bool<EncodingT>(_DataConnection<EncodingT>::openConnection(EncodingT::EMPTY, 0, str, EncodingT::EMPTY, EncodingT::EMPTY)));
+        res->value(_DataConnection<EncodingT>::openConnection(EncodingT::EMPTY, 0, str, EncodingT::EMPTY, EncodingT::EMPTY));
         m_object = _DataConnection<EncodingT>::getInstance(str);
     }
     return res;

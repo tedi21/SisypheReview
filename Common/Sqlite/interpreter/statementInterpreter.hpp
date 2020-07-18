@@ -38,6 +38,7 @@ NAMESPACE_BEGIN(interp)
         StatementInterpreter(_DataStatement<EncodingT>& stmt);
 
         _DataStatement<EncodingT>* getPointer();
+        void swap(_DataStatement<EncodingT>& stmt);
 
         virtual typename EncodingT::string_t toString() const;
 

@@ -220,11 +220,11 @@ void DebugFunctionInfoInterpreter<EncodingT>::insertDebugVariableInfo(boost::sha
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFunctionInfoInterpreter<EncodingT>::getDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugVariableInfoInterpreter<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugVariableInfoInterpreter<EncodingT>(m_value->getDebugVariableInfoAt(nativePosition)));
+		res->value(m_value->getDebugVariableInfoAt(nativePosition));
 	}
 	return res;
 }

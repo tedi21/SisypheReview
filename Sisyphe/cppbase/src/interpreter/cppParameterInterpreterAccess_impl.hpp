@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::g
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::getOneCppParameter(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
+	boost::shared_ptr< CppParameterInterpreter<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppParameterInterpreter<EncodingT>(m_object->getOneCppParameter(nativeIdentifier)));
+			res->value(m_object->getOneCppParameter(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::selectOneCppParameter(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
+	boost::shared_ptr< CppParameterInterpreter<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::s
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppParameterInterpreter<EncodingT>(m_object->selectOneCppParameter(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCppParameter(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void CppParameterInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isSelectedCppParameter(const boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCppParameter(nativeCppParameter)));
+			res->value(m_object->isSelectedCppParameter(nativeCppParameter));
 		}
 	}
 	catch (std::exception& e)
@@ -223,14 +223,14 @@ void CppParameterInterpreterAccess<EncodingT>::fillCppFunction(boost::shared_ptr
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppParameterInterpreterAccess<EncodingT>::isModifiedCppParameter(const boost::shared_ptr< Base<EncodingT> >& cppParameter)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppParameter<EncodingT> > nativeCppParameter;
 		if (check_cppParameter(cppParameter, nativeCppParameter))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCppParameter(nativeCppParameter)));
+			res->value(m_object->isModifiedCppParameter(nativeCppParameter));
 		}
 	}
 	catch (std::exception& e)

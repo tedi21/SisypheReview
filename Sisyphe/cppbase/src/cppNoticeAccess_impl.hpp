@@ -64,6 +64,10 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 	columns.push_back(UCS("startBlock"));
 	columns.push_back(UCS("lengthBlock"));
 	columns.push_back(UCS("isNew"));
+	columns.push_back(UCS("commitHash"));
+	columns.push_back(UCS("commitDate"));
+	columns.push_back(UCS("commitAuthor"));
+	columns.push_back(UCS("commitLine"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppNotice")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
@@ -74,6 +78,10 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 		long long startBlock;
 		long long lengthBlock;
 		long long isNew;
+		typename EncodingT::string_t commitHash;
+		typename EncodingT::string_t commitDate;
+		typename EncodingT::string_t commitAuthor;
+		long long commitLine;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, description ) &&
 			statement.getText( 2, category ) &&
@@ -81,7 +89,11 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 			statement.getInt64( 4, lineNumber ) &&
 			statement.getInt64( 5, startBlock ) &&
 			statement.getInt64( 6, lengthBlock ) &&
-			statement.getInt64( 7, isNew )) {
+			statement.getInt64( 7, isNew ) &&
+			statement.getText( 8, commitHash ) &&
+			statement.getText( 9, commitDate ) &&
+			statement.getText( 10, commitAuthor ) &&
+			statement.getInt64( 11, commitLine )) {
 			value.reset(new _CppNotice<EncodingT>(
 				identifier,
 				description,
@@ -90,7 +102,11 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 				lineNumber,
 				startBlock,
 				lengthBlock,
-				isNew));
+				isNew,
+				commitHash,
+				commitDate,
+				commitAuthor,
+				commitLine));
 			tab.push_back(value);
 		}
 	}
@@ -140,6 +156,10 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 	columns.push_back(UCS("startBlock"));
 	columns.push_back(UCS("lengthBlock"));
 	columns.push_back(UCS("isNew"));
+	columns.push_back(UCS("commitHash"));
+	columns.push_back(UCS("commitDate"));
+	columns.push_back(UCS("commitAuthor"));
+	columns.push_back(UCS("commitLine"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -158,6 +178,10 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 		long long startBlock;
 		long long lengthBlock;
 		long long isNew;
+		typename EncodingT::string_t commitHash;
+		typename EncodingT::string_t commitDate;
+		typename EncodingT::string_t commitAuthor;
+		long long commitLine;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, description ) &&
 			statement.getText( 2, category ) &&
@@ -165,7 +189,11 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 			statement.getInt64( 4, lineNumber ) &&
 			statement.getInt64( 5, startBlock ) &&
 			statement.getInt64( 6, lengthBlock ) &&
-			statement.getInt64( 7, isNew )) {
+			statement.getInt64( 7, isNew ) &&
+			statement.getText( 8, commitHash ) &&
+			statement.getText( 9, commitDate ) &&
+			statement.getText( 10, commitAuthor ) &&
+			statement.getInt64( 11, commitLine )) {
 			tab.push_back(boost::shared_ptr< _CppNotice<EncodingT> >(new _CppNotice<EncodingT>(
 				identifier,
 				description,
@@ -174,7 +202,11 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 				lineNumber,
 				startBlock,
 				lengthBlock,
-				isNew)));
+				isNew,
+				commitHash,
+				commitDate,
+				commitAuthor,
+				commitLine)));
 		}
 	}
 	if (tab.empty()) {
@@ -307,6 +339,10 @@ _CppNoticeAccess<EncodingT>::isModifiedCppNotice(boost::shared_ptr< _CppNotice<E
 	bUpdate = bUpdate || ((*save)->getStartBlock() != o->getStartBlock());
 	bUpdate = bUpdate || ((*save)->getLengthBlock() != o->getLengthBlock());
 	bUpdate = bUpdate || ((*save)->getIsNew() != o->getIsNew());
+	bUpdate = bUpdate || ((*save)->getCommitHash() != o->getCommitHash());
+	bUpdate = bUpdate || ((*save)->getCommitDate() != o->getCommitDate());
+	bUpdate = bUpdate || ((*save)->getCommitAuthor() != o->getCommitAuthor());
+	bUpdate = bUpdate || ((*save)->getCommitLine() != o->getCommitLine());
 	bUpdate = bUpdate || (!(*save)->isNullCppFile() && !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(*save)->getCppFile())(o->getCppFile()))
 		|| ((*save)->isNullCppFile() && !o->isNullCppFile()) 
 		|| (!(*save)->isNullCppFile() && o->isNullCppFile());
@@ -367,6 +403,22 @@ _CppNoticeAccess<EncodingT>::updateCppNotice(boost::shared_ptr< _CppNotice<Encod
 		if ( (*save)->getIsNew() != o->getIsNew() ) {
 			values.addInt64( o->getIsNew() );
 			fields.push_back( UCS("isNew") );
+		}
+		if ( (*save)->getCommitHash() != o->getCommitHash() ) {
+			values.addText( o->getCommitHash() );
+			fields.push_back( UCS("commitHash") );
+		}
+		if ( (*save)->getCommitDate() != o->getCommitDate() ) {
+			values.addText( o->getCommitDate() );
+			fields.push_back( UCS("commitDate") );
+		}
+		if ( (*save)->getCommitAuthor() != o->getCommitAuthor() ) {
+			values.addText( o->getCommitAuthor() );
+			fields.push_back( UCS("commitAuthor") );
+		}
+		if ( (*save)->getCommitLine() != o->getCommitLine() ) {
+			values.addInt64( o->getCommitLine() );
+			fields.push_back( UCS("commitLine") );
 		}
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
@@ -453,6 +505,14 @@ _CppNoticeAccess<EncodingT>::insertCppNotice(boost::shared_ptr< _CppNotice<Encod
 		fields.push_back( UCS("lengthBlock") );
 		values.addInt64( o->getIsNew() );
 		fields.push_back( UCS("isNew") );
+		values.addText( o->getCommitHash() );
+		fields.push_back( UCS("commitHash") );
+		values.addText( o->getCommitDate() );
+		fields.push_back( UCS("commitDate") );
+		values.addText( o->getCommitAuthor() );
+		fields.push_back( UCS("commitAuthor") );
+		values.addInt64( o->getCommitLine() );
+		fields.push_back( UCS("commitLine") );
 		statement.swap( connection->insert(UCS("cppNotice"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";

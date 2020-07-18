@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CppAttributeInterpreterAccess<EncodingT>::g
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppAttributeInterpreterAccess<EncodingT>::getOneCppAttribute(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppAttributeInterpreter<EncodingT>());
+	boost::shared_ptr< CppAttributeInterpreter<EncodingT> > res(new CppAttributeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppAttributeInterpreter<EncodingT>(m_object->getOneCppAttribute(nativeIdentifier)));
+			res->value(m_object->getOneCppAttribute(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppAttributeInterpreterAccess<EncodingT>::selectOneCppAttribute(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppAttributeInterpreter<EncodingT>());
+	boost::shared_ptr< CppAttributeInterpreter<EncodingT> > res(new CppAttributeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CppAttributeInterpreterAccess<EncodingT>::s
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppAttributeInterpreter<EncodingT>(m_object->selectOneCppAttribute(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCppAttribute(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void CppAttributeInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppAttributeInterpreterAccess<EncodingT>::isSelectedCppAttribute(const boost::shared_ptr< Base<EncodingT> >& cppAttribute)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppAttribute<EncodingT> > nativeCppAttribute;
 		if (check_cppAttribute(cppAttribute, nativeCppAttribute))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCppAttribute(nativeCppAttribute)));
+			res->value(m_object->isSelectedCppAttribute(nativeCppAttribute));
 		}
 	}
 	catch (std::exception& e)
@@ -223,14 +223,14 @@ void CppAttributeInterpreterAccess<EncodingT>::fillCppClass(boost::shared_ptr< B
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppAttributeInterpreterAccess<EncodingT>::isModifiedCppAttribute(const boost::shared_ptr< Base<EncodingT> >& cppAttribute)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppAttribute<EncodingT> > nativeCppAttribute;
 		if (check_cppAttribute(cppAttribute, nativeCppAttribute))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCppAttribute(nativeCppAttribute)));
+			res->value(m_object->isModifiedCppAttribute(nativeCppAttribute));
 		}
 	}
 	catch (std::exception& e)

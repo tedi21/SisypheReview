@@ -138,7 +138,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>(false));
         try
         {
-            res.reset(new Bool<EncodingT>(files::exists(m_path)));
+            res->value(files::exists(m_path));
         }
         catch (files::filesystem_error& ex)
         {
@@ -157,7 +157,7 @@ NAMESPACE_BEGIN(interp)
         {
             try
             {
-                res.reset(new Bool<EncodingT>(files::create_directory(m_path/P(nativeName))));
+                res->value(files::create_directory(m_path/P(nativeName)));
             }
             catch (files::filesystem_error& ex)
             {
@@ -195,7 +195,7 @@ NAMESPACE_BEGIN(interp)
         {
             try
             {
-                res.reset(new Numeric<EncodingT>(files::remove_all(m_path/P(nativeName))));
+                res->LLvalue(files::remove_all(m_path/P(nativeName)));
             }
             catch (files::filesystem_error& ex)
             {

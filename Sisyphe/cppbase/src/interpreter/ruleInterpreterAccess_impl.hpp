@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::getManyRu
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::getOneRule(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new RuleInterpreter<EncodingT>());
+	boost::shared_ptr< RuleInterpreter<EncodingT> > res(new RuleInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new RuleInterpreter<EncodingT>(m_object->getOneRule(nativeIdentifier)));
+			res->value(m_object->getOneRule(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::selectOneRule(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new RuleInterpreter<EncodingT>());
+	boost::shared_ptr< RuleInterpreter<EncodingT> > res(new RuleInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::selectOne
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new RuleInterpreter<EncodingT>(m_object->selectOneRule(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneRule(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -162,14 +162,14 @@ void RuleInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::isSelectedRule(const boost::shared_ptr< Base<EncodingT> >& rule)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _Rule<EncodingT> > nativeRule;
 		if (check_rule(rule, nativeRule))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedRule(nativeRule)));
+			res->value(m_object->isSelectedRule(nativeRule));
 		}
 	}
 	catch (std::exception& e)
@@ -182,14 +182,14 @@ boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::isSelecte
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > RuleInterpreterAccess<EncodingT>::isModifiedRule(const boost::shared_ptr< Base<EncodingT> >& rule)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _Rule<EncodingT> > nativeRule;
 		if (check_rule(rule, nativeRule))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedRule(nativeRule)));
+			res->value(m_object->isModifiedRule(nativeRule));
 		}
 	}
 	catch (std::exception& e)

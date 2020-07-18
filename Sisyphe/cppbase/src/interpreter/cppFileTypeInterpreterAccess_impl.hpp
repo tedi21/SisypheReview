@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::ge
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::getOneCppFileType(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
+	boost::shared_ptr< CppFileTypeInterpreter<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppFileTypeInterpreter<EncodingT>(m_object->getOneCppFileType(nativeIdentifier)));
+			res->value(m_object->getOneCppFileType(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::selectOneCppFileType(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
+	boost::shared_ptr< CppFileTypeInterpreter<EncodingT> > res(new CppFileTypeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::se
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppFileTypeInterpreter<EncodingT>(m_object->selectOneCppFileType(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCppFileType(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -162,14 +162,14 @@ void CppFileTypeInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isSelectedCppFileType(const boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCppFileType(nativeCppFileType)));
+			res->value(m_object->isSelectedCppFileType(nativeCppFileType));
 		}
 	}
 	catch (std::exception& e)
@@ -253,14 +253,14 @@ void CppFileTypeInterpreterAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppFileTypeInterpreterAccess<EncodingT>::isModifiedCppFileType(const boost::shared_ptr< Base<EncodingT> >& cppFileType)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppFileType<EncodingT> > nativeCppFileType;
 		if (check_cppFileType(cppFileType, nativeCppFileType))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCppFileType(nativeCppFileType)));
+			res->value(m_object->isModifiedCppFileType(nativeCppFileType));
 		}
 	}
 	catch (std::exception& e)

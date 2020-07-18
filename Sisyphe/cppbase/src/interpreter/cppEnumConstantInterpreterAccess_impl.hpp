@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreterAccess<EncodingT>
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreterAccess<EncodingT>::getOneCppEnumConstant(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppEnumConstantInterpreter<EncodingT>());
+	boost::shared_ptr< CppEnumConstantInterpreter<EncodingT> > res(new CppEnumConstantInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppEnumConstantInterpreter<EncodingT>(m_object->getOneCppEnumConstant(nativeIdentifier)));
+			res->value(m_object->getOneCppEnumConstant(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreterAccess<EncodingT>::selectOneCppEnumConstant(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppEnumConstantInterpreter<EncodingT>());
+	boost::shared_ptr< CppEnumConstantInterpreter<EncodingT> > res(new CppEnumConstantInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreterAccess<EncodingT>
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppEnumConstantInterpreter<EncodingT>(m_object->selectOneCppEnumConstant(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCppEnumConstant(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void CppEnumConstantInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreterAccess<EncodingT>::isSelectedCppEnumConstant(const boost::shared_ptr< Base<EncodingT> >& cppEnumConstant)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppEnumConstant<EncodingT> > nativeCppEnumConstant;
 		if (check_cppEnumConstant(cppEnumConstant, nativeCppEnumConstant))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCppEnumConstant(nativeCppEnumConstant)));
+			res->value(m_object->isSelectedCppEnumConstant(nativeCppEnumConstant));
 		}
 	}
 	catch (std::exception& e)
@@ -223,14 +223,14 @@ void CppEnumConstantInterpreterAccess<EncodingT>::fillCppEnum(boost::shared_ptr<
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumConstantInterpreterAccess<EncodingT>::isModifiedCppEnumConstant(const boost::shared_ptr< Base<EncodingT> >& cppEnumConstant)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppEnumConstant<EncodingT> > nativeCppEnumConstant;
 		if (check_cppEnumConstant(cppEnumConstant, nativeCppEnumConstant))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCppEnumConstant(nativeCppEnumConstant)));
+			res->value(m_object->isModifiedCppEnumConstant(nativeCppEnumConstant));
 		}
 	}
 	catch (std::exception& e)

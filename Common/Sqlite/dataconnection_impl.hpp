@@ -358,6 +358,15 @@ _DataConnection<EncodingT>::setPragma(typename EncodingT::string_t const& pragma
     sqlite3_exec(connection_handle,query.c_str(),NULL,NULL,NULL);
 }
 
+template <class EncodingT>
+bool 
+_DataConnection<EncodingT>::exec(typename EncodingT::string_t const& sql)
+{
+    string query = A(sql);
+    m_logger->debugStream() << "query : " << query;
+    return sqlite3_exec(connection_handle,query.c_str(),NULL,NULL,NULL) == SQLITE_OK;
+}
+
 NAMESPACE_END
 
 #undef C

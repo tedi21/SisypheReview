@@ -760,11 +760,11 @@ void CppFunctionInterpreter<EncodingT>::insertCppVariable(boost::shared_ptr< Bas
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppParameter(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
+	boost::shared_ptr< CppParameterInterpreter<EncodingT> > res(new CppParameterInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppParameterInterpreter<EncodingT>(m_value->getCppParameterAt(nativePosition)));
+		res->value(m_value->getCppParameterAt(nativePosition));
 	}
 	return res;
 }
@@ -773,11 +773,11 @@ boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppPa
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppFunctionInterpreter<EncodingT>::getCppVariable(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppVariableInterpreter<EncodingT>());
+	boost::shared_ptr< CppVariableInterpreter<EncodingT> > res(new CppVariableInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppVariableInterpreter<EncodingT>(m_value->getCppVariableAt(nativePosition)));
+		res->value(m_value->getCppVariableAt(nativePosition));
 	}
 	return res;
 }

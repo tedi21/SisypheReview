@@ -22,7 +22,11 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 				boost::shared_ptr< Base<EncodingT> > const& lineNumber,
 				boost::shared_ptr< Base<EncodingT> > const& startBlock,
 				boost::shared_ptr< Base<EncodingT> > const& lengthBlock,
-				boost::shared_ptr< Base<EncodingT> > const& isNew)
+				boost::shared_ptr< Base<EncodingT> > const& isNew,
+				boost::shared_ptr< Base<EncodingT> > const& commitHash,
+				boost::shared_ptr< Base<EncodingT> > const& commitDate,
+				boost::shared_ptr< Base<EncodingT> > const& commitAuthor,
+				boost::shared_ptr< Base<EncodingT> > const& commitLine)
 {
 	typename EncodingT::string_t nativeDescription;
 	typename EncodingT::string_t nativeCategory;
@@ -31,13 +35,21 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 	long long nativeStartBlock;
 	long long nativeLengthBlock;
 	long long nativeIsNew;
+	typename EncodingT::string_t nativeCommitHash;
+	typename EncodingT::string_t nativeCommitDate;
+	typename EncodingT::string_t nativeCommitAuthor;
+	long long nativeCommitLine;
 	if (check_string<EncodingT>(description, nativeDescription) &&
 		check_string<EncodingT>(category, nativeCategory) &&
 		check_numeric_i(ruleNumber, nativeRuleNumber) &&
 		check_numeric_i(lineNumber, nativeLineNumber) &&
 		check_numeric_i(startBlock, nativeStartBlock) &&
 		check_numeric_i(lengthBlock, nativeLengthBlock) &&
-		check_numeric_i(isNew, nativeIsNew))
+		check_numeric_i(isNew, nativeIsNew) &&
+		check_string<EncodingT>(commitHash, nativeCommitHash) &&
+		check_string<EncodingT>(commitDate, nativeCommitDate) &&
+		check_string<EncodingT>(commitAuthor, nativeCommitAuthor) &&
+		check_numeric_i(commitLine, nativeCommitLine))
 	{
 		m_value = boost::make_shared< _CppNotice<EncodingT> >(nativeDescription,
 				nativeCategory,
@@ -45,7 +57,11 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 				nativeLineNumber,
 				nativeStartBlock,
 				nativeLengthBlock,
-				nativeIsNew);
+				nativeIsNew,
+				nativeCommitHash,
+				nativeCommitDate,
+				nativeCommitAuthor,
+				nativeCommitLine);
 	}
 }
 
@@ -115,6 +131,34 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getIsNew() const
 {
 	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getIsNew()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getCommitHash() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getCommitHash()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getCommitDate() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getCommitDate()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getCommitAuthor() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getCommitAuthor()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getCommitLine() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getCommitLine()) );
 }
 
 
@@ -209,6 +253,50 @@ void CppNoticeInterpreter<EncodingT>::setIsNew(boost::shared_ptr< Base<EncodingT
 	if (check_numeric_i(isNew, nativeIsNew))
 	{
 		m_value->setIsNew(nativeIsNew);
+	}
+}
+
+
+template <class EncodingT>
+void CppNoticeInterpreter<EncodingT>::setCommitHash(boost::shared_ptr< Base<EncodingT> > const& commitHash)
+{
+	typename EncodingT::string_t nativeCommitHash;
+	if (check_string<EncodingT>(commitHash, nativeCommitHash))
+	{
+		m_value->setCommitHash(nativeCommitHash);
+	}
+}
+
+
+template <class EncodingT>
+void CppNoticeInterpreter<EncodingT>::setCommitDate(boost::shared_ptr< Base<EncodingT> > const& commitDate)
+{
+	typename EncodingT::string_t nativeCommitDate;
+	if (check_string<EncodingT>(commitDate, nativeCommitDate))
+	{
+		m_value->setCommitDate(nativeCommitDate);
+	}
+}
+
+
+template <class EncodingT>
+void CppNoticeInterpreter<EncodingT>::setCommitAuthor(boost::shared_ptr< Base<EncodingT> > const& commitAuthor)
+{
+	typename EncodingT::string_t nativeCommitAuthor;
+	if (check_string<EncodingT>(commitAuthor, nativeCommitAuthor))
+	{
+		m_value->setCommitAuthor(nativeCommitAuthor);
+	}
+}
+
+
+template <class EncodingT>
+void CppNoticeInterpreter<EncodingT>::setCommitLine(boost::shared_ptr< Base<EncodingT> > const& commitLine)
+{
+	long long nativeCommitLine;
+	if (check_numeric_i(commitLine, nativeCommitLine))
+	{
+		m_value->setCommitLine(nativeCommitLine);
 	}
 }
 

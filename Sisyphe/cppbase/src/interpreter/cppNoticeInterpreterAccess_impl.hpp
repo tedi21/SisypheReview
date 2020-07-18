@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::getM
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::getOneCppNotice(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppNoticeInterpreter<EncodingT>());
+	boost::shared_ptr< CppNoticeInterpreter<EncodingT> > res(new CppNoticeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppNoticeInterpreter<EncodingT>(m_object->getOneCppNotice(nativeIdentifier)));
+			res->value(m_object->getOneCppNotice(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::selectOneCppNotice(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppNoticeInterpreter<EncodingT>());
+	boost::shared_ptr< CppNoticeInterpreter<EncodingT> > res(new CppNoticeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::sele
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppNoticeInterpreter<EncodingT>(m_object->selectOneCppNotice(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCppNotice(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void CppNoticeInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::isSelectedCppNotice(const boost::shared_ptr< Base<EncodingT> >& cppNotice)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppNotice<EncodingT> > nativeCppNotice;
 		if (check_cppNotice(cppNotice, nativeCppNotice))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCppNotice(nativeCppNotice)));
+			res->value(m_object->isSelectedCppNotice(nativeCppNotice));
 		}
 	}
 	catch (std::exception& e)
@@ -223,14 +223,14 @@ void CppNoticeInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base<
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreterAccess<EncodingT>::isModifiedCppNotice(const boost::shared_ptr< Base<EncodingT> >& cppNotice)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppNotice<EncodingT> > nativeCppNotice;
 		if (check_cppNotice(cppNotice, nativeCppNotice))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCppNotice(nativeCppNotice)));
+			res->value(m_object->isModifiedCppNotice(nativeCppNotice));
 		}
 	}
 	catch (std::exception& e)

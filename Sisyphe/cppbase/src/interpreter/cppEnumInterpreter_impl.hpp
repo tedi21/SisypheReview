@@ -242,11 +242,11 @@ void CppEnumInterpreter<EncodingT>::insertCppEnumConstant(boost::shared_ptr< Bas
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppEnumInterpreter<EncodingT>::getCppEnumConstant(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppEnumConstantInterpreter<EncodingT>());
+	boost::shared_ptr< CppEnumConstantInterpreter<EncodingT> > res(new CppEnumConstantInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppEnumConstantInterpreter<EncodingT>(m_value->getCppEnumConstantAt(nativePosition)));
+		res->value(m_value->getCppEnumConstantAt(nativePosition));
 	}
 	return res;
 }

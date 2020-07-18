@@ -422,6 +422,37 @@ namespace dsg {
                      )
                      [If_IsREF];
 
+            InterpreterValue =
+                  (str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_BOOLEAN))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_SBYTE))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_BYTE))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_CHAR))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_ANSICHAR))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_WIDECHAR))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_INT))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_UINT))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_INT16))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_UINT16))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_INT32))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_UINT32))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_INT64))]
+                << str_g("LLvalue")   [attr_g(getIsAttributeTypeHandler(ATTR_UINT64))]
+                << str_g("Dvalue")    [attr_g(getIsAttributeTypeHandler(ATTR_SINGLE))]
+                << str_g("Dvalue")    [attr_g(getIsAttributeTypeHandler(ATTR_DOUBLE))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_STRING))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_ANSISTRING))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_WIDESTRING))]
+                << str_g("value")     [attr_g(getIsAttributeTypeHandler(ATTR_TEXT))]
+                << str_g("")          [attr_g(getIsAttributeTypeHandler(ATTR_TIME))]
+                << str_g("")          [attr_g(getIsAttributeTypeHandler(ATTR_DATE))]
+                << str_g("")          [attr_g(getIsAttributeTypeHandler(ATTR_ANY))])
+                   [!If_IsREF]
+                << GotoREF
+                   (
+                       str_g("value")
+                   )
+                   [If_IsREF];
+
             ParameterPassing =
                    (($(0)                   [attr_g(getIsAttributeTypeHandler(ATTR_BOOLEAN))]
                   << $(0)                   [attr_g(getIsAttributeTypeHandler(ATTR_SBYTE))]

@@ -470,11 +470,11 @@ void CppClassInterpreter<EncodingT>::insertCppEnum(boost::shared_ptr< Base<Encod
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppInheritance(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppInheritanceInterpreter<EncodingT>());
+	boost::shared_ptr< CppInheritanceInterpreter<EncodingT> > res(new CppInheritanceInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppInheritanceInterpreter<EncodingT>(m_value->getCppInheritanceAt(nativePosition)));
+		res->value(m_value->getCppInheritanceAt(nativePosition));
 	}
 	return res;
 }
@@ -483,11 +483,11 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppInher
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppFunction(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppFunctionInterpreter<EncodingT>());
+	boost::shared_ptr< CppFunctionInterpreter<EncodingT> > res(new CppFunctionInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppFunctionInterpreter<EncodingT>(m_value->getCppFunctionAt(nativePosition)));
+		res->value(m_value->getCppFunctionAt(nativePosition));
 	}
 	return res;
 }
@@ -496,11 +496,11 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppFunct
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getInternClasse(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppClassInterpreter<EncodingT>());
+	boost::shared_ptr< CppClassInterpreter<EncodingT> > res(new CppClassInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppClassInterpreter<EncodingT>(m_value->getInternClasseAt(nativePosition)));
+		res->value(m_value->getInternClasseAt(nativePosition));
 	}
 	return res;
 }
@@ -509,11 +509,11 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getInternCl
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppAttribute(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppAttributeInterpreter<EncodingT>());
+	boost::shared_ptr< CppAttributeInterpreter<EncodingT> > res(new CppAttributeInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppAttributeInterpreter<EncodingT>(m_value->getCppAttributeAt(nativePosition)));
+		res->value(m_value->getCppAttributeAt(nativePosition));
 	}
 	return res;
 }
@@ -522,11 +522,11 @@ boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppAttri
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppClassInterpreter<EncodingT>::getCppEnum(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppEnumInterpreter<EncodingT>());
+	boost::shared_ptr< CppEnumInterpreter<EncodingT> > res(new CppEnumInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new CppEnumInterpreter<EncodingT>(m_value->getCppEnumAt(nativePosition)));
+		res->value(m_value->getCppEnumAt(nativePosition));
 	}
 	return res;
 }

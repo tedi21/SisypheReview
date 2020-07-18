@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::getOneDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugFileInfoInterpreter<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new DebugFileInfoInterpreter<EncodingT>(m_object->getOneDebugFileInfo(nativeIdentifier)));
+			res->value(m_object->getOneDebugFileInfo(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::selectOneDebugFileInfo(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugFileInfoInterpreter<EncodingT> > res(new DebugFileInfoInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new DebugFileInfoInterpreter<EncodingT>(m_object->selectOneDebugFileInfo(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneDebugFileInfo(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void DebugFileInfoInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isSelectedDebugFileInfo(const boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedDebugFileInfo(nativeDebugFileInfo)));
+			res->value(m_object->isSelectedDebugFileInfo(nativeDebugFileInfo));
 		}
 	}
 	catch (std::exception& e)
@@ -365,14 +365,14 @@ void DebugFileInfoInterpreterAccess<EncodingT>::fillManyDebugStubInfos(boost::sh
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreterAccess<EncodingT>::isModifiedDebugFileInfo(const boost::shared_ptr< Base<EncodingT> >& debugFileInfo)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _DebugFileInfo<EncodingT> > nativeDebugFileInfo;
 		if (check_debugFileInfo(debugFileInfo, nativeDebugFileInfo))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedDebugFileInfo(nativeDebugFileInfo)));
+			res->value(m_object->isModifiedDebugFileInfo(nativeDebugFileInfo));
 		}
 	}
 	catch (std::exception& e)

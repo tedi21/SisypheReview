@@ -266,13 +266,13 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::find(boost::shared_ptr< Base<EncodingT> > const& function) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(m_container.size()));
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>(m_container.size()));
         boost::shared_ptr< Predicate<EncodingT> > value  = dynamic_pointer_cast< Predicate<EncodingT> >(function);
         if (value)
         {
             typename std::vector< boost::shared_ptr< Base<EncodingT> > >::const_iterator i =
                     std::find_if(m_container.begin(), m_container.end(), *value);
-            res.reset(new Numeric<EncodingT>(i - m_container.begin()));
+            res->LLvalue(i - m_container.begin());
         }
         else
         {
@@ -328,13 +328,13 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Array<EncodingT>::dichotomy(boost::shared_ptr< Base<EncodingT> > const& fnValid, boost::shared_ptr< Base<EncodingT> > const& fnInf) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Numeric<EncodingT>(m_container.size()));
+        boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>(m_container.size()));
         boost::shared_ptr< Predicate<EncodingT> > pValid  = dynamic_pointer_cast< Predicate<EncodingT> >(fnValid);
         boost::shared_ptr< Predicate<EncodingT> > pInf  = dynamic_pointer_cast< Predicate<EncodingT> >(fnInf);
         if (pValid && pInf)
         {
             size_t i = dichotomy(m_container, 0, m_container.size(), pValid, pInf);
-            res.reset(new Numeric<EncodingT>(i));
+            res->LLvalue(i);
         }
         else
         {

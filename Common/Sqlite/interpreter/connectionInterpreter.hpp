@@ -118,6 +118,11 @@ NAMESPACE_BEGIN(interp)
         void
         setPragma(boost::shared_ptr< Base<EncodingT> > const& pragma);
         
+        FACTORY_PROTOTYPE1(exec,
+                           In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> >
+        exec(boost::shared_ptr< Base<EncodingT> > const& sql);
+        
         FACTORY_PROTOTYPE1(openConnection,
                            In< boost::shared_ptr< Base<EncodingT> > >)
         boost::shared_ptr< Base<EncodingT> >
@@ -149,6 +154,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, rollback, no_const_t, UCS("Connection::Rollback") );
             METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, startTransaction, no_const_t, UCS("Connection::StartTransaction") );
             METHOD_KEY_REGISTER1( ConnectionInterpreter, void, setPragma, no_const_t, UCS("Connection::SetPragma") );
+            METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, exec, no_const_t, UCS("Connection::Exec") );
             METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, openConnection, no_const_t, UCS("Connection::OpenConnection") );
             METHOD_KEY_REGISTER1( ConnectionInterpreter, void, closeConnection, no_const_t, UCS("Connection::CloseConnection") );
             METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, isTransactionInProgress, no_const_t, UCS("Connection::IsTransactionInProgress") );
@@ -170,6 +176,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_UNREGISTER ( UCS("Connection::StartTransaction") );
             METHOD_KEY_UNREGISTER ( UCS("Connection::IsTransactionInProgress") );
             METHOD_KEY_UNREGISTER1( UCS("Connection::SetPragma") );
+            METHOD_KEY_UNREGISTER1( UCS("Connection::Exec") );
             METHOD_KEY_UNREGISTER1( UCS("Connection::OpenConnection") );
             METHOD_KEY_UNREGISTER1( UCS("Connection::CloseConnection") );
             METHOD_KEY_UNREGISTER1( UCS("Connection::GetError") );

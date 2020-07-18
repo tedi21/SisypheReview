@@ -169,14 +169,14 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Predicate<EncodingT>::findVariable(boost::shared_ptr< Base<EncodingT> > const& name, boost::shared_ptr< Base<EncodingT> >& variable) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>(false));
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>(false));
         typename EncodingT::string_t nativeName;
         if (check_string<EncodingT>(name, nativeName))
         {
             typename Context<EncodingT>::iterator_t i = m_context.findObject(nativeName);
             if (i != m_context.end())
             {
-                res.reset(new Bool<EncodingT>(true));
+                res->value(true);
                 variable = m_context.getObject(i);
             }
         }

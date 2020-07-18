@@ -182,7 +182,7 @@ namespace dsg {
                 << MethodClassName << "Interpreter<EncodingT>::" << lower_g(InternalMethodName, 0, 1) << "(" << CreateInterpreterParameters << ")"
                 << str_g(" const")[If_IsConstMethod]
                 << line_g(1) << "{"
-                << ((line_g(1) << htab_g(1) << "boost::shared_ptr< Base<EncodingT> > res(new " << GotoReturn(InterpreterType) << "());")[Has_Return]
+                << ((line_g(1) << htab_g(1) << "boost::shared_ptr< " << GotoReturn(InterpreterType) << " > res(new " << GotoReturn(InterpreterType) << "());")[Has_Return]
                 << WithClassMethod(
                     (
                         line_g(1) << htab_g(1) << ClassName << " valuePtr = refValue();"
@@ -210,7 +210,7 @@ namespace dsg {
                 << line_g(1) << htab_g(1)
                 << htabIsPointer
                 << htab_g(1) [Has_Parameter]
-                << ("res.reset(new " << GotoReturn(InterpreterType) << "(")[Has_Return]
+                << (str_g("res->") << GotoReturn(InterpreterValue) << "(")[Has_Return]
                 << (
                         (+attr_g(getAttributeNameHandler(KIND_NAME)))
                         [If_IsCONTEXTUAL && If_IsREF && !If_IsAUTO && !If_IsID]
@@ -227,7 +227,7 @@ namespace dsg {
                        ParameterPassing( str_g("&")[If_IsVIRTUAL] << "native" << upper_g(attr_g(getAttributeNameHandler(KIND_ALIAS)), 0, 1)) << ~-str_g(", ")
                    )
                 << ")"
-                << str_g("))")[Has_Return]
+                << str_g(")")[Has_Return]
                 << str_g(";")
                 << ListOutputParameter
                    (

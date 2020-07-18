@@ -60,12 +60,12 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
 DataParametersInterpreter<EncodingT>::fill(boost::shared_ptr< Base<EncodingT> >& statement) const
 {
-    boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 
     _DataStatement<EncodingT>* nativeStatement;
     if (check_statement_pointer(statement, nativeStatement))
     {
-        res.reset(new Bool<EncodingT>(m_object.fill(*nativeStatement)));
+        res->value(m_object.fill(*nativeStatement));
     }
     return res;
 }

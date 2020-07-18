@@ -82,6 +82,7 @@ namespace dsg {
                                 ConstantType,
                                 ConstantValue,
                                 InterpreterType,
+                                InterpreterValue,
                                 InterpreterCheck,
                                 InterpreterCheckFunction,
                                 InterpreterReset,

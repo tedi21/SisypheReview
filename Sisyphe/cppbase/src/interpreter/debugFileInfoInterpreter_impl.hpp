@@ -190,11 +190,11 @@ void DebugFileInfoInterpreter<EncodingT>::insertDebugStubInfo(boost::shared_ptr<
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugFunctionInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugFunctionInfoInterpreter<EncodingT> > res(new DebugFunctionInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugFunctionInfoInterpreter<EncodingT>(m_value->getDebugFunctionInfoAt(nativePosition)));
+		res->value(m_value->getDebugFunctionInfoAt(nativePosition));
 	}
 	return res;
 }
@@ -203,11 +203,11 @@ boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getDeb
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugFileInfoInterpreter<EncodingT>::getDebugStubInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugStubInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugStubInfoInterpreter<EncodingT> > res(new DebugStubInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugStubInfoInterpreter<EncodingT>(m_value->getDebugStubInfoAt(nativePosition)));
+		res->value(m_value->getDebugStubInfoAt(nativePosition));
 	}
 	return res;
 }

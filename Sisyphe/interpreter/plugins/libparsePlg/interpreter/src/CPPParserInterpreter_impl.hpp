@@ -1305,11 +1305,11 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::invoke(con
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::getFileContent(const boost::shared_ptr< Base<EncodingT> >& path) const
 {
-    boost::shared_ptr< Base<EncodingT> > obj = boost::make_shared< String<EncodingT> >();
+    boost::shared_ptr< String<EncodingT> > obj = boost::make_shared< String<EncodingT> >();
     boost::shared_ptr< String<EncodingT> > nativePath = dynamic_pointer_cast< String<EncodingT> >(path);
     if (nativePath != nullptr)
     {
-        obj = boost::make_shared< String<EncodingT> >(getNativeContent(nativePath->value()));
+        obj->value(getNativeContent(nativePath->value()));
     }
     else
     {
@@ -1508,13 +1508,13 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::noPos() co
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::indexOf(const boost::shared_ptr< Base<EncodingT> >& val, const boost::shared_ptr< Base<EncodingT> >& blockId) const
 {
-    boost::shared_ptr< Base<EncodingT> > index = boost::make_shared< Numeric<EncodingT> >(NO_POS);
+    boost::shared_ptr< Numeric<EncodingT> > index = boost::make_shared< Numeric<EncodingT> >(NO_POS);
     boost::shared_ptr< Numeric<EncodingT> > nativeVal = dynamic_pointer_cast< Numeric<EncodingT> >(val);
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
     {
         ParserBlock block;
-        index = boost::make_shared< Numeric<EncodingT> >(find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block));
+        index->LLvalue(find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block));
     }
     else
     {
@@ -1527,13 +1527,13 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::indexOf(co
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::inRange(const boost::shared_ptr< Base<EncodingT> >& val, const boost::shared_ptr< Base<EncodingT> >& blockId) const
 {
-    boost::shared_ptr< Base<EncodingT> > res = boost::make_shared< Bool<EncodingT> >(false);
+    boost::shared_ptr< Bool<EncodingT> > res = boost::make_shared< Bool<EncodingT> >(false);
     boost::shared_ptr< Numeric<EncodingT> > nativeVal = dynamic_pointer_cast< Numeric<EncodingT> >(val);
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
     {
         ParserBlock block;
-        res = boost::make_shared< Bool<EncodingT> >(find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block) != NO_POS);
+        res->value(find(nativeVal->LLvalue(), nativeBlock->LLvalue(), block) != NO_POS);
     }
     else
     {
@@ -1569,7 +1569,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::range(cons
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::previous(const boost::shared_ptr< Base<EncodingT> >& val, const boost::shared_ptr< Base<EncodingT> >& blockId) const
 {
-    boost::shared_ptr< Base<EncodingT> > index = boost::make_shared< Numeric<EncodingT> >(NO_POS);
+    boost::shared_ptr< Numeric<EncodingT> > index = boost::make_shared< Numeric<EncodingT> >(NO_POS);
     boost::shared_ptr< Numeric<EncodingT> > nativeVal = dynamic_pointer_cast< Numeric<EncodingT> >(val);
     boost::shared_ptr< Numeric<EncodingT> > nativeBlock = dynamic_pointer_cast< Numeric<EncodingT> >(blockId);
     if (nativeVal != nullptr && nativeBlock != nullptr)
@@ -1580,7 +1580,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::previous(c
             auto it = std::upper_bound(first, last, ParserBlock(nativeVal->LLvalue()), ParserBlock::compareEnd);
             if (it != first)
             {
-                index = boost::make_shared< Numeric<EncodingT> >((it - 1) - first);
+                index->LLvalue((it - 1) - first);
             }
         }
     }
@@ -1629,7 +1629,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::size(const
         std::vector<ParserBlock>::const_iterator first, last;
         if (iterators(nativeBlock->LLvalue(), first, last))
         {
-            s = boost::make_shared< Numeric<EncodingT> >(last - first);
+            s->LLvalue(last - first);
         }
     }
     else
@@ -1653,7 +1653,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::extract(co
                 iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
         {
             const ParserBlock& block = *(first + nativeIndex->LLvalue());
-            str = boost::make_shared< String<EncodingT> >(mContent.substr(block.Start(), (block.End() - block.Start())));
+            str->value(mContent.substr(block.Start(), (block.End() - block.Start())));
         }
     }
     else
@@ -1677,7 +1677,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::extractCod
                 iterators(nativeBlock->LLvalue(), first, last) && (first + nativeIndex->LLvalue()) < last)
         {
             const ParserBlock& block = *(first + nativeIndex->LLvalue());
-            str = boost::make_shared< String<EncodingT> >(mCode.substr(block.Start(), (block.End() - block.Start())));
+            str->value(mCode.substr(block.Start(), (block.End() - block.Start())));
         }
     }
     else
@@ -1742,7 +1742,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::name(const
                     const ParserInformation<EncodingT>& data = block.data< ParserInformation<EncodingT> >();
                     if (data.hasName())
                     {
-                        str = boost::make_shared< String<EncodingT> >(data.getName());
+                        str->value(data.getName());
                     }
                 }
                 catch(const std::bad_any_cast& e)
@@ -1786,7 +1786,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::type(const
                     const ParserInformation<EncodingT>& data = block.data< ParserInformation<EncodingT> >();
                     if (data.hasType())
                     {
-                        type = boost::make_shared< Numeric<EncodingT> >(data.getType());
+                        type->LLvalue(data.getType());
                     }
                 }
                 catch(const std::bad_any_cast& e)
@@ -1830,7 +1830,7 @@ boost::shared_ptr< Base<EncodingT> > CPPParserInterpreter<EncodingT>::include(co
         {
             const ParserBlock& blockI = *(firstI + nativeIndex->LLvalue());
             const ParserBlock& blockO = *(firstO + nativeOrigin->LLvalue());
-            inc = boost::make_shared< Bool<EncodingT> >(blockO.Start() <= blockI.Start() && blockI.End() <= blockO.End());
+            inc->value(blockO.Start() <= blockI.Start() && blockI.End() <= blockO.End());
         }
     }
     else

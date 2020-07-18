@@ -632,11 +632,11 @@ void DebugTypeInfoInterpreter<EncodingT>::insertDebugVariableInfo(boost::shared_
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugTypeInfoInterpreter<EncodingT>::getRichType(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugTypeInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugTypeInfoInterpreter<EncodingT> > res(new DebugTypeInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugTypeInfoInterpreter<EncodingT>(m_value->getRichTypeAt(nativePosition)));
+		res->value(m_value->getRichTypeAt(nativePosition));
 	}
 	return res;
 }
@@ -645,11 +645,11 @@ boost::shared_ptr< Base<EncodingT> > DebugTypeInfoInterpreter<EncodingT>::getRic
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugTypeInfoInterpreter<EncodingT>::getDebugFunctionInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugFunctionInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugFunctionInfoInterpreter<EncodingT> > res(new DebugFunctionInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugFunctionInfoInterpreter<EncodingT>(m_value->getDebugFunctionInfoAt(nativePosition)));
+		res->value(m_value->getDebugFunctionInfoAt(nativePosition));
 	}
 	return res;
 }
@@ -658,11 +658,11 @@ boost::shared_ptr< Base<EncodingT> > DebugTypeInfoInterpreter<EncodingT>::getDeb
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > DebugTypeInfoInterpreter<EncodingT>::getDebugVariableInfo(boost::shared_ptr< Base<EncodingT> > const& n)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
+	boost::shared_ptr< DebugVariableInfoInterpreter<EncodingT> > res(new DebugVariableInfoInterpreter<EncodingT>());
 	size_t nativePosition;
 	if (check_numeric_i(n, nativePosition))
 	{
-		res.reset(new DebugVariableInfoInterpreter<EncodingT>(m_value->getDebugVariableInfoAt(nativePosition)));
+		res->value(m_value->getDebugVariableInfoAt(nativePosition));
 	}
 	return res;
 }

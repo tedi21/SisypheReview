@@ -91,11 +91,11 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::and_(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
-        bool num;     
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
+        bool num;
         if (check_bool(val, num))
         {
-            res.reset(new Bool<EncodingT>(m_value && num));
+            res->value(m_value && num);
         }
         return res;
     }
@@ -103,11 +103,11 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Bool<EncodingT>::or_(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
-        bool num;     
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
+        bool num;
         if (check_bool(val, num))
         {
-            res.reset(new Bool<EncodingT>(m_value || num));
+            res->value(m_value || num);
         }
         return res;
     }

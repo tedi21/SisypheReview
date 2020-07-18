@@ -104,14 +104,14 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::get
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::getOneCppInclude(boost::shared_ptr< Base<EncodingT> > const& identifier)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppIncludeInterpreter<EncodingT>());
+	boost::shared_ptr< CppIncludeInterpreter<EncodingT> > res(new CppIncludeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
 		long long nativeIdentifier;
 		if (check_numeric_i(identifier, nativeIdentifier))
 		{
-			res.reset(new CppIncludeInterpreter<EncodingT>(m_object->getOneCppInclude(nativeIdentifier)));
+			res->value(m_object->getOneCppInclude(nativeIdentifier));
 		}
 	}
 	catch (std::exception& e)
@@ -125,7 +125,7 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::selectOneCppInclude(boost::shared_ptr< Base<EncodingT> > const& identifier,
 				const boost::shared_ptr< Base<EncodingT> >& nowait)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new CppIncludeInterpreter<EncodingT>());
+	boost::shared_ptr< CppIncludeInterpreter<EncodingT> > res(new CppIncludeInterpreter<EncodingT>());
 	clearError();
 	try
 	{
@@ -134,8 +134,8 @@ boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::sel
 		if (check_numeric_i(identifier, nativeIdentifier) &&
 			check_bool(nowait, nativeNoWait))
 		{
-			res.reset(new CppIncludeInterpreter<EncodingT>(m_object->selectOneCppInclude(nativeIdentifier,
-				nativeNoWait)));
+			res->value(m_object->selectOneCppInclude(nativeIdentifier,
+				nativeNoWait));
 		}
 	}
 	catch (std::exception& e)
@@ -184,14 +184,14 @@ void CppIncludeInterpreterAccess<EncodingT>::cancelSelection()
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::isSelectedCppInclude(const boost::shared_ptr< Base<EncodingT> >& cppInclude)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppInclude<EncodingT> > nativeCppInclude;
 		if (check_cppInclude(cppInclude, nativeCppInclude))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isSelectedCppInclude(nativeCppInclude)));
+			res->value(m_object->isSelectedCppInclude(nativeCppInclude));
 		}
 	}
 	catch (std::exception& e)
@@ -223,14 +223,14 @@ void CppIncludeInterpreterAccess<EncodingT>::fillCppFile(boost::shared_ptr< Base
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppIncludeInterpreterAccess<EncodingT>::isModifiedCppInclude(const boost::shared_ptr< Base<EncodingT> >& cppInclude)
 {
-	boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>());
+	boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
 	clearError();
 	try
 	{
 		boost::shared_ptr< _CppInclude<EncodingT> > nativeCppInclude;
 		if (check_cppInclude(cppInclude, nativeCppInclude))
 		{
-			res.reset(new Bool<EncodingT>(m_object->isModifiedCppInclude(nativeCppInclude)));
+			res->value(m_object->isModifiedCppInclude(nativeCppInclude));
 		}
 	}
 	catch (std::exception& e)

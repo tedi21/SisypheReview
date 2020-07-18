@@ -66,6 +66,7 @@ idType        INTEGER             NOT NULL,
 linesCount    INTEGER             NOT NULL,
 hash          INTEGER             NOT NULL,
 analyzed      INTEGER             NOT NULL,
+isTracked     INTEGER,
 
 CONSTRAINT PK_FILE          PRIMARY KEY(identifier),
 CONSTRAINT FK_FILE_FILETYPE FOREIGN KEY(idType) REFERENCES cppFileType(identifier),
@@ -270,6 +271,10 @@ lineNumber      INTEGER           NOT NULL,
 startBlock      INTEGER,
 lengthBlock     INTEGER,
 isNew           INTEGER,
+commitHash      TEXT,
+commitDate      TEXT,
+commitAuthor    TEXT,
+commitLine      INTEGER,
 
 CONSTRAINT PK_NOTICE       PRIMARY KEY(identifier),
 CONSTRAINT FK_NOTICE_FILE  FOREIGN KEY(idFile) REFERENCES cppFile(identifier));

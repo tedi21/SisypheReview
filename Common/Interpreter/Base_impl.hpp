@@ -56,11 +56,11 @@ NAMESPACE_BEGIN(interp)
     template <class EncodingT>
     boost::shared_ptr< Base<EncodingT> > Base<EncodingT>::isType(boost::shared_ptr< Base<EncodingT> > const& val) const
     {
-        boost::shared_ptr< Base<EncodingT> > res(new Bool<EncodingT>);
+        boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>);
         typename EncodingT::string_t str;
         if (check_string<EncodingT>(val, str))
         {
-            res.reset(new Bool<EncodingT>(this->getClassName() == str));
+            res->value(this->getClassName() == str);
         }
         return res;
     }
