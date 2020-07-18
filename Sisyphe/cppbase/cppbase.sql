@@ -275,6 +275,7 @@ commitHash      TEXT,
 commitDate      TEXT,
 commitAuthor    TEXT,
 commitLine      INTEGER,
+derogation      TEXT,
 
 CONSTRAINT PK_NOTICE       PRIMARY KEY(identifier),
 CONSTRAINT FK_NOTICE_FILE  FOREIGN KEY(idFile) REFERENCES cppFile(identifier));
