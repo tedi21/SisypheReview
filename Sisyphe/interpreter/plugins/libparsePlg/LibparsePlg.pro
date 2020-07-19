@@ -28,7 +28,7 @@ HEADERS += \
 INCLUDEPATH += \
     ../../../../../../Libraries/boost_1_66_0 \
     ../../../../../../Libraries/log4cpp/include \
-    ../../../../../../Libraries/libgit2-1.0.1\include \
+    ../../../../../../Libraries/libgit2-1.0.1/include \
     ../../../../CodeGeneration/encoding \
     ../../../../CodeGeneration/generator \
     ../../../../CodeGeneration/factory \
@@ -38,7 +38,7 @@ INCLUDEPATH += \
     ./interpreter/src
 
 
-CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp
+CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
                           -L../../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_filesystem-mgw73-mt-x64-1_66 \
                           -L../../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_system-mgw73-mt-x64-1_66 \
                           -L../../../../../../Libraries/libgit2-1.0.1/Build64 -lgit2
@@ -55,6 +55,9 @@ CONFIG(MinGW-32): LIBS += ../../../../CodeGeneration/bin_qt/Encoding32/release/E
                           ../../../Interpreter/bin/Plugin32/release/Plugin.dll
 
 CONFIG(Linux-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
+                          -L../../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_filesystem \
+                          -L../../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_system \
+                          -L../../../../../../Libraries/libgit2-1.0.1/build -lgit2 \
                           -L../../../../CodeGeneration/bin_qt/Encoding64 -lEncoding \
                           -L../../../interpreter/bin/Plugin64 -lPlugin
 

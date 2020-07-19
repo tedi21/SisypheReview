@@ -20,6 +20,7 @@ files=(
 ../interpreter/bin/libParsePlg64/libLibParsePlg.so.1
 ../interpreter/bin/Plugin64/libPlugin.so.1
 ../interpreter/bin/Script64/script
+../../../../Libraries/libgit2-1.0.1/build/libgit2.so.1.0.1
 )
 
 destination=./

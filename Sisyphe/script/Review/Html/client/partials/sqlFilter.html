@@ -17,12 +17,25 @@
             <img src="imgs/logo.png" class="logo" alt="Sisyphe logo" height="30" width="72" ng-click="logoClicked()"/>
           </div>
         </div>
+        <!-- Collapsed menu for small screen -->
+        <div class="navbar-collapse navbar-ex1-collapse" uib-collapse="isNavBarCollased" id="appNavBar">
+          <!-- Search bar -->
+          <form class="navbar-form navbar-right" role="export">
+            <div class="input-group">
+              <div class="input-group-btn">
+                <button class="btn btn-default" type="submit" ng-click="exportView()">
+                  <span class="glyphicon glyphicon-save"></span> Export view
+                </button>
+              </div> 
+            </div>
+          </form>
+        </div>
       </div>
     </nav>
   </header>
 
   <div id="view">
-	<div id="bottom-bar" style="margin: 20px;">
+	<div id="bottom-bar" style="margin: 20px 20px 5px 5px;">
         <div class="input-group filter-input stretch">
           <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div><input type="text" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
           <div class="input-group-btn">
@@ -33,7 +46,7 @@
         </div>
         <span class="glyphicon glyphicon-question-sign" style="margin: 10px 0 0 20px;" ng-click="filterIconClicked()"></span>
 	</div>
-	<div class="alert alert-danger" role="alert" style="margin: 0 20px 0 20px;white-space: pre-line;" ng-show="console.text!=''">
+	<div class="alert alert-danger" role="alert" style="margin: 0 20px 0 20px; white-space: pre-line;" ng-show="console.text!=''">
 	  {{ console.text }}
 	</div>
 	<table class="table table-striped">
@@ -43,13 +56,17 @@
 		<th scope="col" class="text-align-center">Path</th>
 		<th scope="col" class="text-align-center">Name</th>
 		<th scope="col" class="text-align-center">Type<br><div style="font-size: xx-small;">(1:header,2:source)<div></th>
-		<th scope="col" class="text-align-center">LinesCount</th>
+		<!--<th scope="col" class="text-align-center">LinesCount</th>-->
 		<th scope="col" class="text-align-center">RuleNumber</th>
 		<th scope="col" class="text-align-center">Category</th>
 		<th scope="col" class="text-align-center">Description</th>
 		<th scope="col" class="text-align-center">LineNumber</th>
-		<th scope="col" class="text-align-center">StartBlock</th>
+		<!--<th scope="col" class="text-align-center">StartBlock</th>-->
         <th scope="col" class="text-align-center">IsNew<br><div style="font-size: xx-small;">(0:false,1:true)<div></th>
+		<!--<th scope="col" class="text-align-center">IsTracked</th>-->
+		<th scope="col" class="text-align-center">CommitHash</th>
+		<th scope="col" class="text-align-center">CommitDate</th>
+		<th scope="col" class="text-align-center">CommitAuthor</th>
 	  </tr>
 	  </thead>
 	  <tbody>
@@ -58,13 +75,17 @@
 		<td scope="row" class="text-align-center">{{ item.path }}</td>
 		<td scope="row" class="text-align-center">{{ item.name }}</td>
 		<td scope="row" class="text-align-center">{{ item.type}}</td>
-		<td scope="row" class="text-align-center">{{ item.linesCount }}</td>
+		<!--<td scope="row" class="text-align-center">{{ item.linesCount }}</td>-->
 		<td scope="row" class="text-align-center">{{ item.ruleNumber }}</td>
 		<td scope="row" class="text-align-center">{{ item.category }}</td>
 		<td scope="row" class="text-align-center">{{ item.description }}</td>
 		<td scope="row" class="text-align-center">{{ item.lineNumber }}</td>
-		<td scope="row" class="text-align-center">{{ item.startBlock }}</td>
+		<!--<td scope="row" class="text-align-center">{{ item.startBlock }}</td>-->
         <td scope="row" class="text-align-center">{{ item.isNew }}</td>
+		<!--<td scope="row" class="text-align-center">{{ item.isTracked }}</td>-->
+		<td scope="row" class="text-align-center">{{ item.commitHash }}</td>
+		<td scope="row" class="text-align-center">{{ item.commitDate }}</td>
+		<td scope="row" class="text-align-center">{{ item.commitAuthor }}</td>
 	  </tr>
 	  </tbody>
 	</table>

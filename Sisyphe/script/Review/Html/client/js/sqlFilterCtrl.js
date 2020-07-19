@@ -3,7 +3,7 @@
 
   var sisypheApp = angular.module('sisypheApp');
   
-  sisypheApp.controller('sqlFilterCtrl', ['$q', '$window', '$scope', '$timeout', '$uibModal', 'sisypheFactory', function ($q, $window, $scope, $timeout, $uibModal, sisypheFactory) {
+  sisypheApp.controller('sqlFilterCtrl', ['$q', '$window', '$location', '$scope', '$timeout', '$uibModal', 'sisypheFactory', function ($q, $window, $location, $scope, $timeout, $uibModal, sisypheFactory) {
 
     var loadWindow;
 	var base;
@@ -60,7 +60,7 @@
           const limit = $scope.pageSize;
           var rowsArray = rows.split('\n');
           for (var i = 0; (i < limit) && (i < rowsArray.length - 2); i++) {
-            var item = rowsArray[i].split(':|:');
+            var item = rowsArray[i].split('\t');
             if (item[0].length > 0) {
 			  results.push({
 				identifier: item[0],				
@@ -73,7 +73,12 @@
 				description: item[7],
 				lineNumber: item[8],
 				startBlock: item[9],
-				isNew: item[10]
+				isNew: item[10],
+				isTracked: item[11],
+				commitHash: item[12],
+				commitDate: item[13],
+				commitAuthor: item[14],
+				commitLine: item[15]
 			  });
             }
           }
@@ -95,6 +100,19 @@
 	      }
 		  $scope.ResultView = results;
 		  $scope.pages = pages;
+      });
+    }
+
+    $scope.exportView = function () {
+      $scope.console.text = '';
+      filter(base, $scope.query, 4294967295, 4294967295)
+        .then(function(rows){
+          //console.log(rows);
+          var blob = new Blob([ rows ], { type : 'text/csv' });
+          var downloadLink = angular.element('<a></a>');
+          downloadLink.attr('href',window.URL.createObjectURL(blob));
+          downloadLink.attr('download', 'errors.csv');
+          downloadLink[0].click();
       });
     }
 

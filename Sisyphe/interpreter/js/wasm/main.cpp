@@ -156,14 +156,18 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 		data_access::UniDataConnection* connection = data_access::UniDataConnection::getInstance();
 		logger->debugStream() << "prepare sql query ";
 		std::vector<std::wstring> tables { L"cppFile f", L"cppNotice n" };
-		std::vector<std::wstring> columns { L"n.identifier", L"f.path", L"f.name", L"f.idType", L"f.linesCount", L"n.ruleNumber", L"n.category", L"n.description", L"n.lineNumber", L"n.startBlock", L"n.isNew" };
+		std::vector<std::wstring> columns { L"n.identifier", L"f.path", L"f.name", L"f.idType", L"f.linesCount", L"n.ruleNumber", L"n.category", L"n.description", L"n.lineNumber", L"n.startBlock", L"n.isNew", L"f.isTracked", L"n.commitHash", L"n.commitDate", L"n.commitAuthor", L"n.commitLine" };
 		std::wstring query = L"f.identifier=n.idFile";
 		if (!expr.empty())
 		{
 			query += L" and (" + expr + L")";
 		}
         std::wstring queryWithoutLimit = query;
-		query += L" ORDER BY f.path, n.startBlock, n.ruleNumber LIMIT " + std::to_wstring(limit) + L" OFFSET " + std::to_wstring(offset);
+		query += L" ORDER BY f.path, n.startBlock, n.ruleNumber";
+		if (limit != static_cast<unsigned int>(-1))
+		{
+			query += L" LIMIT " + std::to_wstring(limit) + L" OFFSET " + std::to_wstring(offset);
+		}
 		data_access::UniDataStatement& statement = connection->select(columns, tables, query);
 
 		while( statement.executeStep() ) 
@@ -179,6 +183,12 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 			long long lineNumber;
 			long long startBlock;
 			long long isNew;
+			long long isTracked;
+			std::wstring commitHash;
+			std::wstring commitDate;
+			std::wstring commitAuthor;
+			long long commitLine;
+
 			if (statement.getInt64( 0, identifier ) &&
 				statement.getText( 1, path ) &&				
 				statement.getText( 2, name ) &&
@@ -189,19 +199,27 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 				statement.getText( 7, description ) &&
 				statement.getInt64( 8, lineNumber ) &&
 				statement.getInt64( 9, startBlock ) &&
-				statement.getInt64( 10, isNew )) {
-				result += std::to_wstring(identifier) + L":|:" + path + L":|:" + name + L":|:" + std::to_wstring(type) + L":|:" + std::to_wstring(linesCount) + L":|:" + std::to_wstring(ruleNumber) + L":|:" +category + L":|:" + description + L":|:" + std::to_wstring(lineNumber) + L":|:" + std::to_wstring(startBlock) + L":|:" + std::to_wstring(isNew) + L"\n";
+				statement.getInt64( 10, isNew ) &&
+				statement.getInt64( 11, isTracked ) &&
+				statement.getText( 12, commitHash ) &&
+				statement.getText( 13, commitDate ) &&
+				statement.getText( 14, commitAuthor ) &&
+				statement.getInt64( 15, commitLine )) {
+				result += std::to_wstring(identifier) + L'\t' + path + L'\t' + name + L'\t' + std::to_wstring(type) + L'\t' + std::to_wstring(linesCount) + L'\t' + std::to_wstring(ruleNumber) + L'\t' +category + L'\t' + description + L'\t' + std::to_wstring(lineNumber) + L'\t' + std::to_wstring(startBlock) + L'\t' + std::to_wstring(isNew) + L'\t' + std::to_wstring(isTracked) + L'\t' + commitHash + L'\t' + commitDate + L'\t' + commitAuthor + L'\t' + std::to_wstring(commitLine) + L'\n';
 			}
 		}
 
-		std::vector<std::wstring> countRows { L"COUNT(*)" };
-		data_access::UniDataStatement& statementCount = connection->select(countRows, tables, queryWithoutLimit);
-
-		while( statementCount.executeStep() ) 
+		if (limit != static_cast<unsigned int>(-1))
 		{
-			long long max;
-			if (statement.getInt64( 0, max )) {
-				result += std::to_wstring(max) + L"\n";
+			std::vector<std::wstring> countRows { L"COUNT(*)" };
+			data_access::UniDataStatement& statementCount = connection->select(countRows, tables, queryWithoutLimit);
+
+			while( statementCount.executeStep() ) 
+			{
+				long long max;
+				if (statement.getInt64( 0, max )) {
+					result += std::to_wstring(max) + L'\n';
+				}
 			}
 		}
 	}
