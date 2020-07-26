@@ -167,10 +167,8 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 		logger->debugStream() << "prepare sql query ";
 
 		std::wstring query = L"WITH commitRows(identifier, orderOfError) AS (\n"
-                             L"SELECT n1.identifier, ROW_NUMBER() OVER (PARTITION BY n1.commitLine) orderOfError\n"
-                             L"FROM cppNotice n1, cppNotice n2\n"
-                             L"WHERE n1.commitHash=n2.commitHash and n1.commitLine=n2.commitLine\n"
-                             L"GROUP BY n1.identifier)\n"
+                             L"SELECT n.identifier, ROW_NUMBER() OVER (PARTITION BY n.commitLine) orderOfError\n"
+                             L"FROM cppNotice n)\n"
                              L"SELECT n.identifier, f.path, f.name, f.idType, n.ruleNumber, n.category, n.description, n.lineNumber, n.isNew, n.commitHash, n.commitDate, n.commitAuthor, n.commitLine, r.orderOfError, n.derogation\n"
                              L"FROM cppFile f, cppNotice n, commitRows r\n"
 							 L"WHERE r.identifier=n.identifier and f.identifier=n.idFile\n";

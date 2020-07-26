@@ -3,7 +3,7 @@
 
   var sisypheApp = angular.module('sisypheApp');
   
-  sisypheApp.controller('sqlFilterCtrl', ['$q', '$window', '$location', '$scope', '$timeout', '$uibModal', 'sisypheFactory', function ($q, $window, $location, $scope, $timeout, $uibModal, sisypheFactory) {
+  sisypheApp.controller('sqlFilterCtrl', ['$q', '$window', '$scope', '$timeout', '$uibModal', 'sisypheFactory', function ($q, $window, $scope, $timeout, $uibModal, sisypheFactory) {
 
     var loadWindow;
 	var base;
