@@ -112,6 +112,9 @@ public:
            std::vector<typename EncodingT::string_t> const& columns,
            typename EncodingT::string_t const& filter = EncodingT::EMPTY);
 
+    _DataStatement<EncodingT>&
+	  statement(typename EncodingT::string_t const& query);
+
 	  // Unary query
     int 
 	  getLastInsertID() const;
@@ -133,10 +136,10 @@ public:
 	  isTransactionInProgress() const;
 
     void
-    setPragma(typename EncodingT::string_t const& pragma);
+      setPragma(typename EncodingT::string_t const& pragma);
     
     bool 
-    exec(typename EncodingT::string_t const& sql);
+      exec(typename EncodingT::string_t const& sql);
 };
 
 typedef _DataConnection<ucs>        UniDataConnection;

@@ -23,6 +23,16 @@
           <form class="navbar-form navbar-right" role="export">
             <div class="input-group">
               <div class="input-group-btn">
+                <button class="btn btn-default" type="submit" ng-click="newDerogationFile()" style="margin-right: 5px;">
+                  <span class="glyphicon glyphicon-file"></span> New derogation file
+                </button>
+				<label for="files" class="btn btn-default" style="margin-right: 5px;">
+                  <span class="glyphicon glyphicon-open"></span> Load derogation file
+				</label>
+				<input id="files" type='file' accept=".csv" filelist-bind load="loadDerogationFile" style="display:none">
+                <button class="btn btn-default" type="submit" ng-click="saveDerogationFile()" style="margin-right: 5px;">
+                  <span class="glyphicon glyphicon-save"></span> Save derogation file
+                </button>
                 <button class="btn btn-default" type="submit" ng-click="exportView()">
                   <span class="glyphicon glyphicon-save"></span> Export view
                 </button>
@@ -35,9 +45,9 @@
   </header>
 
   <div id="view">
-	<div id="bottom-bar" style="margin: 20px 20px 5px 5px;">
+	<div id="bottom-bar" style="margin: 20px 20px 0 5px;">
         <div class="input-group filter-input stretch">
-          <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div><input type="text" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
+          <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div><input type="text" placeholder="filter errors" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
           <div class="input-group-btn">
             <button class="btn btn-default" type="submit" ng-click="filterClicked()">
               <span class="glyphicon glyphicon-search"></span>
@@ -46,46 +56,69 @@
         </div>
         <span class="glyphicon glyphicon-question-sign" style="margin: 10px 0 0 20px;" ng-click="filterIconClicked()"></span>
 	</div>
-	<div class="alert alert-danger" role="alert" style="margin: 0 20px 0 20px; white-space: pre-line;" ng-show="console.text!=''">
+	<div class="alert alert-danger" role="alert" style="margin: 5px 20px 5px 20px; white-space: pre-line;" ng-show="console.text!=''">
 	  {{ console.text }}
+	</div>
+	<div style="display: flex; flex-direction: row; margin: 5px 20px 0 20px;">
+        <script type='text/ng-template' id='unfolded'>
+          <span class="glyphicon glyphicon-chevron-up"></span>
+        </script>
+        <script type='text/ng-template' id='folded'>
+          <span class="glyphicon glyphicon-chevron-down"></span>
+        </script>
+        <button class="btn" data-toggle="collapse" data-target="#editDerog" ng-click="changeEditDerog()" ng-show="derogationLoaded"> 
+          <div ng-include='btnEditDerogIcon'></div>
+        </button>
+		<div class="collapse" uib-collapse="isCollapsed || !derogationLoaded" id="editDerog" style="width: 100%; margin: 0 20px 0 0;">
+			<div style="display: flex; flex-direction: row;">
+				<textarea class="form-control" placeholder="Edit derogation for all filtered errors" ng-model="deroration" style="margin: 0px 5px 0px 5px;"></textarea>
+				<div class="input-group-btn">
+					<button class="btn btn-default" type="submit" ng-click="editAllClicked()" style="height: 100%;">
+						<span class="glyphicon glyphicon-edit"></span>
+					</button>
+				</div> 
+			</div>
+		</div>
 	</div>
 	<table class="table table-striped">
 	  <thead>
 	  <tr>
-		<th scope="col" class="text-align-center">#</th>
-		<th scope="col" class="text-align-center">Path</th>
-		<th scope="col" class="text-align-center">Name</th>
-		<th scope="col" class="text-align-center">Type<br><div style="font-size: xx-small;">(1:header,2:source)<div></th>
-		<!--<th scope="col" class="text-align-center">LinesCount</th>-->
+		<th scope="col" class="text-align-center">FilePath</th>
+		<th scope="col" class="text-align-center">FileName</th>
+		<th scope="col" class="text-align-center">FileType<br><div style="font-size: xx-small;">(1:header,2:source)<div></th>
 		<th scope="col" class="text-align-center">RuleNumber</th>
-		<th scope="col" class="text-align-center">Category</th>
-		<th scope="col" class="text-align-center">Description</th>
+		<th scope="col" class="text-align-center">RuleCategory</th>
+		<th scope="col" class="text-align-center">RuleDescription</th>
 		<th scope="col" class="text-align-center">LineNumber</th>
-		<!--<th scope="col" class="text-align-center">StartBlock</th>-->
-        <th scope="col" class="text-align-center">IsNew<br><div style="font-size: xx-small;">(0:false,1:true)<div></th>
-		<!--<th scope="col" class="text-align-center">IsTracked</th>-->
+        <th scope="col" class="text-align-center">NewError<br><div style="font-size: xx-small;">(0:false,1:true)<div></th>
 		<th scope="col" class="text-align-center">CommitHash</th>
 		<th scope="col" class="text-align-center">CommitDate</th>
 		<th scope="col" class="text-align-center">CommitAuthor</th>
+		<th scope="col" class="text-align-center">ErrorDerogation</th>
 	  </tr>
 	  </thead>
 	  <tbody>
 	  <tr ng-repeat="item in ResultView">
-        <td scope="row" class="text-align-center">{{ item.identifier }}</td>
 		<td scope="row" class="text-align-center">{{ item.path }}</td>
 		<td scope="row" class="text-align-center">{{ item.name }}</td>
 		<td scope="row" class="text-align-center">{{ item.type}}</td>
-		<!--<td scope="row" class="text-align-center">{{ item.linesCount }}</td>-->
 		<td scope="row" class="text-align-center">{{ item.ruleNumber }}</td>
 		<td scope="row" class="text-align-center">{{ item.category }}</td>
 		<td scope="row" class="text-align-center">{{ item.description }}</td>
 		<td scope="row" class="text-align-center">{{ item.lineNumber }}</td>
-		<!--<td scope="row" class="text-align-center">{{ item.startBlock }}</td>-->
         <td scope="row" class="text-align-center">{{ item.isNew }}</td>
-		<!--<td scope="row" class="text-align-center">{{ item.isTracked }}</td>-->
 		<td scope="row" class="text-align-center">{{ item.commitHash }}</td>
 		<td scope="row" class="text-align-center">{{ item.commitDate }}</td>
 		<td scope="row" class="text-align-center">{{ item.commitAuthor }}</td>
+		<td scope="row" class="text-align-center">
+			<div style="display: flex; flex-direction: row; width:300px;">
+				<textarea class="form-control" ng-model="item.derogation" placeholder="Edit derogation" ng-disabled="!derogationLoaded || item.commitHash===''" ng-focus="textDerogationClicked(item)"></textarea>
+				<div style="display: flex; flex-direction: column; width:40px; margin: 5px" ng-show="item.derogationWrote">
+					<button class="btn btn-success" style="margin-bottom: 2px" ng-click="validDerogationClicked(item)"><span class="glyphicon glyphicon-ok"></span></button>
+					<button class="btn btn-danger" style="margin-top: 2px" ng-click="cancelDerogationClicked(item)"><span class="glyphicon glyphicon-remove"></span></button>
+				</div>
+			</div>
+		</td>
 	  </tr>
 	  </tbody>
 	</table>

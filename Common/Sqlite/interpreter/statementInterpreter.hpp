@@ -91,6 +91,9 @@ NAMESPACE_BEGIN(interp)
         setText		(boost::shared_ptr< Base<EncodingT> > const& index,
                      boost::shared_ptr< Base<EncodingT> > const& value);
 
+        boost::shared_ptr< Base<EncodingT> >
+        reset		();
+
         // Get Value
         FACTORY_PROTOTYPE2(getBlob,
                            In< boost::shared_ptr< Base<EncodingT> > >,
@@ -143,6 +146,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setInt, no_const_t, UCS("Statement::SetInt") );
             METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setInt64, no_const_t, UCS("Statement::SetInt64") );
             METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, setText, no_const_t, UCS("Statement::SetText") );
+			METHOD_KEY_REGISTER ( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, reset, no_const_t, UCS("Statement::Reset") );
             METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getBlob, no_const_t, UCS("Statement::GetBlob") );
             METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getDouble, no_const_t, UCS("Statement::GetDouble") );
             METHOD_KEY_REGISTER2( StatementInterpreter, boost::shared_ptr< Base<EncodingT> >, getInt, no_const_t, UCS("Statement::GetInt") );
@@ -160,6 +164,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_UNREGISTER2( UCS("Statement::SetInt") );
             METHOD_KEY_UNREGISTER2( UCS("Statement::SetInt64") );
             METHOD_KEY_UNREGISTER2( UCS("Statement::SetText") );
+			METHOD_KEY_UNREGISTER ( UCS("Statement::Reset") );
             METHOD_KEY_UNREGISTER2( UCS("Statement::GetBlob") );
             METHOD_KEY_UNREGISTER2( UCS("Statement::GetDouble") );
             METHOD_KEY_UNREGISTER2( UCS("Statement::GetInt") );

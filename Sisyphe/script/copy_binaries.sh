@@ -42,3 +42,4 @@ do
 done
 
 mv script tdscript
+mv libgit2.so.1.0.1 libgit2.so.1.0

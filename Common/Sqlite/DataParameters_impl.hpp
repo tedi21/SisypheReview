@@ -23,7 +23,7 @@ template <class EncodingT>
 bool 
 _DataParameters<EncodingT>::fill(_DataStatement<EncodingT>& statement) const
 {
-	bool success = true;
+	bool success = statement.reset();
 	parameters_const_iterator itParameter;
 	for (itParameter = m_parameters.begin(); itParameter != m_parameters.end() && success; ++itParameter)
 	{

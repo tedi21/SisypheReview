@@ -211,6 +211,30 @@ ConnectionInterpreter<EncodingT>::update(boost::shared_ptr< Base<EncodingT> > co
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
+ConnectionInterpreter<EncodingT>::statement(boost::shared_ptr< Base<EncodingT> > const& query)
+{
+    boost::shared_ptr< StatementInterpreter<EncodingT> > res(new StatementInterpreter<EncodingT>());
+    if (m_object)
+    {
+      clearError();
+      try
+      {
+          typename EncodingT::string_t nativeQuery;
+          if (check_string<EncodingT>(query, nativeQuery))
+          {
+              res->swap(m_object->statement(nativeQuery));
+          }
+      }
+      catch (std::exception& e)
+      {
+          setError(e);
+      }
+    }
+    return res;
+}
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> >
 ConnectionInterpreter<EncodingT>::getLastInsertID()
 {
     boost::shared_ptr< Numeric<EncodingT> > res(new Numeric<EncodingT>());

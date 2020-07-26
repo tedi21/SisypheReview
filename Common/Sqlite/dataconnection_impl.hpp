@@ -273,6 +273,13 @@ _DataConnection<EncodingT>::update(typename EncodingT::string_t const& table,
 }
 
 template <class EncodingT>
+_DataStatement<EncodingT>&
+_DataConnection<EncodingT>::statement(typename EncodingT::string_t const& query)
+{
+    return prepareStatement(query);
+}
+
+template <class EncodingT>
 int 
 _DataConnection<EncodingT>::getLastInsertID() const
 {

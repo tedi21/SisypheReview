@@ -131,7 +131,7 @@
           //console.log(errors);
           var errorsArray = errors.split('\n');
           for (var i = 0; i < errorsArray.length; i++) {
-            var error = errorsArray[i].split(':|:');
+            var error = errorsArray[i].split('\t');
             if (error[0].length > 0) {
               filter.list.push(
                 {

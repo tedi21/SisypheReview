@@ -5,8 +5,10 @@
   <div class="modal-body">
     <div class="help-title">Filtrage par clause Where SQL</div>
     <p class="help-text">Indiquer une clause <a href="https://sqlite.org/lang_select.html#whereclause">Where SQLite</a> pour filtrer les erreurs.</p>
-    <pre class="help-example">Path LIKE '%Core%' and RuleNumber=65</pre>
+    <pre class="help-example">FilePath LIKE '%Core%' and RuleNumber=65</pre>
     <p class="help-text">Ce filtre affichera les erreurs correspondantes à la règle 65 des fichiers du répertoire Core.</p>
+	<pre class="help-example">RuleDescription LIKE "%'WordXMLNode'%" and RuleNumber=1</pre>
+    <p class="help-text">Ce filtre affichera les erreurs correspondantes à la règle 1 concernant la classe 'WordXMLNode'.</p>
   </div>
   <div class="modal-footer">
       <button class="btn btn-primary" type="button" ng-click="$close()">OK</button>

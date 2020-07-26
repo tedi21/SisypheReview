@@ -15,8 +15,12 @@
     $scope.min = 0;
     $scope.max = 0;
     $scope.query = "";
+	$scope.deroration = "";
 	$scope.pageSize = pageSize;
     $scope.selectedIndex = 1;
+	$scope.derogationLoaded = false;
+    $scope.isCollapsed = true;
+    $scope.btnEditDerogIcon = 'folded';
 
     var init = function() {
     $timeout(function(){
@@ -46,7 +50,7 @@
       $timeout(function () {
         var out = $window.Module.filter(vec, query, limit, offset); 
         deferred.resolve(out);
-      }, 100);
+      }, 0);
       return deferred.promise;
     };
 
@@ -59,29 +63,31 @@
           var pages = [];
           const limit = $scope.pageSize;
           var rowsArray = rows.split('\n');
-          for (var i = 0; (i < limit) && (i < rowsArray.length - 2); i++) {
+          for (var i = 1; (i <= limit) && (i < rowsArray.length - 2); i++) {
             var item = rowsArray[i].split('\t');
-            if (item[0].length > 0) {
+            if (item.length > 14) {
 			  results.push({
 				identifier: item[0],				
 				path: item[1],
 				name: item[2],
 				type: item[3],
-				linesCount: item[4],
-				ruleNumber: item[5],
-				category: item[6],
-				description: item[7],
-				lineNumber: item[8],
-				startBlock: item[9],
-				isNew: item[10],
-				isTracked: item[11],
-				commitHash: item[12],
-				commitDate: item[13],
-				commitAuthor: item[14],
-				commitLine: item[15]
+				ruleNumber: item[4],
+				category: item[5],
+				description: item[6],
+				lineNumber: item[7],
+				isNew: item[8],
+				commitHash: item[9],
+				commitDate: item[10],
+				commitAuthor: item[11],
+				commitLine: item[12],
+				orderOfError: item[13],
+				derogation: item[14],
+				derogationDB: item[14],
+			    derogationWrote : false,
 			  });
             }
           }
+		  //console.log(rowsArray[i]);
           $scope.count = Math.ceil(rowsArray[i] / $scope.pageSize);
           $scope.min = $scope.selectedIndex - 4;
           if ($scope.min <= 0) {
@@ -100,19 +106,6 @@
 	      }
 		  $scope.ResultView = results;
 		  $scope.pages = pages;
-      });
-    }
-
-    $scope.exportView = function () {
-      $scope.console.text = '';
-      filter(base, $scope.query, 4294967295, 4294967295)
-        .then(function(rows){
-          //console.log(rows);
-          var blob = new Blob([ rows ], { type : 'text/csv' });
-          var downloadLink = angular.element('<a></a>');
-          downloadLink.attr('href',window.URL.createObjectURL(blob));
-          downloadLink.attr('download', 'errors.csv');
-          downloadLink[0].click();
       });
     }
 
@@ -241,7 +234,115 @@
       });
     };
 
+    $scope.exportView = function () {
+      $scope.console.text = '';
+      filter(base, $scope.query, 4294967295, 4294967295)
+        .then(function(rows){
+          //console.log(rows);
+          var blob = new Blob([ rows ], { type : 'text/csv' });
+          var downloadLink = angular.element('<a></a>');
+          downloadLink.attr('href',window.URL.createObjectURL(blob));
+          downloadLink.attr('download', 'errors.csv');
+          downloadLink[0].click();
+      });
+    }
+
+	$scope.newDerogationFile = function() {
+		$window.Module.resetDerogations();
+	    $scope.derogationLoaded = true;
+		buildView();
+	};
+
+	$scope.saveDerogationFile = function() {
+    	filter(base, 'ErrorDerogation<>""', 4294967295, 4294967295)
+          .then(function(rows){
+          	//console.log(rows);
+          	var blob = new Blob([ rows ], { type : 'text/csv' });
+          	var downloadLink = angular.element('<a></a>');
+          	downloadLink.attr('href',window.URL.createObjectURL(blob));
+          	downloadLink.attr('download', 'derogation.csv');
+          	downloadLink[0].click();
+      	});
+	};
+
+    var readFileAsync = function (file) {
+        var deferred = $q.defer(),
+        fileReader = new FileReader();
+        fileReader.readAsText(file);
+
+        fileReader.onload = function (e) {
+            deferred.resolve(e.target.result);
+        };
+        return deferred.promise;
+	};
+
+	$scope.loadDerogationFile = function(files) {
+  		//console.log(files);
+		if (files.length > 0) {
+		  readFileAsync(files[0]).then(function (fileContent) {
+              //console.log(fileContent);
+			  $window.Module.loadDerogations(fileContent);
+			  $scope.derogationLoaded = true;
+			  buildView();
+          });
+		}
+	};
+
+	$scope.cancelDerogationClicked = function(item) {
+		item.derogationWrote = false;
+		item.derogation = item.derogationDB; 
+	};
+
+	$scope.textDerogationClicked= function(item) {
+		item.derogationWrote = true;
+	};
+
+	$scope.validDerogationClicked = function(item) {
+        var vec = new $window.Module.VectorDerogation();
+        vec.push_back({CommitHash: item.commitHash, CommitLine: parseInt(item.commitLine, 10), OrderOfError: parseInt(item.orderOfError, 10), Comment: item.derogation});
+		$window.Module.addDerogations(vec);
+	    item.derogationWrote = false;
+		item.derogationDB = item.derogation;
+		buildView();
+	};
+
+	$scope.editAllClicked = function() {
+		var vec = new $window.Module.VectorDerogation();
+		for (var i = 0; i < $scope.ResultView.length; i++) {
+		    var item = $scope.ResultView[i];
+			if (item.commitHash != '') {
+				item.derogation = $scope.deroration;
+				vec.push_back({CommitHash: item.commitHash, CommitLine: parseInt(item.commitLine, 10), OrderOfError: parseInt(item.orderOfError, 10), Comment: item.derogation});
+				item.derogationWrote = false;
+				item.derogationDB = item.derogation;
+			}
+		}
+		$window.Module.addDerogations(vec);
+		buildView();
+	};
+
+    $scope.changeEditDerog = function() {
+      if ($scope.btnEditDerogIcon == 'folded') {
+        $scope.isCollapsed = false;
+        $scope.btnEditDerogIcon = 'unfolded';
+      }
+      else {
+        $scope.isCollapsed = true;
+        $scope.btnEditDerogIcon = 'folded';
+      }
+    };
+
   }]);
+
+  sisypheApp.directive('filelistBind', function() {
+	  return function( scope, elm, attrs ) {
+		elm.bind('change', function( evt ) {
+		  scope.$apply(function() {
+			scope[ attrs.load ](evt.target.files);
+		  });
+		});
+	  };
+	});
 
 }());
 

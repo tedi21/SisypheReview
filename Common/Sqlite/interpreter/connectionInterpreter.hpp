@@ -90,6 +90,11 @@ NAMESPACE_BEGIN(interp)
                boost::shared_ptr< Base<EncodingT> > const& columns,
                boost::shared_ptr< Base<EncodingT> > const& filter);
 
+        FACTORY_PROTOTYPE1(statement,
+                           In< boost::shared_ptr< Base<EncodingT> > >)
+        boost::shared_ptr< Base<EncodingT> >
+        statement(boost::shared_ptr< Base<EncodingT> > const& query);
+
         // Unary query
         boost::shared_ptr< Base<EncodingT> >
         getLastInsertID();
@@ -148,6 +153,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, insert, no_const_t, UCS("Connection::Insert") );
             METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, deleteFrom, no_const_t, UCS("Connection::DeleteFrom") );
             METHOD_KEY_REGISTER3( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, update, no_const_t, UCS("Connection::Update") );
+			METHOD_KEY_REGISTER1( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, statement, no_const_t, UCS("Connection::Statement") );
             METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, getLastInsertID, no_const_t, UCS("Connection::LastInsertID") );
             METHOD_KEY_REGISTER2( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, selectMaxID, no_const_t, UCS("Connection::SelectMaxID") );
             METHOD_KEY_REGISTER ( ConnectionInterpreter, boost::shared_ptr< Base<EncodingT> >, commit, no_const_t, UCS("Connection::Commit") );
@@ -169,6 +175,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_UNREGISTER2( UCS("Connection::Insert") );
             METHOD_KEY_UNREGISTER2( UCS("Connection::DeleteFrom") );
             METHOD_KEY_UNREGISTER3( UCS("Connection::Update") );
+			METHOD_KEY_UNREGISTER1( UCS("Connection::Statement") );
             METHOD_KEY_UNREGISTER ( UCS("Connection::LastInsertID") );
             METHOD_KEY_UNREGISTER2( UCS("Connection::SelectMaxID") );
             METHOD_KEY_UNREGISTER ( UCS("Connection::Commit") );

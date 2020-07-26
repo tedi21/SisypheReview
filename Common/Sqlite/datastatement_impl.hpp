@@ -162,6 +162,18 @@ _DataStatement<EncodingT>::setText		(int index, const typename ansi::string_t& v
 	return sqlite3_bind_text(m_statement, index, value.c_str(), -1, SQLITE_TRANSIENT) == SQLITE_OK;
 }
 
+template <class EncodingT>
+bool 
+_DataStatement<EncodingT>::reset		()
+{
+	if (!m_statement)
+	{
+        m_logger->fatalStream() << "bad statement : prepared statement not initialized";
+        throw BadSqlQueryException("bad statement : prepared statement not initialized");
+	}
+	return (sqlite3_reset(m_statement) == SQLITE_OK) && (sqlite3_clear_bindings(m_statement) == SQLITE_OK);
+}
+
 // Get Value
 template <class EncodingT>
 bool 

@@ -89,6 +89,9 @@ public:
 	
 	bool 
 	setText		(int index, const typename ansi::string_t& value);
+
+	bool 
+	reset		();
 	
 	// Get Value
 	bool 

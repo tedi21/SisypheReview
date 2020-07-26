@@ -232,6 +232,23 @@ StatementInterpreter<EncodingT>::setText(boost::shared_ptr< Base<EncodingT> > co
 
 template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> >
+StatementInterpreter<EncodingT>::reset()
+{
+    boost::shared_ptr< Bool<EncodingT> > res(new Bool<EncodingT>());
+    clearError();
+    try
+    {
+        res->value(m_object.reset());
+    }
+    catch (std::exception& e)
+    {
+        setError(e);
+    }
+    return res;
+}
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> >
 StatementInterpreter<EncodingT>::getBlob(boost::shared_ptr< Base<EncodingT> > const& column,
                                          boost::shared_ptr< Base<EncodingT> >& value)
 {

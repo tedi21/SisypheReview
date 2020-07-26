@@ -14,3 +14,5 @@ SOURCES += \
 INCLUDEPATH += \
     ../..
 
+LIBS += -lpthread -ldl
+
