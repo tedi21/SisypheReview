@@ -177,6 +177,10 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
                              L"FROM cppFile f, cppNotice n\n"
 							 L"WHERE f.identifier=n.idFile\n";
 
+		std::wstring noBlame = L"SELECT COUNT(*)\n"
+                               L"FROM cppFile f, cppNotice n\n"
+							   L"WHERE f.identifier=n.idFile and f.isTracked=1 and n.commitHash=''\n";
+
 		if (!expr.empty())
 		{
 			std::wstring sqlExpr = expr;
@@ -195,6 +199,7 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 			boost::ireplace_all(sqlExpr, "ErrorDerogation", "n.derogation"); 
 			query += L" and (" + sqlExpr + L")\n";
 			count += L" and (" + sqlExpr + L")\n";
+			noBlame += L" and (" + sqlExpr + L")\n";
 		}
 		query += L" ORDER BY f.path, n.lineNumber, n.ruleNumber";
 		if (limit != static_cast<unsigned int>(-1))
@@ -245,6 +250,16 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 			data_access::UniDataStatement& statementCount = connection->statement(count);
 
 			while( statementCount.executeStep() ) 
+			{
+				long long max;
+				if (statement.getInt64( 0, max )) {
+					result += std::to_wstring(max) + L'\t';
+				}
+			}
+
+			data_access::UniDataStatement& statementNoBlame = connection->statement(noBlame);
+
+			while( statementNoBlame.executeStep() ) 
 			{
 				long long max;
 				if (statement.getInt64( 0, max )) {

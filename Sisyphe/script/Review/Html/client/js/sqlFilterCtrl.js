@@ -15,12 +15,14 @@
     $scope.min = 0;
     $scope.max = 0;
     $scope.query = "";
-	$scope.deroration = "";
-	$scope.pageSize = pageSize;
+	  $scope.deroration = "";
+	  $scope.pageSize = pageSize;
     $scope.selectedIndex = 1;
-	$scope.derogationLoaded = false;
+	  $scope.derogationLoaded = false;
     $scope.isCollapsed = true;
     $scope.btnEditDerogIcon = 'folded';
+    $scope.warningClosed = false;
+    $scope.blameWarning = false;
 
     var init = function() {
     $timeout(function(){
@@ -66,46 +68,50 @@
           for (var i = 1; (i <= limit) && (i < rowsArray.length - 2); i++) {
             var item = rowsArray[i].split('\t');
             if (item.length > 14) {
-			  results.push({
-				identifier: item[0],				
-				path: item[1],
-				name: item[2],
-				type: item[3],
-				ruleNumber: item[4],
-				category: item[5],
-				description: item[6],
-				lineNumber: item[7],
-				isNew: item[8],
-				commitHash: item[9],
-				commitDate: item[10],
-				commitAuthor: item[11],
-				commitLine: item[12],
-				orderOfError: item[13],
-				derogation: item[14],
-				derogationDB: item[14],
-			    derogationWrote : false,
-			  });
+                results.push({
+                identifier: item[0],				
+                path: item[1],
+                name: item[2],
+                type: item[3],
+                ruleNumber: item[4],
+                category: item[5],
+                description: item[6],
+                lineNumber: item[7],
+                isNew: item[8],
+                commitHash: item[9],
+                commitDate: item[10],
+                commitAuthor: item[11],
+                commitLine: item[12],
+                orderOfError: item[13],
+                derogation: item[14],
+                derogationDB: item[14],
+                derogationWrote : false,
+              });
             }
           }
-		  //console.log(rowsArray[i]);
-          $scope.count = Math.ceil(rowsArray[i] / $scope.pageSize);
-          $scope.min = $scope.selectedIndex - 4;
-          if ($scope.min <= 0) {
-            $scope.min = 1;
-          }
-          $scope.max = $scope.min + 8;
-          if ($scope.max > $scope.count) {
-            $scope.max = $scope.count;
-            $scope.min = $scope.max - 8;
+          //console.log(rowsArray[i]);
+          var counts = rowsArray[i].split('\t');
+          if (counts.length > 1) {
+            $scope.count = Math.ceil(counts[0] / $scope.pageSize);
+            $scope.min = $scope.selectedIndex - 4;
             if ($scope.min <= 0) {
               $scope.min = 1;
             }
+            $scope.max = $scope.min + 8;
+            if ($scope.max > $scope.count) {
+              $scope.max = $scope.count;
+              $scope.min = $scope.max - 8;
+              if ($scope.min <= 0) {
+                $scope.min = 1;
+              }
+            }
+            for (var i = $scope.min; i <= $scope.max; i++) {     
+              pages.push(i);
+            }
+            $scope.ResultView = results;
+            $scope.pages = pages;
+            $scope.blameWarning = (counts[1] > 0);
           }
-          for (var i = $scope.min; i <= $scope.max; i++) {     
-		    pages.push(i);
-	      }
-		  $scope.ResultView = results;
-		  $scope.pages = pages;
       });
     }
 

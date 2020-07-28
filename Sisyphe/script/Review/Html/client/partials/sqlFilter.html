@@ -59,6 +59,10 @@
 	<div class="alert alert-danger" role="alert" style="margin: 5px 20px 5px 20px; white-space: pre-line;" ng-show="console.text!=''">
 	  {{ console.text }}
 	</div>
+	<div class="alert alert-warning alert-dismissible" role="alert" style="margin: 5px 20px 5px 20px;" ng-show="!warningClosed && blameWarning">
+		<button class="close" data-dismiss="alert" aria-label="close" ng-click="warningClosed = true">&times;</button>
+		<strong>Warning!</strong> Shallow clone detecté, informations git blame manquantes et édition de derogations désactivée. 
+	</div>
 	<div style="display: flex; flex-direction: row; margin: 5px 20px 0 20px;">
         <script type='text/ng-template' id='unfolded'>
           <span class="glyphicon glyphicon-chevron-up"></span>
