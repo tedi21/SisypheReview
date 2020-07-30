@@ -21,6 +21,12 @@
         <div class="navbar-collapse navbar-ex1-collapse" uib-collapse="isNavBarCollased" id="appNavBar">
           <!-- Search bar -->
           <form class="navbar-form navbar-right" role="search">
+            <button class="btn btn-default" type="submit" ng-click="testerClicked()" style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-play-circle"></span> Tester
+            </button>
+            <button class="btn btn-default" type="submit" ng-click="tableClicked()">
+              <span class="glyphicon glyphicon-list-alt"></span> Table
+            </button>
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Search" ng-model="searchInput"/>
               <div class="input-group-btn">

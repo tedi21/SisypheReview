@@ -21,23 +21,19 @@
         <div class="navbar-collapse navbar-ex1-collapse" uib-collapse="isNavBarCollased" id="appNavBar">
           <!-- Search bar -->
           <form class="navbar-form navbar-right" role="export">
-            <div class="input-group">
-              <div class="input-group-btn">
-                <button class="btn btn-default" type="submit" ng-click="newDerogationFile()" style="margin-right: 5px;">
-                  <span class="glyphicon glyphicon-file"></span> New derogation file
-                </button>
-				<label for="files" class="btn btn-default" style="margin-right: 5px;">
-                  <span class="glyphicon glyphicon-open"></span> Load derogation file
-				</label>
-				<input id="files" type='file' accept=".csv" filelist-bind load="loadDerogationFile" style="display:none">
-                <button class="btn btn-default" type="submit" ng-click="saveDerogationFile()" style="margin-right: 5px;">
-                  <span class="glyphicon glyphicon-save"></span> Save derogation file
-                </button>
-                <button class="btn btn-default" type="submit" ng-click="exportView()">
-                  <span class="glyphicon glyphicon-save"></span> Export view
-                </button>
-              </div> 
-            </div>
+            <button class="btn btn-default" type="submit" ng-click="newDerogationFile()" style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-file"></span> New derogation file
+            </button>
+            <label for="files" class="btn btn-default" style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-open"></span> Load derogation file
+            </label>
+            <input id="files" type='file' accept=".csv" filelist-bind load="loadDerogationFile" style="display:none">
+            <button class="btn btn-default" type="submit" ng-click="saveDerogationFile()" style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-save"></span> Save derogation file
+            </button>
+            <button class="btn btn-default" type="submit" ng-click="exportView()">
+              <span class="glyphicon glyphicon-save"></span> Export view
+            </button>
           </form>
         </div>
       </div>
@@ -46,13 +42,16 @@
 
   <div id="view">
 	<div id="bottom-bar" style="margin: 20px 20px 0 5px;">
-        <div class="input-group filter-input stretch">
-          <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div><input type="text" placeholder="filter errors" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
-          <div class="input-group-btn">
-            <button class="btn btn-default" type="submit" ng-click="filterClicked()">
-              <span class="glyphicon glyphicon-search"></span>
-            </button>
-          </div> 
+        <div class="filter-input stretch">
+          <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div>
+          <div class="input-group">
+            <input type="text" placeholder="filter errors" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit" ng-click="filterClicked()">
+                <span class="glyphicon glyphicon-search"></span>
+              </button>
+            </div> 
+          </div>
         </div>
         <span class="glyphicon glyphicon-question-sign" style="margin: 10px 0 0 20px;" ng-click="filterIconClicked()"></span>
 	</div>

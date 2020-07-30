@@ -14,7 +14,7 @@
     $scope.isCollapsed = false;
     
     // init filters
-    $scope.filters = ['Errors', 'Search', 'Diff', 'Tester', 'Table'];
+    $scope.filters = ['Errors', 'Search', 'Diff'];
     $scope.currentFilter = {'name': 'Errors', 'list': []};
     
     var filter_diff_files = function (files) {
@@ -113,38 +113,32 @@
     // set filters click handler
     $scope.setFilter = function(filter) {
       clearSelection();
-      if (filter == 'Tester') {
-        $location.path("/tester");
-      }
-      else if (filter == 'Table') {
-        $location.path("/sqlFilter");
-      }
-      else if (($scope.currentFilter.name == 'Diff' || filter == 'Diff') && 
+      if (($scope.currentFilter.name == 'Diff' || filter == 'Diff') && 
           ($scope.currentFilter.name != filter)) {
-          // Disable old files
-          for (var i = 0; i < $scope.files.length; i++) {
-            $scope.files[i].status = '';
-          }
-          // Set files
-          if (filter == 'Diff') {
-            $scope.files = attributes.diff_files;
-          }
-          else {
-            $scope.files = attributes.all_files;
-          }
-          // Set filter name
-          $scope.currentFilter = 
-                       {'name': filter,
-                        'solved': 0,
-                        'new': 0,
-                        'list': []};
-          // Load file data
-          if ($scope.files.length > 0) {
-            // Remove search
-            searchFactory.clear();
-            // Update filter
-            updateCurrentFile($scope.files[0]);
-          }
+        // Disable old files
+        for (var i = 0; i < $scope.files.length; i++) {
+          $scope.files[i].status = '';
+        }
+        // Set files
+        if (filter == 'Diff') {
+          $scope.files = attributes.diff_files;
+        }
+        else {
+          $scope.files = attributes.all_files;
+        }
+        // Set filter name
+        $scope.currentFilter = 
+                     {'name': filter,
+                      'solved': 0,
+                      'new': 0,
+                      'list': []};
+        // Load file data
+        if ($scope.files.length > 0) {
+          // Remove search
+          searchFactory.clear();
+          // Update filter
+          updateCurrentFile($scope.files[0]);
+        }
       }
       else {
         updateCurrentFilter($scope.currentFile.id, filter);
@@ -238,6 +232,14 @@
           template: html.data,
         });
       });
+    };
+    
+    $scope.testerClicked = function () {
+      $location.path('/tester');
+    };
+    
+    $scope.tableClicked = function () {
+      $location.path('/sqlFilter');
     };
     
     $scope.filterIconClicked = function () {
