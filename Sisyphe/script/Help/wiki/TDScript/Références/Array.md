@@ -31,9 +31,10 @@ collection[0] = "a";
 /*collection = [a,b]*/
 ```
 
-## Méthode insertList `[*]`
+## Méthode insertList `[_]`
 *Paramètres*
 * Numeric : Position d'insertion de la valeur dans le tableau.
+* Numeric : Position de fin d'insertion dans le tableau. -1 pour indiquer toute la taille du tableau.
 * Object : Liste à ajouter dans le tableau.
 
 *Retour*
@@ -47,7 +48,7 @@ collection = new Array();
 collection[0] = "b";
 collection[1] = "a";
 collection2 = new Array();
-collection2[0*] = collection;
+collection2[0 _ -1] = collection;
 collection2[2] = "c";
 /*collection2 = [a,b,c]*/
 ```
@@ -84,9 +85,10 @@ collection[0] = "a";
 print(collection[0]);
 ```
 
-## Méthode getList `[*]`
+## Méthode getList `[_]`
 *Paramètres*
 * Numeric : Position de la valeur dans le tableau.
+* Numeric : Position de fin dans le tableau. -1 pour indiquer toute la taille du tableau.
 
 *Retour*
 * Object : La liste restante à la position donnée.
@@ -98,7 +100,7 @@ collection = new Array();
 collection[0] = "a";
 collection[1] = "b";
 collection[2] = "c";
-print(collection[1*]);
+print(collection[1 _ 2]);
 /*collection[1*] = [b,c]*/
 ```
 
