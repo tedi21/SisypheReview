@@ -154,6 +154,8 @@ void CPPParserInterpreter<EncodingT>::parse()
     mFunctions.clear();
     mAttributes.clear();
     mStatements.clear();
+    mWord = UCS("");
+    mPreviousWord = UCS("");
     mCode.clear();
     mCode.reserve(mContent.size());
     while (i <= end)
@@ -451,6 +453,7 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
     static const typename EncodingT::string_t PRIVATE_KEYWORD = UCS("private");
     static const typename EncodingT::string_t PROTECTED_KEYWORD = UCS("protected");
     static const typename EncodingT::string_t PUBLIC_KEYWORD = UCS("public");
+    static const typename EncodingT::string_t FINAL_KEYWORD = UCS("final");
     static const std::set<typename EncodingT::string_t> SPEC_KEYWORDS = {
             UCS("alignas"), UCS("__declspec"), UCS("__attribute__")
     };
@@ -590,7 +593,14 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
                     }
                     else if (mContent[i] == ':')
                     {
-                        mClassName.push_back(mWord);
+                        if (mWord != FINAL_KEYWORD)
+                        {
+                            mClassName.push_back(mWord);
+                        }
+                        else
+                        {
+                            mClassName.push_back(mPreviousWord);
+                        }
                         flags_reset(flags, FLAGS::IN_CLASS_ID);
                     }
                 }
@@ -598,7 +608,14 @@ void CPPParserInterpreter<EncodingT>::parseClass(size_t i, FlagSet& flags)
                 {
                     if (flags_test(flags, FLAGS::IN_CLASS_ID))
                     {
-                        mClassName.push_back(mWord);
+                        if (mWord != FINAL_KEYWORD)
+                        {
+                            mClassName.push_back(mWord);
+                        }
+                        else
+                        {
+                            mClassName.push_back(mPreviousWord);
+                        }
                         flags_reset(flags, FLAGS::IN_CLASS_ID);
                     }
                     mClassBlock.push_back(i);
@@ -1108,6 +1125,7 @@ void CPPParserInterpreter<EncodingT>::parseWord(size_t i, FlagSet& flags)
 {
     if (flags_test(flags, FLAGS::CLEAR_WORD))
     {
+        mPreviousWord = mWord;
         mWord = UCS("");
         flags_reset(flags, FLAGS::CLEAR_WORD);
     }
@@ -1115,6 +1133,7 @@ void CPPParserInterpreter<EncodingT>::parseWord(size_t i, FlagSet& flags)
         (mContent[i] != '_') &&
         flags_test(flags, FLAGS::IN_WORD))
     {
+        mPreviousWord = mWord;
         mWord = mContent.substr(mWordStart, i - mWordStart);
         flags_reset(flags, FLAGS::IN_WORD);
     }

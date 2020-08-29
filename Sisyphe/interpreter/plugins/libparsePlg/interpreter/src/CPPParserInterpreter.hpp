@@ -246,6 +246,7 @@ NAMESPACE_BEGIN(interp)
 
         size_t mWordStart;
         typename EncodingT::string_t mWord;
+        typename EncodingT::string_t mPreviousWord;
         void parseWord(size_t i, FlagSet& flags);
 
         size_t mTemplateDelcStart;

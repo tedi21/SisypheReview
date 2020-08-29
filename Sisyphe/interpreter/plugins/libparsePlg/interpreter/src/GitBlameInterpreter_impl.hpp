@@ -228,3 +228,4 @@ NAMESPACE_BEGIN(interp)
 NAMESPACE_END
 
 #undef A
+#undef C
