@@ -245,7 +245,7 @@
       filter(base, $scope.query, 4294967295, 4294967295)
         .then(function(rows){
           //console.log(rows);
-          var blob = new Blob([ rows ], { type : 'text/csv' });
+          var blob = new Blob([ '\ufeff' + rows ], { type : 'text/csv' });
           var downloadLink = angular.element('<a></a>');
           downloadLink.attr('href',window.URL.createObjectURL(blob));
           downloadLink.attr('download', 'errors.csv');
@@ -263,7 +263,7 @@
     	filter(base, 'ErrorDerogation<>""', 4294967295, 4294967295)
           .then(function(rows){
           	//console.log(rows);
-          	var blob = new Blob([ rows ], { type : 'text/csv' });
+          	var blob = new Blob([ '\ufeff' + rows ], { type : 'text/csv' });
           	var downloadLink = angular.element('<a></a>');
           	downloadLink.attr('href',window.URL.createObjectURL(blob));
           	downloadLink.attr('download', 'derogation.csv');
