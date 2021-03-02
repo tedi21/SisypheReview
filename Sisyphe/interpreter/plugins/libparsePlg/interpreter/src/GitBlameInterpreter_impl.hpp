@@ -1,3 +1,4 @@
+#include "dbstring.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -182,7 +183,7 @@ NAMESPACE_BEGIN(interp)
             boost::shared_ptr< String<EncodingT> > nativeAuthor = dynamic_pointer_cast< String<EncodingT> >(commitAuthor);
             if (nativeAuthor != nullptr)
             {
-                nativeAuthor->value(C(m_hunk->orig_signature->name));
+                nativeAuthor->value(enc::encode<dbs,ucs>(m_hunk->orig_signature->name));
                 ret->value(true);
             }
             else

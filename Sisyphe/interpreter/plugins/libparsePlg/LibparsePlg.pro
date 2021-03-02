@@ -35,7 +35,8 @@ INCLUDEPATH += \
     ../../../../Common/Interpreter \
     ../../../../Common/Exception \
     ../../../../Common/Pointer \
-    ./interpreter/src
+    ../../../../Common/Sqlite \
+    ./Interpreter/src
 
 
 CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
