@@ -36,8 +36,7 @@ INCLUDEPATH += \
     ../../../../Common/Exception \
     ../../../../Common/Pointer \
     ../../../../Common/Sqlite \
-    ./Interpreter/src
-
+    ./interpreter/src
 
 CONFIG(MinGW-64): LIBS += -L../../../../../../Libraries/log4cpp/lib64 -llog4cpp \
                           -L../../../../../../Libraries/boost_1_66_0/stage/lib64 -lboost_filesystem-mgw73-mt-x64-1_66 \
