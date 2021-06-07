@@ -41,114 +41,112 @@
   </header>
 
   <div id="view">
-	<div id="bottom-bar" style="margin: 20px 20px 0 5px;">
-        <div class="filter-input stretch">
-          <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div>
-          <div class="input-group">
-            <input type="text" placeholder="filter errors" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
-            <div class="input-group-btn">
-              <button class="btn btn-default" type="submit" ng-click="filterClicked()">
-                <span class="glyphicon glyphicon-search"></span>
-              </button>
-            </div> 
-          </div>
-        </div>
-        <span class="glyphicon glyphicon-question-sign" style="margin: 10px 0 0 20px;" ng-click="filterIconClicked()"></span>
-	</div>
-	<div class="alert alert-danger" role="alert" style="margin: 5px 20px 5px 20px; white-space: pre-line;" ng-show="console.text!=''">
-	  {{ console.text }}
-	</div>
-	<div class="alert alert-warning alert-dismissible" role="alert" style="margin: 5px 20px 5px 20px;" ng-show="!warningClosed && blameWarning">
-		<button class="close" data-dismiss="alert" aria-label="close" ng-click="warningClosed = true">&times;</button>
-		<strong>Warning!</strong> Shallow clone detecté, informations git blame manquantes et édition de derogations désactivée. 
-	</div>
-	<div style="display: flex; flex-direction: row; margin: 5px 20px 0 20px;">
-        <script type='text/ng-template' id='unfolded'>
-          <span class="glyphicon glyphicon-chevron-up"></span>
-        </script>
-        <script type='text/ng-template' id='folded'>
-          <span class="glyphicon glyphicon-chevron-down"></span>
-        </script>
-        <button class="btn" data-toggle="collapse" data-target="#editDerog" ng-click="changeEditDerog()" ng-show="derogationLoaded"> 
-          <div ng-include='btnEditDerogIcon'></div>
-        </button>
-		<div class="collapse" uib-collapse="isCollapsed || !derogationLoaded" id="editDerog" style="width: 100%; margin: 0 20px 0 0;">
-			<div style="display: flex; flex-direction: row;">
-				<textarea class="form-control" placeholder="Edit derogation for all filtered errors" ng-model="deroration" style="margin: 0px 5px 0px 5px;"></textarea>
-				<div class="input-group-btn">
-					<button class="btn btn-default" type="submit" ng-click="editAllClicked()" style="height: 100%;">
-						<span class="glyphicon glyphicon-edit"></span>
-					</button>
-				</div> 
-			</div>
-		</div>
-	</div>
-	<table class="table table-striped">
-	  <thead>
-	  <tr>
-		<th scope="col" class="text-align-center">FilePath</th>
-		<th scope="col" class="text-align-center">FileName</th>
-		<th scope="col" class="text-align-center">FileType<br><div style="font-size: xx-small;">(1:header,2:source)<div></th>
-		<th scope="col" class="text-align-center">RuleNumber</th>
-		<th scope="col" class="text-align-center">RuleCategory</th>
-		<th scope="col" class="text-align-center">RuleDescription</th>
-		<th scope="col" class="text-align-center">LineNumber</th>
+    <div id="bottom-bar" style="margin: 20px 20px 0 5px;">
+      <div class="filter-label"><nobr><b>SQLite Where clause: </b></nobr></div>
+      <div class="input-group filter-input">
+        <input type="text" placeholder="filter errors" class="form-control" ng-model="query" ng-keyup="$event.keyCode == 13 && filterClicked()"/>
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" ng-click="filterClicked()">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </div> 
+      </div>
+      <span class="glyphicon glyphicon-question-sign" style="margin: 10px 0 0 20px;" ng-click="filterIconClicked()"></span>
+    </div>
+  <div class="alert alert-danger" role="alert" style="margin: 5px 20px 5px 20px; white-space: pre-line;" ng-show="console.text!=''">
+    {{ console.text }}
+  </div>
+  <div class="alert alert-warning alert-dismissible" role="alert" style="margin: 5px 20px 5px 20px;" ng-show="!warningClosed && blameWarning">
+    <button class="close" data-dismiss="alert" aria-label="close" ng-click="warningClosed = true">&times;</button>
+    <strong>Warning!</strong> Shallow clone detecté, informations git blame manquantes et édition de derogations désactivée. 
+  </div>
+  <div style="display: flex; flex-direction: row; margin: 5px 20px 0 20px;">
+    <script type='text/ng-template' id='unfolded'>
+      <span class="glyphicon glyphicon-chevron-up"></span>
+    </script>
+    <script type='text/ng-template' id='folded'>
+      <span class="glyphicon glyphicon-chevron-down"></span>
+    </script>
+    <button class="btn" data-toggle="collapse" data-target="#editDerog" ng-click="changeEditDerog()" ng-show="derogationLoaded"> 
+      <div ng-include='btnEditDerogIcon'></div>
+    </button>
+    <div class="collapse" uib-collapse="isCollapsed || !derogationLoaded" id="editDerog" style="width: 100%; margin: 0 20px 0 0;">
+      <div style="display: flex; flex-direction: row;">
+        <textarea class="form-control" placeholder="Edit derogation for all filtered errors" ng-model="deroration" style="margin: 0px 5px 0px 5px;"></textarea>
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" ng-click="editAllClicked()" style="height: 100%;">
+            <span class="glyphicon glyphicon-edit"></span>
+          </button>
+        </div> 
+      </div>
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col" class="text-align-center">FilePath</th>
+        <th scope="col" class="text-align-center">FileName</th>
+        <th scope="col" class="text-align-center">FileType<br><div style="font-size: xx-small;">(1:header,2:source)<div></th>
+        <th scope="col" class="text-align-center">RuleNumber</th>
+        <th scope="col" class="text-align-center">RuleCategory</th>
+        <th scope="col" class="text-align-center">RuleDescription</th>
+        <th scope="col" class="text-align-center">LineNumber</th>
         <th scope="col" class="text-align-center">NewError<br><div style="font-size: xx-small;">(0:false,1:true)<div></th>
-		<th scope="col" class="text-align-center">CommitHash</th>
-		<th scope="col" class="text-align-center">CommitDate</th>
-		<th scope="col" class="text-align-center">CommitAuthor</th>
-		<th scope="col" class="text-align-center">ErrorDerogation</th>
-	  </tr>
-	  </thead>
-	  <tbody>
-	  <tr ng-repeat="item in ResultView">
-		<td scope="row" class="text-align-center">{{ item.path }}</td>
-		<td scope="row" class="text-align-center">{{ item.name }}</td>
-		<td scope="row" class="text-align-center">{{ item.type}}</td>
-		<td scope="row" class="text-align-center">{{ item.ruleNumber }}</td>
-		<td scope="row" class="text-align-center">{{ item.category }}</td>
-		<td scope="row" class="text-align-center">{{ item.description }}</td>
-		<td scope="row" class="text-align-center">{{ item.lineNumber }}</td>
+        <th scope="col" class="text-align-center">CommitHash</th>
+        <th scope="col" class="text-align-center">CommitDate</th>
+        <th scope="col" class="text-align-center">CommitAuthor</th>
+        <th scope="col" class="text-align-center">ErrorDerogation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in ResultView">
+        <td scope="row" class="text-align-center">{{ item.path }}</td>
+        <td scope="row" class="text-align-center">{{ item.name }}</td>
+        <td scope="row" class="text-align-center">{{ item.type}}</td>
+        <td scope="row" class="text-align-center">{{ item.ruleNumber }}</td>
+        <td scope="row" class="text-align-center">{{ item.category }}</td>
+        <td scope="row" class="text-align-center">{{ item.description }}</td>
+        <td scope="row" class="text-align-center">{{ item.lineNumber }}</td>
         <td scope="row" class="text-align-center">{{ item.isNew }}</td>
-		<td scope="row" class="text-align-center">{{ item.commitHash }}</td>
-		<td scope="row" class="text-align-center">{{ item.commitDate }}</td>
-		<td scope="row" class="text-align-center">{{ item.commitAuthor }}</td>
-		<td scope="row" class="text-align-center">
-			<div style="display: flex; flex-direction: row; width:300px;">
-				<textarea class="form-control" ng-model="item.derogation" placeholder="Edit derogation" ng-disabled="!derogationLoaded || item.commitHash===''" ng-focus="textDerogationClicked(item)"></textarea>
-				<div style="display: flex; flex-direction: column; width:40px; margin: 5px" ng-show="item.derogationWrote">
-					<button class="btn btn-success" style="margin-bottom: 2px" ng-click="validDerogationClicked(item)"><span class="glyphicon glyphicon-ok"></span></button>
-					<button class="btn btn-danger" style="margin-top: 2px" ng-click="cancelDerogationClicked(item)"><span class="glyphicon glyphicon-remove"></span></button>
-				</div>
-			</div>
-		</td>
-	  </tr>
-	  </tbody>
-	</table>
+        <td scope="row" class="text-align-center">{{ item.commitHash }}</td>
+        <td scope="row" class="text-align-center">{{ item.commitDate }}</td>
+        <td scope="row" class="text-align-center">{{ item.commitAuthor }}</td>
+        <td scope="row" class="text-align-center">
+          <div style="display: flex; flex-direction: row; width:300px;">
+            <textarea class="form-control" ng-model="item.derogation" placeholder="Edit derogation" ng-disabled="!derogationLoaded || item.commitHash===''" ng-focus="textDerogationClicked(item)"></textarea>
+            <div style="display: flex; flex-direction: column; width:40px; margin: 5px" ng-show="item.derogationWrote">
+              <button class="btn btn-success" style="margin-bottom: 2px" ng-click="validDerogationClicked(item)"><span class="glyphicon glyphicon-ok"></span></button>
+              <button class="btn btn-danger" style="margin-top: 2px" ng-click="cancelDerogationClicked(item)"><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-	<nav aria-label="Page navigation" class="navbar">
-	  <div class="container-fluid">
+  <nav aria-label="Page navigation" class="navbar">
+    <div class="container-fluid">
         <ul class="pagination">
-		  <li class="page-item" ng-show="min>1">
-		    <a class="page-link" ng-click="previousPageClicked()" aria-label="Previous">
-			  <span aria-hidden="true">&laquo;</span>
-			  <span class="sr-only">Previous</span>
-		    </a>
-		  </li>
-		  <li ng-repeat="index in pages" class="page-item" ng-class="{active: index===selectedIndex}"><a class="page-link" ng-click="paginationClicked(index)">{{index}}</a></li>
-		  <li class="page-item" ng-show="max<count">
-		    <a class="page-link" ng-click="nextPageClicked()" aria-label="Next">
-		  	  <span aria-hidden="true">&raquo;</span>
-			  <span class="sr-only">Next</span>
-		    </a>
-		  </li>
-	    </ul>
+      <li class="page-item" ng-show="min>1">
+        <a class="page-link" ng-click="previousPageClicked()" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li ng-repeat="index in pages" class="page-item" ng-class="{active: index===selectedIndex}"><a class="page-link" ng-click="paginationClicked(index)">{{index}}</a></li>
+      <li class="page-item" ng-show="max<count">
+        <a class="page-link" ng-click="nextPageClicked()" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+        </a>
+      </li>
+      </ul>
         <div class="navbar-right pagination-select">
-	      <select class="custom-select" ng-model="pageSize">
-		    <option ng-value="10" ng-click="selectClicked(10)">10 items per page</option>
-		    <option ng-value="100" ng-click="selectClicked(100)">100 items per page</option>
-		    <option ng-value="1000" ng-click="selectClicked(1000)">1000 items per page</option>
-	      </select>
+        <select class="custom-select" ng-model="pageSize">
+        <option ng-value="10" ng-click="selectClicked(10)">10 items per page</option>
+        <option ng-value="100" ng-click="selectClicked(100)">100 items per page</option>
+        <option ng-value="1000" ng-click="selectClicked(1000)">1000 items per page</option>
+        </select>
         </div>
       </div>
     </nav>
