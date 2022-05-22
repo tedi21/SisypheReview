@@ -1,0 +1,19 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h3 class="modal-title">About</h3>
+    </div>
+    <div class="modal-body">
+      <div class="d-flex flex-row about-container">
+        <div>
+          <p class="font-weight-bold">Sisyphe V3</p>
+          <p>Author : Teddy</p>
+        </div>
+        <div id="loading-img"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" (click)="modal.close('Close click')">OK</button>
+    </div>
+</ng-template>
+
+<img src="assets/imgs/logo.png" alt="Sisyphe logo" height="30" width="72" (click)="open(content)"/>

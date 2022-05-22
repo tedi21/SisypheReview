@@ -170,12 +170,15 @@ NAMESPACE_BEGIN(interp)
             IN_FUNCTION_SPACE,
             IN_FUNCTION_INIT,
             IN_FUNCTION_PARAM,
+			IN_IGNORED_CODE
         };
 
         static bool IN_CODE(const FlagSet& flags);
 
         template <typename... T>
         static ParserBlock InfoBlock(size_t start, size_t end, T&&... args);
+
+        std::vector<typename EncodingT::string_t> mIgnoredPreprocessorList;
 
         void parse();
 
@@ -185,7 +188,7 @@ NAMESPACE_BEGIN(interp)
         boost::shared_ptr< Base<EncodingT> > mCodePtr;
         typename EncodingT::string_t mCode;
 
-        std::vector<ParserBlock> mNoCode;     // String + Comment
+        std::vector<ParserBlock> mNoCode;     // String + Comment + Ignored code under preprocessor 
         std::vector<ParserBlock> mComments;   // CppComment + CComment
 
         std::vector<ParserBlock> mLines;
@@ -196,6 +199,11 @@ NAMESPACE_BEGIN(interp)
         size_t mStringStart;
         void parseDblString(size_t i, FlagSet& flags);
         void parseSplString(size_t i, FlagSet& flags);
+
+        std::vector<ParserBlock> mIgnoredCodes;
+        size_t mIgnoredCodeStart;
+        size_t mIgnoredCodeEnd;
+        void parseIgnoredCode(size_t i, FlagSet& flags);
 
         std::vector<ParserBlock> mCppComments;
         size_t mCppCommentStart;
@@ -313,6 +321,9 @@ NAMESPACE_BEGIN(interp)
         FACTORY_PROTOTYPE1(parse, In< boost::shared_ptr< Base<EncodingT> > >)
         void parse(const boost::shared_ptr< Base<EncodingT> >& content);
 
+        FACTORY_PROTOTYPE1(setIgnoredPreprocessorList, In< boost::shared_ptr< Base<EncodingT> > >)
+        void setIgnoredPreprocessorList(const boost::shared_ptr< Base<EncodingT> >& list);
+
         boost::shared_ptr< Base<EncodingT> > getContent() const;
 
         boost::shared_ptr< Base<EncodingT> > getSourceCode() const;
@@ -398,6 +409,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_REGISTER1( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getFileContent, const_t, UCS("CPPParser::FileContent") );
             METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parseFile, no_const_t, UCS("CPPParser::ParseFile") );
             METHOD_KEY_REGISTER1( CPPParserInterpreter, void, parse, no_const_t, UCS("CPPParser::Parse") );
+            METHOD_KEY_REGISTER1( CPPParserInterpreter, void, setIgnoredPreprocessorList, no_const_t, UCS("CPPParser::IgnoredPreprocessorList") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getContent, const_t, UCS("CPPParser::Content") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, getSourceCode, const_t, UCS("CPPParser::SourceCode") );
             METHOD_KEY_REGISTER ( CPPParserInterpreter, boost::shared_ptr< Base<EncodingT> >, literalId, const_t, UCS("CPPParser::Literal") );
@@ -439,6 +451,7 @@ NAMESPACE_BEGIN(interp)
             METHOD_KEY_UNREGISTER1( UCS("CPPParser::FileContent") );
             METHOD_KEY_UNREGISTER1( UCS("CPPParser::ParseFile") );
             METHOD_KEY_UNREGISTER1( UCS("CPPParser::Parse") );
+            METHOD_KEY_UNREGISTER1( UCS("CPPParser::IgnoredPreprocessorList") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::Content") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::SourceCode") );
             METHOD_KEY_UNREGISTER ( UCS("CPPParser::Literal") );

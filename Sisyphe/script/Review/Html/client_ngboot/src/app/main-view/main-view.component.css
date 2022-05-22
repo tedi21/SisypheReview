@@ -1,0 +1,95 @@
+
+.page {
+  min-height: 100vh;
+  overflow:hidden;
+}
+
+.view {
+  margin: 0px;
+  padding: 0px;
+  overflow:auto;
+
+  background: rgb(32,32,32);
+}
+
+.sidebar {
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.explorer-panel {
+  border:1px solid Gray;
+  color: white;
+  margin-top:5px;
+  overflow:auto;
+}
+
+.properties-panel {
+  border:1px solid Gray;
+  color: white;
+  margin-top:5px;
+  margin-bottom:5px;
+  overflow:auto;
+}
+
+.flex-even {
+  flex: 1 1 0;
+}
+
+.table-fixed  {
+  overflow-y:auto;
+}
+
+.table-header {
+  text-decoration:underline;
+  font-weight:bold;
+  padding: 2px 5px;
+}
+
+.table-cell>tbody>tr>td {
+  padding: 5px 10px;
+}
+
+.table-cursor:hover {
+  cursor: pointer;
+}
+
+.table-dark > td {
+  color: black;
+}
+
+.table-column-center {
+  width: 0px;
+}
+
+.main-panel {
+  margin-top:5px;
+  margin-bottom:5px;
+  padding:0px;
+}
+
+.code-panel {
+  background-color: #000000;
+  margin:0px;
+  padding:0px;
+  overflow:auto;
+}
+
+.bottom-panel {
+  margin:0px;
+  padding:0px;
+}
+
+.dropdown-item {
+  color: white;
+}
+
+.dropdown-item:hover {
+  color: #fff;
+  background-color: rgba(255,255,255,.075);
+}
+
+.list-info {
+  height:160px;
+  overflow:auto;
+}

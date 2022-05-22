@@ -1,0 +1,145 @@
+<app-loading #loading></app-loading>
+<!-- Page content -->
+<div class="page d-flex flex-column">
+  <!-- Bootstrap Navigation bar : dark-grey bar -->
+  <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+    <!-- brand logo -->
+    <div class="navbar-brand ">
+      <app-about></app-about>
+    </div>
+  </nav>
+  <!-- View content -->
+  <div class="view flex-even d-flex flex-row">
+    <!-- main panel -->
+    <div class="main-panel flex-even pr-1 pl-1 d-flex flex-column">
+      <!-- code panel -->
+      <div class="code-panel flex-even d-flex flex-row">
+        <div class="flex-even code-area">
+          <ngx-codemirror #codemirror0
+            [(ngModel)]="content0"
+            [options]="{
+              lineNumbers: true,
+              theme: 'material',
+              matchBrackets: true,
+              mode: 'text/x-c++src'
+          }">
+          </ngx-codemirror>
+        </div>
+        <div *ngIf="type == 'header+source'" class="flex-even pl-1 code-area">
+          <ngx-codemirror #codemirror1
+            [(ngModel)]="content1"
+            [options]="{
+              lineNumbers: true,
+              theme: 'material',
+              matchBrackets: true,
+              mode: 'text/x-c++src'
+          }">
+          </ngx-codemirror>
+        </div>
+      </div>
+      <!-- buttons bar -->
+      <div class="d-flex flex-row">
+        <div ngbDropdown class="d-inline-block command">
+          <button class="btn btn-secondary dropdown-toggle d-inline-flex align-items-center" type="button" id="dropdownMenuButton" ngbDropdownToggle>
+            <bi name="filter-circle" class="icon-button-text"></bi><span>Type: {{type}}</span>
+          </button>
+          <div ngbDropdownMenu class="bg-dark" aria-labelledby="dropdownMenuButton">
+            <button *ngFor="let typeName of types" ngbDropdownItem (click)="onTypeClicked(typeName)">{{typeName}}</button>
+          </div>
+        </div>
+        <button class="btn btn-success d-inline-flex align-items-center" (click)="onCheckClicked()" [disabled]="checking" type="submit">
+          Check<fa-icon *ngIf="checking" class="ml-1" [icon]="['fas', 'spinner']" [pulse]="true"></fa-icon>
+        </button>
+      </div>
+      <!-- bottom panel -->
+      <div class="bottom-panel">
+        <div #collapse="ngbCollapse" [(ngbCollapse)]="isBottomTableCollapsed">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <a class="bg-secondary text-white" ngbNavLink>Errors</a>
+              <ng-template ngbNavContent>
+                <div class="d-flex flex-row pl-1 py-1">
+                  <div class="flex-even d-flex flex-row align-items-center" *ngIf="fileList.name!='Search'">
+                    <input type="text" class="form-control mx-2" placeholder="Filter rules" [(ngModel)]="filterInput"/>
+                    <app-rule-info></app-rule-info>
+                  </div>
+                </div>
+                <div #listInfo class="list-info">
+                  <table class="table table-dark table-hover table-cell my-0">
+                    <tbody>
+                    <!-- -->
+                      <tr class="table-cursor" *ngFor="let item of fileList.list | ruleFilter:{'query': filterInput, 'enabled': true}" [ngClass]="item.clicked ? 'table-dark' : ''" (click)="onListClicked(item)" id="row-list-{{item.start}}">
+                        <td class="table-column-center">
+                          <div class="d-inline-flex align-items-center"><bi name="exclamation-circle-fill" class="icon-button-text"></bi></div>
+                        </td>
+                        <td class="table-column-center">l.{{item.lineNumber}}</td>
+                        <td>
+                          <div *ngIf="item.description==''; then categoryBlock else descriptionBlock"></div>
+                          <ng-template #categoryBlock>{{item.category}}</ng-template>
+                          <ng-template #descriptionBlock>{{item.category}}: {{item.description}}</ng-template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <a class="bg-secondary text-white" ngbNavLink>Console</a>
+              <ng-template ngbNavContent>
+                <textarea [ngModel]='consoleText'
+                class="console"
+                nowrap="nowrap" wrap="off"
+                autocomplete="off" autocorrect="off" 
+                autocapitalize="off" spellcheck="false">
+                </textarea>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <a class="bg-secondary text-white" ngbNavLink>Settings</a>
+              <ng-template ngbNavContent>
+                <div class="d-flex flex-column settings">
+                  <div class="d-flex flex-row">
+                    <label class="setting-label">File name</label>
+                    <input type="text" class="form-control setting-input" placeholder="name" [(ngModel)]="filename"/>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <label class="setting-label">Disable rules</label>
+                    <input type="text" class="form-control setting-input" placeholder="rule number separated by ;" [(ngModel)]="rules"/>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <label class="setting-label">Suppress issue keyword</label>
+                    <input type="text" class="form-control setting-input" placeholder="keyword" [(ngModel)]="keyword"/>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <label class="setting-label">Preprocessor directives to ignore</label>
+                    <input type="text" class="form-control setting-input" placeholder="preprocessor directive separated by ;" [(ngModel)]="preprocessors"/>
+                  </div>
+                </div>
+            </ng-template>
+            </li>
+            <li [ngbNavItem]="4">
+              <a class="bg-secondary text-white" ngbNavLink>Macros</a>
+              <ng-template ngbNavContent>
+                <textarea [(ngModel)]='macroText'
+                class="console"
+                nowrap="nowrap" wrap="off"
+                autocomplete="off" autocorrect="off" 
+                autocapitalize="off" spellcheck="false">
+                </textarea>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+        <div class="bottom-panel d-flex flex-column align-items-center">
+          <button class="btn btn-secondary d-inline-flex align-items-center mr-md-2" type="submit" (click)="onListView()">
+            <div *ngIf="isBottomTableCollapsed; then chevronUp else chevronDown"></div>
+            <ng-template #chevronUp><bi name="chevron-bar-up" class="icon-button"></bi></ng-template>
+            <ng-template #chevronDown><bi name="chevron-bar-down" class="icon-button"></bi></ng-template>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

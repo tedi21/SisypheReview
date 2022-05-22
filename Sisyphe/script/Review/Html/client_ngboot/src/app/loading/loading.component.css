@@ -1,0 +1,9 @@
+
+.dark-modal .modal-content {
+  background-color: #343a40 !important;
+  color: white;
+}
+
+.loading-container {
+  height: 145px;
+}

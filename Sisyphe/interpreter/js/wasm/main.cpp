@@ -73,19 +73,106 @@ Category* initialize_log(const char* name, int verbose)
 }
 
 
-struct Content {
+class Content {
+public:
+		Content() {
+			text = L"";
+			type = 1U;
+			name = L"";
+		}
+
+		Content(const std::wstring& text_, const unsigned int type_, const std::wstring& name_) {
+			text = text_;
+			type = type_;
+			name = name_;
+		}
+
+		const std::wstring& getText() const {
+			return text;
+		}
+
+		unsigned int getType() const {
+			return type;
+		}
+
+		const std::wstring& getName() const {
+			return name;
+		}
+
+		void setText(const std::wstring& text_) {
+			text = text_;
+		}
+
+		void setType(const unsigned int type_) {
+			type = type_;
+		}
+
+		void setName(const std::wstring& name_) {
+			name = name_;
+		}
+
+private:
     std::wstring text;
     unsigned int type;
+		std::wstring name;
 };
 
-struct Derogation {
+class Derogation {
+public:
+		Derogation() {
+			commitHash = L"";
+			commitLine = 0U;
+			orderOfError = 0U;
+			comment = L"";
+		}
+
+		Derogation(const std::wstring& commitHash_, const unsigned int commitLine_, const unsigned int orderOfError_, const std::wstring& comment_) {
+			commitHash = commitHash_;
+			commitLine = commitLine_;
+			orderOfError = orderOfError_;
+			comment = comment_;
+		}
+
+		const std::wstring& getCommitHash() const {
+			return commitHash;
+		}
+
+		unsigned int getCommitLine() const {
+			return commitLine;
+		}
+
+		void setCommitHash(const std::wstring& commitHash_) {
+			commitHash = commitHash_;
+		}
+
+		void setCommitLine(const unsigned int commitLine_) {
+			commitLine = commitLine_;
+		}
+
+		const std::wstring& getComment() const {
+			return comment;
+		}
+
+		unsigned int getOrderOfError() const {
+			return orderOfError;
+		}
+
+		void setComment(const std::wstring& comment_) {
+			comment = comment_;
+		}
+
+		void setOrderOfError(const unsigned int orderOfError_) {
+			orderOfError = orderOfError_;
+		}
+
+private:
 	std::wstring commitHash;
 	unsigned int commitLine;
 	unsigned int orderOfError;
 	std::wstring comment;
 };
 
-std::wstring tdscript(const std::vector<Content>& contents)
+std::wstring tdscript(const std::vector<Content>& contents, const std::wstring& macro)
 { 
     std::wstring result;  
     Category* logger = Category::exists(LOGNAME);
@@ -104,6 +191,16 @@ std::wstring tdscript(const std::vector<Content>& contents)
         }
     }
 
+	  // Création du fichier macro.td
+ 	  std::wofstream fstream("Macro.td", ios_base::out);
+    std::codecvt<ucs::char_t, char, std::mbstate_t> * codecvt_facet = new utf16LE_codecvt_facet;
+    std::locale old_locale;
+    std::locale new_locale(old_locale,codecvt_facet);
+    fstream.imbue(new_locale);
+    fstream << utf16LE_codecvt_facet::BOM;
+	  fstream << macro;
+	  fstream.close();
+
     logger->infoStream() << "Script parsing started";
     ucs::string_t buf;
     boost::shared_ptr< Term<ucs> > a;
@@ -116,8 +213,9 @@ std::wstring tdscript(const std::vector<Content>& contents)
         for (auto it = contents.begin(); it != contents.end(); ++it)
         {
             boost::shared_ptr<Structure<ucs>> str(new Structure<ucs>());
-            str->insertField(L"Text", boost::shared_ptr<Base<ucs>>(new String<ucs>(it->text)));
-            str->insertField(L"Type", boost::shared_ptr<Base<ucs>>(new Numeric<ucs>(it->type)));
+            str->insertField(L"Text", boost::shared_ptr<Base<ucs>>(new String<ucs>(it->getText())));
+            str->insertField(L"Type", boost::shared_ptr<Base<ucs>>(new Numeric<ucs>(it->getType())));
+						str->insertField(L"Name", boost::shared_ptr<Base<ucs>>(new String<ucs>(it->getName())));
             arr->addValue(str);
         }
         c.add(L"FILES", arr);
@@ -137,9 +235,8 @@ std::wstring tdscript(const std::vector<Content>& contents)
     return result;
 }
 
-std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& expr, const unsigned int limit, const unsigned int offset)
+void loadDb(const std::vector<unsigned char>& base)
 { 
-    std::wstring result = L"Identifier\tFile Path\tFile Name\tFile Type\tRule Number\tRule Category\tRule Description\tLine Number\tNew Error\tCommit Hash\tCommit Date\tCommit Author\tCommit Origine Line\tOrder Of Error\tError Derogation\n";  
     Category* logger = Category::exists(LOGNAME);
     if (logger == nullptr)
     {
@@ -152,9 +249,9 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 		if (db == nullptr)
 		{
 			// Création du fichier db
-			std::ofstream m_fstream("cppbase.db", ios_base::out | ios_base::binary);
-			m_fstream.write(reinterpret_cast<const char*>(base.data()), base.size());
-			m_fstream.close();
+			std::ofstream fstream("cppbase.db", ios_base::out | ios_base::binary);
+			fstream.write(reinterpret_cast<const char*>(base.data()), base.size());
+			fstream.close();
 
 		    logger->debugStream() << "try to open DB connection " << "cppbase.db";
 		    if (!data_access::UniDataConnection::openConnection(UCS(""), 0, encode<ansi,ucs>("cppbase.db"), UCS(""), UCS("")))
@@ -162,7 +259,24 @@ std::wstring filter(const std::vector<unsigned char>& base, const std::wstring& 
 		        logger->errorStream() << "cannot open DB connection " << "cppbase.db" << ".";
 		    }
 		}
+	}
+	catch(const data_access::BadSqlQueryException& e)
+	{
+		logger->errorStream() << e.what();
+	}
+}
 
+std::wstring filter(const std::wstring& expr, const unsigned int limit, const unsigned int offset)
+{ 
+    std::wstring result = L"Identifier\tFile Path\tFile Name\tFile Type\tRule Number\tRule Category\tRule Description\tLine Number\tNew Error\tCommit Hash\tCommit Date\tCommit Author\tCommit Origine Line\tOrder Of Error\tError Derogation\n";  
+    Category* logger = Category::exists(LOGNAME);
+    if (logger == nullptr)
+    {
+        logger = initialize_log(LOGNAME, 6);
+    }
+
+	try
+	{
 		data_access::UniDataConnection* connection = data_access::UniDataConnection::getInstance();
 		logger->debugStream() << "prepare sql query ";
 
@@ -304,10 +418,10 @@ void addDerogations(const std::vector<Derogation>& derogationsList)
 			for (const Derogation& derog : derogationsList)
 			{		
 				data_access::UniDataParameters values;
-				values.addText(derog.commitHash);
-				values.addInt64(derog.commitLine);
-				values.addText(derog.comment);
-				values.addInt64(derog.orderOfError);
+				values.addText(derog.getCommitHash());
+				values.addInt64(derog.getCommitLine());
+				values.addText(derog.getComment());
+				values.addInt64(derog.getOrderOfError());
 				values.fill(statement);
 				statement.executeQuery();
 			}	
@@ -363,10 +477,10 @@ void loadDerogations(const std::wstring& content)
 			Derogation derog;
 			if ((item.size() > 14) && (!item[9].empty())) 
 			{
-				derog.commitHash = item[9];
-				derog.commitLine = std::stoul(item[12]);
-				derog.orderOfError = std::stoul(item[13]);
-				derog.comment = item[14];
+				derog.setCommitHash(item[9]);
+				derog.setCommitLine(std::stoul(item[12]));
+				derog.setOrderOfError(std::stoul(item[13]));
+				derog.setComment(item[14]);
 				vec.push_back(derog);
 			}
 		}
@@ -377,9 +491,12 @@ void loadDerogations(const std::wstring& content)
 
 
 EMSCRIPTEN_BINDINGS(module) {
-    emscripten::value_object<Content>("Content")
-        .field("Text", &Content::text)
-        .field("Type", &Content::type);
+  	emscripten::class_<Content>("Content")
+		.constructor<>()
+    	.constructor<const std::wstring&, const unsigned int, const std::wstring&>()
+    	.property("Text", &Content::getText, &Content::setText)
+		.property("Type", &Content::getType, &Content::setType)
+		.property("Name", &Content::getName, &Content::setName);
 
     emscripten::register_vector<Content>("VectorContent");
 
@@ -389,11 +506,15 @@ EMSCRIPTEN_BINDINGS(module) {
 
     emscripten::function("filter", &filter);
 
-    emscripten::value_object<Derogation>("Derogation")
-        .field("CommitHash", &Derogation::commitHash)
-        .field("CommitLine", &Derogation::commitLine)
-        .field("OrderOfError", &Derogation::orderOfError)
-        .field("Comment", &Derogation::comment);
+    emscripten::function("loadDb", &loadDb);
+
+  	emscripten::class_<Derogation>("Derogation")
+		.constructor<>()
+    	.constructor<const std::wstring&, const unsigned int, const unsigned int, const std::wstring&>()
+    	.property("CommitHash", &Derogation::getCommitHash, &Derogation::setCommitHash)
+		.property("CommitLine", &Derogation::getCommitLine, &Derogation::setCommitLine)
+		.property("OrderOfError", &Derogation::getOrderOfError, &Derogation::setOrderOfError)
+		.property("Comment", &Derogation::getComment, &Derogation::setComment);
 
 	emscripten::register_vector<Derogation>("VectorDerogation");
 

@@ -1,0 +1,25 @@
+.page {
+  min-height: 100vh;
+  overflow:hidden;
+}
+
+.view {
+  margin: 0px;
+  padding: 0px;
+  overflow:auto;
+
+  background: rgb(32,32,32);
+}
+
+.filter-panel {
+  margin: 5px 20px 0 5px;
+  padding:0px;
+}
+
+.filter-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  color: white;
+}

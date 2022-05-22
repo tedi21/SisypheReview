@@ -12,14 +12,16 @@ if sourceFolder.Exists && docFolder.Exists then
   /* Initialise Git */
   InitGit(constant:sourcePath);
 
-  /* Analyse les fichiers sources dans le repértoire passé en paramètre. */
-  Parse(constant:sourcePath);
-
   /* Structure permettant de desactiver une règle (toutes les règles sont activées par défaut). */
   /*
   constant:ENABLED_RULES.Rule1  = false;
   constant:ENABLED_RULES.Rule28 = false;
   */
+  constant:SETTINGS.IgnoreErrorKeyword = "DEROGATION";
+  constant:SETTINGS.IgnorePreprocessorList = "".Split(";");
+  
+  /* Analyse les fichiers sources dans le repértoire passé en paramètre. */
+  Parse(constant:sourcePath);
 
   /* Structure permettant de desactiver la génération des diagrammes (Activée par défaut). 
   Nécessite l'installation de GraphViz + 

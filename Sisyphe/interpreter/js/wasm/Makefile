@@ -36,7 +36,7 @@ all: $(EXEC)
 
 tdscript.html: $(OBJ)
 	@mkdir -p out
-	$(CXX) $(LDFLAGS) $(addprefix obj/,$^) $(LIB) -o out/$@  --preload-file data@/ --shell-file html_template/shell_minimal.html -s NO_EXIT_RUNTIME=1  --bind -s DISABLE_EXCEPTION_CATCHING=0 -s ALLOW_MEMORY_GROWTH=1
+	$(CXX) $(LDFLAGS) $(addprefix obj/,$^) $(LIB) -o out/$@  --preload-file data@/ --shell-file html_template/shell_minimal.html -s NO_EXIT_RUNTIME=1  --bind -s DISABLE_EXCEPTION_CATCHING=0 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s 'EXPORT_NAME="createModule"'
 
 %.bc: %.cpp
 	@mkdir -p obj

@@ -17,6 +17,7 @@
 #include "iso_8859_15_codecvt.hpp"
 #include "Numeric.hpp"
 #include "String.hpp"
+#include "Array.hpp"
 
 #define A(str) encode<EncodingT,ansi>(str)
 #define C(str) encode<ansi,EncodingT>(str)
@@ -128,6 +129,8 @@ void CPPParserInterpreter<EncodingT>::parse()
     mLineStart = i;
     mLiteralStart = i;
     mStringStart = i;
+    mIgnoredCodeStart = i;
+    mIgnoredCodeEnd = i;
     mCppCommentStart = i;
     mCCommentStart = i;
     mPreprocessorStart = i;
@@ -140,6 +143,7 @@ void CPPParserInterpreter<EncodingT>::parse()
     mNoCode.clear();
     mStrings.clear();
     mComments.clear();
+    mIgnoredCodes.clear();
     mCppComments.clear();
     mCComments.clear();
     mPreprocessors.clear();
@@ -167,6 +171,7 @@ void CPPParserInterpreter<EncodingT>::parse()
         parseLine(i, flags);
         parseCppComment(i, flags);
         parseCComment(i, flags);
+        parseIgnoredCode(i, flags);
         parseDblString(i, flags);
         parseSplString(i, flags);
         parseWord(i, flags);
@@ -346,6 +351,64 @@ void CPPParserInterpreter<EncodingT>::parseCComment(size_t i, FlagSet& flags)
             mCCommentStart = i;
             flags_set(flags, FLAGS::IN_C_COMMENT);
             flags_set(flags, FLAGS::IN_COMMENT);
+            flags_set(flags, FLAGS::IN_NO_CODE);
+            flags_set(flags, FLAGS::CODE_BREAK);
+        }
+    }
+}
+
+template <class EncodingT>
+void CPPParserInterpreter<EncodingT>::parseIgnoredCode(size_t i, FlagSet& flags)
+{
+    if (flags_test(flags, FLAGS::IN_IGNORED_CODE))
+    {
+        if (((mIgnoredCodeEnd > mIgnoredCodeStart) && (mIgnoredCodeEnd == i)) ||
+                (i >= mContent.size()))
+        {
+            mIgnoredCodes.push_back(ParserBlock(mIgnoredCodeStart, i));
+            mNoCode.push_back(ParserBlock(mIgnoredCodeStart, i));
+            flags_reset(flags, FLAGS::IN_IGNORED_CODE);
+            flags_reset(flags, FLAGS::IN_NO_CODE);
+        }
+    }
+    if (IN_CODE(flags))
+    {
+        size_t j = i;
+        bool found = false;
+        for (typename std::vector<typename EncodingT::string_t>::const_iterator ite = mIgnoredPreprocessorList.begin(); (ite != mIgnoredPreprocessorList.end()) && (!found); ++ite)
+        {
+            if (mContent.compare(i, ite->size(), *ite) == 0)
+            {
+                found = true;
+                j = i + ite->size();
+                while ((j < mContent.size()) && (isspace(mContent[j]) != 0)) ++j;
+                if ((j < mContent.size()) && (mContent[j] == '('))
+                {
+                    size_t parenthesisCount = 1;
+                    while ((j < mContent.size()) && (parenthesisCount > 0))
+                    {
+                        ++j;
+                        if (j < mContent.size())
+                        {
+                            if (mContent[j] == '(')
+                            {
+                                ++parenthesisCount;
+                            }
+                            else if (mContent[j] == ')')
+                            {
+                                --parenthesisCount;
+                            }
+                        }
+                    }
+                    ++j;
+                }
+            }
+        }
+        if (found)
+        {
+            mIgnoredCodeStart = i;
+            mIgnoredCodeEnd = j;
+            flags_set(flags, FLAGS::IN_IGNORED_CODE);
             flags_set(flags, FLAGS::IN_NO_CODE);
             flags_set(flags, FLAGS::CODE_BREAK);
         }
@@ -1370,6 +1433,16 @@ void CPPParserInterpreter<EncodingT>::parse(const boost::shared_ptr< Base<Encodi
         Category * logger = &Category::getInstance(LOGNAME);
         logger->errorStream() << "String expected, got " << A(content->getClassName());
     }
+}
+
+template <class EncodingT>
+void CPPParserInterpreter<EncodingT>::setIgnoredPreprocessorList(const boost::shared_ptr< Base<EncodingT> >& list)
+{
+    check_string_array(list, mIgnoredPreprocessorList);
+    std::sort(mIgnoredPreprocessorList.begin(), mIgnoredPreprocessorList.end(), [](const typename EncodingT::string_t& a, const typename EncodingT::string_t& b)
+    {
+        return a.size() > b.size();
+    });
 }
 
 template <class EncodingT>
