@@ -121,7 +121,7 @@
               <span class="sr-only">Previous</span>
             </a>
           </li>
-          <li *ngFor="let index of pages" class="page-item" [ngClass]="index===selectedIndex ? 'table-dark' : ''"><a class="page-link bg-secondary text-white" (click)="paginationClicked(index)">{{index}}</a></li>
+          <li *ngFor="let index of pages" class="page-item"><a class="page-link text-white" [ngClass]="index===selectedIndex ? 'bg-dark' : 'bg-secondary'" (click)="paginationClicked(index)">{{index}}</a></li>
           <li class="page-item" *ngIf="table.pageMax<table.pageCount">
             <a class="page-link bg-secondary text-white" (click)="nextPageClicked()" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
