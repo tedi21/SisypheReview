@@ -7,12 +7,6 @@ import { TableComponent } from './table/table.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: MainViewComponent,
-    resolve: {
-    }
-  },
-  {
     path: 'tester',
     component: TesterComponent,
     resolve: {
@@ -21,6 +15,12 @@ const routes: Routes = [
   {
     path: 'table',
     component: TableComponent,
+    resolve: {
+    }
+  },
+  {
+    path: '**',
+    component: MainViewComponent,
     resolve: {
     }
   },
