@@ -137,7 +137,7 @@ _TextFileAccess<EncodingT>::selectManyTextFiles(typename EncodingT::string_t con
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -170,8 +170,7 @@ _TextFileAccess<EncodingT>::isSelectedTextFile(boost::shared_ptr< _TextFile<Enco
 		m_logger->errorStream() << "Rowid : Identifier is null.";
 		throw UnIdentifiedObjectException("Rowid : Identifier is null.");
 	}
-	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -241,8 +240,7 @@ _TextFileAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _TextFile<Encodi
 	if (!filter.empty()) {
 		cppFileFilter += UCS(" AND ") + filter;
 	}
-	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
-	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppFileAccess->selectManyCppFiles(cppFileFilter, nowait, true);
@@ -293,8 +291,7 @@ _TextFileAccess<EncodingT>::fillManyDebugFileInfos(boost::shared_ptr< _TextFile<
 	if (!filter.empty()) {
 		debugFileInfoFilter += UCS(" AND ") + filter;
 	}
-	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(o->getRowid());
-	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = debugFileInfoAccess->selectManyDebugFileInfos(debugFileInfoFilter, nowait, true);
@@ -331,8 +328,7 @@ _TextFileAccess<EncodingT>::isModifiedTextFile(boost::shared_ptr< _TextFile<Enco
 		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
 		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
-	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -408,8 +404,7 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
 		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
-	typename _TextFile<EncodingT>::TextFileIDEquality textFileIdEquality(*o);
-	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), textFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -506,10 +501,10 @@ _TextFileAccess<EncodingT>::updateTextFile(boost::shared_ptr< _TextFile<Encoding
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -612,8 +607,7 @@ _TextFileAccess<EncodingT>::deleteTextFile(boost::shared_ptr< _TextFile<Encoding
 		m_logger->errorStream() << "DebugFileInfoAccess class is not initialized.";
 		throw NullPointerException("DebugFileInfoAccess class is not initialized.");
 	}
-	typename _TextFile<EncodingT>::TextFileIDEquality TextFileIdEquality(*o);
-	typename std::list< boost::shared_ptr< _TextFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), TextFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -638,10 +632,10 @@ _TextFileAccess<EncodingT>::deleteTextFile(boost::shared_ptr< _TextFile<Encoding
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setRowid(-1);
+			o->setRowid(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

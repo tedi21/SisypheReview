@@ -26,7 +26,8 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 				boost::shared_ptr< Base<EncodingT> > const& commitHash,
 				boost::shared_ptr< Base<EncodingT> > const& commitDate,
 				boost::shared_ptr< Base<EncodingT> > const& commitAuthor,
-				boost::shared_ptr< Base<EncodingT> > const& commitLine)
+				boost::shared_ptr< Base<EncodingT> > const& commitLine,
+				boost::shared_ptr< Base<EncodingT> > const& derogation)
 {
 	typename EncodingT::string_t nativeDescription;
 	typename EncodingT::string_t nativeCategory;
@@ -39,6 +40,7 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 	typename EncodingT::string_t nativeCommitDate;
 	typename EncodingT::string_t nativeCommitAuthor;
 	long long nativeCommitLine;
+	typename EncodingT::string_t nativeDerogation;
 	if (check_string<EncodingT>(description, nativeDescription) &&
 		check_string<EncodingT>(category, nativeCategory) &&
 		check_numeric_i(ruleNumber, nativeRuleNumber) &&
@@ -49,7 +51,8 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 		check_string<EncodingT>(commitHash, nativeCommitHash) &&
 		check_string<EncodingT>(commitDate, nativeCommitDate) &&
 		check_string<EncodingT>(commitAuthor, nativeCommitAuthor) &&
-		check_numeric_i(commitLine, nativeCommitLine))
+		check_numeric_i(commitLine, nativeCommitLine) &&
+		check_string<EncodingT>(derogation, nativeDerogation))
 	{
 		m_value = boost::make_shared< _CppNotice<EncodingT> >(nativeDescription,
 				nativeCategory,
@@ -61,7 +64,8 @@ CppNoticeInterpreter<EncodingT>::CppNoticeInterpreter(boost::shared_ptr< Base<En
 				nativeCommitHash,
 				nativeCommitDate,
 				nativeCommitAuthor,
-				nativeCommitLine);
+				nativeCommitLine,
+				nativeDerogation);
 	}
 }
 
@@ -159,6 +163,13 @@ template <class EncodingT>
 boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getCommitLine() const
 {
 	return boost::shared_ptr< Base<EncodingT> >( new Numeric<EncodingT>(m_value->getCommitLine()) );
+}
+
+
+template <class EncodingT>
+boost::shared_ptr< Base<EncodingT> > CppNoticeInterpreter<EncodingT>::getDerogation() const
+{
+	return boost::shared_ptr< Base<EncodingT> >( new String<EncodingT>(m_value->getDerogation()) );
 }
 
 
@@ -297,6 +308,17 @@ void CppNoticeInterpreter<EncodingT>::setCommitLine(boost::shared_ptr< Base<Enco
 	if (check_numeric_i(commitLine, nativeCommitLine))
 	{
 		m_value->setCommitLine(nativeCommitLine);
+	}
+}
+
+
+template <class EncodingT>
+void CppNoticeInterpreter<EncodingT>::setDerogation(boost::shared_ptr< Base<EncodingT> > const& derogation)
+{
+	typename EncodingT::string_t nativeDerogation;
+	if (check_string<EncodingT>(derogation, nativeDerogation))
+	{
+		m_value->setDerogation(nativeDerogation);
 	}
 }
 

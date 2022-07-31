@@ -217,7 +217,7 @@ _CppClassAccess<EncodingT>::selectManyCppClasss(typename EncodingT::string_t con
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -250,8 +250,7 @@ _CppClassAccess<EncodingT>::isSelectedCppClass(boost::shared_ptr< _CppClass<Enco
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -329,9 +328,8 @@ _CppClassAccess<EncodingT>::fillEncapsulationClass(boost::shared_ptr< _CppClass<
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idEncapsulationClass")), std::vector<typename EncodingT::string_t>(1,UCS("cppClass")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = encapsulationClassAccess->getOneCppClass(id);
-		typename std::list< boost::shared_ptr<_CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setEncapsulationClass(val);
 		}
@@ -368,9 +366,8 @@ _CppClassAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppClass<EncodingT> 
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppClass")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
-		typename std::list< boost::shared_ptr<_CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -418,8 +415,7 @@ _CppClassAccess<EncodingT>::fillManyCppInheritances(boost::shared_ptr< _CppClass
 	if (!filter.empty()) {
 		cppInheritanceFilter += UCS(" AND ") + filter;
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppInheritanceAccess->selectManyCppInheritances(cppInheritanceFilter, nowait, true);
@@ -470,8 +466,7 @@ _CppClassAccess<EncodingT>::fillManyCppFunctions(boost::shared_ptr< _CppClass<En
 	if (!filter.empty()) {
 		cppFunctionFilter += UCS(" AND ") + filter;
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait, true);
@@ -522,8 +517,7 @@ _CppClassAccess<EncodingT>::fillManyInternClasses(boost::shared_ptr< _CppClass<E
 	if (!filter.empty()) {
 		cppClassFilter += UCS(" AND ") + filter;
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = internClasseAccess->selectManyCppClasss(cppClassFilter, nowait, true);
@@ -574,8 +568,7 @@ _CppClassAccess<EncodingT>::fillManyCppAttributes(boost::shared_ptr< _CppClass<E
 	if (!filter.empty()) {
 		cppAttributeFilter += UCS(" AND ") + filter;
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppAttributeAccess->selectManyCppAttributes(cppAttributeFilter, nowait, true);
@@ -626,8 +619,7 @@ _CppClassAccess<EncodingT>::fillManyCppEnums(boost::shared_ptr< _CppClass<Encodi
 	if (!filter.empty()) {
 		cppEnumFilter += UCS(" AND ") + filter;
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppEnumAccess->selectManyCppEnums(cppEnumFilter, nowait, true);
@@ -679,8 +671,7 @@ _CppClassAccess<EncodingT>::isModifiedCppClass(boost::shared_ptr< _CppClass<Enco
 		m_logger->errorStream() << "CppEnumAccess class is not initialized.";
 		throw NullPointerException("CppEnumAccess class is not initialized.");
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -841,8 +832,7 @@ _CppClassAccess<EncodingT>::updateCppClass(boost::shared_ptr< _CppClass<Encoding
 		m_logger->errorStream() << "CppEnumAccess class is not initialized.";
 		throw NullPointerException("CppEnumAccess class is not initialized.");
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality cppClassIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -1123,10 +1113,10 @@ _CppClassAccess<EncodingT>::updateCppClass(boost::shared_ptr< _CppClass<Encoding
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -1320,8 +1310,7 @@ _CppClassAccess<EncodingT>::deleteCppClass(boost::shared_ptr< _CppClass<Encoding
 		m_logger->errorStream() << "CppEnumAccess class is not initialized.";
 		throw NullPointerException("CppEnumAccess class is not initialized.");
 	}
-	typename _CppClass<EncodingT>::CppClassIDEquality CppClassIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppClass<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppClassIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -1367,10 +1356,10 @@ _CppClassAccess<EncodingT>::deleteCppClass(boost::shared_ptr< _CppClass<Encoding
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

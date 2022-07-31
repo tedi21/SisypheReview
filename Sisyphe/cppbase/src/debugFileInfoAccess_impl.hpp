@@ -153,7 +153,7 @@ _DebugFileInfoAccess<EncodingT>::selectManyDebugFileInfos(typename EncodingT::st
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -186,8 +186,7 @@ _DebugFileInfoAccess<EncodingT>::isSelectedDebugFileInfo(boost::shared_ptr< _Deb
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -247,9 +246,8 @@ _DebugFileInfoAccess<EncodingT>::fillTextFile(boost::shared_ptr< _DebugFileInfo<
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idText")), std::vector<typename EncodingT::string_t>(1,UCS("debugFileInfo")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(o->getIdentifier());
 		boost::shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
-		typename std::list< boost::shared_ptr<_DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setTextFile(val);
 		}
@@ -297,8 +295,7 @@ _DebugFileInfoAccess<EncodingT>::fillManyDebugFunctionInfos(boost::shared_ptr< _
 	if (!filter.empty()) {
 		debugFunctionInfoFilter += UCS(" AND ") + filter;
 	}
-	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = debugFunctionInfoAccess->selectManyDebugFunctionInfos(debugFunctionInfoFilter, nowait, true);
@@ -349,8 +346,7 @@ _DebugFileInfoAccess<EncodingT>::fillManyDebugStubInfos(boost::shared_ptr< _Debu
 	if (!filter.empty()) {
 		debugStubInfoFilter += UCS(" AND ") + filter;
 	}
-	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = debugStubInfoAccess->selectManyDebugStubInfos(debugStubInfoFilter, nowait, true);
@@ -387,8 +383,7 @@ _DebugFileInfoAccess<EncodingT>::isModifiedDebugFileInfo(boost::shared_ptr< _Deb
 		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
 		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
 	}
-	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*o);
-	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -469,8 +464,7 @@ _DebugFileInfoAccess<EncodingT>::updateDebugFileInfo(boost::shared_ptr< _DebugFi
 		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
 		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
 	}
-	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality debugFileInfoIdEquality(*o);
-	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugFileInfoIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -587,10 +581,10 @@ _DebugFileInfoAccess<EncodingT>::updateDebugFileInfo(boost::shared_ptr< _DebugFi
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -711,8 +705,7 @@ _DebugFileInfoAccess<EncodingT>::deleteDebugFileInfo(boost::shared_ptr< _DebugFi
 		m_logger->errorStream() << "DebugStubInfoAccess class is not initialized.";
 		throw NullPointerException("DebugStubInfoAccess class is not initialized.");
 	}
-	typename _DebugFileInfo<EncodingT>::DebugFileInfoIDEquality DebugFileInfoIdEquality(*o);
-	typename std::list< boost::shared_ptr< _DebugFileInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), DebugFileInfoIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -737,10 +730,10 @@ _DebugFileInfoAccess<EncodingT>::deleteDebugFileInfo(boost::shared_ptr< _DebugFi
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

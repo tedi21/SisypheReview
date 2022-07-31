@@ -25,11 +25,12 @@ var = new CppNotice();
 * String : La valeur de la colonne commitDate.
 * String : La valeur de la colonne commitAuthor.
 * Numeric : La valeur de la colonne commitLine.
+* String : La valeur de la colonne derogation.
 
 *Description*
 * Crée une instance de la classe CppNotice.
 ```
-var = new CppNotice(description, category, ruleNumber, lineNumber, startBlock, lengthBlock, isNew, commitHash, commitDate, commitAuthor, commitLine);
+var = new CppNotice(description, category, ruleNumber, lineNumber, startBlock, lengthBlock, isNew, commitHash, commitDate, commitAuthor, commitLine, derogation);
 ```
 
 ## Méthode Identifier
@@ -186,6 +187,19 @@ val = var.CommitAuthor;
 * Retourne la colonne CommitLine.
 ```
 val = var.CommitLine;
+```
+
+## Méthode Derogation
+*Paramètres*
+* None.
+
+*Retour*
+* String : La colonne derogation.
+
+*Description*
+* Retourne la colonne Derogation.
+```
+val = var.Derogation;
 ```
 
 ## Méthode CppFile
@@ -355,6 +369,19 @@ var.CommitAuthor(commitAuthor);
 * Définit la colonne commitLine.
 ```
 var.CommitLine(commitLine);
+```
+
+## Méthode Derogation
+*Paramètres*
+* String : La valeur de la colonne derogation.
+
+*Retour*
+* None.
+
+*Description*
+* Définit la colonne derogation.
+```
+var.Derogation(derogation);
 ```
 
 ## Méthode HasCppFile

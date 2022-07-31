@@ -137,7 +137,7 @@ _CppFileTypeAccess<EncodingT>::selectManyCppFileTypes(typename EncodingT::string
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -170,8 +170,7 @@ _CppFileTypeAccess<EncodingT>::isSelectedCppFileType(boost::shared_ptr< _CppFile
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -235,8 +234,7 @@ _CppFileTypeAccess<EncodingT>::fillManyCppFiles(boost::shared_ptr< _CppFileType<
 	if (!filter.empty()) {
 		cppFileFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppFileAccess->selectManyCppFiles(cppFileFilter, nowait, true);
@@ -268,8 +266,7 @@ _CppFileTypeAccess<EncodingT>::isModifiedCppFileType(boost::shared_ptr< _CppFile
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -322,8 +319,7 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(boost::shared_ptr< _CppFileType
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	typename _CppFileType<EncodingT>::CppFileTypeIDEquality cppFileTypeIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileTypeIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -382,10 +378,10 @@ _CppFileTypeAccess<EncodingT>::updateCppFileType(boost::shared_ptr< _CppFileType
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -475,8 +471,7 @@ _CppFileTypeAccess<EncodingT>::deleteCppFileType(boost::shared_ptr< _CppFileType
 		m_logger->errorStream() << "CppFileAccess class is not initialized.";
 		throw NullPointerException("CppFileAccess class is not initialized.");
 	}
-	typename _CppFileType<EncodingT>::CppFileTypeIDEquality CppFileTypeIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFileType<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileTypeIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -496,10 +491,10 @@ _CppFileTypeAccess<EncodingT>::deleteCppFileType(boost::shared_ptr< _CppFileType
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

@@ -169,7 +169,7 @@ _CppEnumAccess<EncodingT>::selectManyCppEnums(typename EncodingT::string_t const
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -202,8 +202,7 @@ _CppEnumAccess<EncodingT>::isSelectedCppEnum(boost::shared_ptr< _CppEnum<Encodin
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -257,9 +256,8 @@ _CppEnumAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppEnum<EncodingT> > 
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppEnum")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
-		typename std::list< boost::shared_ptr<_CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -297,9 +295,8 @@ _CppEnumAccess<EncodingT>::fillCppClass(boost::shared_ptr< _CppEnum<EncodingT> >
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idClass")), std::vector<typename EncodingT::string_t>(1,UCS("cppEnum")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
-		typename std::list< boost::shared_ptr<_CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppClass(val);
 		}
@@ -346,8 +343,7 @@ _CppEnumAccess<EncodingT>::fillManyCppEnumConstants(boost::shared_ptr< _CppEnum<
 	if (!filter.empty()) {
 		cppEnumConstantFilter += UCS(" AND ") + filter;
 	}
-	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppEnumConstantAccess->selectManyCppEnumConstants(cppEnumConstantFilter, nowait, true);
@@ -379,8 +375,7 @@ _CppEnumAccess<EncodingT>::isModifiedCppEnum(boost::shared_ptr< _CppEnum<Encodin
 		m_logger->errorStream() << "CppEnumConstantAccess class is not initialized.";
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
-	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppEnum<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -443,8 +438,7 @@ _CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		m_logger->errorStream() << "CppEnumConstantAccess class is not initialized.";
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
-	typename _CppEnum<EncodingT>::CppEnumIDEquality cppEnumIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppEnumIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -543,10 +537,10 @@ _CppEnumAccess<EncodingT>::updateCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -668,8 +662,7 @@ _CppEnumAccess<EncodingT>::deleteCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		m_logger->errorStream() << "CppEnumConstantAccess class is not initialized.";
 		throw NullPointerException("CppEnumConstantAccess class is not initialized.");
 	}
-	typename _CppEnum<EncodingT>::CppEnumIDEquality CppEnumIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppEnum<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppEnumIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -689,10 +682,10 @@ _CppEnumAccess<EncodingT>::deleteCppEnum(boost::shared_ptr< _CppEnum<EncodingT> 
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

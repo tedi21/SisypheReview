@@ -225,7 +225,7 @@ _CppParameterAccess<EncodingT>::selectManyCppParameters(typename EncodingT::stri
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -258,8 +258,7 @@ _CppParameterAccess<EncodingT>::isSelectedCppParameter(boost::shared_ptr< _CppPa
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -307,9 +306,8 @@ _CppParameterAccess<EncodingT>::fillCppFunction(boost::shared_ptr< _CppParameter
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFunction")), std::vector<typename EncodingT::string_t>(1,UCS("cppParameter")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFunction<EncodingT> > val = cppFunctionAccess->getOneCppFunction(id);
-		typename std::list< boost::shared_ptr<_CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppFunction(val);
 		}
@@ -333,8 +331,7 @@ _CppParameterAccess<EncodingT>::isModifiedCppParameter(boost::shared_ptr< _CppPa
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppParameter<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -378,8 +375,7 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _CppParameter<EncodingT>::CppParameterIDEquality cppParameterIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppParameterIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -456,10 +452,10 @@ _CppParameterAccess<EncodingT>::updateCppParameter(boost::shared_ptr< _CppParame
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -568,8 +564,7 @@ _CppParameterAccess<EncodingT>::deleteCppParameter(boost::shared_ptr< _CppParame
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _CppParameter<EncodingT>::CppParameterIDEquality CppParameterIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppParameter<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppParameterIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -584,10 +579,10 @@ _CppParameterAccess<EncodingT>::deleteCppParameter(boost::shared_ptr< _CppParame
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

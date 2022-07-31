@@ -153,7 +153,7 @@ _RuleAccess<EncodingT>::selectManyRules(typename EncodingT::string_t const&  fil
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -186,8 +186,7 @@ _RuleAccess<EncodingT>::isSelectedRule(boost::shared_ptr< _Rule<EncodingT> > o) 
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _Rule<EncodingT>::RuleIDEquality ruleIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), ruleIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -221,8 +220,7 @@ _RuleAccess<EncodingT>::isModifiedRule(boost::shared_ptr< _Rule<EncodingT> > o) 
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _Rule<EncodingT>::RuleIDEquality ruleIdEquality(*o);
-	typename std::list< boost::shared_ptr< _Rule<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), ruleIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -254,8 +252,7 @@ _RuleAccess<EncodingT>::updateRule(boost::shared_ptr< _Rule<EncodingT> > o)
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _Rule<EncodingT>::RuleIDEquality ruleIdEquality(*o);
-	typename std::list< boost::shared_ptr< _Rule<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), ruleIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -284,10 +281,10 @@ _RuleAccess<EncodingT>::updateRule(boost::shared_ptr< _Rule<EncodingT> > o)
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -366,8 +363,7 @@ _RuleAccess<EncodingT>::deleteRule(boost::shared_ptr< _Rule<EncodingT> > o)
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _Rule<EncodingT>::RuleIDEquality RuleIdEquality(*o);
-	typename std::list< boost::shared_ptr< _Rule<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), RuleIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -382,10 +378,10 @@ _RuleAccess<EncodingT>::deleteRule(boost::shared_ptr< _Rule<EncodingT> > o)
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

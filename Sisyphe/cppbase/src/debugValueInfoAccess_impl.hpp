@@ -137,7 +137,7 @@ _DebugValueInfoAccess<EncodingT>::selectManyDebugValueInfos(typename EncodingT::
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -170,8 +170,7 @@ _DebugValueInfoAccess<EncodingT>::isSelectedDebugValueInfo(boost::shared_ptr< _D
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _DebugValueInfo<EncodingT>::DebugValueInfoIDEquality debugValueInfoIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), debugValueInfoIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -219,9 +218,8 @@ _DebugValueInfoAccess<EncodingT>::fillDebugVariableInfo(boost::shared_ptr< _Debu
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDebugVariable")), std::vector<typename EncodingT::string_t>(1,UCS("debugValueInfo")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _DebugValueInfo<EncodingT>::DebugValueInfoIDEquality debugValueInfoIdEquality(o->getIdentifier());
 		boost::shared_ptr< _DebugVariableInfo<EncodingT> > val = debugVariableInfoAccess->getOneDebugVariableInfo(id);
-		typename std::list< boost::shared_ptr<_DebugValueInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugValueInfoIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setDebugVariableInfo(val);
 		}
@@ -259,9 +257,8 @@ _DebugValueInfoAccess<EncodingT>::fillDebugStubInfo(boost::shared_ptr< _DebugVal
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDebugStub")), std::vector<typename EncodingT::string_t>(1,UCS("debugValueInfo")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _DebugValueInfo<EncodingT>::DebugValueInfoIDEquality debugValueInfoIdEquality(o->getIdentifier());
 		boost::shared_ptr< _DebugStubInfo<EncodingT> > val = debugStubInfoAccess->getOneDebugStubInfo(id);
-		typename std::list< boost::shared_ptr<_DebugValueInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugValueInfoIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setDebugStubInfo(val);
 		}
@@ -284,8 +281,7 @@ _DebugValueInfoAccess<EncodingT>::isModifiedDebugValueInfo(boost::shared_ptr< _D
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _DebugValueInfo<EncodingT>::DebugValueInfoIDEquality debugValueInfoIdEquality(*o);
-	typename std::list< boost::shared_ptr< _DebugValueInfo<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugValueInfoIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -321,8 +317,7 @@ _DebugValueInfoAccess<EncodingT>::updateDebugValueInfo(boost::shared_ptr< _Debug
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _DebugValueInfo<EncodingT>::DebugValueInfoIDEquality debugValueInfoIdEquality(*o);
-	typename std::list< boost::shared_ptr< _DebugValueInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), debugValueInfoIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -367,10 +362,10 @@ _DebugValueInfoAccess<EncodingT>::updateDebugValueInfo(boost::shared_ptr< _Debug
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -469,8 +464,7 @@ _DebugValueInfoAccess<EncodingT>::deleteDebugValueInfo(boost::shared_ptr< _Debug
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _DebugValueInfo<EncodingT>::DebugValueInfoIDEquality DebugValueInfoIdEquality(*o);
-	typename std::list< boost::shared_ptr< _DebugValueInfo<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), DebugValueInfoIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -485,10 +479,10 @@ _DebugValueInfoAccess<EncodingT>::deleteDebugValueInfo(boost::shared_ptr< _Debug
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

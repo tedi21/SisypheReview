@@ -68,6 +68,7 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 	columns.push_back(UCS("commitDate"));
 	columns.push_back(UCS("commitAuthor"));
 	columns.push_back(UCS("commitLine"));
+	columns.push_back(UCS("derogation"));
 	statement.swap( connection->select(columns, std::vector<typename EncodingT::string_t>(1,UCS("cppNotice")), filter) );
 	while( statement.executeStep() ) {
 		long long identifier;
@@ -82,6 +83,7 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 		typename EncodingT::string_t commitDate;
 		typename EncodingT::string_t commitAuthor;
 		long long commitLine;
+		typename EncodingT::string_t derogation;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, description ) &&
 			statement.getText( 2, category ) &&
@@ -93,7 +95,8 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 			statement.getText( 8, commitHash ) &&
 			statement.getText( 9, commitDate ) &&
 			statement.getText( 10, commitAuthor ) &&
-			statement.getInt64( 11, commitLine )) {
+			statement.getInt64( 11, commitLine ) &&
+			statement.getText( 12, derogation )) {
 			value.reset(new _CppNotice<EncodingT>(
 				identifier,
 				description,
@@ -106,7 +109,8 @@ _CppNoticeAccess<EncodingT>::getManyCppNotices(typename EncodingT::string_t cons
 				commitHash,
 				commitDate,
 				commitAuthor,
-				commitLine));
+				commitLine,
+				derogation));
 			tab.push_back(value);
 		}
 	}
@@ -160,6 +164,7 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 	columns.push_back(UCS("commitDate"));
 	columns.push_back(UCS("commitAuthor"));
 	columns.push_back(UCS("commitLine"));
+	columns.push_back(UCS("derogation"));
 	if (!addition || !connection->isTransactionInProgress()) {
 		cancelSelection();
 		m_transactionOwner = !connection->isTransactionInProgress();
@@ -182,6 +187,7 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 		typename EncodingT::string_t commitDate;
 		typename EncodingT::string_t commitAuthor;
 		long long commitLine;
+		typename EncodingT::string_t derogation;
 		if (statement.getInt64( 0, identifier ) &&
 			statement.getText( 1, description ) &&
 			statement.getText( 2, category ) &&
@@ -193,7 +199,8 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 			statement.getText( 8, commitHash ) &&
 			statement.getText( 9, commitDate ) &&
 			statement.getText( 10, commitAuthor ) &&
-			statement.getInt64( 11, commitLine )) {
+			statement.getInt64( 11, commitLine ) &&
+			statement.getText( 12, derogation )) {
 			tab.push_back(boost::shared_ptr< _CppNotice<EncodingT> >(new _CppNotice<EncodingT>(
 				identifier,
 				description,
@@ -206,7 +213,8 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 				commitHash,
 				commitDate,
 				commitAuthor,
-				commitLine)));
+				commitLine,
+				derogation)));
 		}
 	}
 	if (tab.empty()) {
@@ -217,7 +225,7 @@ _CppNoticeAccess<EncodingT>::selectManyCppNotices(typename EncodingT::string_t c
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -250,8 +258,7 @@ _CppNoticeAccess<EncodingT>::isSelectedCppNotice(boost::shared_ptr< _CppNotice<E
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppNoticeIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -299,9 +306,8 @@ _CppNoticeAccess<EncodingT>::fillCppFile(boost::shared_ptr< _CppNotice<EncodingT
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppNotice")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppFileAccess->getOneCppFile(id);
-		typename std::list< boost::shared_ptr<_CppNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppNoticeIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppFile(val);
 		}
@@ -325,8 +331,7 @@ _CppNoticeAccess<EncodingT>::isModifiedCppNotice(boost::shared_ptr< _CppNotice<E
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppNotice<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppNoticeIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -343,6 +348,7 @@ _CppNoticeAccess<EncodingT>::isModifiedCppNotice(boost::shared_ptr< _CppNotice<E
 	bUpdate = bUpdate || ((*save)->getCommitDate() != o->getCommitDate());
 	bUpdate = bUpdate || ((*save)->getCommitAuthor() != o->getCommitAuthor());
 	bUpdate = bUpdate || ((*save)->getCommitLine() != o->getCommitLine());
+	bUpdate = bUpdate || ((*save)->getDerogation() != o->getDerogation());
 	bUpdate = bUpdate || (!(*save)->isNullCppFile() && !o->isNullCppFile() && !typename _CppFile<EncodingT>::CppFileIDEquality(*(*save)->getCppFile())(o->getCppFile()))
 		|| ((*save)->isNullCppFile() && !o->isNullCppFile()) 
 		|| (!(*save)->isNullCppFile() && o->isNullCppFile());
@@ -369,8 +375,7 @@ _CppNoticeAccess<EncodingT>::updateCppNotice(boost::shared_ptr< _CppNotice<Encod
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _CppNotice<EncodingT>::CppNoticeIDEquality cppNoticeIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppNoticeIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -420,6 +425,10 @@ _CppNoticeAccess<EncodingT>::updateCppNotice(boost::shared_ptr< _CppNotice<Encod
 			values.addInt64( o->getCommitLine() );
 			fields.push_back( UCS("commitLine") );
 		}
+		if ( (*save)->getDerogation() != o->getDerogation() ) {
+			values.addText( o->getDerogation() );
+			fields.push_back( UCS("derogation") );
+		}
 		if ( !o->isNullCppFile() && typename _CppFile<EncodingT>::CppFileIDEquality(-1)(o->getCppFile()) ) {
 			m_logger->errorStream() << "idFile : Identifier is null.";
 			throw InvalidQueryException("idFile : Identifier is null.");
@@ -443,10 +452,10 @@ _CppNoticeAccess<EncodingT>::updateCppNotice(boost::shared_ptr< _CppNotice<Encod
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -513,6 +522,8 @@ _CppNoticeAccess<EncodingT>::insertCppNotice(boost::shared_ptr< _CppNotice<Encod
 		fields.push_back( UCS("commitAuthor") );
 		values.addInt64( o->getCommitLine() );
 		fields.push_back( UCS("commitLine") );
+		values.addText( o->getDerogation() );
+		fields.push_back( UCS("derogation") );
 		statement.swap( connection->insert(UCS("cppNotice"), fields) );
 		if ( !values.fill(statement) || !statement.executeQuery() ) {
 			m_logger->fatalStream() << "invalid query.";
@@ -553,8 +564,7 @@ _CppNoticeAccess<EncodingT>::deleteCppNotice(boost::shared_ptr< _CppNotice<Encod
 		m_logger->errorStream() << "DB connection is not initialized.";    
 		throw NullPointerException("DB connection is not initialized.");   
 	}
-	typename _CppNotice<EncodingT>::CppNoticeIDEquality CppNoticeIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppNotice<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppNoticeIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -569,10 +579,10 @@ _CppNoticeAccess<EncodingT>::deleteCppNotice(boost::shared_ptr< _CppNotice<Encod
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

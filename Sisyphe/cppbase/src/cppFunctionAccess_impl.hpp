@@ -337,7 +337,7 @@ _CppFunctionAccess<EncodingT>::selectManyCppFunctions(typename EncodingT::string
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -370,8 +370,7 @@ _CppFunctionAccess<EncodingT>::isSelectedCppFunction(boost::shared_ptr< _CppFunc
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -431,9 +430,8 @@ _CppFunctionAccess<EncodingT>::fillCppDeclarationFile(boost::shared_ptr< _CppFun
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDecFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppDeclarationFileAccess->getOneCppFile(id);
-		typename std::list< boost::shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppDeclarationFile(val);
 		}
@@ -470,9 +468,8 @@ _CppFunctionAccess<EncodingT>::fillCppDefinitionFile(boost::shared_ptr< _CppFunc
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idDefFile")), std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFile<EncodingT> > val = cppDefinitionFileAccess->getOneCppFile(id);
-		typename std::list< boost::shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppDefinitionFile(val);
 		}
@@ -509,9 +506,8 @@ _CppFunctionAccess<EncodingT>::fillCppClass(boost::shared_ptr< _CppFunction<Enco
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idClass")), std::vector<typename EncodingT::string_t>(1,UCS("cppFunction")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppClass<EncodingT> > val = cppClassAccess->getOneCppClass(id);
-		typename std::list< boost::shared_ptr<_CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppClass(val);
 		}
@@ -558,8 +554,7 @@ _CppFunctionAccess<EncodingT>::fillManyCppParameters(boost::shared_ptr< _CppFunc
 	if (!filter.empty()) {
 		cppParameterFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppParameterAccess->selectManyCppParameters(cppParameterFilter, nowait, true);
@@ -610,8 +605,7 @@ _CppFunctionAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< _CppFunct
 	if (!filter.empty()) {
 		cppVariableFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppVariableAccess->selectManyCppVariables(cppVariableFilter, nowait, true);
@@ -648,8 +642,7 @@ _CppFunctionAccess<EncodingT>::isModifiedCppFunction(boost::shared_ptr< _CppFunc
 		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
 		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
-	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -759,8 +752,7 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
 		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
-	typename _CppFunction<EncodingT>::CppFunctionIDEquality cppFunctionIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFunctionIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -995,10 +987,10 @@ _CppFunctionAccess<EncodingT>::updateCppFunction(boost::shared_ptr< _CppFunction
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -1189,8 +1181,7 @@ _CppFunctionAccess<EncodingT>::deleteCppFunction(boost::shared_ptr< _CppFunction
 		m_logger->errorStream() << "CppVariableAccess class is not initialized.";
 		throw NullPointerException("CppVariableAccess class is not initialized.");
 	}
-	typename _CppFunction<EncodingT>::CppFunctionIDEquality CppFunctionIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFunction<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFunctionIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -1217,10 +1208,10 @@ _CppFunctionAccess<EncodingT>::deleteCppFunction(boost::shared_ptr< _CppFunction
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();

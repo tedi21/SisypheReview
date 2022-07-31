@@ -177,7 +177,7 @@ _CppFileAccess<EncodingT>::selectManyCppFiles(typename EncodingT::string_t const
 		}
 	}
 	else {
-		m_backup.insert(m_backup.end(), tab.begin(), tab.end());
+		m_backup.insert(tab.begin(), tab.end());
 	}
 	return copy_ptr(tab);
 }
@@ -210,8 +210,7 @@ _CppFileAccess<EncodingT>::isSelectedCppFile(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "Identifier : Identifier is null.";
 		throw UnIdentifiedObjectException("Identifier : Identifier is null.");
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*o);
-	return (!m_backup.empty() && (std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality)!=m_backup.end()));
+	return (!m_backup.empty() && (m_backup.find(o) != m_backup.end()));
 }
 
 template<class EncodingT>
@@ -307,9 +306,8 @@ _CppFileAccess<EncodingT>::fillTextFile(boost::shared_ptr< _CppFile<EncodingT> >
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idText")), std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 		boost::shared_ptr< _TextFile<EncodingT> > val = textFileAccess->getOneTextFile(id);
-		typename std::list< boost::shared_ptr<_CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setTextFile(val);
 		}
@@ -347,9 +345,8 @@ _CppFileAccess<EncodingT>::fillCppFileType(boost::shared_ptr< _CppFile<EncodingT
 	long long id;
 	statement.swap( connection->select(std::vector<typename EncodingT::string_t>(1,UCS("idType")), std::vector<typename EncodingT::string_t>(1,UCS("cppFile")), UCS("identifier = ") /*+ UCS("\'") */+ C(ToString::parse(o->getIdentifier()))/* + UCS("\'")*/) );
 	if( statement.executeStep() && statement.getInt64( 0, id ) && id != 0 ) {
-		typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
 		boost::shared_ptr< _CppFileType<EncodingT> > val = cppFileTypeAccess->getOneCppFileType(id);
-		typename std::list< boost::shared_ptr<_CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+		typename backup_t::iterator save = m_backup.find(o);
 		if (save != m_backup.end()) {
 			(*save)->setCppFileType(val);
 		}
@@ -397,8 +394,7 @@ _CppFileAccess<EncodingT>::fillManyCppDeclarationFunctions(boost::shared_ptr< _C
 	if (!filter.empty()) {
 		cppFunctionFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppDeclarationFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait, true);
@@ -449,8 +445,7 @@ _CppFileAccess<EncodingT>::fillManyCppDefinitionFunctions(boost::shared_ptr< _Cp
 	if (!filter.empty()) {
 		cppFunctionFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppDefinitionFunctionAccess->selectManyCppFunctions(cppFunctionFilter, nowait, true);
@@ -501,8 +496,7 @@ _CppFileAccess<EncodingT>::fillManyCppClasss(boost::shared_ptr< _CppFile<Encodin
 	if (!filter.empty()) {
 		cppClassFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppClassAccess->selectManyCppClasss(cppClassFilter, nowait, true);
@@ -553,8 +547,7 @@ _CppFileAccess<EncodingT>::fillManyCppIncludes(boost::shared_ptr< _CppFile<Encod
 	if (!filter.empty()) {
 		cppIncludeFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppIncludeAccess->selectManyCppIncludes(cppIncludeFilter, nowait, true);
@@ -605,8 +598,7 @@ _CppFileAccess<EncodingT>::fillManyCppVariables(boost::shared_ptr< _CppFile<Enco
 	if (!filter.empty()) {
 		cppVariableFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppVariableAccess->selectManyCppVariables(cppVariableFilter, nowait, true);
@@ -657,8 +649,7 @@ _CppFileAccess<EncodingT>::fillManyCppEnums(boost::shared_ptr< _CppFile<Encoding
 	if (!filter.empty()) {
 		cppEnumFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppEnumAccess->selectManyCppEnums(cppEnumFilter, nowait, true);
@@ -709,8 +700,7 @@ _CppFileAccess<EncodingT>::fillManyCMacros(boost::shared_ptr< _CppFile<EncodingT
 	if (!filter.empty()) {
 		cMacroFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cMacroAccess->selectManyCMacros(cMacroFilter, nowait, true);
@@ -761,8 +751,7 @@ _CppFileAccess<EncodingT>::fillManyCppNotices(boost::shared_ptr< _CppFile<Encodi
 	if (!filter.empty()) {
 		cppNoticeFilter += UCS(" AND ") + filter;
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(o->getIdentifier());
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save != m_backup.end())
 	{
 		tab = cppNoticeAccess->selectManyCppNotices(cppNoticeFilter, nowait, true);
@@ -829,8 +818,7 @@ _CppFileAccess<EncodingT>::isModifiedCppFile(boost::shared_ptr< _CppFile<Encodin
 		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
 		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::const_iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::const_iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -1055,8 +1043,7 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
 		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality cppFileIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), cppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before update.";
 		throw UnSelectedObjectException("You must select object before update.");
@@ -1429,10 +1416,10 @@ _CppFileAccess<EncodingT>::updateCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-	} catch (...) {
+		} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
 		}
@@ -1661,8 +1648,7 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		m_logger->errorStream() << "CppNoticeAccess class is not initialized.";
 		throw NullPointerException("CppNoticeAccess class is not initialized.");
 	}
-	typename _CppFile<EncodingT>::CppFileIDEquality CppFileIdEquality(*o);
-	typename std::list< boost::shared_ptr< _CppFile<EncodingT> > >::iterator save = std::find_if(m_backup.begin(), m_backup.end(), CppFileIdEquality);
+	typename backup_t::iterator save = m_backup.find(o);
 	if (save == m_backup.end()) {
 		m_logger->errorStream() << "You must select object before deletion.";
 		throw UnSelectedObjectException("You must select object before deletion.");
@@ -1721,10 +1707,10 @@ _CppFileAccess<EncodingT>::deleteCppFile(boost::shared_ptr< _CppFile<EncodingT> 
 		if (connection->isTransactionInProgress() && m_transactionOwner) {
 			connection->commit();
 			m_transactionOwner = false;
+			cancelSelection();
 			m_transactionSignal(OPERATION_ACCESS_COMMIT);
 		}
-		m_backup.erase(save);
-		o->setIdentifier(-1);
+			o->setIdentifier(-1);
 	} catch (...) {
 		if (m_transactionOwner) {
 			cancelSelection();
